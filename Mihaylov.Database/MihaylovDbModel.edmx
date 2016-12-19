@@ -1,0 +1,395 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="MihaylovDbModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Answers">
+          <Key>
+            <PropertyRef Name="AnswerId" />
+          </Key>
+          <Property Name="AnswerId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Countries">
+          <Key>
+            <PropertyRef Name="CountryId" />
+          </Key>
+          <Property Name="CountryId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Description" Type="nvarchar" MaxLength="100" />
+        </EntityType>
+        <EntityType Name="Ethnicities">
+          <Key>
+            <PropertyRef Name="EthnicityId" />
+          </Key>
+          <Property Name="EthnicityId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Persons">
+          <Key>
+            <PropertyRef Name="PersonId" />
+          </Key>
+          <Property Name="PersonId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Username" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="CreateDate" Type="date" Nullable="false" />
+          <Property Name="AskDate" Type="datetime" Nullable="false" />
+          <Property Name="Age" Type="int" Nullable="false" />
+          <Property Name="CountryId" Type="int" Nullable="false" />
+          <Property Name="EthnicityId" Type="int" Nullable="false" />
+          <Property Name="SexPreferenceId" Type="int" Nullable="false" />
+          <Property Name="AnswerTypeId" Type="int" Nullable="false" />
+          <Property Name="Answer" Type="money" />
+          <Property Name="AnswerUnitId" Type="int" />
+          <Property Name="AnswerConverted" Type="money" />
+          <Property Name="Comments" Type="nvarchar" MaxLength="100" />
+        </EntityType>
+        <EntityType Name="SexPreferences">
+          <Key>
+            <PropertyRef Name="SexPreferenceId" />
+          </Key>
+          <Property Name="SexPreferenceId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Units">
+          <Key>
+            <PropertyRef Name="UnitId" />
+          </Key>
+          <Property Name="UnitId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="10" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_Persons_Answers">
+          <End Role="Answers" Type="Self.Answers" Multiplicity="1" />
+          <End Role="Persons" Type="Self.Persons" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Answers">
+              <PropertyRef Name="AnswerId" />
+            </Principal>
+            <Dependent Role="Persons">
+              <PropertyRef Name="AnswerTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Persons_Countries">
+          <End Role="Countries" Type="Self.Countries" Multiplicity="1" />
+          <End Role="Persons" Type="Self.Persons" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Countries">
+              <PropertyRef Name="CountryId" />
+            </Principal>
+            <Dependent Role="Persons">
+              <PropertyRef Name="CountryId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Persons_Ethnicities">
+          <End Role="Ethnicities" Type="Self.Ethnicities" Multiplicity="1" />
+          <End Role="Persons" Type="Self.Persons" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Ethnicities">
+              <PropertyRef Name="EthnicityId" />
+            </Principal>
+            <Dependent Role="Persons">
+              <PropertyRef Name="EthnicityId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Persons_SexPreferences">
+          <End Role="SexPreferences" Type="Self.SexPreferences" Multiplicity="1" />
+          <End Role="Persons" Type="Self.Persons" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SexPreferences">
+              <PropertyRef Name="SexPreferenceId" />
+            </Principal>
+            <Dependent Role="Persons">
+              <PropertyRef Name="SexPreferenceId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Persons_Units">
+          <End Role="Units" Type="Self.Units" Multiplicity="0..1" />
+          <End Role="Persons" Type="Self.Persons" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Units">
+              <PropertyRef Name="UnitId" />
+            </Principal>
+            <Dependent Role="Persons">
+              <PropertyRef Name="AnswerUnitId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="MihaylovDbModelStoreContainer">
+          <EntitySet Name="Answers" EntityType="Self.Answers" Schema="cam" store:Type="Tables" />
+          <EntitySet Name="Countries" EntityType="Self.Countries" Schema="cam" store:Type="Tables" />
+          <EntitySet Name="Ethnicities" EntityType="Self.Ethnicities" Schema="cam" store:Type="Tables" />
+          <EntitySet Name="Persons" EntityType="Self.Persons" Schema="cam" store:Type="Tables" />
+          <EntitySet Name="SexPreferences" EntityType="Self.SexPreferences" Schema="cam" store:Type="Tables" />
+          <EntitySet Name="Units" EntityType="Self.Units" Schema="cam" store:Type="Tables" />
+          <AssociationSet Name="FK_Persons_Answers" Association="Self.FK_Persons_Answers">
+            <End Role="Answers" EntitySet="Answers" />
+            <End Role="Persons" EntitySet="Persons" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Persons_Countries" Association="Self.FK_Persons_Countries">
+            <End Role="Countries" EntitySet="Countries" />
+            <End Role="Persons" EntitySet="Persons" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Persons_Ethnicities" Association="Self.FK_Persons_Ethnicities">
+            <End Role="Ethnicities" EntitySet="Ethnicities" />
+            <End Role="Persons" EntitySet="Persons" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Persons_SexPreferences" Association="Self.FK_Persons_SexPreferences">
+            <End Role="SexPreferences" EntitySet="SexPreferences" />
+            <End Role="Persons" EntitySet="Persons" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Persons_Units" Association="Self.FK_Persons_Units">
+            <End Role="Units" EntitySet="Units" />
+            <End Role="Persons" EntitySet="Persons" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="MihaylovDbModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Country">
+          <Key>
+            <PropertyRef Name="CountryId" />
+          </Key>
+          <Property Name="CountryId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Description" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Persons" Relationship="MihaylovDbModel.FK_Persons_Countries" FromRole="Country" ToRole="Person" />
+        </EntityType>
+        <EntityType Name="Unit">
+          <Key>
+            <PropertyRef Name="UnitId" />
+          </Key>
+          <Property Name="UnitId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="10" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Persons" Relationship="MihaylovDbModel.FK_Persons_Units" FromRole="Unit" ToRole="Person" />
+        </EntityType>
+        <EntityContainer Name="MihaylovDbContext" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Countries" EntityType="Self.Country" />
+          <EntitySet Name="Units" EntityType="Self.Unit" />
+          <EntitySet Name="Ethnicities" EntityType="MihaylovDbModel.Ethnicity" />
+          <EntitySet Name="Answers" EntityType="MihaylovDbModel.Answer" />
+          <EntitySet Name="Persons" EntityType="MihaylovDbModel.Person" />
+          <AssociationSet Name="FK_Persons_Answers" Association="MihaylovDbModel.FK_Persons_Answers">
+            <End Role="Answer" EntitySet="Answers" />
+            <End Role="Person" EntitySet="Persons" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Persons_Countries" Association="MihaylovDbModel.FK_Persons_Countries">
+            <End Role="Country" EntitySet="Countries" />
+            <End Role="Person" EntitySet="Persons" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Persons_Ethnicities" Association="MihaylovDbModel.FK_Persons_Ethnicities">
+            <End Role="Ethnicity" EntitySet="Ethnicities" />
+            <End Role="Person" EntitySet="Persons" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Persons_Units" Association="MihaylovDbModel.FK_Persons_Units">
+            <End Role="Unit" EntitySet="Units" />
+            <End Role="Person" EntitySet="Persons" />
+          </AssociationSet>
+          <EntitySet Name="SexPreferences" EntityType="MihaylovDbModel.SexPreference" />
+          <AssociationSet Name="FK_Persons_SexPreferences" Association="MihaylovDbModel.FK_Persons_SexPreferences">
+            <End Role="SexPreference" EntitySet="SexPreferences" />
+            <End Role="Person" EntitySet="Persons" />
+          </AssociationSet>
+          </EntityContainer>
+        <EntityType Name="Ethnicity">
+          <Key>
+            <PropertyRef Name="EthnicityId" />
+          </Key>
+          <Property Name="EthnicityId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Persons" Relationship="MihaylovDbModel.FK_Persons_Ethnicities" FromRole="Ethnicity" ToRole="Person" />
+        </EntityType>
+        <EntityType Name="Answer">
+          <Key>
+            <PropertyRef Name="AnswerId" />
+          </Key>
+          <Property Name="AnswerId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Persons" Relationship="MihaylovDbModel.FK_Persons_Answers" FromRole="Answer" ToRole="Person" />
+        </EntityType>
+        <EntityType Name="Person">
+          <Key>
+            <PropertyRef Name="PersonId" />
+          </Key>
+          <Property Name="PersonId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Username" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="CreateDate" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="AskDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Age" Type="Int32" Nullable="false" />
+          <Property Name="CountryId" Type="Int32" Nullable="false" />
+          <Property Name="EthnicityId" Type="Int32" Nullable="false" />
+          <Property Name="SexPreferenceId" Type="Int32" Nullable="false" />
+          <Property Name="AnswerTypeId" Type="Int32" Nullable="false" />
+          <Property Name="Answer" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="AnswerUnitId" Type="Int32" />
+          <Property Name="AnswerConverted" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="Comments" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Answer1" Relationship="MihaylovDbModel.FK_Persons_Answers" FromRole="Person" ToRole="Answer" />
+          <NavigationProperty Name="Country" Relationship="MihaylovDbModel.FK_Persons_Countries" FromRole="Person" ToRole="Country" />
+          <NavigationProperty Name="Ethnicity" Relationship="MihaylovDbModel.FK_Persons_Ethnicities" FromRole="Person" ToRole="Ethnicity" />
+          <NavigationProperty Name="Unit" Relationship="MihaylovDbModel.FK_Persons_Units" FromRole="Person" ToRole="Unit" />
+          <NavigationProperty Name="SexPreference" Relationship="MihaylovDbModel.FK_Persons_SexPreferences" FromRole="Person" ToRole="SexPreference" />
+        </EntityType>
+        <Association Name="FK_Persons_Answers">
+          <End Type="MihaylovDbModel.Answer" Role="Answer" Multiplicity="1" />
+          <End Type="MihaylovDbModel.Person" Role="Person" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Answer">
+              <PropertyRef Name="AnswerId" />
+            </Principal>
+            <Dependent Role="Person">
+              <PropertyRef Name="AnswerTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Persons_Countries">
+          <End Type="MihaylovDbModel.Country" Role="Country" Multiplicity="1" />
+          <End Type="MihaylovDbModel.Person" Role="Person" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Country">
+              <PropertyRef Name="CountryId" />
+            </Principal>
+            <Dependent Role="Person">
+              <PropertyRef Name="CountryId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Persons_Ethnicities">
+          <End Type="MihaylovDbModel.Ethnicity" Role="Ethnicity" Multiplicity="1" />
+          <End Type="MihaylovDbModel.Person" Role="Person" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Ethnicity">
+              <PropertyRef Name="EthnicityId" />
+            </Principal>
+            <Dependent Role="Person">
+              <PropertyRef Name="EthnicityId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Persons_Units">
+          <End Type="MihaylovDbModel.Unit" Role="Unit" Multiplicity="0..1" />
+          <End Type="MihaylovDbModel.Person" Role="Person" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Unit">
+              <PropertyRef Name="UnitId" />
+            </Principal>
+            <Dependent Role="Person">
+              <PropertyRef Name="AnswerUnitId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="SexPreference">
+          <Key>
+            <PropertyRef Name="SexPreferenceId" />
+          </Key>
+          <Property Name="SexPreferenceId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Persons" Relationship="MihaylovDbModel.FK_Persons_SexPreferences" FromRole="SexPreference" ToRole="Person" />
+        </EntityType>
+        <Association Name="FK_Persons_SexPreferences">
+          <End Type="MihaylovDbModel.SexPreference" Role="SexPreference" Multiplicity="1" />
+          <End Type="MihaylovDbModel.Person" Role="Person" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SexPreference">
+              <PropertyRef Name="SexPreferenceId" />
+            </Principal>
+            <Dependent Role="Person">
+              <PropertyRef Name="SexPreferenceId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="MihaylovDbModelStoreContainer" CdmEntityContainer="MihaylovDbContext">
+          <EntitySetMapping Name="Countries">
+            <EntityTypeMapping TypeName="MihaylovDbModel.Country">
+              <MappingFragment StoreEntitySet="Countries">
+                <ScalarProperty Name="CountryId" ColumnName="CountryId" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Units">
+            <EntityTypeMapping TypeName="MihaylovDbModel.Unit">
+              <MappingFragment StoreEntitySet="Units">
+                <ScalarProperty Name="UnitId" ColumnName="UnitId" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Ethnicities">
+            <EntityTypeMapping TypeName="MihaylovDbModel.Ethnicity">
+              <MappingFragment StoreEntitySet="Ethnicities">
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="EthnicityId" ColumnName="EthnicityId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Answers">
+            <EntityTypeMapping TypeName="MihaylovDbModel.Answer">
+              <MappingFragment StoreEntitySet="Answers">
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="AnswerId" ColumnName="AnswerId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Persons">
+            <EntityTypeMapping TypeName="MihaylovDbModel.Person">
+              <MappingFragment StoreEntitySet="Persons">
+                <ScalarProperty Name="Comments" ColumnName="Comments" />
+                <ScalarProperty Name="AnswerConverted" ColumnName="AnswerConverted" />
+                <ScalarProperty Name="AnswerUnitId" ColumnName="AnswerUnitId" />
+                <ScalarProperty Name="Answer" ColumnName="Answer" />
+                <ScalarProperty Name="AnswerTypeId" ColumnName="AnswerTypeId" />
+                <ScalarProperty Name="SexPreferenceId" ColumnName="SexPreferenceId" />
+                <ScalarProperty Name="EthnicityId" ColumnName="EthnicityId" />
+                <ScalarProperty Name="CountryId" ColumnName="CountryId" />
+                <ScalarProperty Name="Age" ColumnName="Age" />
+                <ScalarProperty Name="AskDate" ColumnName="AskDate" />
+                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+                <ScalarProperty Name="Username" ColumnName="Username" />
+                <ScalarProperty Name="PersonId" ColumnName="PersonId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SexPreferences">
+            <EntityTypeMapping TypeName="MihaylovDbModel.SexPreference">
+              <MappingFragment StoreEntitySet="SexPreferences">
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="SexPreferenceId" ColumnName="SexPreferenceId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

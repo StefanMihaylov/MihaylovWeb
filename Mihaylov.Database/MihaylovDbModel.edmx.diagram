@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="e8f7adbbdbd646a09784d8679167b810" Name="Diagram1">
+        <EntityTypeShape EntityType="MihaylovDbModel.Country" Width="1.5" PointX="0.875" PointY="1" IsExpanded="true" />
+        <EntityTypeShape EntityType="MihaylovDbModel.Unit" Width="1.5" PointX="5.5" PointY="3.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="MihaylovDbModel.Ethnicity" Width="1.5" PointX="5.5" PointY="1" />
+        <EntityTypeShape EntityType="MihaylovDbModel.Answer" Width="1.5" PointX="0.875" PointY="5.25" />
+        <EntityTypeShape EntityType="MihaylovDbModel.Person" Width="1.5" PointX="3.375" PointY="1.375" />
+        <AssociationConnector Association="MihaylovDbModel.FK_Persons_Answers" />
+        <AssociationConnector Association="MihaylovDbModel.FK_Persons_Countries" />
+        <AssociationConnector Association="MihaylovDbModel.FK_Persons_Ethnicities" />
+        <AssociationConnector Association="MihaylovDbModel.FK_Persons_Units" />
+        <EntityTypeShape EntityType="MihaylovDbModel.SexPreference" Width="1.5" PointX="0.875" PointY="3.25" />
+        <AssociationConnector Association="MihaylovDbModel.FK_Persons_SexPreferences" />
+        </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>
