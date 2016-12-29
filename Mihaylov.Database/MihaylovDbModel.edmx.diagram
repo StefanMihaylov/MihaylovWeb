@@ -7,7 +7,7 @@
       <Diagram DiagramId="e8f7adbbdbd646a09784d8679167b810" Name="Diagram1">
         <EntityTypeShape EntityType="MihaylovDbModel.Country" Width="1.5" PointX="0.875" PointY="1" IsExpanded="true" />
         <EntityTypeShape EntityType="MihaylovDbModel.Unit" Width="1.5" PointX="5.5" PointY="3.5" IsExpanded="true" />
-        <EntityTypeShape EntityType="MihaylovDbModel.Ethnicity" Width="1.5" PointX="5.5" PointY="1" />
+        <EntityTypeShape EntityType="MihaylovDbModel.Ethnicity" Width="1.5" PointX="5.5" PointY="1.125" />
         <EntityTypeShape EntityType="MihaylovDbModel.Answer" Width="1.5" PointX="0.875" PointY="5.25" />
         <EntityTypeShape EntityType="MihaylovDbModel.Person" Width="1.5" PointX="3.375" PointY="1.375" />
         <AssociationConnector Association="MihaylovDbModel.FK_Persons_Answers" />

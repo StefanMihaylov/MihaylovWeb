@@ -43,7 +43,8 @@
           <Property Name="Answer" Type="money" />
           <Property Name="AnswerUnitId" Type="int" />
           <Property Name="AnswerConverted" Type="money" />
-          <Property Name="Comments" Type="nvarchar" MaxLength="100" />
+          <Property Name="Comments" Type="nvarchar" MaxLength="128" />
+          <Property Name="RecordsPath" Type="nvarchar" MaxLength="128" />
         </EntityType>
         <EntityType Name="SexPreferences">
           <Key>
@@ -228,12 +229,13 @@
           <Property Name="Answer" Type="Decimal" Precision="19" Scale="4" />
           <Property Name="AnswerUnitId" Type="Int32" />
           <Property Name="AnswerConverted" Type="Decimal" Precision="19" Scale="4" />
-          <Property Name="Comments" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Comments" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Answer1" Relationship="MihaylovDbModel.FK_Persons_Answers" FromRole="Person" ToRole="Answer" />
           <NavigationProperty Name="Country" Relationship="MihaylovDbModel.FK_Persons_Countries" FromRole="Person" ToRole="Country" />
           <NavigationProperty Name="Ethnicity" Relationship="MihaylovDbModel.FK_Persons_Ethnicities" FromRole="Person" ToRole="Ethnicity" />
           <NavigationProperty Name="Unit" Relationship="MihaylovDbModel.FK_Persons_Units" FromRole="Person" ToRole="Unit" />
           <NavigationProperty Name="SexPreference" Relationship="MihaylovDbModel.FK_Persons_SexPreferences" FromRole="Person" ToRole="SexPreference" />
+          <Property Name="RecordsPath" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
         </EntityType>
         <Association Name="FK_Persons_Answers">
           <End Type="MihaylovDbModel.Answer" Role="Answer" Multiplicity="1" />
@@ -345,6 +347,7 @@
           <EntitySetMapping Name="Persons">
             <EntityTypeMapping TypeName="MihaylovDbModel.Person">
               <MappingFragment StoreEntitySet="Persons">
+                <ScalarProperty Name="RecordsPath" ColumnName="RecordsPath" />
                 <ScalarProperty Name="Comments" ColumnName="Comments" />
                 <ScalarProperty Name="AnswerConverted" ColumnName="AnswerConverted" />
                 <ScalarProperty Name="AnswerUnitId" ColumnName="AnswerUnitId" />

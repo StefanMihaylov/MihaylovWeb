@@ -6,22 +6,26 @@ using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
+using Mihaylov.Web.Controllers.Base;
 using Mihaylov.Web.Identity;
 using Mihaylov.Web.Models;
+using Ninject.Extensions.Logging;
 
 namespace Mihaylov.Web.Controllers
 {
     [Authorize]
-    public class ManageController : Controller
+    public class ManageController : BaseController
     {
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
 
-        public ManageController()
+        public ManageController(ILogger logger)
+            : base(logger)
         {
         }
 
-        public ManageController(ApplicationUserManager userManager, ApplicationSignInManager signInManager)
+        public ManageController(ApplicationUserManager userManager, ApplicationSignInManager signInManager, ILogger logger)
+             : base(logger)
         {
             UserManager = userManager;
             SignInManager = signInManager;
@@ -33,9 +37,9 @@ namespace Mihaylov.Web.Controllers
             {
                 return _signInManager ?? HttpContext.GetOwinContext().Get<ApplicationSignInManager>();
             }
-            private set 
-            { 
-                _signInManager = value; 
+            private set
+            {
+                _signInManager = value;
             }
         }
 
@@ -332,7 +336,7 @@ namespace Mihaylov.Web.Controllers
             base.Dispose(disposing);
         }
 
-#region Helpers
+        #region Helpers
         // Used for XSRF protection when adding external logins
         private const string XsrfKey = "XsrfId";
 
@@ -383,6 +387,6 @@ namespace Mihaylov.Web.Controllers
             Error
         }
 
-#endregion
+        #endregion
     }
 }

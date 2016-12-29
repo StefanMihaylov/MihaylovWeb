@@ -39,7 +39,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Helpers\PersonInfo.cs" />
+    <Compile Include="Repositories\Person.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Mihaylov.Database.Models\Mihaylov.Database.Models.csproj">
+      <Project>{251a9623-1317-4232-801c-f21189557227}</Project>
+      <Name>Mihaylov.Database.Models</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -27,6 +27,7 @@ namespace Mihaylov.Database
         public Nullable<int> AnswerUnitId { get; set; }
         public Nullable<decimal> AnswerConverted { get; set; }
         public string Comments { get; set; }
+        public string RecordsPath { get; set; }
     
         public virtual Answer Answer1 { get; set; }
         public virtual Country Country { get; set; }

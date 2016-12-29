@@ -1,8 +1,9 @@
 ﻿namespace Mihaylov.Database.Models.Interfaces
 {
     using System.Data.Entity;
+    using Common.Interfaces;
 
-    public interface IMihaylovDbContext
+    public interface IMihaylovDbContext: IDbContext
     {
         DbSet<Country> Countries { get; set; }
         DbSet<Ethnicity> Ethnicities { get; set; }
