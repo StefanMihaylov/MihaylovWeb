@@ -56,41 +56,33 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Answer.cs">
+    <Compile Include="AnswerType.cs">
       <DependentUpon>MihaylovDbModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Enums\AnswerType.cs" />
-    <Compile Include="Enums\EthnicityType.cs" />
-    <Compile Include="Enums\SexPreferenceType.cs" />
-    <Compile Include="Enums\UnitType.cs" />
-    <Compile Include="Identity\AppUser.cs" />
     <Compile Include="Country.cs">
       <DependentUpon>MihaylovDbModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Ethnicity.cs">
+    <Compile Include="EthnicityType.cs">
       <DependentUpon>MihaylovDbModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Identity\AppUser.cs" />
     <Compile Include="Interfaces\IMihaylovDbContext.cs" />
     <Compile Include="MihaylovDbModel.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>MihaylovDbModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Partials\Ethnicity.cs" />
-    <Compile Include="Partials\SexPreference.cs" />
-    <Compile Include="Partials\Unit.cs" />
-    <Compile Include="Partials\Answer.cs" />
+    <Compile Include="OrientationType.cs">
+      <DependentUpon>MihaylovDbModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Person.cs">
       <DependentUpon>MihaylovDbModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SexPreference.cs">
-      <DependentUpon>MihaylovDbModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Unit.cs">
-      <DependentUpon>MihaylovDbModel.tt</DependentUpon>
-    </Compile>
     <Compile Include="Identity\UsersDbContext.cs" />
+    <Compile Include="UnitType.cs">
+      <DependentUpon>MihaylovDbModel.tt</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

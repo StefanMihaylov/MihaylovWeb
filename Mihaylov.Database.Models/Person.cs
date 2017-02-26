@@ -17,22 +17,24 @@ namespace Mihaylov.Database
         public int PersonId { get; set; }
         public string Username { get; set; }
         public System.DateTime CreateDate { get; set; }
-        public System.DateTime AskDate { get; set; }
+        public System.DateTime LastBroadcastDate { get; set; }
+        public Nullable<System.DateTime> AskDate { get; set; }
         public int Age { get; set; }
         public int CountryId { get; set; }
-        public int EthnicityId { get; set; }
-        public int SexPreferenceId { get; set; }
+        public int EthnicityTypeId { get; set; }
+        public int OrientationTypeId { get; set; }
         public int AnswerTypeId { get; set; }
         public Nullable<decimal> Answer { get; set; }
-        public Nullable<int> AnswerUnitId { get; set; }
+        public Nullable<int> AnswerUnitTypeId { get; set; }
         public Nullable<decimal> AnswerConverted { get; set; }
         public string Comments { get; set; }
         public string RecordsPath { get; set; }
+        public bool IsAccountDisabled { get; set; }
     
-        public virtual Answer Answer1 { get; set; }
+        public virtual AnswerType AnswerType { get; set; }
         public virtual Country Country { get; set; }
-        public virtual Ethnicity Ethnicity { get; set; }
-        public virtual Unit Unit { get; set; }
-        public virtual SexPreference SexPreference { get; set; }
+        public virtual UnitType UnitType { get; set; }
+        public virtual EthnicityType EthnicityType { get; set; }
+        public virtual OrientationType OrientationType { get; set; }
     }
 }

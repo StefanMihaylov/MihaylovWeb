@@ -5,10 +5,16 @@
 
     public interface IMihaylovDbContext: IDbContext
     {
+        DbSet<AnswerType> AnswerTypes { get; set; }
+
         DbSet<Country> Countries { get; set; }
-        DbSet<Ethnicity> Ethnicities { get; set; }
+
+        DbSet<EthnicityType> EthnicityTypes { get; set; }
+
+        DbSet<OrientationType> OrientationTypes { get; set; }
+
         DbSet<Person> Persons { get; set; }
-        DbSet<SexPreference> SexPreferences { get; set; }
-        DbSet<Unit> Units { get; set; }
+
+        DbSet<UnitType> UnitTypes { get; set; }
     }
 }

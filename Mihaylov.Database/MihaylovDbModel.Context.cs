@@ -25,11 +25,11 @@ namespace Mihaylov.Database
             throw new UnintentionalCodeFirstException();
         }
     
+        public virtual DbSet<AnswerType> AnswerTypes { get; set; }
         public virtual DbSet<Country> Countries { get; set; }
-        public virtual DbSet<Unit> Units { get; set; }
-        public virtual DbSet<Ethnicity> Ethnicities { get; set; }
-        public virtual DbSet<Answer> Answers { get; set; }
+        public virtual DbSet<EthnicityType> EthnicityTypes { get; set; }
+        public virtual DbSet<OrientationType> OrientationTypes { get; set; }
         public virtual DbSet<Person> Persons { get; set; }
-        public virtual DbSet<SexPreference> SexPreferences { get; set; }
+        public virtual DbSet<UnitType> UnitTypes { get; set; }
     }
 }

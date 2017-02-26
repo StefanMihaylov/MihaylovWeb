@@ -12,15 +12,16 @@ namespace Mihaylov.Database
     using System;
     using System.Collections.Generic;
     
-    public partial class Ethnicity
+    public partial class OrientationType
     {
-        public Ethnicity()
+        public OrientationType()
         {
             this.Persons = new HashSet<Person>();
         }
     
-        public int EthnicityId { get; set; }
+        public int OrientationTypeId { get; set; }
         public string Name { get; set; }
+        public string Description { get; set; }
     
         public virtual ICollection<Person> Persons { get; set; }
     }

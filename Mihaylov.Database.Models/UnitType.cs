@@ -12,15 +12,16 @@ namespace Mihaylov.Database
     using System;
     using System.Collections.Generic;
     
-    public partial class Unit
+    public partial class UnitType
     {
-        public Unit()
+        public UnitType()
         {
             this.Persons = new HashSet<Person>();
         }
     
-        public int UnitId { get; set; }
+        public int UnitTypeId { get; set; }
         public string Name { get; set; }
+        public string Description { get; set; }
     
         public virtual ICollection<Person> Persons { get; set; }
     }

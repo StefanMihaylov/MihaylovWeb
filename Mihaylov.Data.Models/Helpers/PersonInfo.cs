@@ -16,6 +16,6 @@ namespace Mihaylov.Data.Models.Helpers
 
         public int EthnicityId { get; set; }
 
-        public int SexPreferenceId { get; set; }
+        public int OrientationId { get; set; }
     }
 }

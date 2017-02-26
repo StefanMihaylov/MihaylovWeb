@@ -12,15 +12,16 @@ namespace Mihaylov.Database
     using System;
     using System.Collections.Generic;
     
-    public partial class Answer
+    public partial class AnswerType
     {
-        public Answer()
+        public AnswerType()
         {
             this.Persons = new HashSet<Person>();
         }
     
-        public int AnswerId { get; set; }
+        public int AnswerTypeId { get; set; }
         public string Name { get; set; }
+        public string Description { get; set; }
     
         public virtual ICollection<Person> Persons { get; set; }
     }
