@@ -4,6 +4,7 @@ using System.Linq;
 using CsQuery;
 using Mihaylov.Data.Models.Repositories;
 using Mihaylov.Core.Interfaces;
+using Ninject.Extensions.Logging;
 
 namespace Mihaylov.Core.Helpers
 {
@@ -13,46 +14,48 @@ namespace Mihaylov.Core.Helpers
         private readonly ICountriesManager countriesManager;
         private readonly IEthnicitiesManager ethnicitiesManager;
         private readonly IOrientationsManager orientationsManager;
+        private readonly ILogger logger;
 
 
         public SiteHelper(string url, ICountriesManager countriesManager, IEthnicitiesManager ethnicitiesManager,
-            IOrientationsManager orientationsManager)
+            IOrientationsManager orientationsManager, ILogger logger)
         {
             this.url = url;
             this.countriesManager = countriesManager;
             this.ethnicitiesManager = ethnicitiesManager;
             this.orientationsManager = orientationsManager;
+            this.logger = logger;
         }
 
         public Person GetUserInfo(string username)
         {
-            var dom = CQ.CreateFromUrl($"{this.url}/{username}");
-            var bioContainer = dom.Select("div.miniBio ul li");
-
-            if (bioContainer.Length == 0)
-            {
-                if (dom.Select("#main-content").Length > 0)
-                {
-                    Ethnicity ethnicityDTO = GetEthnisityType(null);
-                    Orientation orientationDTO = GetOrientationType(null);
-                    Country countryDTO = GetCountry(null);
-
-                    return new Person()
-                    {
-                        Username = username,
-                        IsAccountDisabled = true,
-                        Ethnicity = ethnicityDTO.Name,
-                        EthnicityId = ethnicityDTO.Id,
-                        Orientation = orientationDTO.Name,
-                        OrientationId = orientationDTO.Id,
-                        Country = countryDTO.Name,
-                        CountryId = countryDTO.Id,
-                    };
-                }
-            }
-
             try
             {
+                var dom = CQ.CreateFromUrl($"{this.url}/{username}");
+                var bioContainer = dom.Select("div.miniBio ul li");
+
+                if (bioContainer.Length == 0)
+                {
+                    if (dom.Select("#main-content").Length > 0)
+                    {
+                        Ethnicity ethnicityDtoNull = GetEthnisityType(null);
+                        Orientation orientationDtoNull = GetOrientationType(null);
+                        Country countryDtoNull = GetCountry(null);
+
+                        return new Person()
+                        {
+                            Username = username,
+                            IsAccountDisabled = true,
+                            Ethnicity = ethnicityDtoNull.Name,
+                            EthnicityId = ethnicityDtoNull.Id,
+                            Orientation = orientationDtoNull.Name,
+                            OrientationId = orientationDtoNull.Id,
+                            Country = countryDtoNull.Name,
+                            CountryId = countryDtoNull.Id,
+                        };
+                    }
+                }
+
                 var attributes = bioContainer.Find("span.desc");
 
                 string createdDate = GetAttributeValue(attributes, "Member since:");
@@ -78,13 +81,14 @@ namespace Mihaylov.Core.Helpers
                     OrientationId = orientationDTO.Id,
                     Country = countryDTO.Name,
                     CountryId = countryDTO.Id,
-                    IsAccountDisabled = false,                     
+                    IsAccountDisabled = false,
                 };
 
                 return person;
             }
             catch (Exception ex)
             {
+                this.logger.ErrorException($"Error in Site helper, username: {username}", ex);
                 throw;
             }
         }

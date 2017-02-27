@@ -18,6 +18,7 @@ namespace Mihaylov.Web.App_Start
     using Ninject;
     using Ninject.Extensions.Logging.Log4net;
     using Ninject.Web.Common;
+    using Common.Log4net;
 
     public static class NinjectWebCommon 
     {
@@ -67,48 +68,19 @@ namespace Mihaylov.Web.App_Start
             }
         }
 
-        private static void Log4NetSetup(string filePath)
-        {
-            Hierarchy hierarchy = (Hierarchy)LogManager.GetRepository();
-
-            PatternLayout patternLayout = new PatternLayout();
-            patternLayout.ConversionPattern = "%date [%thread] %-5level %logger - %message%newline";
-            patternLayout.ActivateOptions();
-
-            RollingFileAppender roller = new RollingFileAppender();
-            roller.AppendToFile = true;
-            roller.File = filePath;
-            roller.Layout = patternLayout;
-            roller.MaxSizeRollBackups = 5;
-            roller.MaximumFileSize = "10MB";
-            roller.RollingStyle = RollingFileAppender.RollingMode.Size;
-            roller.StaticLogFileName = true;
-            roller.ActivateOptions();
-            hierarchy.Root.AddAppender(roller);
-
-            MemoryAppender memory = new MemoryAppender();
-            memory.ActivateOptions();
-            hierarchy.Root.AddAppender(memory);
-
-            hierarchy.Root.Level = log4net.Core.Level.Info;
-            hierarchy.Configured = true;
-        }
-
         /// <summary>
         /// Load your modules or register your services here!
         /// </summary>
         /// <param name="kernel">The kernel.</param>
         private static void RegisterServices(IKernel kernel)
         {
-            //Log4NetSetup(@"D:\Logs\MihaylovWeb\log.txt");
-            var loggerPath = HostingEnvironment.MapPath("~/App_Data/Log/log.txt");            
-            Log4NetSetup(loggerPath);
+            // Log4netConfiguration.Setup(@"D:\Logs\MihaylovWeb\log.txt");
+            var loggerPath = HostingEnvironment.MapPath("~/App_Data/Log/log.txt");
+            Log4netConfiguration.Setup(loggerPath);
 
             var dataStoreFolder = HostingEnvironment.MapPath("~/App_Data/Google");
             kernel.Bind<IGoogleDriveApiHelper>().To<GoogleDriveApiHelper>().InSingletonScope()
                 .WithConstructorArgument("dataStoreFolder", dataStoreFolder);
-
-
         }
     }
 }
