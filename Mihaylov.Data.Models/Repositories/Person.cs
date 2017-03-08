@@ -10,7 +10,30 @@ namespace Mihaylov.Data.Models.Repositories
         {
             get
             {
-                return person => ConvertToDTO(person);
+                return person => new Person
+                {
+                    Id = person.PersonId,
+                    Username = person.Username,
+                    CreateDate = person.CreateDate, // addit
+                    LastBroadcastDate = person.LastBroadcastDate,
+                    AskDate = person.AskDate,
+                    Age = person.Age, //  // addit
+                    CountryId = person.CountryId,
+                    Country = person.Country.Name,  // addit
+                    EthnicityId = person.EthnicityType.EthnicityTypeId,
+                    Ethnicity = person.EthnicityType.Name,  // addit
+                    OrientationId = person.OrientationType.OrientationTypeId,
+                    Orientation = person.OrientationType.Name,  // addit
+                    AnswerTypeId = person.AnswerType.AnswerTypeId,
+                    AnswerType = person.AnswerType.Name,
+                    Answer = person.Answer,
+                    AnswerConverted = person.AnswerConverted,
+                    AnswerUnitId = person.UnitType.UnitTypeId,
+                    AnswerUnit = person.UnitType.Name,
+                    Comments = person.Comments,
+                    RecordsPath = person.RecordsPath,
+                    IsAccountDisabled = person.IsAccountDisabled,
+                };
             }
         }
 
@@ -21,25 +44,33 @@ namespace Mihaylov.Data.Models.Repositories
                 return null;
             }
 
-            Person PersonDTO = ConvertToDTO(personDAL);
+            Person PersonDTO = new Person
+            {
+                Id = personDAL.PersonId,
+                Username = personDAL.Username,
+                CreateDate = personDAL.CreateDate, // addit
+                LastBroadcastDate = personDAL.LastBroadcastDate,
+                AskDate = personDAL.AskDate,
+                Age = personDAL.Age, //  // addit
+                CountryId = personDAL.CountryId,
+                Country = personDAL.Country.Name,  // addit
+                EthnicityId = personDAL.EthnicityType.EthnicityTypeId,
+                Ethnicity = personDAL.EthnicityType.Name,  // addit
+                OrientationId = personDAL.OrientationType.OrientationTypeId,
+                Orientation = personDAL.OrientationType.Name,  // addit
+                AnswerTypeId = personDAL.AnswerType.AnswerTypeId,
+                AnswerType = personDAL.AnswerType.Name,
+                Answer = personDAL.Answer,
+                AnswerConverted = personDAL.AnswerConverted,
+                AnswerUnitId = personDAL.UnitType.UnitTypeId,
+                AnswerUnit = personDAL.UnitType.Name,
+                Comments = personDAL.Comments,
+                RecordsPath = personDAL.RecordsPath,
+                IsAccountDisabled = personDAL.IsAccountDisabled,
+            };
+
             return PersonDTO;
         }
-
-        //public DAL.Person Create(PersonInfo personInfo)
-        //{
-        //    DAL.Person person = new DAL.Person()
-        //    {
-        //        Username = personInfo.Username,
-        //        CreateDate = personInfo.CreateDate,
-        //        AskDate = personInfo.AskDate,
-        //        Age = personInfo.Age,
-        //        CountryId = personInfo.CountryId,
-        //        EthnicityTypeId = personInfo.EthnicityId,
-        //        OrientationTypeId = personInfo.OrientationId,
-        //    };
-
-        //    return person;
-        //}
 
         public DAL.Person Create()
         {
@@ -107,34 +138,5 @@ namespace Mihaylov.Data.Models.Repositories
         public string RecordsPath { get; set; }
 
         public bool IsAccountDisabled { get; set; }
-
-
-        private static Person ConvertToDTO(DAL.Person person)
-        {
-            return new Person
-            {
-                Id = person.PersonId,
-                Username = person.Username,
-                CreateDate = person.CreateDate, // addit
-                LastBroadcastDate = person.LastBroadcastDate,
-                AskDate = person.AskDate,
-                Age = person.Age, //  // addit
-                CountryId = person.CountryId,
-                Country = person.Country.Name,  // addit
-                EthnicityId = person.EthnicityType.EthnicityTypeId,
-                Ethnicity = person.EthnicityType.Name,  // addit
-                OrientationId = person.OrientationType.OrientationTypeId,
-                Orientation = person.OrientationType.Name,  // addit
-                AnswerTypeId = person.AnswerType.AnswerTypeId,
-                AnswerType = person.AnswerType.Name,
-                Answer = person.Answer,
-                AnswerConverted = person.AnswerConverted,
-                AnswerUnitId = person.UnitType.UnitTypeId,
-                AnswerUnit = person.UnitType.Name,
-                Comments = person.Comments,
-                RecordsPath = person.RecordsPath,
-                IsAccountDisabled = person.IsAccountDisabled,
-            };
-        }
     }
 }

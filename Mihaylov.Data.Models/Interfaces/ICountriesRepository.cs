@@ -10,5 +10,7 @@ namespace Mihaylov.Data.Models.Interfaces
         IEnumerable<Country> GetAll();
 
         Country GetById(int id);
+
+        Country GetByName(string name);
     }
 }

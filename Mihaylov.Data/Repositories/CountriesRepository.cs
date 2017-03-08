@@ -32,6 +32,15 @@ namespace Mihaylov.Data.Repositories
             return country;
         }
 
+        public Country GetByName(string name)
+        {
+            Country country = this.All()
+                                  .Where(p => p.Name == name)
+                                  .Select(Country.FromDb)
+                                  .FirstOrDefault();
+            return country;
+        }
+
         public Country AddCountry(Country inputCountry)
         {
             DAL.Country country = inputCountry.Create();

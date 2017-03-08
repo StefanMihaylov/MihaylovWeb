@@ -34,6 +34,16 @@ namespace Mihaylov.Data.Repositories
             return person;
         }
 
+        public Person GetByName(string username)
+        {
+            Person person = this.All()
+                                .Where(p => p.Username == username)
+                                .Select(Person.FromDb)
+                                .FirstOrDefault();
+
+            return person;
+        }
+
         public Person AddPerson(Person inputPerson)
         {
             DAL.Person person = inputPerson.Create();
@@ -41,7 +51,8 @@ namespace Mihaylov.Data.Repositories
             this.Add(person);
             this.Context.SaveChanges();
 
-            return person;
+            Person personDTO = this.GetById(person.PersonId);
+            return personDTO;
         }
     }
 }

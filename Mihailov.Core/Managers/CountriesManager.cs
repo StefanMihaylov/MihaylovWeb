@@ -18,54 +18,47 @@ namespace Mihaylov.Core.Managers
             this.provider = countryProvider;
             this.countriesById = new ConcurrentDictionary<int, Country>();
             this.countriesByName = new ConcurrentDictionary<string, Country>(StringComparer.OrdinalIgnoreCase);
-
-            Initialize();
         }
 
-        public IEnumerable<Country> GetAllUnits()
+        public IEnumerable<Country> GetAllCountries()
         {
-            IEnumerable<Country> units = this.countriesById.Values;
-            return units;
+            IEnumerable<Country> countries = this.countriesByName.Values;
+            return countries;
         }
 
         public Country GetById(int id)
         {
-            Country country;
-            if (this.countriesById.TryGetValue(id, out country))
+            Country country = this.countriesById.GetOrAdd(id, (newId) =>
             {
-                return country;
-            }
-            else
-            {
-                throw new ApplicationException($"Country with id: {id} was not found");
-            }
-        }
-
-        public Country GetByName(string name)
-        {
-            name = name.Trim();
-            Country country = this.countriesByName.GetOrAdd(name,
-                newName =>
-                {
-                    Country newCountry = new Country() { Name = newName };
-                    Country savedCountry = this.provider.AddCountry(newCountry);
-
-                    this.countriesById.TryAdd(savedCountry.Id, savedCountry);
-
-                    return savedCountry;
-                });
+                Country newCountry = this.provider.GetById(newId);
+                return newCountry;
+            });
 
             return country;
         }
 
-        private void Initialize()
+        public Country GetByName(string name)
         {
-            IEnumerable<Country> countries = this.provider.GetAll();
-            foreach (var country in countries)
+           string key = name.Trim();
+            Country country = this.countriesByName.GetOrAdd(key, (newName) =>
             {
-                this.countriesById.TryAdd(country.Id, country);
-                this.countriesByName.TryAdd(country.Name, country);
+                try
+                {
+                    Country newCountry = this.provider.GetByName(newName);
+                    return newCountry;
+                }
+                catch (Exception)
+                {
+                    return null;
+                }
+            });
+
+            if (country == null)
+            {
+                this.countriesByName.TryRemove(key, out country);
             }
+
+            return country;
         }
     }
 }

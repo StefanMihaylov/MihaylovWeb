@@ -68,6 +68,8 @@
     <Compile Include="Interfaces\Managers\IOrientationsManager.cs" />
     <Compile Include="Interfaces\Managers\IEthnicitiesManager.cs" />
     <Compile Include="Interfaces\Managers\ICountriesManager.cs" />
+    <Compile Include="Interfaces\Managers\IPersonsManager.cs" />
+    <Compile Include="Managers\PersonsManager.cs" />
     <Compile Include="Managers\OrientationsManager.cs" />
     <Compile Include="Managers\EthnicitiesManager.cs" />
     <Compile Include="Managers\CountriesManager.cs" />
@@ -81,9 +83,15 @@
     <Compile Include="Interfaces\Providers\IOrientationsProvider.cs" />
     <Compile Include="Interfaces\Providers\ICountriesProvider.cs" />
     <Compile Include="Interfaces\Providers\IAnswerTypesProvider.cs" />
+    <Compile Include="Interfaces\Providers\IPersonsProvider.cs" />
     <Compile Include="Providers\OrientationsProvider.cs" />
     <Compile Include="Providers\AnswerTypesProvider.cs" />
+    <Compile Include="Providers\PersonsProvider.cs" />
     <Compile Include="Providers\UnitsProvider.cs" />
+    <Compile Include="Interfaces\Writers\IPersonsWriter.cs" />
+    <Compile Include="Writers\CountriesWriter.cs" />
+    <Compile Include="Interfaces\Writers\ICountriesWriter.cs" />
+    <Compile Include="Writers\PersonsWriter.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Mihaylov.Data.Models\Mihaylov.Data.Models.csproj">
@@ -99,6 +107,7 @@
     <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

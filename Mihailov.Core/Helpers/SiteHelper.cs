@@ -14,16 +14,18 @@ namespace Mihaylov.Core.Helpers
         private readonly ICountriesManager countriesManager;
         private readonly IEthnicitiesManager ethnicitiesManager;
         private readonly IOrientationsManager orientationsManager;
+        private readonly ICountriesWriter countriesWriter;
         private readonly ILogger logger;
 
 
-        public SiteHelper(string url, ICountriesManager countriesManager, IEthnicitiesManager ethnicitiesManager,
-            IOrientationsManager orientationsManager, ILogger logger)
+        public SiteHelper(string url, ICountriesManager countriesManager, ICountriesWriter countriesWriter,
+            IEthnicitiesManager ethnicitiesManager, IOrientationsManager orientationsManager, ILogger logger)
         {
             this.url = url;
             this.countriesManager = countriesManager;
             this.ethnicitiesManager = ethnicitiesManager;
             this.orientationsManager = orientationsManager;
+            this.countriesWriter = countriesWriter;
             this.logger = logger;
         }
 
@@ -135,7 +137,12 @@ namespace Mihaylov.Core.Helpers
                 country = country.Substring(index + 1);
             }
 
-            Country countryDTO = this.countriesManager.GetByName(country.Trim());
+            Country countryDTO = this.countriesManager.GetByName(country);
+            if (countryDTO == null)
+            {
+                countryDTO = this.countriesWriter.Add(country);
+            }
+
             return countryDTO;
         }
 

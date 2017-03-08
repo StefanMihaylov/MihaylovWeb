@@ -9,6 +9,8 @@ namespace Mihaylov.Data.Models.Interfaces
 
         Person GetById(int id);
 
+        Person GetByName(string username);
+
         Person AddPerson(Person inputPerson);
     }
 }

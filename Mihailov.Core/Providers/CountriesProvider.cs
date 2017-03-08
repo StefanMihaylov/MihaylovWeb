@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Mihaylov.Core.Interfaces;
 using Mihaylov.Data.Models.Interfaces;
 using Mihaylov.Data.Models.Repositories;
@@ -37,9 +35,15 @@ namespace Mihaylov.Core.Providers
             return country;
         }
 
-        public Country AddCountry(Country inputCountry)
+        public Country GetByName(string name)
         {
-            Country country = this.repository.AddCountry(inputCountry);
+            Country country = this.repository.GetByName(name);
+
+            if (country == null)
+            {
+                throw new ApplicationException($"Country with name: {name} was not found");
+            }
+
             return country;
         }
     }
