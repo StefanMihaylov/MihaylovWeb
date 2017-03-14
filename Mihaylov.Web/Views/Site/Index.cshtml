@@ -1,0 +1,37 @@
+﻿
+<div class="person-details-container">
+    @Html.TextBox("url", null, new { style = "width:300px" })
+
+    <span class="btn btn-default find-info">Find</span>
+    <div id="person-info" />
+</div>
+
+@section scripts{
+    @* @Scripts.Render("~/bundles/jqueryval")*@
+    <script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            var $container = $('.person-details-container');
+
+            $container.on('click', '.find-info', function () {
+                var siteUrl = $('#url').val();
+                var url = main.getUrl('Site/Find');
+
+                var data = { url: siteUrl };
+                $.post(url, data, function (res) {
+                    $('#person-info').empty().append(res);
+                    //if (res.Success === true) {
+                    //    toastr.success('Job ticket created');
+                    //}
+                    //else {
+                    //    toastr.error(res.ErrorMessage, undefined, { timeOut: 0 });
+                    //}
+                }).fail(function (res) {
+                    // toastr.error(res.ErrorMessage); //???
+                }).always(function () {
+
+                });
+            });
+        });
+    </script>
+}

@@ -65,6 +65,7 @@
           <Property Name="UnitTypeId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Name" Type="nvarchar" MaxLength="10" Nullable="false" />
           <Property Name="Description" Type="nvarchar" MaxLength="20" />
+          <Property Name="ConversionRate" Type="decimal" Precision="18" Scale="2" Nullable="false" />
         </EntityType>
         <Association Name="FK_Persons_AnswerTypes">
           <End Role="AnswerTypes" Type="Self.AnswerTypes" Multiplicity="1" />
@@ -256,6 +257,7 @@
           <Property Name="Name" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Persons" Relationship="MihaylovDbModel.FK_Persons_UnitTypes" FromRole="UnitType" ToRole="Person" />
           <Property Name="Description" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="ConversionRate" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
         </EntityType>
         <Association Name="FK_Persons_AnswerTypes">
           <End Type="MihaylovDbModel.AnswerType" Role="AnswerType" Multiplicity="1" />
@@ -384,6 +386,7 @@
           <EntitySetMapping Name="UnitTypes">
             <EntityTypeMapping TypeName="MihaylovDbModel.UnitType">
               <MappingFragment StoreEntitySet="UnitTypes">
+                <ScalarProperty Name="ConversionRate" ColumnName="ConversionRate" />
                 <ScalarProperty Name="Description" ColumnName="Description" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="UnitTypeId" ColumnName="UnitTypeId" />

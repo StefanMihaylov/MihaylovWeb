@@ -15,6 +15,7 @@ namespace Mihaylov.Data.Models.Repositories
                     Id = unit.UnitTypeId,
                     Name = unit.Name,
                     Description = unit.Description,
+                    ConversionRate = unit.ConversionRate,
                 };
             }
         }
@@ -24,5 +25,7 @@ namespace Mihaylov.Data.Models.Repositories
         public string Name { get; set; }
 
         public string Description { get; set; }
+
+        public decimal ConversionRate { get; set; }
     }
 }

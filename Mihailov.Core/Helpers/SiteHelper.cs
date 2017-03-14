@@ -5,6 +5,8 @@ using CsQuery;
 using Mihaylov.Data.Models.Repositories;
 using Mihaylov.Core.Interfaces;
 using Ninject.Extensions.Logging;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace Mihaylov.Core.Helpers
 {
@@ -14,19 +16,71 @@ namespace Mihaylov.Core.Helpers
         private readonly ICountriesManager countriesManager;
         private readonly IEthnicitiesManager ethnicitiesManager;
         private readonly IOrientationsManager orientationsManager;
+        private readonly IUnitsManager unitsManager;
+        private readonly IAnswerTypesManager answerTypesManager;
         private readonly ICountriesWriter countriesWriter;
         private readonly ILogger logger;
 
 
         public SiteHelper(string url, ICountriesManager countriesManager, ICountriesWriter countriesWriter,
-            IEthnicitiesManager ethnicitiesManager, IOrientationsManager orientationsManager, ILogger logger)
+            IEthnicitiesManager ethnicitiesManager, IOrientationsManager orientationsManager,
+            IUnitsManager unitsManager, IAnswerTypesManager answerTypesManager, ILogger logger)
         {
             this.url = url;
             this.countriesManager = countriesManager;
             this.ethnicitiesManager = ethnicitiesManager;
             this.orientationsManager = orientationsManager;
+            this.unitsManager = unitsManager;
+            this.answerTypesManager = answerTypesManager;
             this.countriesWriter = countriesWriter;
             this.logger = logger;
+        }
+
+        public string GetUserName(string url)
+        {
+            if (url == null)
+            {
+                return null;
+            }
+
+            int index = url.LastIndexOf('/');
+            if(index >= 0)
+            {
+                string username = url.Substring(index + 1);
+                return username.Trim();
+            }
+            else
+            {
+                return url.Trim();
+            }
+        }
+
+        public void AddAdditionalInfo(Person person)
+        {
+            if (person.AskDate == null)
+            {
+                person.AskDate = DateTime.Now;
+            }
+
+            if (string.IsNullOrWhiteSpace(person.AnswerType))
+            {
+                AnswerType answerType = this.answerTypesManager.GetById(person.AnswerTypeId);
+                person.AnswerType = answerType.Name;
+            }
+
+            if (person.Answer.HasValue)
+            {
+                Unit unit = this.unitsManager.GetById(person.AnswerUnitId.Value);
+
+                person.AnswerUnit = unit.Name;
+                person.AnswerConverted = person.Answer.Value * unit.ConversionRate;
+            }
+            else
+            {
+                person.AnswerUnit = null;
+                person.AnswerUnitId = null;
+                person.AnswerConverted = null;
+            }
         }
 
         public Person GetUserInfo(string username)
@@ -94,6 +148,18 @@ namespace Mihaylov.Core.Helpers
                 throw;
             }
         }
+
+        public IEnumerable<Unit> GetAllUnits()
+        {
+            return this.unitsManager.GetAllUnits();
+        }
+
+        public IEnumerable<AnswerType> GetAllAnswerTypes()
+        {
+            return this.answerTypesManager.GetAllAnswerTypes();
+        }
+
+        #region Private Methods
 
         private Orientation GetOrientationType(string orientation)
         {
@@ -171,5 +237,7 @@ namespace Mihaylov.Core.Helpers
                                     .Text();
             return value;
         }
+
+        #endregion
     }
 }

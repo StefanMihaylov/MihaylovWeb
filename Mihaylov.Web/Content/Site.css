@@ -22,3 +22,17 @@ select,
 textarea {
     max-width: 280px;
 }
+
+/* Custom css */
+
+.my-display-for label {
+    font-weight: 600;
+}
+
+.skip-padding {
+    padding: 0 !important;
+}
+
+.my-display-for label:not(.skip-padding) {
+    margin-right: 5px;
+}

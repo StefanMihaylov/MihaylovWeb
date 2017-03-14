@@ -39,6 +39,11 @@ namespace Mihaylov.Core.Managers
 
         public Person GetByName(string name)
         {
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                return null;
+            }
+
             string key = name.Trim();
             Person person = this.personsByName.GetOrAdd(key, (newName) =>
             {

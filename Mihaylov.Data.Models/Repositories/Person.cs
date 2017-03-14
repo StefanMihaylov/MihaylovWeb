@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.Linq.Expressions;
 using DAL = Mihaylov.Database;
 
@@ -6,6 +7,35 @@ namespace Mihaylov.Data.Models.Repositories
 {
     public class Person
     {
+        public Person()
+        {
+        }
+
+        public Person(Person person)
+        {
+            Id = person.Id;
+            Username = person.Username;
+            CreateDate = person.CreateDate;
+            LastBroadcastDate = person.LastBroadcastDate;
+            AskDate = person.AskDate;
+            Age = person.Age;
+            CountryId = person.CountryId;
+            Country = person.Country;
+            EthnicityId = person.EthnicityId;
+            Ethnicity = person.Ethnicity;
+            OrientationId = person.OrientationId;
+            Orientation = person.Orientation;
+            AnswerTypeId = person.AnswerTypeId;
+            AnswerType = person.AnswerType;
+            Answer = person.Answer;
+            AnswerConverted = person.AnswerConverted;
+            AnswerUnitId = person.AnswerUnitId;
+            AnswerUnit = person.AnswerUnit;
+            Comments = person.Comments;
+            RecordsPath = person.RecordsPath;
+            IsAccountDisabled = person.IsAccountDisabled;
+        }
+
         public static Expression<Func<DAL.Person, Person>> FromDb
         {
             get
@@ -99,32 +129,43 @@ namespace Mihaylov.Data.Models.Repositories
 
         public int Id { get; set; }
 
+        [Display(Name = "Username:")]
         public string Username { get; set; }
 
+        [Display(Name = "Create:")]
         public DateTime CreateDate { get; set; }
 
+        [Display(Name = "Broadcast:")]
         public DateTime LastBroadcastDate { get; set; }
 
+        [Display(Name = "Asked:")]
         public DateTime? AskDate { get; set; }
 
+        [Display(Name = "Age:")]
         public int Age { get; set; }
 
         public int CountryId { get; set; }
 
+        [Display(Name = "Country:")]
         public string Country { get; set; }
 
         public int EthnicityId { get; set; }
 
+        [Display(Name = "Ethnicity:")]
         public string Ethnicity { get; set; }
 
         public int OrientationId { get; set; }
 
+        [Display(Name = "Orientation:")]
         public string Orientation { get; set; }
 
+        [Display(Name = "AnswerType:")]
         public int AnswerTypeId { get; set; }
 
+        [Display(Name = "AnswerType:")]
         public string AnswerType { get; set; }
 
+        [Display(Name = "Answer:")]
         public decimal? Answer { get; set; }
 
         public int? AnswerUnitId { get; set; }
@@ -133,10 +174,12 @@ namespace Mihaylov.Data.Models.Repositories
 
         public decimal? AnswerConverted { get; set; }
 
+        [Display(Name = "Comments:")]
         public string Comments { get; set; }
 
         public string RecordsPath { get; set; }
 
+        [Display(Name = "Disabled:")]
         public bool IsAccountDisabled { get; set; }
     }
 }
