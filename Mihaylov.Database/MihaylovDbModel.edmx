@@ -57,6 +57,7 @@
           <Property Name="Comments" Type="nvarchar" MaxLength="128" />
           <Property Name="RecordsPath" Type="nvarchar" MaxLength="128" />
           <Property Name="IsAccountDisabled" Type="bit" Nullable="false" />
+          <Property Name="UpdatedDate" Type="datetime" />
         </EntityType>
         <EntityType Name="UnitTypes">
           <Key>
@@ -248,6 +249,7 @@
           <NavigationProperty Name="UnitType" Relationship="MihaylovDbModel.FK_Persons_UnitTypes" FromRole="Person" ToRole="UnitType" />
           <NavigationProperty Name="EthnicityType" Relationship="MihaylovDbModel.FK_Persons_EthnicityTypes" FromRole="Person" ToRole="EthnicityType" />
           <NavigationProperty Name="OrientationType" Relationship="MihaylovDbModel.FK_Persons_OrientationTypes" FromRole="Person" ToRole="OrientationType" />
+          <Property Name="UpdatedDate" Type="DateTime" Precision="3" />
         </EntityType>
         <EntityType Name="UnitType">
           <Key>
@@ -364,6 +366,7 @@
           <EntitySetMapping Name="Persons">
             <EntityTypeMapping TypeName="MihaylovDbModel.Person">
               <MappingFragment StoreEntitySet="Persons">
+                <ScalarProperty Name="UpdatedDate" ColumnName="UpdatedDate" />
                 <ScalarProperty Name="IsAccountDisabled" ColumnName="IsAccountDisabled" />
                 <ScalarProperty Name="RecordsPath" ColumnName="RecordsPath" />
                 <ScalarProperty Name="Comments" ColumnName="Comments" />

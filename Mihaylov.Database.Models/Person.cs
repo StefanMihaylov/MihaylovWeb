@@ -30,6 +30,7 @@ namespace Mihaylov.Database
         public string Comments { get; set; }
         public string RecordsPath { get; set; }
         public bool IsAccountDisabled { get; set; }
+        public Nullable<System.DateTime> UpdatedDate { get; set; }
     
         public virtual AnswerType AnswerType { get; set; }
         public virtual Country Country { get; set; }

@@ -34,6 +34,7 @@ namespace Mihaylov.Data.Models.Repositories
             Comments = person.Comments;
             RecordsPath = person.RecordsPath;
             IsAccountDisabled = person.IsAccountDisabled;
+            UpdatedDate = person.UpdatedDate;
         }
 
         public static Expression<Func<DAL.Person, Person>> FromDb
@@ -63,6 +64,7 @@ namespace Mihaylov.Data.Models.Repositories
                     Comments = person.Comments,
                     RecordsPath = person.RecordsPath,
                     IsAccountDisabled = person.IsAccountDisabled,
+                    UpdatedDate = person.UpdatedDate,
                 };
             }
         }
@@ -97,6 +99,7 @@ namespace Mihaylov.Data.Models.Repositories
                 Comments = personDAL.Comments,
                 RecordsPath = personDAL.RecordsPath,
                 IsAccountDisabled = personDAL.IsAccountDisabled,
+                UpdatedDate = personDAL.UpdatedDate,
             };
 
             return PersonDTO;
@@ -121,7 +124,8 @@ namespace Mihaylov.Data.Models.Repositories
                 Comments = this.Comments,
                 RecordsPath = this.RecordsPath,
                 IsAccountDisabled = this.IsAccountDisabled,
-                LastBroadcastDate = this.LastBroadcastDate,                                  
+                LastBroadcastDate = this.LastBroadcastDate,
+                UpdatedDate = this.UpdatedDate,                          
             };
 
             return person;
@@ -181,5 +185,7 @@ namespace Mihaylov.Data.Models.Repositories
 
         [Display(Name = "Disabled:")]
         public bool IsAccountDisabled { get; set; }
+
+        public DateTime? UpdatedDate { get; set; }
     }
 }

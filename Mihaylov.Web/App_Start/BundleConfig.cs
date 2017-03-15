@@ -8,6 +8,12 @@ namespace Mihaylov.Web
         // For more information on bundling, visit http://go.microsoft.com/fwlink/?LinkId=301862
         public static void RegisterBundles(BundleCollection bundles)
         {
+            RegisterScripts(bundles);
+            RegisterStyles(bundles);
+        }
+
+        private static void RegisterScripts(BundleCollection bundles)
+        {
             bundles.Add(new ScriptBundle("~/bundles/jquery").Include(
                         "~/Scripts/jquery-{version}.js",
                         "~/Scripts/Custom/main-layout.js"));
@@ -24,9 +30,18 @@ namespace Mihaylov.Web
                       "~/Scripts/bootstrap.js",
                       "~/Scripts/respond.js"));
 
+            bundles.Add(new ScriptBundle("~/bundles/unobtrusive").Include(
+           "~/Scripts/Custom/site-script.js"));
+
+            bundles.Add(new ScriptBundle("~/bundles/siteTab").Include(
+                       "~/Scripts/Custom/site-script.js"));
+        }
+
+        private static void RegisterStyles(BundleCollection bundles)
+        {
             bundles.Add(new StyleBundle("~/Content/css").Include(
-                      "~/Content/bootstrap.css",
-                      "~/Content/site.css"));
+                "~/Content/bootstrap.css",
+                "~/Content/site.css"));
         }
     }
 }

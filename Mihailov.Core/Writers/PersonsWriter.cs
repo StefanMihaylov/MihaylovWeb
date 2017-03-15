@@ -23,6 +23,8 @@ namespace Mihaylov.Core.Writers
                 inputPerson.LastBroadcastDate = inputPerson.AskDate.Value;
             }
 
+            inputPerson.UpdatedDate = DateTime.Now;
+
             Person person = this.repository.AddPerson(inputPerson);
             return person;
         }

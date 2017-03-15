@@ -39,7 +39,7 @@
                         @Html.HiddenFor(m => m.Orientation)
                         @Html.HiddenFor(m => m.OrientationId)
 
-                        @Html.MyDisplayFor(m => m.IsAccountDisabled, null, null, Model.IsAccountDisabled ? "Yes" : "No")
+                        @Html.MyDisplayFor(m => m.IsAccountDisabled, null, null, (Model.IsAccountDisabled ? "Yes" : "No") + " / " + Model.UpdatedDate.ConvertToString("dd.MM.yyyy"))
                         @Html.HiddenFor(m => m.IsAccountDisabled)
                     </div>
                     <div class="col-sm-4">
@@ -80,7 +80,7 @@
                     </div>
                     <div class="col-sm-4">
                         @Html.LabelFor(m => m.Comments)
-                        @Html.TextBoxFor(m => m.Comments)
+                        @Html.TextBoxFor(m => m.Comments, new { style = "width:200px" })
                     </div>
                 </div>
             </div>
