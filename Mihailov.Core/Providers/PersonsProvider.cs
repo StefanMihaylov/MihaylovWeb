@@ -33,5 +33,11 @@ namespace Mihaylov.Core.Providers
             Person person = this.repository.GetByName(name.Trim());
             return person;
         }
+
+        public PersonStatistics GetStatictics()
+        {
+            PersonStatistics statistics = this.repository.GetStatictics();
+            return statistics;
+        }
     }
 }

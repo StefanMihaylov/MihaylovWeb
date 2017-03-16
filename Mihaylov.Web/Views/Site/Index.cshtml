@@ -1,9 +1,22 @@
-﻿
-<div class="person-details-container">
-    @Html.TextBox("url", null, new { style = "width:350px" })
+﻿@using Mihaylov.Data.Models.Repositories
+@model PersonStatistics
 
-    <span class="btn btn-default find-info">Find</span>
-    <div id="person-info" />
+<div class="person-details-container">
+    <div class="search">
+        @Html.TextBox("url", null, new { style = "width:350px" })
+        <span class="btn btn-default find-info">Find</span>
+    </div>
+
+    <div id="person-info"></div>
+
+    <div class="statictics">
+        @foreach (var countPair in Model.CountDictionaryResult)
+        {
+            <span style="padding: 5px">
+                @string.Format("{0}: {1}", countPair.Key, countPair.Value)
+            </span>
+        }
+    </div>
 </div>
 
 @section scripts{

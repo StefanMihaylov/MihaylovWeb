@@ -22,6 +22,7 @@ namespace Mihaylov.Database
         public int AnswerTypeId { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
+        public bool IsAsked { get; set; }
     
         public virtual ICollection<Person> Persons { get; set; }
     }

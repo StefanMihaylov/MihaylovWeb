@@ -50,6 +50,7 @@
     <Compile Include="Repositories\Person.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\Orientation.cs" />
+    <Compile Include="Repositories\PersonStatistics.cs" />
     <Compile Include="Repositories\Unit.cs" />
   </ItemGroup>
   <ItemGroup>

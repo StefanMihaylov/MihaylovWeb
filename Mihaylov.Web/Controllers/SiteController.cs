@@ -25,7 +25,9 @@ namespace Mihaylov.Web.Controllers
         // GET: Site
         public ActionResult Index()
         {
-            return View();
+            PersonStatistics statistics = this.personManager.GetStatictics();
+
+            return View(statistics);
         }
 
         public ActionResult Find(string url)

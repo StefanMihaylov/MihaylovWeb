@@ -65,5 +65,11 @@ namespace Mihaylov.Core.Managers
 
             return person;
         }
+
+        public PersonStatistics GetStatictics()
+        {
+            PersonStatistics statistics = this.provider.GetStatictics();
+            return statistics;
+        }
     }
 }

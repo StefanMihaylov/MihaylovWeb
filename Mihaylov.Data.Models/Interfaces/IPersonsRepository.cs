@@ -12,5 +12,7 @@ namespace Mihaylov.Data.Models.Interfaces
         Person GetByName(string username);
 
         Person AddPerson(Person inputPerson);
+
+        PersonStatistics GetStatictics();
     }
 }

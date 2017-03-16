@@ -87,11 +87,11 @@ namespace Mihaylov.Data.Models.Repositories
                 CountryId = personDAL.CountryId,
                 Country = personDAL.Country.Name,  // addit
                 EthnicityId = personDAL.EthnicityType.EthnicityTypeId,
-                Ethnicity = personDAL.EthnicityType.Name,  // addit
+                Ethnicity = personDAL.EthnicityType.Description,  // addit
                 OrientationId = personDAL.OrientationType.OrientationTypeId,
-                Orientation = personDAL.OrientationType.Name,  // addit
+                Orientation = personDAL.OrientationType.Description,  // addit
                 AnswerTypeId = personDAL.AnswerType.AnswerTypeId,
-                AnswerType = personDAL.AnswerType.Name,
+                AnswerType = personDAL.AnswerType.Description,
                 Answer = personDAL.Answer,
                 AnswerConverted = personDAL.AnswerConverted,
                 AnswerUnitId = personDAL.UnitType.UnitTypeId,

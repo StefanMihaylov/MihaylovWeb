@@ -15,6 +15,7 @@ namespace Mihaylov.Data.Models.Repositories
                     Id = type.AnswerTypeId,
                     Name = type.Name,
                     Description = type.Description,
+                    IsAsked = type.IsAsked,
                 };
             }
         }
@@ -24,5 +25,7 @@ namespace Mihaylov.Data.Models.Repositories
         public string Name { get; set; }
 
         public string Description { get; set; }
+
+        public bool IsAsked { get; set; }
     }
 }

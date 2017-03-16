@@ -10,5 +10,7 @@ namespace Mihaylov.Core.Interfaces
         Person GetById(int id);
 
         Person GetByName(string name);
+
+        PersonStatistics GetStatictics();
     }
 }

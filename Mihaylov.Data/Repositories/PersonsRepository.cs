@@ -54,5 +54,29 @@ namespace Mihaylov.Data.Repositories
             Person personDTO = this.GetById(person.PersonId);
             return personDTO;
         }
+
+        public PersonStatistics GetStatictics()
+        {
+            IQueryable<DAL.Person> persons = this.All().Where(p => p.AnswerType.IsAsked);
+
+            var countDictionary = persons.GroupBy(p => new { Description = p.AnswerType.Description, Id = p.AnswerTypeId })
+                                         .Select(g => new { Key = g.Key.Description, Value = g.Count() })
+                                         .OrderBy(g => g.Key)
+                                         .ToDictionary(r => r.Key, r => r.Value);
+
+            IQueryable<decimal> answers = persons.Where(p => p.AnswerConverted.HasValue)
+                                                 .Select(p => p.AnswerConverted.Value);
+
+            var statistics = new PersonStatistics()
+            {
+                CountDictionary = countDictionary,
+                Average = answers.Average(),
+                Min = answers.Min(),
+                Max = answers.Max(),
+                TotalCount = this.All().Count(),
+            };
+
+            return statistics;
+        }
     }
 }
