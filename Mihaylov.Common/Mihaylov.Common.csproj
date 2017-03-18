@@ -56,6 +56,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Web" />
@@ -69,6 +70,7 @@
     <Compile Include="Base\BaseUnitOfWork.cs" />
     <Compile Include="Base\GenericRepository.cs" />
     <Compile Include="Cache\BaseCacheService.cs" />
+    <Compile Include="Encryptions\StringEncryptor.cs" />
     <Compile Include="Extensions\EnumExtentions.cs" />
     <Compile Include="Extensions\FileInfoExtensions.cs" />
     <Compile Include="Extensions\IEnumerableExtensions.cs" />
@@ -86,11 +88,36 @@
     <Compile Include="Loggers\Interfaces\IInfoLogger.cs" />
     <Compile Include="Loggers\Interfaces\ILogger.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Validations\ParameterValidation.cs" />
+    <Compile Include="WebConfigSettings\Interfaces\ICustomSettingsManager.cs" />
+    <Compile Include="WebConfigSettings\Providers\ExternalFileConfigurationProvider.cs" />
+    <Compile Include="WebConfigSettings\Providers\CustomSettingsProvider.cs" />
+    <Compile Include="WebConfigSettings\Interfaces\IExternalFileConfigurationProvider.cs" />
+    <Compile Include="WebConfigSettings\Interfaces\IWebConfigProvider.cs" />
+    <Compile Include="WebConfigSettings\Models\CustomSettingsConfigSection.cs" />
+    <Compile Include="WebConfigSettings\Models\CustomSettingsModel.cs" />
+    <Compile Include="WebConfigSettings\Models\XmlElements\DbConnectionCollection.cs" />
+    <Compile Include="WebConfigSettings\Models\XmlElements\DbConnectionElementParts\DbConnectionElement.cs" />
+    <Compile Include="WebConfigSettings\Models\XmlElements\DbConnectionElementParts\DbCredentialElement.cs" />
+    <Compile Include="WebConfigSettings\Models\XmlElements\DbConnectionElementParts\DbEndpointElement.cs" />
+    <Compile Include="WebConfigSettings\Models\XmlElements\DbTemplateCollection.cs" />
+    <Compile Include="WebConfigSettings\Models\XmlElements\DbTemplateElement.cs" />
+    <Compile Include="WebConfigSettings\Models\XmlElements\EndpointCollection.cs" />
+    <Compile Include="WebConfigSettings\Models\XmlElements\EndpointElement.cs" />
+    <Compile Include="WebConfigSettings\Models\XmlElements\EnvironmentElement.cs" />
+    <Compile Include="WebConfigSettings\Models\XmlElements\LoggerElement.cs" />
+    <Compile Include="WebConfigSettings\CustomSettingsManager.cs" />
+    <Compile Include="WebConfigSettings\Interfaces\ICustomSettingsProvider.cs" />
+    <Compile Include="WebConfigSettings\Providers\WebConfigProvider.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
+    <None Include="WebConfigSettings\Models\CustomSettings.xsd">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
