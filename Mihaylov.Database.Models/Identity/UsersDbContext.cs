@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNet.Identity.EntityFramework;
+using Mihaylov.Common.WebConfigSettings.Interfaces;
 
 namespace Mihaylov.Database.Models
 {
@@ -16,7 +17,12 @@ namespace Mihaylov.Database.Models
 
         public static UsersDbContext Create()
         {
-            return new UsersDbContext("MihaylovDbContextCF");
+           // string connectionString = "MihaylovDbContextCF";
+
+            var settingsManager = new CustomSettingsManager();
+            string connectionString = settingsManager.GetSettingByName("MihaylovDbCF");
+
+            return new UsersDbContext(connectionString);
         }
     }
 }

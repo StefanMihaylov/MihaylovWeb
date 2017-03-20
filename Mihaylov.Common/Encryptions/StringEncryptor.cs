@@ -13,7 +13,7 @@ namespace Mihaylov.Common.Encryptions
         // This constant string is used as a "salt" value for the PasswordDeriveBytes function calls.
         // This size of the IV (in bytes) must = (keysize / 8).  Default keysize is 256, so the IV must be
         // 32 bytes long. Using a 16 character string here gives us 32 bytes when converted to a byte array.
-        private static readonly byte[] InitVectorBytes = Encoding.ASCII.GetBytes("+4bEcO2MYv1/+A==");
+        private static readonly byte[] InitVectorBytes = Encoding.ASCII.GetBytes("abcd");
 
         public static string Encrypt(string plainText, string passPhrase)
         {

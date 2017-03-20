@@ -11,16 +11,16 @@ namespace Mihaylov.Common.WebConfigSettings.Models
         public const string DB_CONNECTIONS_TAG_NAME = "dbConnections";
         public const string DB_CONNECTION_TEMPLATES_TAG_NAME = "dbConnectionTemplates";
 
-        [ConfigurationProperty(LOGGER_TAG_NAME)]
-        public LoggerElement Logger
-        {
-            get { return (LoggerElement)this[LOGGER_TAG_NAME]; }
-        }
-
         [ConfigurationProperty(ENVIRONMENT_TAG_NAME)]
         public EnvironmentElement Environment
         {
             get { return (EnvironmentElement)this[ENVIRONMENT_TAG_NAME]; }
+        }
+
+        [ConfigurationProperty(LOGGER_TAG_NAME)]
+        public LoggerElement Logger
+        {
+            get { return (LoggerElement)this[LOGGER_TAG_NAME]; }
         }
 
         [ConfigurationProperty(ENDPOINTS_TAG_NAME)]

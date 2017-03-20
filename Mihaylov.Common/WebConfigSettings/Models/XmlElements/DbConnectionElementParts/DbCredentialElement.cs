@@ -1,8 +1,9 @@
 ﻿namespace Mihaylov.Common.WebConfigSettings.Models.XmlElements.DbConnectionElementParts
 {
     using System.Configuration;
+    using Interfaces.Models;
 
-    public class DbCredentialElement : ConfigurationElement
+    public class DbCredentialElement : ConfigurationElement, IDbCredential
     {
         // <credential username="Pesho" cipheredPassword="asdsdijw8ejxuhuxhwuh"/>
 

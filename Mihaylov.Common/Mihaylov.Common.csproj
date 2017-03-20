@@ -90,6 +90,12 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Validations\ParameterValidation.cs" />
     <Compile Include="WebConfigSettings\Interfaces\ICustomSettingsManager.cs" />
+    <Compile Include="WebConfigSettings\Interfaces\Models\IDbConnection.cs" />
+    <Compile Include="WebConfigSettings\Interfaces\Models\IDbCredential.cs" />
+    <Compile Include="WebConfigSettings\Interfaces\Models\IDbEndpoint.cs" />
+    <Compile Include="WebConfigSettings\Models\ExternalDbConnections\DbConnection.cs" />
+    <Compile Include="WebConfigSettings\Models\ExternalDbConnections\DbCredential.cs" />
+    <Compile Include="WebConfigSettings\Models\ExternalDbConnections\DbEndpoint.cs" />
     <Compile Include="WebConfigSettings\Providers\ExternalFileConfigurationProvider.cs" />
     <Compile Include="WebConfigSettings\Providers\CustomSettingsProvider.cs" />
     <Compile Include="WebConfigSettings\Interfaces\IExternalFileConfigurationProvider.cs" />

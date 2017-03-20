@@ -6,11 +6,11 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 
-using Mihaylov.Common.Encryptions;
 using Mihaylov.Common.Validations;
 using Mihaylov.Common.WebConfigSettings.Interfaces;
+using Mihaylov.Common.WebConfigSettings.Interfaces.Models;
 using Mihaylov.Common.WebConfigSettings.Models;
-using Mihaylov.Common.WebConfigSettings.Models.XmlElements;
+using Mihaylov.Common.WebConfigSettings.Models.ExternalDbConnections;
 
 namespace Mihaylov.Common.WebConfigSettings.Providers
 {
@@ -18,11 +18,12 @@ namespace Mihaylov.Common.WebConfigSettings.Providers
     {
         public const string ENVIRONMENT_KEY_NAME = "Environment";
 
-        private IExternalFileConfigurationProvider externalFileProvider;
-        private IWebConfigProvider webConfigProvider;
+        private readonly IExternalFileConfigurationProvider externalFileProvider;
+        private readonly IWebConfigProvider webConfigProvider;
 
         private Lazy<Configuration> externalConfiguration;
         private Lazy<CustomSettingsConfigSection> webConfigSettings;
+        private Lazy<IDictionary<string, string>> appSettings;
 
         public CustomSettingsProvider()
             : this(new ExternalFileConfigurationProvider(), new WebConfigProvider())
@@ -48,6 +49,12 @@ namespace Mihaylov.Common.WebConfigSettings.Providers
                 CustomSettingsConfigSection settings = this.webConfigProvider.GetCustomSettings();
                 return settings;
             });
+
+            this.appSettings = new Lazy<IDictionary<string, string>>(() =>
+            {
+                IDictionary<string, string> settings = this.webConfigProvider.GetAppSettings();
+                return settings;
+            });
         }
 
         public CustomSettingsModel GetAllSettingByEnvironment()
@@ -55,38 +62,35 @@ namespace Mihaylov.Common.WebConfigSettings.Providers
             var environment = this.GetEnvironment();
 
             Dictionary<string, string> dictionary = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase);
-            this.GetEndpoints(dictionary, environment);
-            this.GetConnectionStrings(dictionary, environment);
 
-            var appSettings = this.webConfigProvider.GetAppSettings();
-            foreach (var appSettingPair in appSettings)
-            {
-                if (dictionary.ContainsKey(appSettingPair.Key))
-                {
-                    throw new ApplicationException($"The \"{appSettingPair.Key}\" appSettings key is duplicated");
-                }
+            this.AddEndpoints(dictionary, environment);
+            this.AddConnectionStrings(dictionary, environment);
+            this.AddAppSettings(dictionary);
 
-                dictionary.Add(appSettingPair.Key, appSettingPair.Value);
-            }
-
-            return new CustomSettingsModel()
+            var result = new CustomSettingsModel()
             {
                 Environment = environment,
                 LoggerPath = this.webConfigSettings.Value.Logger.Path,
                 Settings = dictionary,
             };
+
+            return result;
         }
 
-        private void GetConnectionStrings(IDictionary<string, string> dictionary, string environment)
+        private void AddConnectionStrings(IDictionary<string, string> dictionary, string environment)
         {
-            Dictionary<string, string> dbTemplateDictionary = GetDatabaseTemplates();
+            IDictionary<string, string> dbTemplateDictionary = GetDatabaseTemplates();
 
             string nameSufix = this.GetNameSufix(environment);
-            DbConnectionCollection dbConnections = this.webConfigSettings.Value.DbConnections;
+            ICollection<IDbConnection> dbConnections = this.webConfigSettings.Value.DbConnections
+                                                                    .Select(c => (IDbConnection)new DbConnection(c))
+                                                                    .ToList();
 
-            foreach (var dbConnection in dbConnections)
+            foreach (IDbConnection connection in dbConnections)
             {
+                IDbConnection dbConnection = connection;
                 var dbConnectionName = dbConnection.Name;
+
                 if (dbConnectionName.EndsWith(nameSufix, StringComparison.InvariantCultureIgnoreCase))
                 {
                     var systemName = this.GetSystemName(dbConnectionName, nameSufix);
@@ -96,40 +100,31 @@ namespace Mihaylov.Common.WebConfigSettings.Providers
                         throw new ArgumentException($"\"{systemName}_{environment}\" key in web.config is found in AppSetting and dbConnections areas");
                     }
 
-                    var encryptedPassword = dbConnection.Credential.CipheredPassword;
-                    var userName = dbConnection.Credential.UserName;
-
-                    string password = string.Empty;
-                    if (!string.IsNullOrWhiteSpace(userName) && !string.IsNullOrWhiteSpace(encryptedPassword))
+                    string key = dbConnection.ExternalSettings;
+                    if (!string.IsNullOrWhiteSpace(key))
                     {
-                        var passwordPhrase = CreatePasswordPhrase(userName, dbConnection.Endpoint.DbName);
-                        password = StringEncryptor.Decrypt(encryptedPassword, passwordPhrase);
-                    }
-
-                    string connectionString = string.Empty;
-                    if (dbTemplateDictionary.ContainsKey(systemName))
-                    {
-                        string template = dbTemplateDictionary[systemName];
-                        connectionString = string.Format(template, dbConnection.Endpoint.IPAdress, dbConnection.Endpoint.Port, dbConnection.Endpoint.DbName, userName, password);
-                    }
-                    else
-                    {
-                        SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder();
-                        builder.DataSource = dbConnection.Endpoint.IPAdress;
-                        builder.InitialCatalog = dbConnection.Endpoint.DbName;
-                        builder.MultipleActiveResultSets = true;
-
-                        if (!string.IsNullOrWhiteSpace(password))
+                        string uriString = string.Empty;
+                        if (this.appSettings.Value.ContainsKey(key))
                         {
-                            builder.UserID = userName;
-                            builder.Password = password;
+                            uriString = this.appSettings.Value[key];
                         }
                         else
                         {
-                            builder.IntegratedSecurity = true;
+                            uriString = this.GetApplicationConfigSetting(key);
+                            if (string.IsNullOrWhiteSpace(uriString))
+                            {
+                                throw new ArgumentException($"The Key \"{key}\" is found in web.config AppSetting area or external file");
+                            }
                         }
 
-                        connectionString = builder.ConnectionString.ToString();
+                        dbConnection = ParseAppHarborConnectionString(systemName, dbConnection, uriString);
+                    }
+
+                    string connectionString = this.GetConnectionString(dbConnection);
+                    if (dbTemplateDictionary.ContainsKey(systemName) && dbConnection.IsCodeFirst == false)
+                    {
+                        string template = dbTemplateDictionary[systemName];
+                        connectionString = string.Format(template, connectionString);
                     }
 
                     dictionary.Add(systemName, connectionString);
@@ -137,18 +132,43 @@ namespace Mihaylov.Common.WebConfigSettings.Providers
             }
         }
 
-        private Dictionary<string, string> GetDatabaseTemplates()
+        private string GetConnectionString(IDbConnection dbConnection)
         {
-            var dbTemplateDictionary = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase);
-            foreach (var dbTemplate in this.webConfigSettings.Value.DbConnectionTemplates)
+            string dataSource = dbConnection.Endpoint?.IPAdress;
+            string initialCatalog = dbConnection.Endpoint?.DbName;
+
+            if (string.IsNullOrWhiteSpace(dataSource) || string.IsNullOrWhiteSpace(initialCatalog))
             {
-                dbTemplateDictionary.Add(dbTemplate.Name, dbTemplate.Template);
+                throw new ArgumentNullException("Connection string DataSource and InitialCatalog cannot be null");
             }
 
-            return dbTemplateDictionary;
+            SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder();
+            builder.DataSource = dataSource;
+            builder.InitialCatalog = initialCatalog;
+            builder.MultipleActiveResultSets = true;
+            builder.ApplicationName = "EntityFramework";
+
+            var encryptedPassword = dbConnection.Credential?.CipheredPassword;
+            var userName = dbConnection.Credential?.UserName;
+
+            if (!string.IsNullOrWhiteSpace(userName) && !string.IsNullOrWhiteSpace(encryptedPassword))
+            {
+                //var passwordPhrase = CreatePasswordPhrase(userName, dbConnection.Endpoint.DbName);
+                //password = StringEncryptor.Decrypt(encryptedPassword, passwordPhrase);
+
+                builder.UserID = userName;
+                builder.Password = encryptedPassword;
+            }
+            else
+            {
+                builder.IntegratedSecurity = true;
+            }
+
+            string connectionString = builder.ConnectionString.ToString();
+            return connectionString;
         }
 
-        private void GetEndpoints(IDictionary<string, string> dictionary, string environment)
+        private void AddEndpoints(IDictionary<string, string> dictionary, string environment)
         {
             string nameSufix = this.GetNameSufix(environment);
 
@@ -182,8 +202,34 @@ namespace Mihaylov.Common.WebConfigSettings.Providers
             }
         }
 
+        private void AddAppSettings(Dictionary<string, string> dictionary)
+        {
+            foreach (var appSettingPair in appSettings.Value)
+            {
+                if (dictionary.ContainsKey(appSettingPair.Key))
+                {
+                    throw new ApplicationException($"The \"{appSettingPair.Key}\" appSettings key is duplicated");
+                }
+
+                string externalSettings = this.GetApplicationConfigSetting(appSettingPair.Key);
+                if (!string.IsNullOrWhiteSpace(externalSettings))
+                {
+                    dictionary.Add(appSettingPair.Key, externalSettings);
+                }
+                else
+                {
+                    dictionary.Add(appSettingPair.Key, appSettingPair.Value);
+                }
+            }
+        }
+
         private string GetEnvironment()
         {
+            if (this.appSettings.Value.ContainsKey(ENVIRONMENT_KEY_NAME))
+            {
+                return this.appSettings.Value[ENVIRONMENT_KEY_NAME];
+            }
+
             string applicationConfigEnvironment = this.GetApplicationConfigSetting(ENVIRONMENT_KEY_NAME);
             if (!string.IsNullOrWhiteSpace(applicationConfigEnvironment))
             {
@@ -197,6 +243,17 @@ namespace Mihaylov.Common.WebConfigSettings.Providers
             }
 
             return webConfigEnvironment;
+        }
+
+        private IDictionary<string, string> GetDatabaseTemplates()
+        {
+            var dbTemplateDictionary = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase);
+            foreach (var dbTemplate in this.webConfigSettings.Value.DbConnectionTemplates)
+            {
+                dbTemplateDictionary.Add(dbTemplate.Name, dbTemplate.Template);
+            }
+
+            return dbTemplateDictionary;
         }
 
         private string GetApplicationConfigSetting(string settingKeyName)
@@ -226,13 +283,35 @@ namespace Mihaylov.Common.WebConfigSettings.Providers
             return $"_{environment}";
         }
 
-        public static string CreatePasswordPhrase(string username, string dbName)
+        private string CreatePasswordPhrase(string username, string dbName)
         {
             var sha1 = new SHA1Managed();
-            var passwordPhraseAsString = string.Format("{0}{1}{0}", dbName.ToLower(), username.ToLower());
-            var hash = sha1.ComputeHash(Encoding.UTF8.GetBytes(passwordPhraseAsString));
-            var passwordPhrase = string.Join(string.Empty, hash.Select(b => b.ToString("x2")).ToArray());
+
+            throw new NotImplementedException();
+
+            string passwordPhraseAsString = string.Empty;
+            byte[] hash = sha1.ComputeHash(Encoding.UTF8.GetBytes(passwordPhraseAsString));
+            string passwordPhrase = string.Join(string.Empty, hash.Select(b => b.ToString("x2")).ToArray());
             return passwordPhrase;
+        }
+
+        private IDbConnection ParseAppHarborConnectionString(string name, IDbConnection dbConnection, string uriString)
+        {
+            var uri = new Uri(uriString);
+
+            string dataSource = uri.Host;
+            string initialCatalog = uri.AbsolutePath.Trim('/');
+            string userId = uri.UserInfo.Split(':').First();
+            string password = uri.UserInfo.Split(':').Last();
+
+            IDbConnection result = new DbConnection(
+                name,
+                dbConnection.ExternalSettings,
+                dbConnection.IsCodeFirst,
+                new DbEndpoint(initialCatalog, dataSource),
+                new DbCredential(userId, password));
+
+            return result;
         }
     }
 }

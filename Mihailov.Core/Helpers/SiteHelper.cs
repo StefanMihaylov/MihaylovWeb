@@ -144,7 +144,7 @@ namespace Mihaylov.Core.Helpers
             }
             catch (Exception ex)
             {
-                this.logger.ErrorException($"Error in Site helper, username: {username}", ex);
+                this.logger.ErrorException($"Error in Site helper, username: {username}, url: {this.url}", ex);
                 throw;
             }
         }
