@@ -12,12 +12,12 @@ using Ninject.Modules;
 
 namespace Mihaylov.Tests
 {
-    [TestClass]
+   // [TestClass]
     public class ExperimentalTests
     {
         private static IKernel kernel;
 
-        [ClassInitialize]
+        //[ClassInitialize]
         public static void Initialize(TestContext context)
         {
             kernel = new StandardKernel();
@@ -32,7 +32,7 @@ namespace Mihaylov.Tests
             //Log4netConfiguration.Setup(loggerPath);
         }
 
-        [ClassCleanup]
+        //[ClassCleanup]
         public static void Clear()
         {
             kernel.Dispose();
@@ -80,12 +80,6 @@ namespace Mihaylov.Tests
 
             Assert.IsNotNull(data2);
             Assert.IsTrue(data2.Count() > 0);
-        }
-
-        [TestMethod]
-        public void DummyTest()
-        {
-            Assert.IsTrue(true);
         }
     }
 }
