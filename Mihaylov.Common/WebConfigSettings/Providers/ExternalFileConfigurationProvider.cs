@@ -26,14 +26,21 @@ namespace Mihaylov.Common.WebConfigSettings.Providers
 
         private string GetFilePath(string fileName)
         {
-            string startPath = this.GetAssemblyDirectory();
-            var directory = new DirectoryInfo(startPath);
-            FileInfo applicationConfigInfo = this.GetFilePath(directory, fileName);
-            if (applicationConfigInfo != null)
+            try
             {
-                return applicationConfigInfo.FullName;
+                string startPath = this.GetAssemblyDirectory();
+                var directory = new DirectoryInfo(startPath);
+                FileInfo applicationConfigInfo = this.GetFilePath(directory, fileName);
+                if (applicationConfigInfo != null)
+                {
+                    return applicationConfigInfo.FullName;
+                }
+                else
+                {
+                    return string.Empty;
+                }
             }
-            else
+            catch (Exception)
             {
                 return string.Empty;
             }

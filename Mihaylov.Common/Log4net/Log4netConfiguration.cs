@@ -32,6 +32,15 @@ namespace Mihaylov.Common.Log4net
 
             hierarchy.Root.Level = log4net.Core.Level.Info;
             hierarchy.Configured = true;
+
+            // LogentriesAppender
+            PatternLayout entityPatternLayout = new PatternLayout();
+            entityPatternLayout.ConversionPattern = "%date [%thread] %-5level %logger - %message%newline";
+
+            LogentriesAppender entity = new LogentriesAppender();
+            entity.Layout = entityPatternLayout;
+            entity.Debug = true;
+            hierarchy.Root.AddAppender(entity);
         }
     }
 }
