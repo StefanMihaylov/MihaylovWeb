@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Web.Mvc;
+using log4net;
 using Ninject.Extensions.Logging;
 
 namespace Mihaylov.Web.Controllers.Base
@@ -22,6 +23,9 @@ namespace Mihaylov.Web.Controllers.Base
             {
                 var exception = filterContext.Exception;
                 this.Logger.Error(exception, "Error in {0}", filterContext.Controller);
+
+                ILog otherLogger = LogManager.GetLogger("BaseController");
+                otherLogger.Error(string.Format("Error in {0}", filterContext.Controller), exception);
             }
             catch (Exception)
             {
