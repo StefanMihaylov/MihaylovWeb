@@ -289,10 +289,10 @@ namespace Mihaylov.Common.WebConfigSettings.Providers
 
             throw new NotImplementedException();
 
-            string passwordPhraseAsString = string.Empty;
-            byte[] hash = sha1.ComputeHash(Encoding.UTF8.GetBytes(passwordPhraseAsString));
-            string passwordPhrase = string.Join(string.Empty, hash.Select(b => b.ToString("x2")).ToArray());
-            return passwordPhrase;
+            //string passwordPhraseAsString = string.Empty;
+            //byte[] hash = sha1.ComputeHash(Encoding.UTF8.GetBytes(passwordPhraseAsString));
+            //string passwordPhrase = string.Join(string.Empty, hash.Select(b => b.ToString("x2")).ToArray());
+            //return passwordPhrase;
         }
 
         private IDbConnection ParseAppHarborConnectionString(string name, IDbConnection dbConnection, string uriString)

@@ -65,7 +65,7 @@ namespace Mihaylov.Tests.Core
         public void GetAnswersTypeByNameWithWhiteSpacesTest()
         {
             string validName = string.Format(NAME_TEMPLATE, 3);
-            string name = $"  {validName}  ";
+            string name = string.Format("  {0}  ", validName);
 
             IAnswerTypesManager manager = GetAnswerTypeManagerMock();
             AnswerType result = manager.GetByName(name);
@@ -93,7 +93,13 @@ namespace Mihaylov.Tests.Core
                 var result = new List<AnswerType>();
                 for (int index = 1; index <= NUMBER; index++)
                 {
-                    result.Add(new AnswerType() { Id = index, Name = string.Format(NAME_TEMPLATE, index), Description = $"N/A {index}", IsAsked = (index % 2 == 0) });
+                    result.Add(new AnswerType()
+                    {
+                        Id = index,
+                        Name = string.Format(NAME_TEMPLATE, index),
+                        Description = string.Format("N/A {0}", index),
+                        IsAsked = (index % 2 == 0)
+                    });
                 }
 
                 return result;
