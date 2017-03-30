@@ -74,6 +74,7 @@ namespace Mihaylov.Data.Repositories
                 Min = answers.Min(),
                 Max = answers.Max(),
                 TotalCount = this.All().Count(),
+                Disabled = persons.Count(p => p.IsAccountDisabled),
             };
 
             return statistics;

@@ -16,6 +16,8 @@ namespace Mihaylov.Data.Models.Repositories
 
         public int TotalCount { get; set; }
 
+        public int Disabled { get; set; }
+
         public int Count
         {
             get
@@ -34,14 +36,11 @@ namespace Mihaylov.Data.Models.Repositories
 
                 foreach (var countPair in this.CountDictionary)
                 {
-                    int count = countPair.Value;
-                    decimal percent = (decimal)count / this.Count;
-
-                    string countAsText = $"{count} ({percent:P2})";
-                    result.Add(countPair.Key, countAsText);
+                    result.Add(countPair.Key, $"{countPair.Value} ({(decimal)countPair.Value / this.Count:P2})");
                 }
 
                 result.Add("Count", $"{this.Count} ({this.TotalCount})");
+                result.Add("Disabled", $"{this.Disabled} ({((decimal)this.Disabled / this.Count):P2})");
 
                 return result;
             }

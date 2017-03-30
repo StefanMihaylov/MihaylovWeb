@@ -6,20 +6,23 @@ using System.Web.Mvc;
 using Mihaylov.Core.Interfaces;
 using Mihaylov.Data.Models.Repositories;
 using Mihaylov.Web.ViewModels.Site;
+using Ninject.Extensions.Logging;
 
 namespace Mihaylov.Web.Controllers
 {
     public class SiteController : Controller
     {
-        private ISiteHelper siteHelper;
-        private IPersonsManager personManager;
-        private IPersonsWriter personsWriter;
+        private readonly ISiteHelper siteHelper;
+        private readonly IPersonsManager personManager;
+        private readonly IPersonsWriter personsWriter;
+        private readonly ILogger logger;
 
-        public SiteController(ISiteHelper siteHelper, IPersonsManager personManager, IPersonsWriter personsWriter)
+        public SiteController(ISiteHelper siteHelper, IPersonsManager personManager, IPersonsWriter personsWriter, ILogger logger)
         {
             this.siteHelper = siteHelper;
             this.personManager = personManager;
             this.personsWriter = personsWriter;
+            this.logger = logger;
         }
 
         // GET: Site
@@ -32,6 +35,8 @@ namespace Mihaylov.Web.Controllers
 
         public ActionResult Find(string url)
         {
+            this.logger.Debug($"Controller: hit find: {url}");
+
             string userName = this.siteHelper.GetUserName(url);
 
             Person person = this.personManager.GetByName(userName);

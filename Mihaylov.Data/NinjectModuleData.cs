@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Mihaylov.Data.Models.Interfaces;
+﻿using Mihaylov.Data.Models.Interfaces;
 using Mihaylov.Data.Models.Repositories;
 using Mihaylov.Data.Repositories;
 using Ninject.Modules;

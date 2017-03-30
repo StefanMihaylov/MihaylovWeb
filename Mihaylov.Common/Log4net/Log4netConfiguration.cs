@@ -30,7 +30,7 @@ namespace Mihaylov.Common.Log4net
             memory.ActivateOptions();
             hierarchy.Root.AddAppender(memory);
 
-            hierarchy.Root.Level = log4net.Core.Level.Info;
+            hierarchy.Root.Level = log4net.Core.Level.All;
             hierarchy.Configured = true;
 
             // LogentriesAppender

@@ -1,5 +1,6 @@
 ﻿using Mihaylov.Database.Models.Interfaces;
 using Ninject.Modules;
+using Ninject.Web.Common;
 
 namespace Mihaylov.Database
 {
@@ -14,7 +15,7 @@ namespace Mihaylov.Database
 
         public override void Load()
         {
-            Kernel.Bind<IMihaylovDbContext>().ToConstructor(x => new MihaylovDbContext(this.connectionString)).InSingletonScope();
+            Kernel.Bind<IMihaylovDbContext>().ToConstructor(x => new MihaylovDbContext(this.connectionString)).InThreadScope();
         }
     }
 }

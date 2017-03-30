@@ -10,7 +10,7 @@ namespace Mihaylov.Data.Repositories
 {
     public class CountriesRepository : GenericRepository<DAL.Country, IMihaylovDbContext>, ICountriesRepository
     {
-        public CountriesRepository(IMihaylovDbContext context) 
+        public CountriesRepository(IMihaylovDbContext context)
             : base(context)
         {
         }
@@ -34,10 +34,13 @@ namespace Mihaylov.Data.Repositories
 
         public Country GetByName(string name)
         {
+            var filtered = this.All().Where(p => p.Name == name).ToList();
+
             Country country = this.All()
                                   .Where(p => p.Name == name)
                                   .Select(Country.FromDb)
                                   .FirstOrDefault();
+
             return country;
         }
 

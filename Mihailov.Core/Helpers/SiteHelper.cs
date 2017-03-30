@@ -87,6 +87,8 @@ namespace Mihaylov.Core.Helpers
         {
             try
             {
+                this.logger.Debug($"Helper: Get person by name: {username}");
+
                 var dom = CQ.CreateFromUrl($"{this.url}/{username}");
                 var bioContainer = dom.Select("div.miniBio ul li");
 

@@ -2,7 +2,7 @@
     var $container = $('.body-content');
     var $detailsContainer = $('#person-info');
 
-    $container.on('click', '.person-details-container .find-info', function () {
+    $container.off('click').on('click', '.person-details-container .find-info-button', function () {
         $detailsContainer.empty();
 
         var siteUrl = $('#url').val();

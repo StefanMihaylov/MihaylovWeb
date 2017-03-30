@@ -5,7 +5,7 @@ namespace Mihaylov.Core.Interfaces
 {
     public interface ICountriesManager
     {
-        IEnumerable<Country> GetAllCountries();
+       // IEnumerable<Country> GetAllCountries();
 
         Country GetById(int id);
 

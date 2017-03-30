@@ -12,8 +12,8 @@ namespace Mihaylov.Tests.Core
     [TestClass]
     public class AnswerTypesManagerTests
     {
-        private const int NUMBER = 5;
-        private const string NAME_TEMPLATE = "Type {0}";
+        private const int NUMBER_OF_ANSWER_TYPES = 5;
+        private const string NAME_TEMPLATE = "Name {0}";
 
         [TestMethod]
         public void GetAllAnswersTypesTest()
@@ -22,7 +22,7 @@ namespace Mihaylov.Tests.Core
             IEnumerable<AnswerType> result = manager.GetAllAnswerTypes();
 
             Assert.IsNotNull(result);
-            Assert.AreEqual(NUMBER, result.Count());
+            Assert.AreEqual(NUMBER_OF_ANSWER_TYPES, result.Count());
         }
 
         [TestMethod]
@@ -42,7 +42,27 @@ namespace Mihaylov.Tests.Core
         [ExpectedException(typeof(ApplicationException))]
         public void GetAnswersTypeByIdInvalidIdTest()
         {
-            int id = NUMBER + 1;
+            int id = NUMBER_OF_ANSWER_TYPES + 1;
+
+            IAnswerTypesManager manager = GetAnswerTypeManagerMock();
+            AnswerType result = manager.GetById(id);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ApplicationException))]
+        public void GetAnswersTypeByIdZeroIdTest()
+        {
+            int id = 0;
+
+            IAnswerTypesManager manager = GetAnswerTypeManagerMock();
+            AnswerType result = manager.GetById(id);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ApplicationException))]
+        public void GetAnswersTypeByIdNegativeIdTest()
+        {
+            int id = -3;
 
             IAnswerTypesManager manager = GetAnswerTypeManagerMock();
             AnswerType result = manager.GetById(id);
@@ -76,6 +96,34 @@ namespace Mihaylov.Tests.Core
         }
 
         [TestMethod]
+        public void GetAnswersTypeByNameUpperTest()
+        {
+            string validName = string.Format(NAME_TEMPLATE, 3);
+            string name = validName.ToUpper();
+
+            IAnswerTypesManager manager = GetAnswerTypeManagerMock();
+            AnswerType result = manager.GetByName(name);
+
+            Assert.IsNotNull(result);
+            Assert.IsTrue(result.Id > 0);
+            Assert.AreEqual(validName, result.Name);
+        }
+
+        [TestMethod]
+        public void GetAnswersTypeByNameLowerTest()
+        {
+            string validName = string.Format(NAME_TEMPLATE, 3);
+            string name = validName.ToLower();
+
+            IAnswerTypesManager manager = GetAnswerTypeManagerMock();
+            AnswerType result = manager.GetByName(name);
+
+            Assert.IsNotNull(result);
+            Assert.IsTrue(result.Id > 0);
+            Assert.AreEqual(validName, result.Name);
+        }
+
+        [TestMethod]
         [ExpectedException(typeof(ApplicationException))]
         public void GetAnswersTypeByNameInvaliNameTest()
         {
@@ -91,7 +139,7 @@ namespace Mihaylov.Tests.Core
             Mock.Arrange(() => provider.GetAllAnswerTypes()).Returns(() =>
             {
                 var result = new List<AnswerType>();
-                for (int index = 1; index <= NUMBER; index++)
+                for (int index = 1; index <= NUMBER_OF_ANSWER_TYPES; index++)
                 {
                     result.Add(new AnswerType()
                     {

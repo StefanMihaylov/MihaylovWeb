@@ -27,7 +27,7 @@ namespace Mihaylov.Core.Providers
         {
             Country country = this.repository.GetById(id);
 
-            if(country == null)
+            if (country == null)
             {
                 throw new ApplicationException($"Country with Id: {id} was not found");
             }

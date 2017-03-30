@@ -24,59 +24,76 @@ namespace Mihaylov.Core.Managers
             this.countriesByName = new ConcurrentDictionary<string, Country>(StringComparer.OrdinalIgnoreCase);
         }
 
-        public IEnumerable<Country> GetAllCountries()
+        //public IEnumerable<Country> GetAllCountries()
+        //{
+        //    IEnumerable<Country> countries = this.countriesByName.Values;
+        //    return countries;
+        //}
+
+        public int NumberOfCountriesById
         {
-            IEnumerable<Country> countries = this.countriesByName.Values;
-            return countries;
+            get { return this.countriesById.Keys.Count; }
+        }
+
+        public int NumberOfCountriesByName
+        {
+            get { return this.countriesByName.Keys.Count; }
         }
 
         public Country GetById(int id)
         {
-            Country country = this.countriesById.GetOrAdd(id, (newId) =>
+            if (id <= 0)
             {
-                try
+                throw new ArgumentOutOfRangeException("Id must be positive");
+            }
+
+            try
+            {
+                Country country = this.countriesById.GetOrAdd(id, (newId) =>
                 {
                     Country newCountry = this.provider.GetById(newId);
                     return newCountry;
-                }
-                catch (Exception ex)
-                {
-                    this.logger.Error(ex, "GetById");
-                    return null;
-                }
-            });
+                });
 
-            if (country == null)
-            {
-                this.countriesById.TryRemove(id, out country);
+                return country;
             }
-
-            return country;
+            catch (ApplicationException)
+            {
+                return null;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
         public Country GetByName(string name)
         {
-            string key = name.Trim();
-            Country country = this.countriesByName.GetOrAdd(key, (newName) =>
+            this.logger.Debug($"Manager: Get country by name: {name}");
+            try
             {
-                try
+                string key = name.Trim();
+                Country country = this.countriesByName.GetOrAdd(key, (newName) =>
                 {
+                    this.logger.Debug($"Provider: Get country by name: {name}");
+
                     Country newCountry = this.provider.GetByName(newName);
+
+                    this.logger.Debug($"Provider: Found country by name ({name}): {newCountry?.Name}");
+
                     return newCountry;
-                }
-                catch (Exception ex)
-                {
-                    this.logger.Error(ex, "GetByName");
-                    return null;
-                }
-            });
+                });
 
-            if (country == null)
-            {
-                this.countriesByName.TryRemove(key, out country);
+                return country;
             }
-
-            return country;
+            catch (ApplicationException)
+            {
+                return null;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
     }
 }
