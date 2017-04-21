@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
 using Mihaylov.Core.Interfaces;
 using Mihaylov.Data.Models.Repositories;
 using Ninject.Extensions.Logging;
@@ -24,9 +25,26 @@ namespace Mihaylov.Core.Managers
             this.personsByName = new ConcurrentDictionary<string, Person>(StringComparer.OrdinalIgnoreCase);
         }
 
-        public IEnumerable<Person> GetAllPersons()
+        public IEnumerable<Person> GetAllPersons(bool descOrder = false, int? pageNumber = null, int? pageSize = null)
         {
             IEnumerable<Person> persons = this.personsByName.Values;
+
+            if (pageSize.HasValue && pageNumber.HasValue)
+            {
+                persons = this.FilterPage(persons, descOrder, pageNumber, pageSize);
+
+                if (persons.Count() < pageSize.Value)
+                {
+                    IEnumerable<Person> dbPersons = this.provider.GetAll(descOrder, pageNumber, pageSize);
+                    foreach (var dbPerson in dbPersons)
+                    {
+                        this.personsByName.TryAdd(dbPerson.Username, dbPerson);
+                    }
+
+                    persons = this.FilterPage(this.personsByName.Values, descOrder, pageNumber, pageSize);
+                }
+            }
+
             return persons;
         }
 
@@ -75,6 +93,20 @@ namespace Mihaylov.Core.Managers
         {
             PersonStatistics statistics = this.provider.GetStatictics();
             return statistics;
+        }
+
+        private IEnumerable<Person> FilterPage(IEnumerable<Person> persons, bool descOrder, int? pageNumber, int? pageSize)
+        {
+            int skipCount = pageNumber.Value * pageSize.Value;
+
+            if (descOrder)
+            {
+                return persons.OrderByDescending(p => p.AskDate).Skip(skipCount).Take(pageSize.Value);
+            }
+            else
+            {
+                return persons.OrderBy(p => p.AskDate).Skip(skipCount).Take(pageSize.Value);
+            }
         }
     }
 }

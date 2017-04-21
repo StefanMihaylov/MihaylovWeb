@@ -10,6 +10,7 @@
         var data = { url: siteUrl };
         $.post(url, data, function (res) {
             $detailsContainer.empty().append(res);
+            $('#url').val('');
             //if (res.Success === true) {
             //    toastr.success('Job ticket created');
             //}
@@ -17,6 +18,7 @@
             //    toastr.error(res.ErrorMessage, undefined, { timeOut: 0 });
             //}
         }).fail(function (res) {
+            $detailsContainer.empty().append(res);
             // toastr.error(res.ErrorMessage); //???
         }).always(function () {
 

@@ -5,7 +5,7 @@ namespace Mihaylov.Core.Interfaces
 {
     public interface IPersonsProvider
     {
-        IEnumerable<Person> GetAll();
+        IEnumerable<Person> GetAll(bool descOrder = false, int? pageNumber = null, int? pageSize = null);
 
         Person GetById(int id);
 

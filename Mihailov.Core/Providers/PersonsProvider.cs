@@ -16,10 +16,26 @@ namespace Mihaylov.Core.Providers
             this.repository = personsRepository;
         }
 
-        public IEnumerable<Person> GetAll()
+        public IEnumerable<Person> GetAll(bool descOrder = false, int? pageNumber = null, int? pageSize = null)
         {
-            IEnumerable<Person> persons = this.repository.GetAll()
-                                                         .ToList();
+            IQueryable<Person> query = this.repository.GetAll().AsQueryable();
+
+            if (descOrder)
+            {
+                query = query.OrderByDescending(p => p.AskDate);
+            }
+            else
+            {
+                query = query.OrderBy(p => p.AskDate);
+            }
+
+            if (pageNumber.HasValue && pageSize.HasValue)
+            {
+                int skipCount = pageSize.Value * pageNumber.Value;
+                query = query.Skip(skipCount).Take(pageSize.Value);
+            }
+
+            IEnumerable<Person> persons = query.ToList();
             return persons;
         }
 

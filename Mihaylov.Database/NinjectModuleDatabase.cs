@@ -15,7 +15,7 @@ namespace Mihaylov.Database
 
         public override void Load()
         {
-            Kernel.Bind<IMihaylovDbContext>().ToConstructor(x => new MihaylovDbContext(this.connectionString)).InThreadScope();
+            Kernel.Bind<IMihaylovDbContext>().ToConstructor(x => new MihaylovDbContext(this.connectionString)).InSingletonScope();
         }
     }
 }

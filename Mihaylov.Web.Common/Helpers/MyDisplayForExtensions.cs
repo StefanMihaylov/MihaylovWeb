@@ -22,6 +22,15 @@ namespace System.Web.Mvc.Html
                 wrapper.AddCssClass(wrapperClass);
             }
 
+            wrapper.InnerHtml = htmlHelper.LabelFor(expression).ToHtmlString();
+            wrapper.InnerHtml += htmlHelper.MyValueFor(expression, unit, text).ToHtmlString();
+
+            return new HtmlString(wrapper.ToString());
+        }
+
+        public static IHtmlString MyValueFor<TModel, TValue>(this HtmlHelper<TModel> htmlHelper,
+            Expression<Func<TModel, TValue>> expression, string unit = null, string text = null)
+        {
             string content = string.Empty;
             if (string.IsNullOrWhiteSpace(text))
             {
@@ -37,10 +46,7 @@ namespace System.Web.Mvc.Html
                 content = string.Format("{0} {1}", content, unit);
             }
 
-            wrapper.InnerHtml = htmlHelper.LabelFor(expression).ToHtmlString();
-            wrapper.InnerHtml += content;
-
-            return new HtmlString(wrapper.ToString());
+            return new HtmlString(content);
         }
 
         //public static IHtmlString MyDisplayForFormGroup<TModel, TValue>(this HtmlHelper<TModel> htmlHelper,

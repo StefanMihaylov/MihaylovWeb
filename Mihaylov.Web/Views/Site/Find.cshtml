@@ -39,8 +39,8 @@
                         @Html.HiddenFor(m => m.Orientation)
                         @Html.HiddenFor(m => m.OrientationId)
 
-                        @Html.MyDisplayFor(m => m.IsAccountDisabled, null, null, (Model.IsAccountDisabled ? "Yes" : "No") + " / " + Model.UpdatedDate.ConvertToString("dd.MM.yyyy"))
-                        @Html.HiddenFor(m => m.IsAccountDisabled)
+                        @Html.MyDisplayFor(m => m.AskDate, null, null, Model.AskDate.ConvertToString())
+                        @Html.HiddenFor(m => m.AskDate)
                     </div>
                     <div class="col-sm-4">
                         @Html.MyDisplayFor(m => m.CreateDate, null, null, Model.CreateDate.ConvertToString("dd.MM.yyyy"))
@@ -49,8 +49,8 @@
                         @Html.MyDisplayFor(m => m.LastBroadcastDate, null, null, Model.LastBroadcastDate.ConvertToString("dd.MM.yyyy"))
                         @Html.HiddenFor(m => m.LastBroadcastDate)
 
-                        @Html.MyDisplayFor(m => m.AskDate, null, null, Model.AskDate.ConvertToString())
-                        @Html.HiddenFor(m => m.AskDate)
+                        @Html.MyDisplayFor(m => m.IsAccountDisabled, null, null, (Model.IsAccountDisabled ? "Yes" : "No") + " / " + Model.UpdatedDate.ConvertToString("dd.MM.yyyy"))
+                        @Html.HiddenFor(m => m.IsAccountDisabled)
                     </div>
                 </div>
 

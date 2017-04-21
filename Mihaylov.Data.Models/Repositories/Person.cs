@@ -52,15 +52,15 @@ namespace Mihaylov.Data.Models.Repositories
                     CountryId = person.CountryId,
                     Country = person.Country.Name,  // addit
                     EthnicityId = person.EthnicityType.EthnicityTypeId,
-                    Ethnicity = person.EthnicityType.Name,  // addit
+                    Ethnicity = person.EthnicityType.Description,  // addit
                     OrientationId = person.OrientationType.OrientationTypeId,
-                    Orientation = person.OrientationType.Name,  // addit
+                    Orientation = person.OrientationType.Description,  // addit
                     AnswerTypeId = person.AnswerType.AnswerTypeId,
-                    AnswerType = person.AnswerType.Name,
+                    AnswerType = person.AnswerType.Description,
                     Answer = person.Answer,
                     AnswerConverted = person.AnswerConverted,
                     AnswerUnitId = person.UnitType.UnitTypeId,
-                    AnswerUnit = person.UnitType.Name,
+                    AnswerUnit = person.UnitType.Description,
                     Comments = person.Comments,
                     RecordsPath = person.RecordsPath,
                     IsAccountDisabled = person.IsAccountDisabled,
@@ -105,30 +105,34 @@ namespace Mihaylov.Data.Models.Repositories
             return PersonDTO;
         }
 
-        public DAL.Person Create()
+        public void Update(DAL.Person person)
         {
-            DAL.Person person = new DAL.Person()
-            {
-                PersonId = this.Id,
-                Username = this.Username,
-                CreateDate = this.CreateDate,
-                AskDate = this.AskDate,
-                Age = this.Age,
-                CountryId = this.CountryId,
-                EthnicityTypeId = this.EthnicityId,
-                OrientationTypeId = this.OrientationId,
-                AnswerTypeId = this.AnswerTypeId,
-                Answer = this.Answer,
-                AnswerConverted = this.AnswerConverted,
-                AnswerUnitTypeId = this.AnswerUnitId,
-                Comments = this.Comments,
-                RecordsPath = this.RecordsPath,
-                IsAccountDisabled = this.IsAccountDisabled,
-                LastBroadcastDate = this.LastBroadcastDate,
-                UpdatedDate = this.UpdatedDate,                          
-            };
+            person.Username = this.Username;
+            person.Age = this.Age;
+            person.CountryId = this.CountryId;
+            person.IsAccountDisabled = this.IsAccountDisabled;
+            person.LastBroadcastDate = this.LastBroadcastDate;
 
-            return person;
+            person.Comments = this.Comments;
+            person.RecordsPath = this.RecordsPath;
+
+            if (person.PersonId == 0)
+            {
+                person.CreateDate = this.CreateDate;
+                person.EthnicityTypeId = this.EthnicityId;
+                person.OrientationTypeId = this.OrientationId;
+            }
+
+            if (!person.Answer.HasValue)
+            {
+                person.AnswerTypeId = this.AnswerTypeId;
+                person.Answer = this.Answer;
+                person.AnswerConverted = this.AnswerConverted;
+                person.AnswerUnitTypeId = this.AnswerUnitId;
+                person.AskDate = this.AskDate;
+            }
+
+            person.UpdatedDate = this.UpdatedDate;
         }
 
         public int Id { get; set; }

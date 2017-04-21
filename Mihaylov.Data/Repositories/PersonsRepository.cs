@@ -46,9 +46,19 @@ namespace Mihaylov.Data.Repositories
 
         public Person AddPerson(Person inputPerson)
         {
-            DAL.Person person = inputPerson.Create();
+            DAL.Person person;
+            if (inputPerson.Id == 0)
+            {
+                person = new DAL.Person();
+                this.Add(person);
+            }
+            else
+            {
+                person = this.GetById((object)inputPerson.Id);
+            }
 
-            this.Add(person);
+            inputPerson.Update(person);
+
             this.Context.SaveChanges();
 
             Person personDTO = this.GetById(person.PersonId);

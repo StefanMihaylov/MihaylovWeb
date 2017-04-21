@@ -5,7 +5,7 @@ namespace Mihaylov.Core.Interfaces
 {
     public interface IPersonsManager
     {
-        IEnumerable<Person> GetAllPersons();
+        IEnumerable<Person> GetAllPersons(bool descOrder = false, int? pageNumber = null, int? pageSize = null);
 
         Person GetById(int id);
 
