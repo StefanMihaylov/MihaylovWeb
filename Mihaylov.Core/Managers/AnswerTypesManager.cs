@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using Mihaylov.Common.Validations;
 using Mihaylov.Core.Interfaces;
 using Mihaylov.Data.Models.Repositories;
 
@@ -8,14 +9,17 @@ namespace Mihaylov.Core.Managers
 {
     public class AnswerTypesManager : IAnswerTypesManager
     {
-        private readonly IAnswerTypesProvider provider;
+        protected readonly IAnswerTypesProvider provider;
 
-        private readonly ConcurrentDictionary<int, AnswerType> answerTypesById;
-        private readonly ConcurrentDictionary<string, AnswerType> answerTypesByName;
+        protected readonly ConcurrentDictionary<int, AnswerType> answerTypesById;
+        protected readonly ConcurrentDictionary<string, AnswerType> answerTypesByName;
 
         public AnswerTypesManager(IAnswerTypesProvider answerTypeProvider)
         {
+            ParameterValidation.IsNotNull(answerTypeProvider, nameof(answerTypeProvider));
+
             this.provider = answerTypeProvider;
+
             this.answerTypesById = new ConcurrentDictionary<int, AnswerType>();
             this.answerTypesByName = new ConcurrentDictionary<string, AnswerType>(StringComparer.OrdinalIgnoreCase);
 

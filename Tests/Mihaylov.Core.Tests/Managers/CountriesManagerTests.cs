@@ -8,7 +8,7 @@ using Mihaylov.Data.Models.Repositories;
 using Ninject.Extensions.Logging;
 using Telerik.JustMock;
 
-namespace Mihaylov.Tests.Core
+namespace Mihaylov.Core.Tests.Managers
 {
     [TestClass]
     public class CountriesManagerTests
@@ -17,11 +17,30 @@ namespace Mihaylov.Tests.Core
         private const string NAME_TEMPLATE = "Country {0}";
 
         [TestMethod]
+        public void ConstructiorProviderNullTest()
+        {
+            ILogger logger = Mock.Create<ILogger>();
+
+            Assert.ThrowsException<ArgumentNullException>(() => new CountriesManager(null, logger));
+        }
+
+        [TestMethod]
+        public void ConstructiorLoggerNullTest()
+        {
+            ICountriesProvider provider = Mock.Create<ICountriesProvider>();
+
+            Assert.ThrowsException<ArgumentNullException>(() => new CountriesManager(provider, null));
+        }
+
+        [TestMethod]
         public void GeCountryByIdTest()
         {
             int id = 2;
 
-            ICountriesManager manager = GetCountriesManagerMock();
+            ILogger logger = Mock.Create<ILogger>();
+            ICountriesProvider provider = GetCountriesProvider();
+            ICountriesManager manager = new CountriesManager(provider, logger);
+            
             Country result = manager.GetById(id);
 
             Assert.IsNotNull(result);
@@ -37,7 +56,10 @@ namespace Mihaylov.Tests.Core
         {
             int id = NUMBER_OF_COUNTRIES + 1;
 
-            ICountriesManager manager = GetCountriesManagerMock();
+            ILogger logger = Mock.Create<ILogger>();
+            ICountriesProvider provider = GetCountriesProvider();
+            ICountriesManager manager = new CountriesManager(provider, logger);
+
             Country result = manager.GetById(id);
 
             Assert.IsNull(result);
@@ -47,23 +69,15 @@ namespace Mihaylov.Tests.Core
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentOutOfRangeException))]
-        public void GetCountryByIdZeroIdTest()
+        [DataRow(0, DisplayName = "Zero Id")]
+        [DataRow(-3, DisplayName = "Negative Id")]
+        public void GetCountryByIdIncorrectTest(int id)
         {
-            int id = 0;
+            ILogger logger = Mock.Create<ILogger>();
+            ICountriesProvider provider = GetCountriesProvider();
+            ICountriesManager manager = new CountriesManager(provider, logger);
 
-            ICountriesManager manager = GetCountriesManagerMock();
-            Country result = manager.GetById(id);
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(ArgumentOutOfRangeException))]
-        public void GetCountryByIdNegativeIdTest()
-        {
-            int id = -3;
-
-            ICountriesManager manager = GetCountriesManagerMock();
-            Country result = manager.GetById(id);
+            Assert.ThrowsException<ArgumentOutOfRangeException>(() => manager.GetById(id));
         }
 
         [TestMethod]
@@ -71,7 +85,10 @@ namespace Mihaylov.Tests.Core
         {
             string name = string.Format(NAME_TEMPLATE, 3);
 
-            ICountriesManager manager = GetCountriesManagerMock();
+            ILogger logger = Mock.Create<ILogger>();
+            ICountriesProvider provider = GetCountriesProvider();
+            ICountriesManager manager = new CountriesManager(provider, logger);
+
             Country result = manager.GetByName(name);
 
             Assert.IsNotNull(result);
@@ -88,7 +105,10 @@ namespace Mihaylov.Tests.Core
             string validName = string.Format(NAME_TEMPLATE, 3);
             string name = validName.ToUpper();
 
-            ICountriesManager manager = GetCountriesManagerMock();
+            ILogger logger = Mock.Create<ILogger>();
+            ICountriesProvider provider = GetCountriesProvider();
+            ICountriesManager manager = new CountriesManager(provider, logger);
+
             Country result = manager.GetByName(name);
 
             Assert.IsNotNull(result);
@@ -105,7 +125,10 @@ namespace Mihaylov.Tests.Core
             string validName = string.Format(NAME_TEMPLATE, 3);
             string name = validName.ToLower();
 
-            ICountriesManager manager = GetCountriesManagerMock();
+            ILogger logger = Mock.Create<ILogger>();
+            ICountriesProvider provider = GetCountriesProvider();
+            ICountriesManager manager = new CountriesManager(provider, logger);
+
             Country result = manager.GetByName(name);
 
             Assert.IsNotNull(result);
@@ -122,7 +145,10 @@ namespace Mihaylov.Tests.Core
             string validName = string.Format(NAME_TEMPLATE, 3);
             string name = string.Format("  {0}  ", validName);
 
-            ICountriesManager manager = GetCountriesManagerMock();
+            ILogger logger = Mock.Create<ILogger>();
+            ICountriesProvider provider = GetCountriesProvider();
+            ICountriesManager manager = new CountriesManager(provider, logger);
+
             Country result = manager.GetByName(name);
 
             Assert.IsNotNull(result);
@@ -134,11 +160,14 @@ namespace Mihaylov.Tests.Core
         }
 
         [TestMethod]
-        public void GetCountryByNameInvaliNameTest()
+        public void GetCountryByNameInvalidNameTest()
         {
             string name = "abc";
 
-            ICountriesManager manager = GetCountriesManagerMock();
+            ILogger logger = Mock.Create<ILogger>();
+            ICountriesProvider provider = GetCountriesProvider();
+            ICountriesManager manager = new CountriesManager(provider, logger);
+
             Country result = manager.GetByName(name);
 
             Assert.IsNull(result);
@@ -147,7 +176,7 @@ namespace Mihaylov.Tests.Core
             Assert.AreEqual(0, records);
         }
 
-        private ICountriesManager GetCountriesManagerMock()
+        private ICountriesProvider GetCountriesProvider()
         {
             var countries = new List<Country>();
             for (int index = 1; index <= NUMBER_OF_COUNTRIES; index++)
@@ -186,10 +215,7 @@ namespace Mihaylov.Tests.Core
 
             Mock.Arrange(() => provider.GetAll()).Returns(countries);
 
-            var logger = Mock.Create<ILogger>();
-
-            var manager = new CountriesManager(provider, logger);
-            return manager;
+            return provider;
         }
     }
 }

@@ -6,7 +6,7 @@ using Mihaylov.Core.Writers;
 using Mihaylov.Data;
 using Ninject.Modules;
 
-namespace Mihailov.Core
+namespace Mihaylov.Core
 {
     public class NinjectModuleCore : NinjectModule
     {

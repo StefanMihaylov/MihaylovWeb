@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using Mihaylov.Common.Validations;
 using Mihaylov.Core.Interfaces;
 using Mihaylov.Data.Models.Repositories;
 using Ninject.Extensions.Logging;
@@ -9,14 +10,17 @@ namespace Mihaylov.Core.Managers
 {
     public class CountriesManager : ICountriesManager
     {
-        private readonly ICountriesProvider provider;
-        private readonly ILogger logger;
+        protected readonly ICountriesProvider provider;
+        protected readonly ILogger logger;
 
-        private readonly ConcurrentDictionary<int, Country> countriesById;
-        private readonly ConcurrentDictionary<string, Country> countriesByName;
+        protected readonly ConcurrentDictionary<int, Country> countriesById;
+        protected readonly ConcurrentDictionary<string, Country> countriesByName;
 
         public CountriesManager(ICountriesProvider countryProvider, ILogger logger)
         {
+            ParameterValidation.IsNotNull(countryProvider, nameof(countryProvider));
+            ParameterValidation.IsNotNull(logger, nameof(logger));
+
             this.provider = countryProvider;
             this.logger = logger;
 
@@ -29,16 +33,6 @@ namespace Mihaylov.Core.Managers
         //    IEnumerable<Country> countries = this.countriesByName.Values;
         //    return countries;
         //}
-
-        public int NumberOfCountriesById
-        {
-            get { return this.countriesById.Keys.Count; }
-        }
-
-        public int NumberOfCountriesByName
-        {
-            get { return this.countriesByName.Keys.Count; }
-        }
 
         public Country GetById(int id)
         {
@@ -94,6 +88,16 @@ namespace Mihaylov.Core.Managers
             {
                 throw;
             }
+        }
+
+        public int NumberOfCountriesById
+        {
+            get { return this.countriesById.Keys.Count; }
+        }
+
+        public int NumberOfCountriesByName
+        {
+            get { return this.countriesByName.Keys.Count; }
         }
     }
 }

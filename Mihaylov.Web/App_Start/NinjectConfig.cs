@@ -1,10 +1,7 @@
-﻿using System.Web.Hosting;
-using Mihailov.Core;
-using Mihaylov.Common.Log4net;
+﻿using Mihaylov.Common.Log4net;
 using Mihaylov.Common.WebConfigSettings;
 using Mihaylov.Common.WebConfigSettings.Interfaces;
-using Mihaylov.GoogleDrive;
-using Mihaylov.GoogleDrive.Interfaces;
+using Mihaylov.Core;
 using Ninject;
 using Ninject.Modules;
 
