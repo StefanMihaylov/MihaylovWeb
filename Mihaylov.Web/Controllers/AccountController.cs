@@ -6,6 +6,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using Mihaylov.Database.Models;
+using Mihaylov.Web.Common.Toastr;
 using Mihaylov.Web.Controllers.Base;
 using Mihaylov.Web.Identity;
 using Mihaylov.Web.Models;
@@ -19,13 +20,13 @@ namespace Mihaylov.Web.Controllers
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
 
-        public AccountController(ILogger logger)
-            : base(logger)
+        public AccountController(ILogger logger, IToastrHelper toaster)
+            : base(logger, toaster)
         {
         }
 
-        public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager, ILogger logger) 
-            : base(logger)
+        public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager, ILogger logger, IToastrHelper toaster) 
+            : this(logger, toaster)
         {
             UserManager = userManager;
             SignInManager = signInManager;

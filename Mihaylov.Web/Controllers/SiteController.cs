@@ -5,27 +5,28 @@ using System.Web;
 using System.Web.Mvc;
 using Mihaylov.Core.Interfaces;
 using Mihaylov.Data.Models.Repositories;
+using Mihaylov.Web.Common.Toastr;
+using Mihaylov.Web.Controllers.Base;
 using Mihaylov.Web.ViewModels.Site;
 using Ninject.Extensions.Logging;
 
 namespace Mihaylov.Web.Controllers
 {
-    public class SiteController : Controller
+    public class SiteController : BaseController
     {
         private readonly ISiteHelper siteHelper;
         private readonly IPersonsManager personManager;
         private readonly IPersonsWriter personsWriter;
         private readonly IUnitsManager unitManager;
-        private readonly ILogger logger;
 
         public SiteController(ISiteHelper siteHelper, IPersonsManager personManager, IPersonsWriter personsWriter,
-            IUnitsManager unitManager, ILogger logger)
+            IUnitsManager unitManager, ILogger logger, IToastrHelper toaster) 
+            : base(logger, toaster)
         {
             this.siteHelper = siteHelper;
             this.personManager = personManager;
             this.personsWriter = personsWriter;
             this.unitManager = unitManager;
-            this.logger = logger;
         }
 
         // GET: Site
@@ -45,7 +46,7 @@ namespace Mihaylov.Web.Controllers
         {
             try
             {
-                this.logger.Debug($"Controller: hit find: {url}");
+                this.Logger.Debug($"Controller: hit find: {url}");
 
                 string userName = this.siteHelper.GetUserName(url);
 

@@ -16,6 +16,7 @@ namespace Mihaylov.Web
         {
             bundles.Add(new ScriptBundle("~/bundles/jquery").Include(
                         "~/Scripts/jquery-{version}.js",
+                        "~/Scripts/toastr.js",
                         "~/Scripts/Custom/main-layout.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/jqueryval").Include(
@@ -41,6 +42,7 @@ namespace Mihaylov.Web
         {
             bundles.Add(new StyleBundle("~/Content/css").Include(
                 "~/Content/bootstrap.css",
+                "~/Content/toastr.css",
                 "~/Content/site.css"));
         }
     }

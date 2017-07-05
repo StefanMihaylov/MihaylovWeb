@@ -2,6 +2,7 @@
 using Mihaylov.Common.WebConfigSettings;
 using Mihaylov.Common.WebConfigSettings.Interfaces;
 using Mihaylov.Core;
+using Mihaylov.Web.Common.Toastr;
 using Ninject;
 using Ninject.Modules;
 
@@ -28,6 +29,7 @@ namespace Mihaylov.Web.App_Start
             //    .WithConstructorArgument("dataStoreFolder", dataStoreFolder);
 
             kernel.Load(new INinjectModule[] { new NinjectModuleCore(connectionString, siteUrl) });
+            kernel.Bind<IToastrHelper>().To<ToastrHelper>();
         }
     }
 }

@@ -4,6 +4,7 @@ using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Mihaylov.Core.Interfaces;
 using Mihaylov.Core.Managers;
+using Mihaylov.Core.Tests.Managers.Fakes;
 using Mihaylov.Data.Models.Repositories;
 using Ninject.Extensions.Logging;
 using Telerik.JustMock;
@@ -15,6 +16,7 @@ namespace Mihaylov.Core.Tests.Managers
     {
         private const int NUMBER_OF_COUNTRIES = 5;
         private const string NAME_TEMPLATE = "Country {0}";
+        private const string VALID_NAME = "Country 3";
 
         [TestMethod]
         public void ConstructiorProviderNullTest()
@@ -22,6 +24,16 @@ namespace Mihaylov.Core.Tests.Managers
             ILogger logger = Mock.Create<ILogger>();
 
             Assert.ThrowsException<ArgumentNullException>(() => new CountriesManager(null, logger));
+        }
+
+        [TestMethod]
+        public void ConstructiorProviderIsSetProperly()
+        {
+            ICountriesProvider providerMock = this.GetCountriesProvider();
+            ILogger loggerMock = Mock.Create<ILogger>();
+            var manager = new CountriesManagerFake(providerMock, loggerMock);
+
+            Assert.AreSame(providerMock, manager.ExposedProvider);
         }
 
         [TestMethod]
@@ -33,39 +45,47 @@ namespace Mihaylov.Core.Tests.Managers
         }
 
         [TestMethod]
-        public void GeCountryByIdTest()
+        public void ConstructiorLoggerIsSetProperly()
         {
-            int id = 2;
+            ICountriesProvider providerMock = this.GetCountriesProvider();
+            ILogger loggerMock = Mock.Create<ILogger>();
+            var manager = new CountriesManagerFake(providerMock, loggerMock);
 
+            Assert.AreSame(loggerMock, manager.ExposedLogger);
+        }
+
+        [TestMethod]
+        [DataRow(2, DisplayName = "Reqular Id, start")]
+        [DataRow(NUMBER_OF_COUNTRIES / 2, DisplayName = "Reqular Id, middle")]
+        [DataRow(NUMBER_OF_COUNTRIES, DisplayName = "Reqular Id, end")]
+        public void GeCountryByIdTest(int id)
+        {
             ILogger logger = Mock.Create<ILogger>();
             ICountriesProvider provider = GetCountriesProvider();
-            ICountriesManager manager = new CountriesManager(provider, logger);
-            
+            var manager = new CountriesManagerFake(provider, logger);
+
             Country result = manager.GetById(id);
 
             Assert.IsNotNull(result);
             Assert.AreEqual(id, result.Id);
             Assert.IsNotNull(result.Name);
 
-            int records = ((CountriesManager)manager).NumberOfCountriesById;
-            Assert.AreEqual(1, records);
+            Assert.AreEqual(1, manager.ExposedDictionaryById.Count);
         }
 
         [TestMethod]
-        public void GetCountryByIdInvalidIdTest()
+        [DataRow(NUMBER_OF_COUNTRIES + 1, DisplayName = "Id, out of range")]
+        public void GetCountryByIdInvalidIdTest(int id)
         {
-            int id = NUMBER_OF_COUNTRIES + 1;
-
             ILogger logger = Mock.Create<ILogger>();
             ICountriesProvider provider = GetCountriesProvider();
-            ICountriesManager manager = new CountriesManager(provider, logger);
+            var manager = new CountriesManagerFake(provider, logger);
 
             Country result = manager.GetById(id);
 
             Assert.IsNull(result);
 
-            int records = ((CountriesManager)manager).NumberOfCountriesById;
-            Assert.AreEqual(0, records);
+            Assert.AreEqual(0, manager.ExposedDictionaryById.Count);
         }
 
         [TestMethod]
@@ -81,22 +101,21 @@ namespace Mihaylov.Core.Tests.Managers
         }
 
         [TestMethod]
-        public void GetCountryByNameTest()
+        [DataRow(VALID_NAME, VALID_NAME, DisplayName = "Valid name")]
+        [DataRow(VALID_NAME, "  " + VALID_NAME + "   ", DisplayName = "Name with white spaces")]
+        public void GetCountryByNameTest(string name, string inputName)
         {
-            string name = string.Format(NAME_TEMPLATE, 3);
-
             ILogger logger = Mock.Create<ILogger>();
             ICountriesProvider provider = GetCountriesProvider();
-            ICountriesManager manager = new CountriesManager(provider, logger);
+            var manager = new CountriesManagerFake(provider, logger);
 
-            Country result = manager.GetByName(name);
+            Country result = manager.GetByName(inputName);
 
             Assert.IsNotNull(result);
             Assert.IsTrue(result.Id > 0);
             Assert.AreEqual(name, result.Name);
 
-            int records = ((CountriesManager)manager).NumberOfCountriesByName;
-            Assert.AreEqual(1, records);
+            Assert.AreEqual(1, manager.ExposedDictionaryByName.Count);
         }
 
         [TestMethod]
@@ -107,7 +126,7 @@ namespace Mihaylov.Core.Tests.Managers
 
             ILogger logger = Mock.Create<ILogger>();
             ICountriesProvider provider = GetCountriesProvider();
-            ICountriesManager manager = new CountriesManager(provider, logger);
+            var manager = new CountriesManagerFake(provider, logger);
 
             Country result = manager.GetByName(name);
 
@@ -115,8 +134,7 @@ namespace Mihaylov.Core.Tests.Managers
             Assert.IsTrue(result.Id > 0);
             Assert.AreEqual(validName, result.Name);
 
-            int records = ((CountriesManager)manager).NumberOfCountriesByName;
-            Assert.AreEqual(1, records);
+            Assert.AreEqual(1, manager.ExposedDictionaryByName.Count);
         }
 
         [TestMethod]
@@ -127,7 +145,7 @@ namespace Mihaylov.Core.Tests.Managers
 
             ILogger logger = Mock.Create<ILogger>();
             ICountriesProvider provider = GetCountriesProvider();
-            ICountriesManager manager = new CountriesManager(provider, logger);
+            var manager = new CountriesManagerFake(provider, logger);
 
             Country result = manager.GetByName(name);
 
@@ -135,28 +153,7 @@ namespace Mihaylov.Core.Tests.Managers
             Assert.IsTrue(result.Id > 0);
             Assert.AreEqual(validName, result.Name);
 
-            int records = ((CountriesManager)manager).NumberOfCountriesByName;
-            Assert.AreEqual(1, records);
-        }
-
-        [TestMethod]
-        public void GetCountryByNameWithWhiteSpacesTest()
-        {
-            string validName = string.Format(NAME_TEMPLATE, 3);
-            string name = string.Format("  {0}  ", validName);
-
-            ILogger logger = Mock.Create<ILogger>();
-            ICountriesProvider provider = GetCountriesProvider();
-            ICountriesManager manager = new CountriesManager(provider, logger);
-
-            Country result = manager.GetByName(name);
-
-            Assert.IsNotNull(result);
-            Assert.IsTrue(result.Id > 0);
-            Assert.AreEqual(validName, result.Name);
-
-            int records = ((CountriesManager)manager).NumberOfCountriesByName;
-            Assert.AreEqual(1, records);
+            Assert.AreEqual(1, manager.ExposedDictionaryByName.Count);
         }
 
         [TestMethod]
@@ -166,14 +163,55 @@ namespace Mihaylov.Core.Tests.Managers
 
             ILogger logger = Mock.Create<ILogger>();
             ICountriesProvider provider = GetCountriesProvider();
-            ICountriesManager manager = new CountriesManager(provider, logger);
+            var manager = new CountriesManagerFake(provider, logger);
 
             Country result = manager.GetByName(name);
 
             Assert.IsNull(result);
 
-            int records = ((CountriesManager)manager).NumberOfCountriesByName;
-            Assert.AreEqual(0, records);
+            Assert.AreEqual(0, manager.ExposedDictionaryByName.Count);
+        }
+
+        [TestMethod]
+        public void RequestByNameIsLoggedTest()
+        {
+            string name = VALID_NAME;
+
+            ILogger logger = Mock.Create<ILogger>();
+            ICountriesProvider provider = GetCountriesProvider();
+            var manager = new CountriesManagerFake(provider, logger);
+
+            Country result = manager.GetByName(name);
+
+            Mock.Assert(() => logger.Debug(Arg.AnyString), Occurs.AtLeastOnce());
+        }
+
+        [TestMethod]
+        public void RequestByNameCallProviderByNameTest()
+        {
+            string name = VALID_NAME;
+
+            ILogger logger = Mock.Create<ILogger>();
+            ICountriesProvider provider = GetCountriesProvider();
+            var manager = new CountriesManagerFake(provider, logger);
+
+            Country result = manager.GetByName(name);
+
+            Mock.Assert(() => provider.GetByName(Arg.AnyString), Occurs.Once());
+        }
+
+        [TestMethod]
+        public void RequestByIdCallProviderByIdTest()
+        {
+            int id = 2;
+
+            ILogger logger = Mock.Create<ILogger>();
+            ICountriesProvider provider = GetCountriesProvider();
+            var manager = new CountriesManagerFake(provider, logger);
+
+            Country result = manager.GetById(id);
+
+            Mock.Assert(() => provider.GetById(Arg.AnyInt), Occurs.Once());
         }
 
         private ICountriesProvider GetCountriesProvider()

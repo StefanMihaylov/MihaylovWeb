@@ -1,0 +1,7 @@
+﻿@using Mihaylov.Web.Common.Toastr
+
+@if (TempData.ContainsKey("Toastr"))
+{
+    ToastrHelper toastr = TempData["Toastr"] as ToastrHelper;
+    @ToastrBuilder.ShowToastMessages(toastr);
+}

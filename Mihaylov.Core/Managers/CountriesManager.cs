@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using Mihaylov.Common.Validations;
 using Mihaylov.Core.Interfaces;
 using Mihaylov.Data.Models.Repositories;
@@ -55,10 +54,6 @@ namespace Mihaylov.Core.Managers
             {
                 return null;
             }
-            catch (Exception)
-            {
-                throw;
-            }
         }
 
         public Country GetByName(string name)
@@ -73,7 +68,7 @@ namespace Mihaylov.Core.Managers
 
                     Country newCountry = this.provider.GetByName(newName);
 
-                    this.logger.Debug($"Provider: Found country by name ({name}): {newCountry?.Name}");
+                   this.logger.Debug($"Provider: Found country by name ({name}): {newCountry?.Name}");
 
                     return newCountry;
                 });
@@ -84,20 +79,6 @@ namespace Mihaylov.Core.Managers
             {
                 return null;
             }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
-
-        public int NumberOfCountriesById
-        {
-            get { return this.countriesById.Keys.Count; }
-        }
-
-        public int NumberOfCountriesByName
-        {
-            get { return this.countriesByName.Keys.Count; }
         }
     }
 }
