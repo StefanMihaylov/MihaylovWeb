@@ -15,6 +15,6 @@ namespace Mihaylov.Core.Interfaces
 
         IEnumerable<AnswerType> GetAllAnswerTypes();
 
-        void UpdatePersons();
+        int UpdatePersons();
     }
 }

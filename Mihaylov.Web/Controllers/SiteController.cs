@@ -20,7 +20,7 @@ namespace Mihaylov.Web.Controllers
         private readonly IUnitsManager unitManager;
 
         public SiteController(ISiteHelper siteHelper, IPersonsManager personManager, IPersonsWriter personsWriter,
-            IUnitsManager unitManager, ILogger logger, IToastrHelper toaster) 
+            IUnitsManager unitManager, ILogger logger, IToastrHelper toaster)
             : base(logger, toaster)
         {
             this.siteHelper = siteHelper;
@@ -79,7 +79,10 @@ namespace Mihaylov.Web.Controllers
 
         public ActionResult Update()
         {
-            this.siteHelper.UpdatePersons();
+            int updated = this.siteHelper.UpdatePersons();
+
+            this.AddToastMessage(string.Empty, $"{updated} persons were updated", ToastType.Success);
+
             return this.RedirectToAction(nameof(SiteController.Index));
         }
     }

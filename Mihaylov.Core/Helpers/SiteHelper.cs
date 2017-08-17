@@ -160,9 +160,12 @@ namespace Mihaylov.Core.Helpers
             }
         }
 
-        public void UpdatePersons()
+        public int UpdatePersons()
         {
-            var persons = this.personsProvider.GetAll();
+            var persons = this.personsProvider.GetAll()
+                .Where(p => p.IsAccountDisabled == false)
+                .Where(p => p.UpdatedDate < DateTime.Now.AddDays(-1))
+                .ToList();
 
             foreach (var person in persons)
             {
@@ -172,6 +175,8 @@ namespace Mihaylov.Core.Helpers
                     this.personsWriter.Update(updatedPerson);
                 }
             }
+
+            return persons.Count;
         }
 
         public IEnumerable<Unit> GetAllUnits()
