@@ -35,9 +35,7 @@
                     <td>
                         @if (person.Answer.HasValue)
                         {
-                            @Html.MyValueFor(m => person.Answer, person.AnswerUnit, null)
-                            <span>=</span>
-                            @Html.MyValueFor(m => person.AnswerConverted, Model.SystemUnit, null)
+                            @Html.MyValueFor(m => person.AnswerDisplay)
                         }
                     </td>
                     <td>@Html.MyValueFor(m => person.Comments)</td>
@@ -60,6 +58,8 @@
             </tr>
         </tfoot>
     </table>
+
+    @Html.ActionLink("Update", "Update", "Site")
 
 </div>
 

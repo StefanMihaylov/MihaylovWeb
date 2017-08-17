@@ -74,7 +74,13 @@ namespace Mihaylov.Web.Controllers
             this.personsWriter.Add(input);
             this.personManager.GetByName(input.Username);
 
-            return this.RedirectToAction("Index");
+            return this.RedirectToAction(nameof(SiteController.Index));
+        }
+
+        public ActionResult Update()
+        {
+            this.siteHelper.UpdatePersons();
+            return this.RedirectToAction(nameof(SiteController.Index));
         }
     }
 }

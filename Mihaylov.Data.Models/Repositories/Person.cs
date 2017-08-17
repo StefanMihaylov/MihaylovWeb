@@ -41,7 +41,7 @@ namespace Mihaylov.Data.Models.Repositories
         {
             get
             {
-                return person => new Person
+                return person => new Person()
                 {
                     Id = person.PersonId,
                     Username = person.Username,
@@ -76,7 +76,7 @@ namespace Mihaylov.Data.Models.Repositories
                 return null;
             }
 
-            Person PersonDTO = new Person
+            Person PersonDTO = new Person()
             {
                 Id = personDAL.PersonId,
                 Username = personDAL.Username,
@@ -94,8 +94,8 @@ namespace Mihaylov.Data.Models.Repositories
                 AnswerType = personDAL.AnswerType.Description,
                 Answer = personDAL.Answer,
                 AnswerConverted = personDAL.AnswerConverted,
-                AnswerUnitId = personDAL.UnitType.UnitTypeId,
-                AnswerUnit = personDAL.UnitType.Name,
+                AnswerUnitId = personDAL.UnitType?.UnitTypeId,
+                AnswerUnit = personDAL.UnitType?.Name,
                 Comments = personDAL.Comments,
                 RecordsPath = personDAL.RecordsPath,
                 IsAccountDisabled = personDAL.IsAccountDisabled,
@@ -123,7 +123,7 @@ namespace Mihaylov.Data.Models.Repositories
                 person.OrientationTypeId = this.OrientationId;
             }
 
-            if (!person.Answer.HasValue)
+            if (!person.Answer.HasValue && this.Answer.HasValue)
             {
                 person.AnswerTypeId = this.AnswerTypeId;
                 person.Answer = this.Answer;
@@ -131,6 +131,31 @@ namespace Mihaylov.Data.Models.Repositories
                 person.AnswerUnitTypeId = this.AnswerUnitId;
                 person.AskDate = this.AskDate;
             }
+
+            person.UpdatedDate = this.UpdatedDate;
+        }
+
+        public void Syncronize(DAL.Person person)
+        {
+            if (!this.IsAccountDisabled)
+            {
+                if (this.LastBroadcastDate > DateTime.MinValue)
+                {
+                    person.LastBroadcastDate = this.LastBroadcastDate;
+                }
+
+                if (this.Age > 0)
+                {
+                    person.Age = this.Age;
+                }
+
+                if (this.CountryId > 0)
+                {
+                    person.CountryId = this.CountryId;
+                }
+            }
+
+            person.IsAccountDisabled = this.IsAccountDisabled;
 
             person.UpdatedDate = this.UpdatedDate;
         }
@@ -173,7 +198,6 @@ namespace Mihaylov.Data.Models.Repositories
         [Display(Name = "AnswerType:")]
         public string AnswerType { get; set; }
 
-        [Display(Name = "Answer:")]
         public decimal? Answer { get; set; }
 
         public int? AnswerUnitId { get; set; }
@@ -181,6 +205,8 @@ namespace Mihaylov.Data.Models.Repositories
         public string AnswerUnit { get; set; }
 
         public decimal? AnswerConverted { get; set; }
+
+        public string AnswerConvertedUnit { get; set; }
 
         [Display(Name = "Comments:")]
         public string Comments { get; set; }
@@ -191,5 +217,26 @@ namespace Mihaylov.Data.Models.Repositories
         public bool IsAccountDisabled { get; set; }
 
         public DateTime? UpdatedDate { get; set; }
+
+        [Display(Name = "Answer:")]
+        public string AnswerDisplay
+        {
+            get
+            {
+                if (!this.Answer.HasValue)
+                {
+                    return string.Empty;
+                }
+
+                if (this.Answer.Value == this.AnswerConverted.Value)
+                {
+                    return $"{this.AnswerConverted.Value} {this.AnswerUnit}";
+                }
+                else
+                {
+                    return $"{this.Answer.Value} {this.AnswerUnit} ({this.AnswerConverted.Value} {this.AnswerConvertedUnit})";
+                }
+            }
+        }
     }
 }

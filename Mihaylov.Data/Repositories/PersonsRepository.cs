@@ -65,6 +65,23 @@ namespace Mihaylov.Data.Repositories
             return personDTO;
         }
 
+        public Person UpdatePerson(Person updatedPerson)
+        {
+            DAL.Person personDTO = this.All()
+                                       .Where(p => p.Username == updatedPerson.Username)
+                                       .FirstOrDefault();
+            if (personDTO == null)
+            {
+                throw new System.ApplicationException($"Person with name {updatedPerson.Username} was not found!");
+            }
+
+            updatedPerson.Syncronize(personDTO);
+
+            this.Context.SaveChanges();
+
+            return personDTO;
+        }
+
         public PersonStatistics GetStatictics()
         {
             IQueryable<DAL.Person> persons = this.All().Where(p => p.AnswerType.IsAsked);

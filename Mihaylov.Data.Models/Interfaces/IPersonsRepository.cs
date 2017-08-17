@@ -13,6 +13,8 @@ namespace Mihaylov.Data.Models.Interfaces
 
         Person AddPerson(Person inputPerson);
 
+        Person UpdatePerson(Person updatedPerson);
+
         PersonStatistics GetStatictics();
     }
 }

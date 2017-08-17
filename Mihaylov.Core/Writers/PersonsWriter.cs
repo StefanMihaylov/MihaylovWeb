@@ -28,5 +28,13 @@ namespace Mihaylov.Core.Writers
             Person person = this.repository.AddPerson(inputPerson);
             return person;
         }
+
+        public Person Update(Person updatedPerson)
+        {
+            updatedPerson.UpdatedDate = DateTime.Now;
+
+            Person person = this.repository.UpdatePerson(updatedPerson);
+            return person;
+        }
     }
 }

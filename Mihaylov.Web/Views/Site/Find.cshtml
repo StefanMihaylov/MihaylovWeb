@@ -69,7 +69,7 @@
                     <div class="col-sm-4">
                         @if (Model.Answer.HasValue)
                         {
-                            @Html.MyDisplayFor(m => m.Answer, null, Model.AnswerUnit, null)
+                            @Html.MyDisplayFor(m => m.AnswerDisplay)                           
                         }
                         else
                         {

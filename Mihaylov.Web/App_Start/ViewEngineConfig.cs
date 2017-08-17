@@ -7,7 +7,9 @@ namespace Mihaylov.Web.App_Start
         public static void RegisterEngines()
         {
             ViewEngines.Engines.Clear();
-            ViewEngines.Engines.Add(new RazorViewEngine());
+            var viewEngine = new RazorViewEngine();
+
+            ViewEngines.Engines.Add(viewEngine);
         }
     }
 }

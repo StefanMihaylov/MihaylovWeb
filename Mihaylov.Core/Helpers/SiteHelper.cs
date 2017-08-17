@@ -19,12 +19,16 @@ namespace Mihaylov.Core.Helpers
         private readonly IUnitsManager unitsManager;
         private readonly IAnswerTypesManager answerTypesManager;
         private readonly ICountriesWriter countriesWriter;
+        private readonly IPersonsProvider personsProvider;
+        private readonly IPersonsWriter personsWriter;
         private readonly ILogger logger;
 
+        private readonly string systemUnit;
 
         public SiteHelper(string url, ICountriesManager countriesManager, ICountriesWriter countriesWriter,
             IEthnicitiesManager ethnicitiesManager, IOrientationsManager orientationsManager,
-            IUnitsManager unitsManager, IAnswerTypesManager answerTypesManager, ILogger logger)
+            IUnitsManager unitsManager, IAnswerTypesManager answerTypesManager, ILogger logger,
+            IPersonsProvider personsProvider, IPersonsWriter personsWriter)
         {
             this.url = url;
             this.countriesManager = countriesManager;
@@ -34,6 +38,10 @@ namespace Mihaylov.Core.Helpers
             this.answerTypesManager = answerTypesManager;
             this.countriesWriter = countriesWriter;
             this.logger = logger;
+            this.personsProvider = personsProvider;
+            this.personsWriter = personsWriter;
+
+            systemUnit = this.unitsManager.GetAllUnits().FirstOrDefault(u => u.ConversionRate == 1m)?.Name;
         }
 
         public string GetUserName(string url)
@@ -44,7 +52,7 @@ namespace Mihaylov.Core.Helpers
             }
 
             int index = url.LastIndexOf('/');
-            if(index >= 0)
+            if (index >= 0)
             {
                 string username = url.Substring(index + 1);
                 return username.Trim();
@@ -74,6 +82,7 @@ namespace Mihaylov.Core.Helpers
 
                 person.AnswerUnit = unit.Name;
                 person.AnswerConverted = person.Answer.Value * unit.ConversionRate;
+                person.AnswerConvertedUnit = systemUnit;
             }
             else
             {
@@ -148,6 +157,20 @@ namespace Mihaylov.Core.Helpers
             {
                 this.logger.ErrorException($"Error in Site helper, username: {username}, url: {this.url}", ex);
                 throw;
+            }
+        }
+
+        public void UpdatePersons()
+        {
+            var persons = this.personsProvider.GetAll();
+
+            foreach (var person in persons)
+            {
+                if (!person.IsAccountDisabled)
+                {
+                    var updatedPerson = this.GetUserInfo(person.Username);
+                    this.personsWriter.Update(updatedPerson);
+                }
             }
         }
 
