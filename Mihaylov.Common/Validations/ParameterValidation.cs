@@ -11,5 +11,13 @@ namespace Mihaylov.Common.Validations
                 throw new ArgumentNullException(parameterName);
             }
         }
+
+        public static void IsNotEmptyString(string parameter, string parameterName)
+        {
+            if (string.IsNullOrWhiteSpace(parameter))
+            {
+                throw new ArgumentException(parameterName);
+            }
+        }
     }
 }

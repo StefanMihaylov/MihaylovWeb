@@ -123,7 +123,7 @@ namespace Mihaylov.Data.Models.Repositories
                 person.OrientationTypeId = this.OrientationId;
             }
 
-            if (!person.Answer.HasValue && this.Answer.HasValue)
+            if (!person.Answer.HasValue)
             {
                 person.AnswerTypeId = this.AnswerTypeId;
                 person.Answer = this.Answer;

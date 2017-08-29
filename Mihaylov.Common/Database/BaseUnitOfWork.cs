@@ -1,9 +1,9 @@
-﻿namespace Mihaylov.Common.Base
+﻿namespace Mihaylov.Common.Database
 {
     using System;
     using System.Collections.Generic;
     using System.Data.Entity;
-    using Mihaylov.Common.Interfaces;
+    using Mihaylov.Common.Database.Interfaces;
 
     public abstract class BaseUnitOfWork<C> : IUnitOfWork<C> where C : IDbContext
     {

@@ -75,8 +75,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Base\BaseUnitOfWork.cs" />
-    <Compile Include="Base\GenericRepository.cs" />
+    <Compile Include="Database\BaseUnitOfWork.cs" />
+    <Compile Include="Database\GenericRepository.cs" />
     <Compile Include="Cache\BaseCacheService.cs" />
     <Compile Include="Encryptions\StringEncryptor.cs" />
     <Compile Include="Extensions\EnumExtentions.cs" />
@@ -84,9 +84,9 @@
     <Compile Include="Extensions\IEnumerableExtensions.cs" />
     <Compile Include="Extensions\NullableExtensions.cs" />
     <Compile Include="Extensions\ObjectExtensions.cs" />
-    <Compile Include="Interfaces\IDbContext.cs" />
-    <Compile Include="Interfaces\IRepository.cs" />
-    <Compile Include="Interfaces\IUnitOfWork.cs" />
+    <Compile Include="Database\Interfaces\IDbContext.cs" />
+    <Compile Include="Database\Interfaces\IRepository.cs" />
+    <Compile Include="Database\Interfaces\IUnitOfWork.cs" />
     <Compile Include="Log4net\Log4netConfiguration.cs" />
     <Compile Include="Loggers\BaseErrorLogger.cs" />
     <Compile Include="Loggers\BaseFileWriter.cs" />
@@ -95,6 +95,9 @@
     <Compile Include="Loggers\Interfaces\ICriticalErrorLogger.cs" />
     <Compile Include="Loggers\Interfaces\IInfoLogger.cs" />
     <Compile Include="Loggers\Interfaces\ILogger.cs" />
+    <Compile Include="MessageBus\SimpleMessageBus.cs" />
+    <Compile Include="MessageBus\Interfaces\IMessageBus.cs" />
+    <Compile Include="MessageBus\Models\Message.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Validations\ParameterValidation.cs" />
     <Compile Include="WebConfigSettings\Interfaces\ICustomSettingsManager.cs" />

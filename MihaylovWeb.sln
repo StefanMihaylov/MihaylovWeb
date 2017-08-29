@@ -37,6 +37,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mihaylov.Tests", "Tests\Mih
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mihaylov.Core.Tests", "Tests\Mihaylov.Core.Tests\Mihaylov.Core.Tests.csproj", "{6377B688-23A6-4FB6-851C-51B9E8485BBE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mihaylov.Common.Tests", "Tests\Mihaylov.Common.Tests\Mihaylov.Common.Tests.csproj", "{982DD814-12D4-4A93-8EBB-3F427E91E8CD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -87,6 +89,10 @@ Global
 		{6377B688-23A6-4FB6-851C-51B9E8485BBE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6377B688-23A6-4FB6-851C-51B9E8485BBE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6377B688-23A6-4FB6-851C-51B9E8485BBE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{982DD814-12D4-4A93-8EBB-3F427E91E8CD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{982DD814-12D4-4A93-8EBB-3F427E91E8CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{982DD814-12D4-4A93-8EBB-3F427E91E8CD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{982DD814-12D4-4A93-8EBB-3F427E91E8CD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -103,5 +109,6 @@ Global
 		{5EC53F7D-22EA-4024-A71F-4A677D91F1BA} = {EB8036E8-B271-45FE-BC83-081108573BE7}
 		{6556C774-6A19-4159-B47D-077019A77FB8} = {DA910199-2A46-45B8-82F7-4363C2EBE3F7}
 		{6377B688-23A6-4FB6-851C-51B9E8485BBE} = {DA910199-2A46-45B8-82F7-4363C2EBE3F7}
+		{982DD814-12D4-4A93-8EBB-3F427E91E8CD} = {DA910199-2A46-45B8-82F7-4363C2EBE3F7}
 	EndGlobalSection
 EndGlobal

@@ -11,7 +11,7 @@ using Telerik.JustMock;
 namespace Mihaylov.Core.Tests.Managers
 {
     [TestClass]
-    public class AnswerTypesManagerTests
+    public class Core_AnswerTypesManagerTests
     {
         private const int NUMBER_OF_ANSWER_TYPES = 5;
         private const string NAME_TEMPLATE = "Name {0}";

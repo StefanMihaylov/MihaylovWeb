@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNet.Identity.EntityFramework;
+using Mihaylov.Common.WebConfigSettings;
 using Mihaylov.Common.WebConfigSettings.Interfaces;
 
 namespace Mihaylov.Database.Models

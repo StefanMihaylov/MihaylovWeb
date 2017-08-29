@@ -61,7 +61,7 @@ namespace Mihaylov.Common.WebConfigSettings.Providers
         {
             var environment = this.GetEnvironment();
 
-            Dictionary<string, string> dictionary = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase);
+            Dictionary<string, string> dictionary = new Dictionary<string, string>();
 
             this.AddEndpoints(dictionary, environment);
             this.AddConnectionStrings(dictionary, environment);

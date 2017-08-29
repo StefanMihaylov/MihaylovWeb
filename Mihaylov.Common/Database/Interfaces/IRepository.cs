@@ -1,4 +1,4 @@
-﻿namespace Mihaylov.Common.Interfaces
+﻿namespace Mihaylov.Common.Database.Interfaces
 {
     using System;
     using System.Linq;

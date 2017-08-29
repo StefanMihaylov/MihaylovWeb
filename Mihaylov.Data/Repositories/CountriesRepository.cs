@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Mihaylov.Common.Base;
+using Mihaylov.Common.Database;
 using Mihaylov.Data.Models.Interfaces;
 using Mihaylov.Data.Models.Repositories;
 using Mihaylov.Database.Models.Interfaces;

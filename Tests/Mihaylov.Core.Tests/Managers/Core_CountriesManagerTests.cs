@@ -12,7 +12,7 @@ using Telerik.JustMock;
 namespace Mihaylov.Core.Tests.Managers
 {
     [TestClass]
-    public class CountriesManagerTests
+    public class Core_CountriesManagerTests
     {
         private const int NUMBER_OF_COUNTRIES = 5;
         private const string NAME_TEMPLATE = "Country {0}";

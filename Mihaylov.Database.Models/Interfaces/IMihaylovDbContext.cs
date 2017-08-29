@@ -1,7 +1,7 @@
 ﻿namespace Mihaylov.Database.Models.Interfaces
 {
     using System.Data.Entity;
-    using Common.Interfaces;
+    using Mihaylov.Common.Database.Interfaces;
 
     public interface IMihaylovDbContext: IDbContext
     {

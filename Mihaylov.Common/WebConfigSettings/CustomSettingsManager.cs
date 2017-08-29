@@ -3,18 +3,20 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Configuration;
 using Mihaylov.Common.Validations;
+using Mihaylov.Common.WebConfigSettings.Interfaces;
 using Mihaylov.Common.WebConfigSettings.Models;
 using Mihaylov.Common.WebConfigSettings.Providers;
 
-namespace Mihaylov.Common.WebConfigSettings.Interfaces
+namespace Mihaylov.Common.WebConfigSettings
 {
     public class CustomSettingsManager : ICustomSettingsManager
     {
         private ICustomSettingsProvider provider;
         private Lazy<CustomSettingsModel> settings;
+        private Lazy<IDictionary<string, string>> customSettings;
 
         public CustomSettingsManager()
-            :this(new CustomSettingsProvider())
+            : this(new CustomSettingsProvider())
         {
         }
 
@@ -29,6 +31,11 @@ namespace Mihaylov.Common.WebConfigSettings.Interfaces
                 CustomSettingsModel settings = this.provider.GetAllSettingByEnvironment();
                 return settings;
             });
+
+            this.customSettings = new Lazy<IDictionary<string, string>>(() =>
+            {
+                return new Dictionary<string, string>(this.settings.Value.Settings, StringComparer.InvariantCultureIgnoreCase);
+            });
         }
 
         public CustomSettingsModel Settings
@@ -41,13 +48,12 @@ namespace Mihaylov.Common.WebConfigSettings.Interfaces
 
         public string GetSettingByName(string systemName)
         {
-            IDictionary<string, string> customSettings = this.settings.Value.Settings;
-            if (!customSettings.ContainsKey(systemName))
+            if (!this.customSettings.Value.ContainsKey(systemName))
             {
                 throw new ConfigurationErrorsException($" The \"{systemName}\" or \"{systemName}_{this.settings.Value.Environment}\" key in web.config is not found in CustomSettings area");
             }
 
-            return customSettings[systemName];
+            return this.customSettings.Value[systemName];
         }
 
         public T GetSettingByName<T>(string key)

@@ -1,4 +1,4 @@
-﻿namespace Mihaylov.Common.Base
+﻿namespace Mihaylov.Common.Database
 {
     using System;
     using System.Collections.Generic;
@@ -8,8 +8,8 @@
     using System.Data.Entity.Infrastructure;
     using System.Linq;
     using System.Linq.Expressions;
+    using Mihaylov.Common.Database.Interfaces;
     using Mihaylov.Common.Extensions;
-    using Mihaylov.Common.Interfaces;
 
     public class GenericRepository<T, C> : IRepository<T>
         where T : class
