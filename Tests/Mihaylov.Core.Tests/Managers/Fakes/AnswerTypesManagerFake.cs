@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Mihaylov.Core.Interfaces;
-using Mihaylov.Core.Managers;
-using Mihaylov.Data.Models.Repositories;
+﻿using System.Collections.Generic;
+using Mihaylov.Core.Interfaces.Site;
+using Mihaylov.Core.Managers.Site;
+using Mihaylov.Data.Models.Site;
 
 namespace Mihaylov.Core.Tests.Managers.Fakes
 {

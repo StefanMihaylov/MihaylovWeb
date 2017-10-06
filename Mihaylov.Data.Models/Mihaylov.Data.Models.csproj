@@ -48,18 +48,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Helpers\PersonInfo.cs" />
-    <Compile Include="Interfaces\ICountriesRepository.cs" />
-    <Compile Include="Interfaces\IGetAllRepository.cs" />
-    <Compile Include="Interfaces\IPersonsRepository.cs" />
-    <Compile Include="Repositories\AnswerType.cs" />
-    <Compile Include="Repositories\Country.cs" />
-    <Compile Include="Repositories\Ethnicity.cs" />
-    <Compile Include="Repositories\Person.cs" />
+    <Compile Include="Helpers\Site\PersonInfo.cs" />
+    <Compile Include="Interfaces\Site\ICountriesRepository.cs" />
+    <Compile Include="Interfaces\Site\IGetAllRepository.cs" />
+    <Compile Include="Interfaces\Site\IPersonsRepository.cs" />
+    <Compile Include="Repositories\Site\AnswerType.cs" />
+    <Compile Include="Repositories\Site\Country.cs" />
+    <Compile Include="Repositories\Site\Ethnicity.cs" />
+    <Compile Include="Repositories\Site\Person.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Repositories\Orientation.cs" />
-    <Compile Include="Repositories\PersonStatistics.cs" />
-    <Compile Include="Repositories\Unit.cs" />
+    <Compile Include="Repositories\Site\Orientation.cs" />
+    <Compile Include="Repositories\Site\PersonStatistics.cs" />
+    <Compile Include="Repositories\Site\Unit.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Mihaylov.Database.Models\Mihaylov.Database.Models.csproj">

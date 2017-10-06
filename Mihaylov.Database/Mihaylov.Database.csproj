@@ -86,37 +86,30 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="MihaylovDbModel.Context.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>MihaylovDbModel.Context.tt</DependentUpon>
-    </Compile>
-    <Compile Include="MihaylovDbModel.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>MihaylovDbModel.edmx</DependentUpon>
-    </Compile>
     <Compile Include="NinjectModuleDatabase.cs" />
-    <Compile Include="Partials\MihaylovDbContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <EntityDeploy Include="MihaylovDbModel.edmx">
-      <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>MihaylovDbModel.Designer.cs</LastGenOutput>
-    </EntityDeploy>
+    <Compile Include="Site\Partials\SiteDbContext.cs" />
+    <Compile Include="Site\SiteDbModel.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>SiteDbModel.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Site\SiteDbModel.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>SiteDbModel.edmx</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.Config" />
-    <None Include="MihaylovDbModel.Context.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>MihaylovDbModel.edmx</DependentUpon>
-      <LastGenOutput>MihaylovDbModel.Context.cs</LastGenOutput>
-    </None>
-    <None Include="MihaylovDbModel.edmx.diagram">
-      <DependentUpon>MihaylovDbModel.edmx</DependentUpon>
-    </None>
     <None Include="packages.config" />
+    <EntityDeploy Include="Site\SiteDbModel.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>SiteDbModel.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <None Include="Site\SiteDbModel.edmx.diagram">
+      <DependentUpon>SiteDbModel.edmx</DependentUpon>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
@@ -130,6 +123,14 @@
       <Project>{251a9623-1317-4232-801c-f21189557227}</Project>
       <Name>Mihaylov.Database.Models</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <Content Include="Site\SiteDbModel.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>SiteDbModel.edmx</DependentUpon>
+      <LastGenOutput>SiteDbModel.Context.cs</LastGenOutput>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using Mihaylov.Core.Interfaces;
-using Mihaylov.Core.Managers;
-using Mihaylov.Data.Models.Repositories;
+using Mihaylov.Core.Interfaces.Site;
+using Mihaylov.Core.Managers.Site;
+using Mihaylov.Data.Models.Site;
 using Ninject.Extensions.Logging;
 
 namespace Mihaylov.Core.Tests.Managers.Fakes

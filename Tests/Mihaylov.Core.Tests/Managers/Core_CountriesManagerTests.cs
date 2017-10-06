@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Mihaylov.Core.Interfaces;
-using Mihaylov.Core.Managers;
+using Mihaylov.Core.Interfaces.Site;
+using Mihaylov.Core.Managers.Site;
 using Mihaylov.Core.Tests.Managers.Fakes;
-using Mihaylov.Data.Models.Repositories;
+using Mihaylov.Data.Models.Site;
 using Ninject.Extensions.Logging;
 using Telerik.JustMock;
 

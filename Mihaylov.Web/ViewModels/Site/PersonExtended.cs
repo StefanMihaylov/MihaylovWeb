@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Mihaylov.Data.Models.Repositories;
+using Mihaylov.Data.Models.Site;
 
 namespace Mihaylov.Web.ViewModels.Site
 {

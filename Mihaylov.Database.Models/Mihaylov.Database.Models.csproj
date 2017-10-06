@@ -64,41 +64,39 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AnswerType.cs">
-      <DependentUpon>MihaylovDbModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Country.cs">
-      <DependentUpon>MihaylovDbModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="EthnicityType.cs">
-      <DependentUpon>MihaylovDbModel.tt</DependentUpon>
-    </Compile>
     <Compile Include="Identity\AppUser.cs" />
-    <Compile Include="Interfaces\IMihaylovDbContext.cs" />
-    <Compile Include="MihaylovDbModel.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>MihaylovDbModel.tt</DependentUpon>
+    <Compile Include="Site\AnswerType.cs">
+      <DependentUpon>SiteDbModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="OrientationType.cs">
-      <DependentUpon>MihaylovDbModel.tt</DependentUpon>
+    <Compile Include="Site\Country.cs">
+      <DependentUpon>SiteDbModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Person.cs">
-      <DependentUpon>MihaylovDbModel.tt</DependentUpon>
+    <Compile Include="Site\EthnicityType.cs">
+      <DependentUpon>SiteDbModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Site\ISiteDbContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Identity\UsersDbContext.cs" />
-    <Compile Include="UnitType.cs">
-      <DependentUpon>MihaylovDbModel.tt</DependentUpon>
+    <Compile Include="Site\OrientationType.cs">
+      <DependentUpon>SiteDbModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Site\Person.cs">
+      <DependentUpon>SiteDbModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Site\Phras.cs">
+      <DependentUpon>SiteDbModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Site\SiteDbModel.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>SiteDbModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Site\UnitType.cs">
+      <DependentUpon>SiteDbModel.tt</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <None Include="MihaylovDbModel.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>MihaylovDbModel.cs</LastGenOutput>
-      <CustomToolNamespace>Mihaylov.Database</CustomToolNamespace>
-    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
@@ -109,6 +107,14 @@
       <Project>{d0c0fdcb-f718-418b-8425-2559c7f4c431}</Project>
       <Name>Mihaylov.Common</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Site\SiteDbModel.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>SiteDbModel.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+      <CustomToolNamespace>Mihaylov.Database.Site</CustomToolNamespace>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

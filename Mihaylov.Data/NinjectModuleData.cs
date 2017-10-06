@@ -1,6 +1,8 @@
-﻿using Mihaylov.Data.Models.Interfaces;
-using Mihaylov.Data.Models.Repositories;
-using Mihaylov.Data.Repositories;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using Ninject.Modules;
 
 namespace Mihaylov.Data
@@ -16,14 +18,7 @@ namespace Mihaylov.Data
 
         public override void Load()
         {
-            Kernel.Load(new INinjectModule[] { new Mihaylov.Database.NinjectModuleDatabase(this.connectionString) });
-
-            Kernel.Bind<IGetAllRepository<AnswerType>>().To<AnswerTypeRepository>();
-            Kernel.Bind<IGetAllRepository<Ethnicity>>().To<EthnicitiesRepository>();
-            Kernel.Bind<IGetAllRepository<Orientation>>().To<OrientationsRepository>();
-            Kernel.Bind<IGetAllRepository<Unit>>().To<UnitsRepository>();
-            Kernel.Bind<ICountriesRepository>().To<CountriesRepository>();
-            Kernel.Bind<IPersonsRepository>().To<PersonsRepository>();
+            Kernel.Load(new INinjectModule[] { new NinjectModuleSiteData(this.connectionString) });
         }
     }
 }
