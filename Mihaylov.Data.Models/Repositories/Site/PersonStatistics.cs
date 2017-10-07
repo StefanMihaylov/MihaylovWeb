@@ -30,9 +30,10 @@ namespace Mihaylov.Data.Models.Site
         {
             get
             {
-                var result = new Dictionary<string, string>();
-
-                result.Add("Average", $"{this.Average:0.00} ({this.Min:0.0} - {this.Max:0.0})");
+                var result = new Dictionary<string, string>
+                {
+                    { "Average", $"{this.Average:0.00} ({this.Min:0.0} - {this.Max:0.0})" }
+                };
 
                 foreach (var countPair in this.CountDictionary)
                 {

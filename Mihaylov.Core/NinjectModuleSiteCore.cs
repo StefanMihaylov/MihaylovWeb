@@ -23,19 +23,12 @@ namespace Mihaylov.Core
         {
             Kernel.Load(new INinjectModule[] { new NinjectModuleSiteData(this.connectionString) });
 
-            Kernel.Bind<IAnswerTypesProvider>().To<AnswerTypesProvider>();
-            Kernel.Bind<ICountriesProvider>().To<CountriesProvider>();
-            Kernel.Bind<IEthnicitiesProvider>().To<EthnicitiesProvider>();
-            Kernel.Bind<IOrientationsProvider>().To<OrientationsProvider>();
             Kernel.Bind<IPersonsProvider>().To<PersonsProvider>();
-            Kernel.Bind<IUnitsProvider>().To<UnitsProvider>();
+            Kernel.Bind<IPersonAdditionalInfoProvider>().To<PersonAdditionalInfoProvider>();
 
-            Kernel.Bind<IAnswerTypesManager>().To<AnswerTypesManager>().InSingletonScope();
-            Kernel.Bind<ICountriesManager>().To<CountriesManager>().InSingletonScope();
-            Kernel.Bind<IEthnicitiesManager>().To<EthnicitiesManager>().InSingletonScope();
-            Kernel.Bind<IOrientationsManager>().To<OrientationsManager>().InSingletonScope();
+            Kernel.Bind<IPersonAdditionalInfoManager>().To<PersonAdditionalInfoManager>().InSingletonScope();
             Kernel.Bind<IPersonsManager>().To<PersonsManager>().InSingletonScope();
-            Kernel.Bind<IUnitsManager>().To<UnitsManager>().InSingletonScope();
+            Kernel.Bind<IPersonAdditionalInfoManager>().To<PersonAdditionalInfoManager>().InSingletonScope();
 
             Kernel.Bind<ICountriesWriter>().To<CountriesWriter>();
             Kernel.Bind<IPersonsWriter>().To<PersonsWriter>();

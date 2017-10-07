@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using Mihaylov.Core.Interfaces.Site;
 using Mihaylov.Data.Models.Site;
@@ -12,21 +9,20 @@ using Ninject.Extensions.Logging;
 
 namespace Mihaylov.Web.Controllers
 {
+    [Authorize]
     public class SiteController : BaseController
     {
         private readonly ISiteHelper siteHelper;
         private readonly IPersonsManager personManager;
         private readonly IPersonsWriter personsWriter;
-        private readonly IUnitsManager unitManager;
 
         public SiteController(ISiteHelper siteHelper, IPersonsManager personManager, IPersonsWriter personsWriter,
-            IUnitsManager unitManager, ILogger logger, IToastrHelper toaster)
+            ILogger logger, IToastrHelper toaster)
             : base(logger, toaster)
         {
             this.siteHelper = siteHelper;
             this.personManager = personManager;
             this.personsWriter = personsWriter;
-            this.unitManager = unitManager;
         }
 
         // GET: Site
@@ -36,7 +32,7 @@ namespace Mihaylov.Web.Controllers
             {
                 Statistics = this.personManager.GetStatictics(),
                 Persons = this.personManager.GetAllPersons(true, 0, 10),
-                SystemUnit = this.unitManager.GetAllUnits().FirstOrDefault(u => u.ConversionRate == 1.0m)?.Description,
+                SystemUnit = this.siteHelper.SystemUnit,
             };
 
             return View(model);
@@ -56,9 +52,11 @@ namespace Mihaylov.Web.Controllers
                     person = this.siteHelper.GetUserInfo(userName);
                 }
 
-                PersonExtended personExtended = new PersonExtended(person);
-                personExtended.AnswerUnits = this.siteHelper.GetAllUnits();
-                personExtended.AnswerTypes = this.siteHelper.GetAllAnswerTypes();
+                var personExtended = new PersonExtended(person)
+                {
+                    AnswerUnits = this.siteHelper.GetAllUnits(),
+                    AnswerTypes = this.siteHelper.GetAllAnswerTypes()
+                };
 
                 return this.PartialView(personExtended);
             }

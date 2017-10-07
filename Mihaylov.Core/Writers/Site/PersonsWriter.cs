@@ -8,12 +8,10 @@ namespace Mihaylov.Core.Writers.Site
     public class PersonsWriter : IPersonsWriter
     {
         private readonly IPersonsRepository repository;
-        private readonly IUnitsManager unitsManager;
 
-        public PersonsWriter(IPersonsRepository personsRepository, IUnitsManager unitsManager)
+        public PersonsWriter(IPersonsRepository personsRepository)
         {
             this.repository = personsRepository;
-            this.unitsManager = unitsManager;
         }
 
         public Person Add(Person inputPerson)

@@ -5,6 +5,8 @@ namespace Mihaylov.Core.Interfaces.Site
 {
     public interface ISiteHelper
     {
+        string SystemUnit { get; }
+
         string GetUserName(string url);
 
         Person GetUserInfo(string username);

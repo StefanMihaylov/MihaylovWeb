@@ -13,35 +13,31 @@ namespace Mihaylov.Core.Helpers.Site
     public class SiteHelper : ISiteHelper
     {
         private readonly string url;
-        private readonly ICountriesManager countriesManager;
-        private readonly IEthnicitiesManager ethnicitiesManager;
-        private readonly IOrientationsManager orientationsManager;
-        private readonly IUnitsManager unitsManager;
-        private readonly IAnswerTypesManager answerTypesManager;
+        private readonly IPersonAdditionalInfoManager personAdditionalManager;
         private readonly ICountriesWriter countriesWriter;
         private readonly IPersonsProvider personsProvider;
         private readonly IPersonsWriter personsWriter;
         private readonly ILogger logger;
 
-        private readonly string systemUnit;
-
-        public SiteHelper(string url, ICountriesManager countriesManager, ICountriesWriter countriesWriter,
-            IEthnicitiesManager ethnicitiesManager, IOrientationsManager orientationsManager,
-            IUnitsManager unitsManager, IAnswerTypesManager answerTypesManager, ILogger logger,
+        public SiteHelper(string url, ICountriesWriter countriesWriter,
+            IPersonAdditionalInfoManager personAdditionalManager, ILogger logger,
             IPersonsProvider personsProvider, IPersonsWriter personsWriter)
         {
             this.url = url;
-            this.countriesManager = countriesManager;
-            this.ethnicitiesManager = ethnicitiesManager;
-            this.orientationsManager = orientationsManager;
-            this.unitsManager = unitsManager;
-            this.answerTypesManager = answerTypesManager;
+            this.personAdditionalManager = personAdditionalManager;
             this.countriesWriter = countriesWriter;
             this.logger = logger;
             this.personsProvider = personsProvider;
             this.personsWriter = personsWriter;
+        }
 
-            systemUnit = this.unitsManager.GetAllUnits().FirstOrDefault(u => u.ConversionRate == 1m)?.Name;
+        public string SystemUnit
+        {
+            get
+            {
+                return this.personAdditionalManager.GetAllUnits()
+                                                   .FirstOrDefault(u => u.ConversionRate == 1m)?.Name;
+            }
         }
 
         public string GetUserName(string url)
@@ -72,17 +68,17 @@ namespace Mihaylov.Core.Helpers.Site
 
             if (string.IsNullOrWhiteSpace(person.AnswerType))
             {
-                AnswerType answerType = this.answerTypesManager.GetById(person.AnswerTypeId);
+                AnswerType answerType = this.personAdditionalManager.GetAnswerTypeById(person.AnswerTypeId);
                 person.AnswerType = answerType.Name;
             }
 
             if (person.Answer.HasValue)
             {
-                Unit unit = this.unitsManager.GetById(person.AnswerUnitId.Value);
+                Unit unit = this.personAdditionalManager.GetUnitById(person.AnswerUnitId.Value);
 
                 person.AnswerUnit = unit.Name;
                 person.AnswerConverted = person.Answer.Value * unit.ConversionRate;
-                person.AnswerConvertedUnit = systemUnit;
+                person.AnswerConvertedUnit = this.SystemUnit;
             }
             else
             {
@@ -181,12 +177,12 @@ namespace Mihaylov.Core.Helpers.Site
 
         public IEnumerable<Unit> GetAllUnits()
         {
-            return this.unitsManager.GetAllUnits();
+            return this.personAdditionalManager.GetAllUnits();
         }
 
         public IEnumerable<AnswerType> GetAllAnswerTypes()
         {
-            return this.answerTypesManager.GetAllAnswerTypes();
+            return this.personAdditionalManager.GetAllAnswerTypes();
         }
 
         #region Private Methods
@@ -198,7 +194,7 @@ namespace Mihaylov.Core.Helpers.Site
                 orientation = "Unknown";
             }
 
-            Orientation orientationDTO = this.orientationsManager.GetByName(orientation);
+            Orientation orientationDTO = this.personAdditionalManager.GetOrientationByName(orientation);
             return orientationDTO;
         }
 
@@ -216,7 +212,7 @@ namespace Mihaylov.Core.Helpers.Site
                 ethnicity = ethnicity.Substring(0, index).Trim();
             }
 
-            Ethnicity ethnisityDTO = this.ethnicitiesManager.GetByName(ethnicity);
+            Ethnicity ethnisityDTO = this.personAdditionalManager.GetEthnicityByName(ethnicity);
             return ethnisityDTO;
         }
 
@@ -233,7 +229,7 @@ namespace Mihaylov.Core.Helpers.Site
                 country = country.Substring(index + 1);
             }
 
-            Country countryDTO = this.countriesManager.GetByName(country);
+            Country countryDTO = this.personAdditionalManager.GetCountryByName(country);
             if (countryDTO == null)
             {
                 countryDTO = this.countriesWriter.Add(country);

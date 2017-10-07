@@ -81,9 +81,9 @@
     <Compile Include="Helpers\MyDisplayForExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Toastr\IToastrHelper.cs" />
-    <Compile Include="Toastr\ToastMessage.cs" />
+    <Compile Include="Toastr\Models\ToastMessage.cs" />
     <Compile Include="Toastr\ToastrHelper.cs" />
-    <Compile Include="Toastr\ToastType.cs" />
+    <Compile Include="Toastr\Models\ToastType.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

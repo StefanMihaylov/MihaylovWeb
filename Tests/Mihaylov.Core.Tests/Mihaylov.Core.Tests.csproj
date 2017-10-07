@@ -77,10 +77,8 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
-    <Compile Include="Managers\Core_AnswerTypesManagerTests.cs" />
-    <Compile Include="Managers\Core_CountriesManagerTests.cs" />
-    <Compile Include="Managers\Fakes\AnswerTypesManagerFake.cs" />
-    <Compile Include="Managers\Fakes\CountriesManagerFake.cs" />
+    <Compile Include="Managers\Core_Site_PersonAdditionalInfoManagerTests.cs" />
+    <Compile Include="Managers\Fakes\PersonAdditionalInfoManagerFake.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
