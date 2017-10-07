@@ -26,7 +26,6 @@ namespace Mihaylov.Core
             Kernel.Bind<IPersonsProvider>().To<PersonsProvider>();
             Kernel.Bind<IPersonAdditionalInfoProvider>().To<PersonAdditionalInfoProvider>();
 
-            Kernel.Bind<IPersonAdditionalInfoManager>().To<PersonAdditionalInfoManager>().InSingletonScope();
             Kernel.Bind<IPersonsManager>().To<PersonsManager>().InSingletonScope();
             Kernel.Bind<IPersonAdditionalInfoManager>().To<PersonAdditionalInfoManager>().InSingletonScope();
 
