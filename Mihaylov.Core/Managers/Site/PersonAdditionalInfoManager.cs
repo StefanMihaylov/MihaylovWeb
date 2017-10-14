@@ -218,6 +218,11 @@ namespace Mihaylov.Core.Managers.Site
             }
         }
 
+        public IEnumerable<Country> GetAllCountries()
+        {
+            return this.countriesById.Values;
+        }
+
         private void InitializeOrientation()
         {
             IEnumerable<Orientation> orientations = this.provider.GetAllOrientations();

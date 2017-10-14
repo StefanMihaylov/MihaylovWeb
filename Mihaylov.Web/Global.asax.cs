@@ -2,7 +2,7 @@
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
-using Mihaylov.Web.App_Start;
+using Mihaylov.Web.Common;
 
 namespace Mihaylov.Web
 {
@@ -16,6 +16,7 @@ namespace Mihaylov.Web
             BundleConfig.RegisterBundles(BundleTable.Bundles);
 
             ViewEngineConfig.RegisterEngines();
+            AutoMapperConfig.RegisterModels();
         }
     }
 }

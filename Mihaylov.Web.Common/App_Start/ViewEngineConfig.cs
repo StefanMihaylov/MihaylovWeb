@@ -1,7 +1,7 @@
 ﻿using System.Web.Mvc;
 
-namespace Mihaylov.Web.App_Start
-{
+namespace Mihaylov.Web.Common
+{ 
     public class ViewEngineConfig
     {
         public static void RegisterEngines()

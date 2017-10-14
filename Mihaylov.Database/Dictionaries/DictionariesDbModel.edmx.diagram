@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="fe863bddae984fe0b7e182fd6c066ac6" Name="Diagram1" ZoomLevel="182">
+        <EntityTypeShape EntityType="DictionariesDbModel.Language" Width="1.5" PointX="0.75" PointY="4.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="DictionariesDbModel.LearningSystem" Width="1.5" PointX="3" PointY="3.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="DictionariesDbModel.Level" Width="1.5" PointX="5.25" PointY="2.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="DictionariesDbModel.PrepositionType" Width="1.5" PointX="3" PointY="6.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="DictionariesDbModel.Record" Width="1.5" PointX="9.75" PointY="2.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="DictionariesDbModel.RecordType" Width="1.5" PointX="12" PointY="3.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="DictionariesDbModel.Test" Width="1.5" PointX="15" PointY="2.375" IsExpanded="true" />
+        <AssociationConnector Association="DictionariesDbModel.FK_LearningSystems_Languages" ManuallyRouted="false" />
+        <AssociationConnector Association="DictionariesDbModel.FK_PrepositionTypes_Languages" ManuallyRouted="false" />
+        <AssociationConnector Association="DictionariesDbModel.FK_Levels_LearningSystems" ManuallyRouted="false" />
+        <AssociationConnector Association="DictionariesDbModel.FK_Tests_Tests" ManuallyRouted="false" />
+        <AssociationConnector Association="DictionariesDbModel.IncorrectAnswers" ManuallyRouted="false" />
+        <AssociationConnector Association="DictionariesDbModel.RecordRecordTypes" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="DictionariesDbModel.AspNetUser" Width="1.5" PointX="17.625" PointY="2.5" />
+        <AssociationConnector Association="DictionariesDbModel.FK_Tests_AspNetUsers" />
+        <EntityTypeShape EntityType="DictionariesDbModel.Cours" Width="1.5" PointX="7.5" PointY="3" />
+        <AssociationConnector Association="DictionariesDbModel.FK_Courses_Levels" />
+        <AssociationConnector Association="DictionariesDbModel.FK_Records_Courses" />
+        <AssociationConnector Association="DictionariesDbModel.FK_Tests_Courses" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

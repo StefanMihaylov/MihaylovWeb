@@ -1,0 +1,738 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="DictionariesDbModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="AspNetUsers">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="Email" Type="nvarchar" MaxLength="256" />
+          <Property Name="EmailConfirmed" Type="bit" Nullable="false" />
+          <Property Name="PasswordHash" Type="nvarchar(max)" />
+          <Property Name="SecurityStamp" Type="nvarchar(max)" />
+          <Property Name="PhoneNumber" Type="nvarchar(max)" />
+          <Property Name="PhoneNumberConfirmed" Type="bit" Nullable="false" />
+          <Property Name="TwoFactorEnabled" Type="bit" Nullable="false" />
+          <Property Name="LockoutEndDateUtc" Type="datetime" />
+          <Property Name="LockoutEnabled" Type="bit" Nullable="false" />
+          <Property Name="AccessFailedCount" Type="int" Nullable="false" />
+          <Property Name="UserName" Type="nvarchar" MaxLength="256" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Courses">
+          <Key>
+            <PropertyRef Name="CourseId" />
+          </Key>
+          <Property Name="CourseId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="LevelId" Type="int" Nullable="false" />
+          <Property Name="StartDate" Type="date" />
+          <Property Name="EndDate" Type="date" />
+        </EntityType>
+        <EntityType Name="IncorrectAnswers">
+          <Key>
+            <PropertyRef Name="TestId" />
+            <PropertyRef Name="RecordId" />
+          </Key>
+          <Property Name="TestId" Type="int" Nullable="false" />
+          <Property Name="RecordId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Languages">
+          <Key>
+            <PropertyRef Name="LanguageId" />
+          </Key>
+          <Property Name="LanguageId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="LearningSystems">
+          <Key>
+            <PropertyRef Name="LearningSystemId" />
+          </Key>
+          <Property Name="LearningSystemId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="LanguageId" Type="int" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Levels">
+          <Key>
+            <PropertyRef Name="LevelId" />
+          </Key>
+          <Property Name="LevelId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="LearningSystemId" Type="int" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="Descrition" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="ModulesStartNumber" Type="int" />
+          <Property Name="ModulesEndNumber" Type="int" />
+        </EntityType>
+        <EntityType Name="PrepositionTypes">
+          <Key>
+            <PropertyRef Name="PrepositionTypeId" />
+          </Key>
+          <Property Name="PrepositionTypeId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="LanguageId" Type="int" Nullable="false" />
+          <Property Name="Value" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="RecordRecordTypes">
+          <Key>
+            <PropertyRef Name="RecordId" />
+            <PropertyRef Name="RecordTypeId" />
+          </Key>
+          <Property Name="RecordId" Type="int" Nullable="false" />
+          <Property Name="RecordTypeId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Records">
+          <Key>
+            <PropertyRef Name="RecordId" />
+          </Key>
+          <Property Name="RecordId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CourseId" Type="int" Nullable="false" />
+          <Property Name="ModuleNumber" Type="int" />
+          <Property Name="Original" Type="nvarchar" MaxLength="200" Nullable="false" />
+          <Property Name="Translation" Type="nvarchar" MaxLength="200" />
+          <Property Name="Comment" Type="nvarchar" MaxLength="200" />
+        </EntityType>
+        <EntityType Name="RecordTypes">
+          <Key>
+            <PropertyRef Name="RecordTypeId" />
+          </Key>
+          <Property Name="RecordTypeId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Tests">
+          <Key>
+            <PropertyRef Name="TestId" />
+          </Key>
+          <Property Name="TestId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="PreviousTestId" Type="int" />
+          <Property Name="UserId" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="CourseId" Type="int" Nullable="false" />
+          <Property Name="ModuleStartNumber" Type="int" />
+          <Property Name="ModuleEndNumber" Type="int" />
+          <Property Name="StartDate" Type="datetime" Nullable="false" />
+          <Property Name="CorrectAnswers" Type="int" />
+          <Property Name="TotalRecords" Type="int" />
+        </EntityType>
+        <Association Name="FK_Courses_Levels">
+          <End Role="Levels" Type="Self.Levels" Multiplicity="1" />
+          <End Role="Courses" Type="Self.Courses" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Levels">
+              <PropertyRef Name="LevelId" />
+            </Principal>
+            <Dependent Role="Courses">
+              <PropertyRef Name="LevelId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_IncorrectAnswers_Records">
+          <End Role="Records" Type="Self.Records" Multiplicity="1" />
+          <End Role="IncorrectAnswers" Type="Self.IncorrectAnswers" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Records">
+              <PropertyRef Name="RecordId" />
+            </Principal>
+            <Dependent Role="IncorrectAnswers">
+              <PropertyRef Name="RecordId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_IncorrectAnswers_Tests">
+          <End Role="Tests" Type="Self.Tests" Multiplicity="1" />
+          <End Role="IncorrectAnswers" Type="Self.IncorrectAnswers" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Tests">
+              <PropertyRef Name="TestId" />
+            </Principal>
+            <Dependent Role="IncorrectAnswers">
+              <PropertyRef Name="TestId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_LearningSystems_Languages">
+          <End Role="Languages" Type="Self.Languages" Multiplicity="1" />
+          <End Role="LearningSystems" Type="Self.LearningSystems" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Languages">
+              <PropertyRef Name="LanguageId" />
+            </Principal>
+            <Dependent Role="LearningSystems">
+              <PropertyRef Name="LanguageId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Levels_LearningSystems">
+          <End Role="LearningSystems" Type="Self.LearningSystems" Multiplicity="1" />
+          <End Role="Levels" Type="Self.Levels" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="LearningSystems">
+              <PropertyRef Name="LearningSystemId" />
+            </Principal>
+            <Dependent Role="Levels">
+              <PropertyRef Name="LearningSystemId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PrepositionTypes_Languages">
+          <End Role="Languages" Type="Self.Languages" Multiplicity="1" />
+          <End Role="PrepositionTypes" Type="Self.PrepositionTypes" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Languages">
+              <PropertyRef Name="LanguageId" />
+            </Principal>
+            <Dependent Role="PrepositionTypes">
+              <PropertyRef Name="LanguageId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_RecordRecordTypes_Records">
+          <End Role="Records" Type="Self.Records" Multiplicity="1" />
+          <End Role="RecordRecordTypes" Type="Self.RecordRecordTypes" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Records">
+              <PropertyRef Name="RecordId" />
+            </Principal>
+            <Dependent Role="RecordRecordTypes">
+              <PropertyRef Name="RecordId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_RecordRecordTypes_RecordTypes">
+          <End Role="RecordTypes" Type="Self.RecordTypes" Multiplicity="1" />
+          <End Role="RecordRecordTypes" Type="Self.RecordRecordTypes" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="RecordTypes">
+              <PropertyRef Name="RecordTypeId" />
+            </Principal>
+            <Dependent Role="RecordRecordTypes">
+              <PropertyRef Name="RecordTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Records_Courses">
+          <End Role="Courses" Type="Self.Courses" Multiplicity="1" />
+          <End Role="Records" Type="Self.Records" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Courses">
+              <PropertyRef Name="CourseId" />
+            </Principal>
+            <Dependent Role="Records">
+              <PropertyRef Name="CourseId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Tests_AspNetUsers">
+          <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="1" />
+          <End Role="Tests" Type="Self.Tests" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUsers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Tests">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Tests_Courses">
+          <End Role="Courses" Type="Self.Courses" Multiplicity="1" />
+          <End Role="Tests" Type="Self.Tests" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Courses">
+              <PropertyRef Name="CourseId" />
+            </Principal>
+            <Dependent Role="Tests">
+              <PropertyRef Name="CourseId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Tests_Tests">
+          <End Role="Tests" Type="Self.Tests" Multiplicity="0..1" />
+          <End Role="Tests1" Type="Self.Tests" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Tests">
+              <PropertyRef Name="TestId" />
+            </Principal>
+            <Dependent Role="Tests1">
+              <PropertyRef Name="PreviousTestId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="DictionariesDbModelStoreContainer">
+          <EntitySet Name="AspNetUsers" EntityType="Self.AspNetUsers" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Courses" EntityType="Self.Courses" Schema="dict" store:Type="Tables" />
+          <EntitySet Name="IncorrectAnswers" EntityType="Self.IncorrectAnswers" Schema="dict" store:Type="Tables" />
+          <EntitySet Name="Languages" EntityType="Self.Languages" Schema="dict" store:Type="Tables" />
+          <EntitySet Name="LearningSystems" EntityType="Self.LearningSystems" Schema="dict" store:Type="Tables" />
+          <EntitySet Name="Levels" EntityType="Self.Levels" Schema="dict" store:Type="Tables" />
+          <EntitySet Name="PrepositionTypes" EntityType="Self.PrepositionTypes" Schema="dict" store:Type="Tables" />
+          <EntitySet Name="RecordRecordTypes" EntityType="Self.RecordRecordTypes" Schema="dict" store:Type="Tables" />
+          <EntitySet Name="Records" EntityType="Self.Records" Schema="dict" store:Type="Tables" />
+          <EntitySet Name="RecordTypes" EntityType="Self.RecordTypes" Schema="dict" store:Type="Tables" />
+          <EntitySet Name="Tests" EntityType="Self.Tests" Schema="dict" store:Type="Tables" />
+          <AssociationSet Name="FK_Courses_Levels" Association="Self.FK_Courses_Levels">
+            <End Role="Levels" EntitySet="Levels" />
+            <End Role="Courses" EntitySet="Courses" />
+          </AssociationSet>
+          <AssociationSet Name="FK_IncorrectAnswers_Records" Association="Self.FK_IncorrectAnswers_Records">
+            <End Role="Records" EntitySet="Records" />
+            <End Role="IncorrectAnswers" EntitySet="IncorrectAnswers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_IncorrectAnswers_Tests" Association="Self.FK_IncorrectAnswers_Tests">
+            <End Role="Tests" EntitySet="Tests" />
+            <End Role="IncorrectAnswers" EntitySet="IncorrectAnswers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_LearningSystems_Languages" Association="Self.FK_LearningSystems_Languages">
+            <End Role="Languages" EntitySet="Languages" />
+            <End Role="LearningSystems" EntitySet="LearningSystems" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Levels_LearningSystems" Association="Self.FK_Levels_LearningSystems">
+            <End Role="LearningSystems" EntitySet="LearningSystems" />
+            <End Role="Levels" EntitySet="Levels" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PrepositionTypes_Languages" Association="Self.FK_PrepositionTypes_Languages">
+            <End Role="Languages" EntitySet="Languages" />
+            <End Role="PrepositionTypes" EntitySet="PrepositionTypes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RecordRecordTypes_Records" Association="Self.FK_RecordRecordTypes_Records">
+            <End Role="Records" EntitySet="Records" />
+            <End Role="RecordRecordTypes" EntitySet="RecordRecordTypes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RecordRecordTypes_RecordTypes" Association="Self.FK_RecordRecordTypes_RecordTypes">
+            <End Role="RecordTypes" EntitySet="RecordTypes" />
+            <End Role="RecordRecordTypes" EntitySet="RecordRecordTypes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Records_Courses" Association="Self.FK_Records_Courses">
+            <End Role="Courses" EntitySet="Courses" />
+            <End Role="Records" EntitySet="Records" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Tests_AspNetUsers" Association="Self.FK_Tests_AspNetUsers">
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+            <End Role="Tests" EntitySet="Tests" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Tests_Courses" Association="Self.FK_Tests_Courses">
+            <End Role="Courses" EntitySet="Courses" />
+            <End Role="Tests" EntitySet="Tests" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Tests_Tests" Association="Self.FK_Tests_Tests">
+            <End Role="Tests" EntitySet="Tests" />
+            <End Role="Tests1" EntitySet="Tests" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="DictionariesDbModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Language">
+          <Key>
+            <PropertyRef Name="LanguageId" />
+          </Key>
+          <Property Name="LanguageId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="LearningSystems" Relationship="Self.FK_LearningSystems_Languages" FromRole="Languages" ToRole="LearningSystems" />
+          <NavigationProperty Name="PrepositionTypes" Relationship="Self.FK_PrepositionTypes_Languages" FromRole="Languages" ToRole="PrepositionTypes" />
+        </EntityType>
+        <EntityType Name="LearningSystem">
+          <Key>
+            <PropertyRef Name="LearningSystemId" />
+          </Key>
+          <Property Name="LearningSystemId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="LanguageId" Type="Int32" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Language" Relationship="Self.FK_LearningSystems_Languages" FromRole="LearningSystems" ToRole="Languages" />
+          <NavigationProperty Name="Levels" Relationship="Self.FK_Levels_LearningSystems" FromRole="LearningSystems" ToRole="Levels" />
+        </EntityType>
+        <EntityType Name="Level">
+          <Key>
+            <PropertyRef Name="LevelId" />
+          </Key>
+          <Property Name="LevelId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="LearningSystemId" Type="Int32" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="10" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Descrition" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ModulesStartNumber" Type="Int32" />
+          <Property Name="ModulesEndNumber" Type="Int32" />
+          <NavigationProperty Name="LearningSystem" Relationship="Self.FK_Levels_LearningSystems" FromRole="Levels" ToRole="LearningSystems" />
+          <NavigationProperty Name="Courses" Relationship="DictionariesDbModel.FK_Courses_Levels" FromRole="Level" ToRole="Cours" />
+        </EntityType>
+        <EntityType Name="PrepositionType">
+          <Key>
+            <PropertyRef Name="PrepositionTypeId" />
+          </Key>
+          <Property Name="PrepositionTypeId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="LanguageId" Type="Int32" Nullable="false" />
+          <Property Name="Value" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Language" Relationship="Self.FK_PrepositionTypes_Languages" FromRole="PrepositionTypes" ToRole="Languages" />
+        </EntityType>
+        <EntityType Name="Record">
+          <Key>
+            <PropertyRef Name="RecordId" />
+          </Key>
+          <Property Name="RecordId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CourseId" Type="Int32" Nullable="false" />
+          <Property Name="ModuleNumber" Type="Int32" />
+          <Property Name="Original" Type="String" MaxLength="200" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Translation" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="Comment" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Tests" Relationship="Self.IncorrectAnswers" FromRole="Records" ToRole="Tests" />
+          <NavigationProperty Name="RecordTypes" Relationship="Self.RecordRecordTypes" FromRole="Records" ToRole="RecordTypes" />
+          <NavigationProperty Name="Cours" Relationship="DictionariesDbModel.FK_Records_Courses" FromRole="Record" ToRole="Cours" />
+        </EntityType>
+        <EntityType Name="RecordType">
+          <Key>
+            <PropertyRef Name="RecordTypeId" />
+          </Key>
+          <Property Name="RecordTypeId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Records" Relationship="Self.RecordRecordTypes" FromRole="RecordTypes" ToRole="Records" />
+        </EntityType>
+        <EntityType Name="Test">
+          <Key>
+            <PropertyRef Name="TestId" />
+          </Key>
+          <Property Name="TestId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="PreviousTestId" Type="Int32" />
+          <Property Name="UserId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="CourseId" Type="Int32" Nullable="false" />
+          <Property Name="ModuleStartNumber" Type="Int32" />
+          <Property Name="ModuleEndNumber" Type="Int32" />
+          <Property Name="StartDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="CorrectAnswers" Type="Int32" />
+          <Property Name="TotalRecords" Type="Int32" />
+          <NavigationProperty Name="Tests1" Relationship="Self.FK_Tests_Tests" FromRole="Tests" ToRole="Tests1" />
+          <NavigationProperty Name="Test1" Relationship="Self.FK_Tests_Tests" FromRole="Tests1" ToRole="Tests" />
+          <NavigationProperty Name="Records" Relationship="Self.IncorrectAnswers" FromRole="Tests" ToRole="Records" />
+          <NavigationProperty Name="AspNetUser" Relationship="DictionariesDbModel.FK_Tests_AspNetUsers" FromRole="Test" ToRole="AspNetUser" />
+          <NavigationProperty Name="Cours" Relationship="DictionariesDbModel.FK_Tests_Courses" FromRole="Test" ToRole="Cours" />
+        </EntityType>
+        <Association Name="FK_LearningSystems_Languages">
+          <End Role="Languages" Type="Self.Language" Multiplicity="1" />
+          <End Role="LearningSystems" Type="Self.LearningSystem" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Languages">
+              <PropertyRef Name="LanguageId" />
+            </Principal>
+            <Dependent Role="LearningSystems">
+              <PropertyRef Name="LanguageId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PrepositionTypes_Languages">
+          <End Role="Languages" Type="Self.Language" Multiplicity="1" />
+          <End Role="PrepositionTypes" Type="Self.PrepositionType" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Languages">
+              <PropertyRef Name="LanguageId" />
+            </Principal>
+            <Dependent Role="PrepositionTypes">
+              <PropertyRef Name="LanguageId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Levels_LearningSystems">
+          <End Role="LearningSystems" Type="Self.LearningSystem" Multiplicity="1" />
+          <End Role="Levels" Type="Self.Level" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="LearningSystems">
+              <PropertyRef Name="LearningSystemId" />
+            </Principal>
+            <Dependent Role="Levels">
+              <PropertyRef Name="LearningSystemId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Tests_Tests">
+          <End Role="Tests" Type="Self.Test" Multiplicity="0..1" />
+          <End Role="Tests1" Type="Self.Test" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Tests">
+              <PropertyRef Name="TestId" />
+            </Principal>
+            <Dependent Role="Tests1">
+              <PropertyRef Name="PreviousTestId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="IncorrectAnswers">
+          <End Role="Records" Type="Self.Record" Multiplicity="*" />
+          <End Role="Tests" Type="Self.Test" Multiplicity="*" />
+        </Association>
+        <Association Name="RecordRecordTypes">
+          <End Role="Records" Type="Self.Record" Multiplicity="*" />
+          <End Role="RecordTypes" Type="Self.RecordType" Multiplicity="*" />
+        </Association>
+        <EntityContainer Name="DictionariesDbContext" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Languages" EntityType="Self.Language" />
+          <EntitySet Name="LearningSystems" EntityType="Self.LearningSystem" />
+          <EntitySet Name="Levels" EntityType="Self.Level" />
+          <EntitySet Name="PrepositionTypes" EntityType="Self.PrepositionType" />
+          <EntitySet Name="Records" EntityType="Self.Record" />
+          <EntitySet Name="RecordTypes" EntityType="Self.RecordType" />
+          <EntitySet Name="Tests" EntityType="Self.Test" />
+          <AssociationSet Name="FK_LearningSystems_Languages" Association="Self.FK_LearningSystems_Languages">
+            <End Role="Languages" EntitySet="Languages" />
+            <End Role="LearningSystems" EntitySet="LearningSystems" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PrepositionTypes_Languages" Association="Self.FK_PrepositionTypes_Languages">
+            <End Role="Languages" EntitySet="Languages" />
+            <End Role="PrepositionTypes" EntitySet="PrepositionTypes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Levels_LearningSystems" Association="Self.FK_Levels_LearningSystems">
+            <End Role="LearningSystems" EntitySet="LearningSystems" />
+            <End Role="Levels" EntitySet="Levels" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Tests_Tests" Association="Self.FK_Tests_Tests">
+            <End Role="Tests" EntitySet="Tests" />
+            <End Role="Tests1" EntitySet="Tests" />
+          </AssociationSet>
+          <AssociationSet Name="IncorrectAnswers" Association="Self.IncorrectAnswers">
+            <End Role="Records" EntitySet="Records" />
+            <End Role="Tests" EntitySet="Tests" />
+          </AssociationSet>
+          <AssociationSet Name="RecordRecordTypes" Association="Self.RecordRecordTypes">
+            <End Role="Records" EntitySet="Records" />
+            <End Role="RecordTypes" EntitySet="RecordTypes" />
+          </AssociationSet>
+          <EntitySet Name="AspNetUsers" EntityType="DictionariesDbModel.AspNetUser" />
+          <AssociationSet Name="FK_Tests_AspNetUsers" Association="DictionariesDbModel.FK_Tests_AspNetUsers">
+            <End Role="AspNetUser" EntitySet="AspNetUsers" />
+            <End Role="Test" EntitySet="Tests" />
+          </AssociationSet>
+          <EntitySet Name="Courses" EntityType="DictionariesDbModel.Cours" />
+          <AssociationSet Name="FK_Courses_Levels" Association="DictionariesDbModel.FK_Courses_Levels">
+            <End Role="Level" EntitySet="Levels" />
+            <End Role="Cours" EntitySet="Courses" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Records_Courses" Association="DictionariesDbModel.FK_Records_Courses">
+            <End Role="Cours" EntitySet="Courses" />
+            <End Role="Record" EntitySet="Records" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Tests_Courses" Association="DictionariesDbModel.FK_Tests_Courses">
+            <End Role="Cours" EntitySet="Courses" />
+            <End Role="Test" EntitySet="Tests" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="AspNetUser">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="Email" Type="String" MaxLength="256" FixedLength="false" Unicode="true" />
+          <Property Name="EmailConfirmed" Type="Boolean" Nullable="false" />
+          <Property Name="PasswordHash" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="SecurityStamp" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="PhoneNumber" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="PhoneNumberConfirmed" Type="Boolean" Nullable="false" />
+          <Property Name="TwoFactorEnabled" Type="Boolean" Nullable="false" />
+          <Property Name="LockoutEndDateUtc" Type="DateTime" Precision="3" />
+          <Property Name="LockoutEnabled" Type="Boolean" Nullable="false" />
+          <Property Name="AccessFailedCount" Type="Int32" Nullable="false" />
+          <Property Name="UserName" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Tests" Relationship="DictionariesDbModel.FK_Tests_AspNetUsers" FromRole="AspNetUser" ToRole="Test" />
+        </EntityType>
+        <Association Name="FK_Tests_AspNetUsers">
+          <End Type="DictionariesDbModel.AspNetUser" Role="AspNetUser" Multiplicity="1" />
+          <End Type="DictionariesDbModel.Test" Role="Test" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUser">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Test">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="Cours">
+          <Key>
+            <PropertyRef Name="CourseId" />
+          </Key>
+          <Property Name="CourseId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="LevelId" Type="Int32" Nullable="false" />
+          <Property Name="StartDate" Type="DateTime" Precision="0" />
+          <Property Name="EndDate" Type="DateTime" Precision="0" />
+          <NavigationProperty Name="Level" Relationship="DictionariesDbModel.FK_Courses_Levels" FromRole="Cours" ToRole="Level" />
+          <NavigationProperty Name="Records" Relationship="DictionariesDbModel.FK_Records_Courses" FromRole="Cours" ToRole="Record" />
+          <NavigationProperty Name="Tests" Relationship="DictionariesDbModel.FK_Tests_Courses" FromRole="Cours" ToRole="Test" />
+        </EntityType>
+        <Association Name="FK_Courses_Levels">
+          <End Type="DictionariesDbModel.Level" Role="Level" Multiplicity="1" />
+          <End Type="DictionariesDbModel.Cours" Role="Cours" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Level">
+              <PropertyRef Name="LevelId" />
+            </Principal>
+            <Dependent Role="Cours">
+              <PropertyRef Name="LevelId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Records_Courses">
+          <End Type="DictionariesDbModel.Cours" Role="Cours" Multiplicity="1" />
+          <End Type="DictionariesDbModel.Record" Role="Record" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Cours">
+              <PropertyRef Name="CourseId" />
+            </Principal>
+            <Dependent Role="Record">
+              <PropertyRef Name="CourseId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Tests_Courses">
+          <End Type="DictionariesDbModel.Cours" Role="Cours" Multiplicity="1" />
+          <End Type="DictionariesDbModel.Test" Role="Test" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Cours">
+              <PropertyRef Name="CourseId" />
+            </Principal>
+            <Dependent Role="Test">
+              <PropertyRef Name="CourseId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="DictionariesDbModelStoreContainer" CdmEntityContainer="DictionariesDbContext">
+          <EntitySetMapping Name="Languages">
+            <EntityTypeMapping TypeName="DictionariesDbModel.Language">
+              <MappingFragment StoreEntitySet="Languages">
+                <ScalarProperty Name="LanguageId" ColumnName="LanguageId" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="LearningSystems">
+            <EntityTypeMapping TypeName="DictionariesDbModel.LearningSystem">
+              <MappingFragment StoreEntitySet="LearningSystems">
+                <ScalarProperty Name="LearningSystemId" ColumnName="LearningSystemId" />
+                <ScalarProperty Name="LanguageId" ColumnName="LanguageId" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Levels">
+            <EntityTypeMapping TypeName="DictionariesDbModel.Level">
+              <MappingFragment StoreEntitySet="Levels">
+                <ScalarProperty Name="LevelId" ColumnName="LevelId" />
+                <ScalarProperty Name="LearningSystemId" ColumnName="LearningSystemId" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Descrition" ColumnName="Descrition" />
+                <ScalarProperty Name="ModulesStartNumber" ColumnName="ModulesStartNumber" />
+                <ScalarProperty Name="ModulesEndNumber" ColumnName="ModulesEndNumber" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PrepositionTypes">
+            <EntityTypeMapping TypeName="DictionariesDbModel.PrepositionType">
+              <MappingFragment StoreEntitySet="PrepositionTypes">
+                <ScalarProperty Name="PrepositionTypeId" ColumnName="PrepositionTypeId" />
+                <ScalarProperty Name="LanguageId" ColumnName="LanguageId" />
+                <ScalarProperty Name="Value" ColumnName="Value" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Records">
+            <EntityTypeMapping TypeName="DictionariesDbModel.Record">
+              <MappingFragment StoreEntitySet="Records">
+                <ScalarProperty Name="RecordId" ColumnName="RecordId" />
+                <ScalarProperty Name="CourseId" ColumnName="CourseId" />
+                <ScalarProperty Name="ModuleNumber" ColumnName="ModuleNumber" />
+                <ScalarProperty Name="Original" ColumnName="Original" />
+                <ScalarProperty Name="Translation" ColumnName="Translation" />
+                <ScalarProperty Name="Comment" ColumnName="Comment" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="RecordTypes">
+            <EntityTypeMapping TypeName="DictionariesDbModel.RecordType">
+              <MappingFragment StoreEntitySet="RecordTypes">
+                <ScalarProperty Name="RecordTypeId" ColumnName="RecordTypeId" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Tests">
+            <EntityTypeMapping TypeName="DictionariesDbModel.Test">
+              <MappingFragment StoreEntitySet="Tests">
+                <ScalarProperty Name="TestId" ColumnName="TestId" />
+                <ScalarProperty Name="PreviousTestId" ColumnName="PreviousTestId" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="CourseId" ColumnName="CourseId" />
+                <ScalarProperty Name="ModuleStartNumber" ColumnName="ModuleStartNumber" />
+                <ScalarProperty Name="ModuleEndNumber" ColumnName="ModuleEndNumber" />
+                <ScalarProperty Name="StartDate" ColumnName="StartDate" />
+                <ScalarProperty Name="CorrectAnswers" ColumnName="CorrectAnswers" />
+                <ScalarProperty Name="TotalRecords" ColumnName="TotalRecords" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <AssociationSetMapping Name="IncorrectAnswers" TypeName="DictionariesDbModel.IncorrectAnswers" StoreEntitySet="IncorrectAnswers">
+            <EndProperty Name="Records">
+              <ScalarProperty Name="RecordId" ColumnName="RecordId" />
+            </EndProperty>
+            <EndProperty Name="Tests">
+              <ScalarProperty Name="TestId" ColumnName="TestId" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <AssociationSetMapping Name="RecordRecordTypes" TypeName="DictionariesDbModel.RecordRecordTypes" StoreEntitySet="RecordRecordTypes">
+            <EndProperty Name="Records">
+              <ScalarProperty Name="RecordId" ColumnName="RecordId" />
+            </EndProperty>
+            <EndProperty Name="RecordTypes">
+              <ScalarProperty Name="RecordTypeId" ColumnName="RecordTypeId" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <EntitySetMapping Name="AspNetUsers">
+            <EntityTypeMapping TypeName="DictionariesDbModel.AspNetUser">
+              <MappingFragment StoreEntitySet="AspNetUsers">
+                <ScalarProperty Name="UserName" ColumnName="UserName" />
+                <ScalarProperty Name="AccessFailedCount" ColumnName="AccessFailedCount" />
+                <ScalarProperty Name="LockoutEnabled" ColumnName="LockoutEnabled" />
+                <ScalarProperty Name="LockoutEndDateUtc" ColumnName="LockoutEndDateUtc" />
+                <ScalarProperty Name="TwoFactorEnabled" ColumnName="TwoFactorEnabled" />
+                <ScalarProperty Name="PhoneNumberConfirmed" ColumnName="PhoneNumberConfirmed" />
+                <ScalarProperty Name="PhoneNumber" ColumnName="PhoneNumber" />
+                <ScalarProperty Name="SecurityStamp" ColumnName="SecurityStamp" />
+                <ScalarProperty Name="PasswordHash" ColumnName="PasswordHash" />
+                <ScalarProperty Name="EmailConfirmed" ColumnName="EmailConfirmed" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Courses">
+            <EntityTypeMapping TypeName="DictionariesDbModel.Cours">
+              <MappingFragment StoreEntitySet="Courses">
+                <ScalarProperty Name="EndDate" ColumnName="EndDate" />
+                <ScalarProperty Name="StartDate" ColumnName="StartDate" />
+                <ScalarProperty Name="LevelId" ColumnName="LevelId" />
+                <ScalarProperty Name="CourseId" ColumnName="CourseId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

@@ -1,4 +1,5 @@
-﻿using Mihaylov.Database.Interfaces;
+﻿using Mihaylov.Database.Dictionaries;
+using Mihaylov.Database.Interfaces;
 using Mihaylov.Database.Site;
 using Ninject.Modules;
 
@@ -16,6 +17,7 @@ namespace Mihaylov.Database
         public override void Load()
         {
             Kernel.Bind<ISiteDbContext>().ToConstructor(x => new SiteDbContext(this.connectionString)).InSingletonScope();
+            Kernel.Bind<IDictionariesDbContext>().ToConstructor(x => new DictionariesDbContext(this.connectionString)).InSingletonScope();
         }
     }
 }
