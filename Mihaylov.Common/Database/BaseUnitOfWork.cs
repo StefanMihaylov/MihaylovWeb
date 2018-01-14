@@ -7,30 +7,30 @@
 
     public abstract class BaseUnitOfWork<C> : IUnitOfWork<C> where C : IDbContext
     {
-        private readonly C context;
-
-        private readonly Dictionary<Type, object> repositories = new Dictionary<Type, object>();
+        private readonly IDictionary<Type, Type> repositoryTypes;
+        private readonly IDictionary<Type, object> repositories;
 
         public BaseUnitOfWork(C context)
         {
-            this.context = context;
+            this.Context = context;
+            this.repositoryTypes = new Dictionary<Type, Type>();
+            this.repositories = new Dictionary<Type, object>();
+
+            this.AddRepositoryTypes(this.repositoryTypes);
         }
 
-        public C Context
-        {
-            get
-            {
-                return this.context;
-            }
-        }
+        public C Context { get; private set; }
 
         public Database Database
         {
-            get
-            {
-                return this.Context.Database;
-            }
+            get { return this.Context.Database; }
         }
+
+        /// <summary>
+        /// Key - DTO type, Value - Repository type
+        /// </summary>
+        /// <param name="repositoryTypes"></param>
+        protected abstract void AddRepositoryTypes(IDictionary<Type, Type> repositoryTypes);
 
         /// <summary>
         /// Saves all changes made in this context to the underlying database.
@@ -41,7 +41,7 @@
         /// <exception cref="T:System.InvalidOperationException">Thrown if the context has been disposed.</exception>
         public int SaveChanges()
         {
-            return this.context.SaveChanges();
+            return this.Context.SaveChanges();
         }
 
         public void Dispose()
@@ -53,19 +53,27 @@
         {
             if (disposing)
             {
-                if (this.context != null)
+                if (this.Context != null)
                 {
-                    this.context.Dispose();
+                    this.Context.Dispose();
                 }
             }
         }
 
         protected virtual IRepository<T> GetRepository<T>() where T : class
         {
-            var type = typeof(T);
-            if (!this.ContainsRepository(type))
+            Type type = typeof(T);
+            if (!this.repositories.ContainsKey(type))
             {
-                this.AddRepository(type, typeof(GenericRepository<T, C>));
+                foreach (Type modelType in repositoryTypes.Keys)
+                {
+                    if (type.IsAssignableFrom(modelType))
+                    {
+                        Type repositoryType = repositoryTypes[modelType];
+                        this.AddRepository(type, repositoryType);
+                        break;
+                    }
+                }
             }
 
             return (IRepository<T>)this.repositories[type];
@@ -73,13 +81,8 @@
 
         protected virtual void AddRepository(Type type, Type repositoryType)
         {
-            var instance = Activator.CreateInstance(repositoryType, this.context);
+            object instance = Activator.CreateInstance(repositoryType, this.Context);
             this.repositories.Add(type, instance);
-        }
-
-        protected virtual bool ContainsRepository(Type type)
-        {
-            return this.repositories.ContainsKey(type);
         }
     }
 }

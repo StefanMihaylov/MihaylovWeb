@@ -70,21 +70,28 @@
     <Compile Include="Helpers\Site\SiteHelper.cs" />
     <Compile Include="Interfaces\Helpers\Site\ISiteHelper.cs" />
     <Compile Include="Interfaces\Managers\Dictionaries\ICoursesInfoManager.cs" />
+    <Compile Include="Interfaces\Managers\Dictionaries\IRecordsManager.cs" />
     <Compile Include="Interfaces\Managers\Site\IPersonsManager.cs" />
     <Compile Include="Interfaces\Managers\Site\IPersonAdditionalInfoManager.cs" />
     <Compile Include="Managers\Dictionaries\CoursesInfoManager.cs" />
+    <Compile Include="Managers\Dictionaries\RecordsManager.cs" />
     <Compile Include="Managers\Site\PersonAdditionalInfoManager.cs" />
     <Compile Include="Managers\Site\PersonsManager.cs" />
     <Compile Include="NinjectModuleCore.cs" />
+    <Compile Include="NinjectModuleDictionariesCore.cs" />
     <Compile Include="NinjectModuleSiteCore.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Interfaces\Providers\Site\IPersonsProvider.cs" />
     <Compile Include="Interfaces\Providers\Site\IPersonAdditionalInfoProvider.cs" />
     <Compile Include="Providers\Dictionaries\CoursesInfoProvider.cs" />
     <Compile Include="Interfaces\Providers\Dictionaries\ICoursesInfoProvider.cs" />
+    <Compile Include="Interfaces\Providers\Dictionaries\IRecordsProvider.cs" />
+    <Compile Include="Providers\Dictionaries\RecordsProvider.cs" />
     <Compile Include="Providers\Site\PersonAdditionalInfoProvider.cs" />
     <Compile Include="Providers\Site\PersonsProvider.cs" />
     <Compile Include="Interfaces\Writers\Site\IPersonsWriter.cs" />
+    <Compile Include="Interfaces\Writers\Dictionaries\IRecordsWriter.cs" />
+    <Compile Include="Writers\Dictionaries\RecordsWriter.cs" />
     <Compile Include="Writers\Site\CountriesWriter.cs" />
     <Compile Include="Interfaces\Writers\Site\ICountriesWriter.cs" />
     <Compile Include="Writers\Site\PersonsWriter.cs" />
@@ -97,6 +104,10 @@
     <ProjectReference Include="..\Mihaylov.Data.Models\Mihaylov.Data.Models.csproj">
       <Project>{5efcdd18-10b6-456d-ac0d-d19e7a8ec5f9}</Project>
       <Name>Mihaylov.Data.Models</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Mihaylov.Database.Models\Mihaylov.Database.Models.csproj">
+      <Project>{251a9623-1317-4232-801c-f21189557227}</Project>
+      <Name>Mihaylov.Database.Models</Name>
     </ProjectReference>
     <ProjectReference Include="..\Mihaylov.Data\Mihaylov.Data.csproj">
       <Project>{bf7d5fed-8954-47d7-98eb-8538f8251f31}</Project>

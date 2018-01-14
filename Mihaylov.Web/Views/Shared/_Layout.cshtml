@@ -29,7 +29,9 @@
                     @if (this.User.Identity.IsAuthenticated)
                     {
                         <li>@Html.ActionLink("Site", "Index", "Site")</li>
-                    }                    
+                    }   
+                    
+                    <li>@Html.ActionLink("Dictionaries", "Index", "Dictionaries")</li>
                 </ul>
                 @Html.Partial("_LoginPartial")
             </div>

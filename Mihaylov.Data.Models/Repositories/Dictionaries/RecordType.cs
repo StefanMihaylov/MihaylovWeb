@@ -10,6 +10,11 @@ namespace Mihaylov.Data.Models.Dictionaries
         {
         }
 
+        public RecordType(RecordType recordType)
+            :this(recordType.Id, recordType.Name)
+        {
+        }
+
         public RecordType(int id, string name)
         {
             this.Id = id;

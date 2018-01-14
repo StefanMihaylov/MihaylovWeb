@@ -19,7 +19,7 @@ namespace Mihaylov.Web.App_Start
 
             var customSettingsManager = kernel.Get<ICustomSettingsManager>();
             var loggerPath = customSettingsManager.Settings.LoggerPath;
-            var connectionString = customSettingsManager.GetSettingByName("SiteDb");
+            var connectionString = customSettingsManager.GetSettingByName("MihaylovDb");
             var siteUrl = customSettingsManager.GetSettingByName("SiteUrl");
 
             Log4netConfiguration.Setup(loggerPath);

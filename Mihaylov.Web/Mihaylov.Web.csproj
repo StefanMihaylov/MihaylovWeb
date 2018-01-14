@@ -212,6 +212,7 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\Base\BaseController.cs" />
+    <Compile Include="Controllers\DictionariesController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\SiteController.cs" />
@@ -233,6 +234,12 @@
     <Compile Include="ViewModels\Account\ResetPasswordViewModel.cs" />
     <Compile Include="ViewModels\Account\SendCodeViewModel.cs" />
     <Compile Include="ViewModels\Account\VerifyCodeViewModel.cs" />
+    <Compile Include="ViewModels\Dictionaries\ChooseCourseExtendedModel.cs" />
+    <Compile Include="ViewModels\Dictionaries\ChooseCourseModel.cs" />
+    <Compile Include="ViewModels\Dictionaries\IndexExtendedViewModel.cs" />
+    <Compile Include="ViewModels\Dictionaries\IndexViewModel.cs" />
+    <Compile Include="ViewModels\Dictionaries\RecordTypeViewModel.cs" />
+    <Compile Include="ViewModels\Dictionaries\RecordViewModel.cs" />
     <Compile Include="ViewModels\Manage\AddPhoneNumberViewModel.cs" />
     <Compile Include="ViewModels\Manage\ChangePasswordViewModel.cs" />
     <Compile Include="ViewModels\Manage\ConfigureTwoFactorViewModel.cs" />
@@ -334,6 +341,10 @@
     <Content Include="Views\Site\Find.cshtml" />
     <Content Include="Views\Site\Index.cshtml" />
     <Content Include="Views\Shared\_Toastr.cshtml" />
+    <Content Include="Views\Dictionaries\ChooseCourse.cshtml" />
+    <Content Include="Views\Dictionaries\Index.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\RecordTypeViewModel.cshtml" />
+    <Content Include="Views\Dictionaries\_NewRecord.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Mihaylov.Common\Mihaylov.Common.csproj">
@@ -365,6 +376,9 @@
     <Content Include="packages.config">
       <SubType>Designer</SubType>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
   <ItemGroup />
   <PropertyGroup>

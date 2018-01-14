@@ -9,7 +9,7 @@ namespace Mihaylov.Database.Site
     public partial class SiteDbContext : ISiteDbContext
     {
         public SiteDbContext(string connectionString)
-            : base(connectionString)
+            : base(DatabaseContextExtensions.GetDbFirstConnectionString(connectionString, "Site.SiteDbModel"))
         {
             this.FixEfProviderServicesProblem();
         }

@@ -9,7 +9,7 @@ using DAL = Mihaylov.Database.Dictionaries;
 
 namespace Mihaylov.Data.Repositories.Dictionaries
 {
-    public class RecordTypesRepository : GenericRepository<DAL.RecordType, IDictionariesDbContext>, IGetAllRepository<RecordType>
+    public class RecordTypesRepository : GenericRepository<DAL.RecordType, IDictionariesDbContext>, IRecordTypesRepository
     {
         public RecordTypesRepository(IDictionariesDbContext context)
             : base(context)
@@ -18,10 +18,10 @@ namespace Mihaylov.Data.Repositories.Dictionaries
 
         public IEnumerable<RecordType> GetAll()
         {
-            IEnumerable<RecordType> record = this.All()
+            IEnumerable<RecordType> records = this.All()
                                            .To<RecordType>()
                                            .AsQueryable();
-            return record;
+            return records;
         }
     }
 }

@@ -92,6 +92,7 @@
     <Compile Include="Repositories\Site\PersonsRepository.cs" />
     <Compile Include="Repositories\Site\OrientationsRepository.cs" />
     <Compile Include="Repositories\Site\UnitsRepository.cs" />
+    <Compile Include="UnitOfWorks\RecordsData.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

@@ -7,7 +7,7 @@ namespace Mihaylov.Data.Models.Dictionaries
 {
     public class Course : IMapFrom<DAL.Cours>, IHaveCustomMappings
     {
-        private Course()
+        public Course()
         {
         }
 
@@ -19,15 +19,22 @@ namespace Mihaylov.Data.Models.Dictionaries
             this.EndDate = endDate;
         }
 
-        public int Id { get; private set; }
+        public int Id { get; set; }
 
-        public int LevelId { get; private set; }        
+        public int LevelId { get; private set; }
 
         public DateTime? StartDate { get; private set; }
 
         public DateTime? EndDate { get; private set; }
 
         public Level Level { get; private set; }
+
+        public override string ToString()
+        {
+            string language = this.Level.LearningSystem.Language.Name;
+            string date = this.StartDate.HasValue ? this.StartDate.Value.ToString("yyyy.MM") : string.Empty;
+            return $"{language} {this.Level.Name} - '{this.Level.LearningSystem.Name}' - {date}";
+        }
 
         public void CreateMappings(IMapperConfigurationExpression configuration)
         {

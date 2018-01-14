@@ -9,7 +9,7 @@ using DAL = Mihaylov.Database.Dictionaries;
 
 namespace Mihaylov.Data.Repositories.Dictionaries
 {
-    public class PrepositionTypesRepository : GenericRepository<DAL.PrepositionType, IDictionariesDbContext>, IGetAllRepository<PrepositionType>
+    public class PrepositionTypesRepository : GenericRepository<DAL.PrepositionType, IDictionariesDbContext>, IPrepositionTypesRepository
     {
         public PrepositionTypesRepository(IDictionariesDbContext context) 
             : base(context)

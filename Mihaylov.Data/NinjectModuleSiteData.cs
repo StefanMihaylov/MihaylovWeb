@@ -1,6 +1,8 @@
 ﻿using Mihaylov.Data.Interfaces.Site;
 using Mihaylov.Data.Models.Site;
 using Mihaylov.Data.Repositories.Site;
+using Mihaylov.Database.Interfaces;
+using DAL = Mihaylov.Database.Site;
 using Ninject.Modules;
 
 namespace Mihaylov.Data
@@ -16,7 +18,8 @@ namespace Mihaylov.Data
 
         public override void Load()
         {
-            Kernel.Load(new INinjectModule[] { new Mihaylov.Database.NinjectModuleDatabase(this.connectionString) });
+            // Kernel.Load(new INinjectModule[] { new Mihaylov.Database.NinjectModuleDatabase(this.connectionString) });
+            Kernel.Rebind<ISiteDbContext>().ToConstructor(x => new DAL.SiteDbContext(this.connectionString));
 
             Kernel.Bind<IGetAllRepository<AnswerType>>().To<AnswerTypeRepository>();
             Kernel.Bind<IGetAllRepository<Ethnicity>>().To<EthnicitiesRepository>();

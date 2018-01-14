@@ -23,14 +23,14 @@ namespace Mihaylov.Web.Controllers
 
         public ActionResult Index()
         {
-            this.AddToastMessage("Congratulations", "You made it all the way here!", ToastType.Success);
+           // this.AddToastMessage("Congratulations", "You made it all the way here!", ToastType.Success);
           
             return View();
         }
 
         public ActionResult About()
         {
-            this.AddToastMessage("Redirected message", "This message has been redirected", ToastType.Error);
+           // this.AddToastMessage("Redirected message", "This message has been redirected", ToastType.Error);
 
             return View();
         }

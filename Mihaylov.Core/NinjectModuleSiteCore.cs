@@ -3,8 +3,10 @@ using Mihaylov.Core.Interfaces.Site;
 using Mihaylov.Core.Managers.Site;
 using Mihaylov.Core.Providers.Site;
 using Mihaylov.Core.Writers.Site;
-using Mihaylov.Data;
+using Mihaylov.Database.Interfaces;
+using DAL = Mihaylov.Database.Site;
 using Ninject.Modules;
+using Mihaylov.Data;
 
 namespace Mihaylov.Core
 {

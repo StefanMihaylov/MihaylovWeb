@@ -15,7 +15,7 @@ namespace Mihaylov.Common.WebConfigSettings.Models.ExternalDbConnections
         {
             this.Name = name;
             this.ExternalSettings = externalSettings;
-            this.IsCodeFirst = isCodeFirst ?? false;
+            this.IsCodeFirst = isCodeFirst ?? true;
             this.Endpoint = endpoint;
             this.Credential = credential;
         }

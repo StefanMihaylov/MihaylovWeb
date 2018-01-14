@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Mihaylov.Common.Database.Interfaces;
 
 namespace Mihaylov.Data.Interfaces.Site
 {

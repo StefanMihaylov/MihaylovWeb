@@ -59,9 +59,14 @@
   <ItemGroup>
     <Compile Include="Helpers\Site\PersonInfo.cs" />
     <Compile Include="Interfaces\Dictionaries\IGetAllRepository.cs" />
+    <Compile Include="Interfaces\Dictionaries\IPrepositionTypesRepository.cs" />
+    <Compile Include="Interfaces\Dictionaries\IRecordsRepository.cs" />
+    <Compile Include="Interfaces\Dictionaries\IRecordTypesRepository.cs" />
+    <Compile Include="Interfaces\IRecordsData.cs" />
     <Compile Include="Interfaces\Site\ICountriesRepository.cs" />
     <Compile Include="Interfaces\Site\IGetAllRepository.cs" />
     <Compile Include="Interfaces\Site\IPersonsRepository.cs" />
+    <Compile Include="Repositories\Dictionaries\Additional\RecordSearchModel.cs" />
     <Compile Include="Repositories\Dictionaries\Course.cs" />
     <Compile Include="Repositories\Dictionaries\Language.cs" />
     <Compile Include="Repositories\Dictionaries\LearningSystem.cs" />
