@@ -55,27 +55,13 @@
 
                 <div>
                     <div class="col-sm-4">
-                        @if (Model.Answer.HasValue)
-                        {
-                            @Html.MyDisplayFor(m => m.AnswerType)
-                        }
-                        else
-                        {
-                            @Html.LabelFor(m => m.AnswerTypeId)
-                            @Html.DropDownListFor(m => m.AnswerTypeId, Model.AnswerTypes.GetDropdownListItems(u => u.Id, u => u.Description), "-- Not Selected --")
-                        }
+                        @Html.LabelFor(m => m.AnswerTypeId)
+                        @Html.DropDownListFor(m => m.AnswerTypeId, Model.AnswerTypes.GetDropdownListItems(u => u.Id, u => u.Description), "-- Not Selected --")
                     </div>
                     <div class="col-sm-4">
-                        @if (Model.Answer.HasValue)
-                        {
-                            @Html.MyDisplayFor(m => m.AnswerDisplay)                           
-                        }
-                        else
-                        {
-                            @Html.LabelFor(m => m.Answer)
-                            @Html.TextBoxFor(m => m.Answer, new { style = "width:70px" })
-                            @Html.DropDownListFor(m => m.AnswerUnitId, Model.AnswerUnits.GetDropdownListItems(u => u.Id, u => u.Description), "-- Not Selected --")
-                        }
+                        @Html.LabelFor(m => m.Answer)
+                        @Html.TextBoxFor(m => m.Answer, new { style = "width:70px" })
+                        @Html.DropDownListFor(m => m.AnswerUnitId, Model.AnswerUnits.GetDropdownListItems(u => u.Id, u => u.Description), "-- Not Selected --")
                     </div>
                     <div class="col-sm-4">
                         @Html.LabelFor(m => m.Comments)
