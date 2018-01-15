@@ -1,163 +1,85 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.Linq.Expressions;
+using AutoMapper;
+using Mihaylov.Common.Mapping;
 using DAL = Mihaylov.Database.Site;
 
 namespace Mihaylov.Data.Models.Site
 {
-    public class Person
+    public class Person : IMapFrom<DAL.Person>, IHaveCustomMappings
     {
         public Person()
         {
         }
 
+        public Person(int id, string username, DateTime createDate, DateTime lastBroadcastDate, DateTime? askDate,
+            int age, int countryId, string country, int ethnicityId, string ethnicity, int orientationId, string orientation,
+            int answerTypeId, string answerType, decimal? answer, decimal? answerConverted, int? answerUnitId, string answerUnit,
+            string comments, string recordsPath, bool isAccountDisabled, DateTime? updatedDate)
+        {
+            Id = id;
+            Username = username;
+            CreateDate = createDate;
+            LastBroadcastDate = lastBroadcastDate;
+            AskDate = askDate;
+            Age = age;
+            CountryId = countryId;
+            Country = country;
+            EthnicityTypeId = ethnicityId;
+            Ethnicity = ethnicity;
+            OrientationTypeId = orientationId;
+            Orientation = orientation;
+            AnswerTypeId = answerTypeId;
+            AnswerType = answerType;
+            Answer = answer;
+            AnswerConverted = answerConverted;
+            AnswerUnitTypeId = answerUnitId;
+            AnswerUnit = answerUnit;
+            Comments = comments;
+            RecordsPath = recordsPath;
+            IsAccountDisabled = isAccountDisabled;
+            UpdatedDate = updatedDate;
+        }
+
         public Person(Person person)
+            : this(person.Id, person.Username, person.CreateDate, person.LastBroadcastDate, person.AskDate,
+            person.Age, person.CountryId, person.Country, person.EthnicityTypeId, person.Ethnicity, person.OrientationTypeId,
+            person.Orientation, person.AnswerTypeId, person.AnswerType, person.Answer, person.AnswerConverted,
+            person.AnswerUnitTypeId, person.AnswerUnit, person.Comments, person.RecordsPath, person.IsAccountDisabled,
+            person.UpdatedDate)
         {
-            Id = person.Id;
-            Username = person.Username;
-            CreateDate = person.CreateDate;
-            LastBroadcastDate = person.LastBroadcastDate;
-            AskDate = person.AskDate;
-            Age = person.Age;
-            CountryId = person.CountryId;
-            Country = person.Country;
-            EthnicityId = person.EthnicityId;
-            Ethnicity = person.Ethnicity;
-            OrientationId = person.OrientationId;
-            Orientation = person.Orientation;
-            AnswerTypeId = person.AnswerTypeId;
-            AnswerType = person.AnswerType;
-            Answer = person.Answer;
-            AnswerConverted = person.AnswerConverted;
-            AnswerUnitId = person.AnswerUnitId;
-            AnswerUnit = person.AnswerUnit;
-            Comments = person.Comments;
-            RecordsPath = person.RecordsPath;
-            IsAccountDisabled = person.IsAccountDisabled;
-            UpdatedDate = person.UpdatedDate;
-        }
-
-        public static Expression<Func<DAL.Person, Person>> FromDb
-        {
-            get
-            {
-                return person => new Person()
-                {
-                    Id = person.PersonId,
-                    Username = person.Username,
-                    CreateDate = person.CreateDate, // addit
-                    LastBroadcastDate = person.LastBroadcastDate,
-                    AskDate = person.AskDate,
-                    Age = person.Age, //  // addit
-                    CountryId = person.CountryId,
-                    Country = person.Country.Name,  // addit
-                    EthnicityId = person.EthnicityType.EthnicityTypeId,
-                    Ethnicity = person.EthnicityType.Description,  // addit
-                    OrientationId = person.OrientationType.OrientationTypeId,
-                    Orientation = person.OrientationType.Description,  // addit
-                    AnswerTypeId = person.AnswerType.AnswerTypeId,
-                    AnswerType = person.AnswerType.Description,
-                    Answer = person.Answer,
-                    AnswerConverted = person.AnswerConverted,
-                    AnswerUnitId = person.UnitType.UnitTypeId,
-                    AnswerUnit = person.UnitType.Description,
-                    Comments = person.Comments,
-                    RecordsPath = person.RecordsPath,
-                    IsAccountDisabled = person.IsAccountDisabled,
-                    UpdatedDate = person.UpdatedDate,
-                };
-            }
-        }
-
-        public static implicit operator Person(DAL.Person personDAL)
-        {
-            if (personDAL == null)
-            {
-                return null;
-            }
-
-            Person PersonDTO = new Person()
-            {
-                Id = personDAL.PersonId,
-                Username = personDAL.Username,
-                CreateDate = personDAL.CreateDate, // addit
-                LastBroadcastDate = personDAL.LastBroadcastDate,
-                AskDate = personDAL.AskDate,
-                Age = personDAL.Age, //  // addit
-                CountryId = personDAL.CountryId,
-                Country = personDAL.Country.Name,  // addit
-                EthnicityId = personDAL.EthnicityType.EthnicityTypeId,
-                Ethnicity = personDAL.EthnicityType.Description,  // addit
-                OrientationId = personDAL.OrientationType.OrientationTypeId,
-                Orientation = personDAL.OrientationType.Description,  // addit
-                AnswerTypeId = personDAL.AnswerType.AnswerTypeId,
-                AnswerType = personDAL.AnswerType.Description,
-                Answer = personDAL.Answer,
-                AnswerConverted = personDAL.AnswerConverted,
-                AnswerUnitId = personDAL.UnitType?.UnitTypeId,
-                AnswerUnit = personDAL.UnitType?.Name,
-                Comments = personDAL.Comments,
-                RecordsPath = personDAL.RecordsPath,
-                IsAccountDisabled = personDAL.IsAccountDisabled,
-                UpdatedDate = personDAL.UpdatedDate,
-            };
-
-            return PersonDTO;
         }
 
         public void Update(DAL.Person person)
         {
             person.Username = this.Username;
+            person.CreateDate = this.CreateDate;
+            person.LastBroadcastDate = this.LastBroadcastDate;
+            person.AskDate = this.AskDate;
             person.Age = this.Age;
             person.CountryId = this.CountryId;
-            person.IsAccountDisabled = this.IsAccountDisabled;
-            person.LastBroadcastDate = this.LastBroadcastDate;
-
+            person.EthnicityTypeId = this.EthnicityTypeId;
+            person.OrientationTypeId = this.OrientationTypeId;
+            person.AnswerTypeId = this.AnswerTypeId;
+            person.Answer = this.Answer;
+            person.AnswerConverted = this.AnswerConverted;
+            person.AnswerUnitTypeId = this.AnswerUnitTypeId;
             person.Comments = this.Comments;
             person.RecordsPath = this.RecordsPath;
-
-            if (person.PersonId == 0)
-            {
-                person.CreateDate = this.CreateDate;
-                person.EthnicityTypeId = this.EthnicityId;
-                person.OrientationTypeId = this.OrientationId;
-            }
-
-            if (!person.Answer.HasValue)
-            {
-                person.AnswerTypeId = this.AnswerTypeId;
-                person.Answer = this.Answer;
-                person.AnswerConverted = this.AnswerConverted;
-                person.AnswerUnitTypeId = this.AnswerUnitId;
-                person.AskDate = this.AskDate;
-            }
-
+            person.IsAccountDisabled = this.IsAccountDisabled;
             person.UpdatedDate = this.UpdatedDate;
         }
 
-        public void Syncronize(DAL.Person person)
+        public void CreateMappings(IMapperConfigurationExpression configuration)
         {
-            if (!this.IsAccountDisabled)
-            {
-                if (this.LastBroadcastDate > DateTime.MinValue)
-                {
-                    person.LastBroadcastDate = this.LastBroadcastDate;
-                }
-
-                if (this.Age > 0)
-                {
-                    person.Age = this.Age;
-                }
-
-                if (this.CountryId > 0)
-                {
-                    person.CountryId = this.CountryId;
-                }
-            }
-
-            person.IsAccountDisabled = this.IsAccountDisabled;
-
-            person.UpdatedDate = this.UpdatedDate;
+            configuration.CreateMap<DAL.Person, Person>()
+                .ForMember(x => x.Id, opt => opt.MapFrom(m => m.PersonId))
+                .ForMember(x => x.Country, opt => opt.MapFrom(m => m.Country.Name))
+                .ForMember(x => x.Ethnicity, opt => opt.MapFrom(m => m.EthnicityType.Description))
+                .ForMember(x => x.Orientation, opt => opt.MapFrom(m => m.OrientationType.Description))
+                .ForMember(x => x.AnswerType, opt => opt.MapFrom(m => m.AnswerType.Description))
+                .ForMember(x => x.AnswerUnit, opt => opt.MapFrom(m => m.UnitType.Name));
         }
 
         public int Id { get; set; }
@@ -182,12 +104,12 @@ namespace Mihaylov.Data.Models.Site
         [Display(Name = "Country:")]
         public string Country { get; set; }
 
-        public int EthnicityId { get; set; }
+        public int EthnicityTypeId { get; set; }
 
         [Display(Name = "Ethnicity:")]
         public string Ethnicity { get; set; }
 
-        public int OrientationId { get; set; }
+        public int OrientationTypeId { get; set; }
 
         [Display(Name = "Orientation:")]
         public string Orientation { get; set; }
@@ -200,13 +122,13 @@ namespace Mihaylov.Data.Models.Site
 
         public decimal? Answer { get; set; }
 
-        public int? AnswerUnitId { get; set; }
+        public int? AnswerUnitTypeId { get; set; }
 
         public string AnswerUnit { get; set; }
 
         public decimal? AnswerConverted { get; set; }
 
-        public string AnswerConvertedUnit { get; set; }
+        public string AnswerConvertedUnit { get; set; } // TODO
 
         [Display(Name = "Comments:")]
         public string Comments { get; set; }
@@ -218,12 +140,13 @@ namespace Mihaylov.Data.Models.Site
 
         public DateTime? UpdatedDate { get; set; }
 
+
         [Display(Name = "Answer:")]
         public string AnswerDisplay
         {
             get
             {
-                if (!this.Answer.HasValue)
+                if (!this.Answer.HasValue || !this.AnswerConverted.HasValue)
                 {
                     return string.Empty;
                 }

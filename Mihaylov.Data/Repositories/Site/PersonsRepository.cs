@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Mihaylov.Common.Database;
+using Mihaylov.Common.Mapping;
 using Mihaylov.Data.Interfaces.Site;
 using Mihaylov.Data.Models.Site;
 using Mihaylov.Database.Interfaces;
@@ -18,7 +19,7 @@ namespace Mihaylov.Data.Repositories.Site
         public IEnumerable<Person> GetAll()
         {
             IEnumerable<Person> persons = this.All()
-                                              .Select(Person.FromDb)
+                                              .To<Person>()
                                               .AsQueryable();
 
             return persons;
@@ -28,7 +29,7 @@ namespace Mihaylov.Data.Repositories.Site
         {
             Person person = this.All()
                                 .Where(p => p.PersonId == id)
-                                .Select(Person.FromDb)
+                                .To<Person>()
                                 .FirstOrDefault();
 
             return person;
@@ -38,13 +39,13 @@ namespace Mihaylov.Data.Repositories.Site
         {
             Person person = this.All()
                                 .Where(p => p.Username == username)
-                                .Select(Person.FromDb)
+                                .To<Person>()
                                 .FirstOrDefault();
 
             return person;
         }
 
-        public Person AddPerson(Person inputPerson)
+        public Person AddOrUpdatePerson(Person inputPerson)
         {
             DAL.Person person;
             if (inputPerson.Id == 0)
@@ -62,23 +63,6 @@ namespace Mihaylov.Data.Repositories.Site
             this.Context.SaveChanges();
 
             Person personDTO = this.GetById(person.PersonId);
-            return personDTO;
-        }
-
-        public Person UpdatePerson(Person updatedPerson)
-        {
-            DAL.Person personDTO = this.All()
-                                       .Where(p => p.Username == updatedPerson.Username)
-                                       .FirstOrDefault();
-            if (personDTO == null)
-            {
-                throw new System.ApplicationException($"Person with name {updatedPerson.Username} was not found!");
-            }
-
-            updatedPerson.Syncronize(personDTO);
-
-            this.Context.SaveChanges();
-
             return personDTO;
         }
 

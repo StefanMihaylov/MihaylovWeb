@@ -2,6 +2,8 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using Mihaylov.Common.MessageBus;
+using Mihaylov.Common.MessageBus.Interfaces;
 using Mihaylov.Core.Interfaces.Site;
 using Mihaylov.Data.Models.Site;
 using Ninject.Extensions.Logging;
@@ -12,17 +14,21 @@ namespace Mihaylov.Core.Managers.Site
     {
         private readonly IPersonsProvider provider;
         private readonly ILogger logger;
+        private readonly IMessageBus messageBus;
 
         private readonly ConcurrentDictionary<int, Person> personsById;
         private readonly ConcurrentDictionary<string, Person> personsByName;
 
-        public PersonsManager(IPersonsProvider personsProvider, ILogger logger)
+        public PersonsManager(IPersonsProvider personsProvider, ILogger logger, IMessageBus messageBus)
         {
             this.provider = personsProvider;
             this.logger = logger;
+            this.messageBus = messageBus;
 
             this.personsById = new ConcurrentDictionary<int, Person>();
             this.personsByName = new ConcurrentDictionary<string, Person>(StringComparer.OrdinalIgnoreCase);
+
+            this.messageBus.Attach(typeof(Person), this.HandleMessage);
         }
 
         public IEnumerable<Person> GetAllPersons(bool descOrder = false, int? pageNumber = null, int? pageSize = null)
@@ -106,6 +112,28 @@ namespace Mihaylov.Core.Managers.Site
             else
             {
                 return persons.OrderBy(p => p.AskDate).Skip(skipCount).Take(pageSize.Value);
+            }
+        }
+
+        private void HandleMessage(Message message)
+        {
+            if (message == null)
+            {
+                return;
+            }
+
+            Person person = message.Data as Person;
+            if (person != null)
+            {
+                if (this.personsById.ContainsKey(person.Id))
+                {
+                    this.personsById.AddOrUpdate(person.Id, (id) => person, (updateId, existingPerson) => person);
+                }
+
+                if (this.personsByName.ContainsKey(person.Username))
+                {
+                    this.personsByName.AddOrUpdate(person.Username, (id) => person, (updateId, existingPerson) => person);
+                }
             }
         }
     }

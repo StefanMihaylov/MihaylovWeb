@@ -32,7 +32,7 @@ namespace Mihaylov.Web.Controllers
             {
                 Statistics = this.personManager.GetStatictics(),
                 Persons = this.personManager.GetAllPersons(true, 0, 10),
-                SystemUnit = this.siteHelper.SystemUnit,
+                SystemUnit = this.siteHelper.GetSystemUnit(),
             };
 
             return View(model);
@@ -45,6 +45,10 @@ namespace Mihaylov.Web.Controllers
                 this.Logger.Debug($"Controller: hit find: {url}");
 
                 string userName = this.siteHelper.GetUserName(url);
+                if (string.IsNullOrWhiteSpace(userName))
+                {
+                    return this.Json($"{url}: Error: Missing username", JsonRequestBehavior.AllowGet);
+                }
 
                 Person person = this.personManager.GetByName(userName);
                 if (person == null)
@@ -69,8 +73,7 @@ namespace Mihaylov.Web.Controllers
         public ActionResult Save(Person input)
         {
             this.siteHelper.AddAdditionalInfo(input);
-            this.personsWriter.Add(input);
-            this.personManager.GetByName(input.Username);
+            this.personsWriter.AddOrUpdate(input);
 
             return this.RedirectToAction(nameof(SiteController.Index));
         }

@@ -21,7 +21,7 @@ namespace Mihaylov.Core
         public override void Load()
         {
             Kernel.Load(new INinjectModule[] { new NinjectModuleSiteCore(this.connectionString, this.url) });
-            Kernel.Load(new INinjectModule[] { new NinjectModuleDictionariesCore(this.connectionString) });
+            Kernel.Load(new INinjectModule[] { new NinjectModuleDictionariesCore(this.connectionString) });          
         }
     }
 }

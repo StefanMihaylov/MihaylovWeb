@@ -5,8 +5,6 @@ namespace Mihaylov.Core.Interfaces.Site
 {
     public interface ISiteHelper
     {
-        string SystemUnit { get; }
-
         string GetUserName(string url);
 
         Person GetUserInfo(string username);
@@ -16,6 +14,8 @@ namespace Mihaylov.Core.Interfaces.Site
         IEnumerable<Unit> GetAllUnits();
 
         IEnumerable<AnswerType> GetAllAnswerTypes();
+
+        string GetSystemUnit();
 
         int UpdatePersons();
     }

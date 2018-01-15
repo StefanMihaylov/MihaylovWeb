@@ -1,4 +1,5 @@
 ﻿using System;
+using Mihaylov.Common.MessageBus.Interfaces;
 using Mihaylov.Core.Interfaces.Site;
 using Mihaylov.Data.Interfaces.Site;
 using Mihaylov.Data.Models.Site;
@@ -8,13 +9,15 @@ namespace Mihaylov.Core.Writers.Site
     public class PersonsWriter : IPersonsWriter
     {
         private readonly IPersonsRepository repository;
+        private readonly IMessageBus messageBus;
 
-        public PersonsWriter(IPersonsRepository personsRepository)
+        public PersonsWriter(IPersonsRepository personsRepository, IMessageBus messageBus)
         {
             this.repository = personsRepository;
+            this.messageBus = messageBus;
         }
 
-        public Person Add(Person inputPerson)
+        public Person AddOrUpdate(Person inputPerson)
         {
             if (inputPerson.LastBroadcastDate == default(DateTime))
             {
@@ -23,15 +26,10 @@ namespace Mihaylov.Core.Writers.Site
 
             inputPerson.UpdatedDate = DateTime.Now;
 
-            Person person = this.repository.AddPerson(inputPerson);
-            return person;
-        }
+            Person person = this.repository.AddOrUpdatePerson(inputPerson);
 
-        public Person Update(Person updatedPerson)
-        {
-            updatedPerson.UpdatedDate = DateTime.Now;
+            this.messageBus.SendMessage(person, this);
 
-            Person person = this.repository.UpdatePerson(updatedPerson);
             return person;
         }
     }

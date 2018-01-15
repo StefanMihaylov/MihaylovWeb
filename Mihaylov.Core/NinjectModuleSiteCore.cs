@@ -7,6 +7,8 @@ using Mihaylov.Database.Interfaces;
 using DAL = Mihaylov.Database.Site;
 using Ninject.Modules;
 using Mihaylov.Data;
+using Mihaylov.Common.MessageBus.Interfaces;
+using Mihaylov.Common.MessageBus;
 
 namespace Mihaylov.Core
 {
@@ -24,6 +26,8 @@ namespace Mihaylov.Core
         public override void Load()
         {
             Kernel.Load(new INinjectModule[] { new NinjectModuleSiteData(this.connectionString) });
+
+            Kernel.Bind<IMessageBus>().To<SimpleMessageBus>().InSingletonScope();
 
             Kernel.Bind<IPersonsProvider>().To<PersonsProvider>();
             Kernel.Bind<IPersonAdditionalInfoProvider>().To<PersonAdditionalInfoProvider>();

@@ -32,7 +32,7 @@ namespace Mihaylov.Common.MessageBus
 
         public virtual void SendMessage(object data, object sender)
         {
-            var message = new Message(data, this);
+            var message = new Message(data, sender);
 
             if (this.actions.ContainsKey(message.MessageType))
             {

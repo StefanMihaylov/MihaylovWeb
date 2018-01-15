@@ -27,16 +27,13 @@
 
                         @Html.MyDisplayFor(m => m.Country)
                         @Html.HiddenFor(m => m.CountryId)
-                        @Html.HiddenFor(m => m.Country)
                     </div>
                     <div class="col-sm-4">
                         @Html.MyDisplayFor(m => m.Ethnicity)
-                        @Html.HiddenFor(m => m.Ethnicity)
-                        @Html.HiddenFor(m => m.EthnicityId)
+                        @Html.HiddenFor(m => m.EthnicityTypeId)
 
                         @Html.MyDisplayFor(m => m.Orientation)
-                        @Html.HiddenFor(m => m.Orientation)
-                        @Html.HiddenFor(m => m.OrientationId)
+                        @Html.HiddenFor(m => m.OrientationTypeId)
 
                         @Html.MyDisplayFor(m => m.AskDate, null, null, Model.AskDate.ConvertToString())
                         @Html.HiddenFor(m => m.AskDate)
@@ -61,11 +58,11 @@
                     <div class="col-sm-4">
                         @Html.LabelFor(m => m.Answer)
                         @Html.TextBoxFor(m => m.Answer, new { style = "width:70px" })
-                        @Html.DropDownListFor(m => m.AnswerUnitId, Model.AnswerUnits.GetDropdownListItems(u => u.Id, u => u.Description), "-- Not Selected --")
+                        @Html.DropDownListFor(m => m.AnswerUnitTypeId, Model.AnswerUnits.GetDropdownListItems(u => u.Id, u => u.Description), "-- Not Selected --")
                     </div>
                     <div class="col-sm-4">
                         @Html.LabelFor(m => m.Comments)
-                        @Html.TextBoxFor(m => m.Comments, new { style = "width:200px" })
+                        @Html.TextBoxFor(m => m.Comments, new { style = "width:250px" })
                     </div>
                 </div>
             </div>

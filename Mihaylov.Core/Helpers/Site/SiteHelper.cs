@@ -31,15 +31,6 @@ namespace Mihaylov.Core.Helpers.Site
             this.personsWriter = personsWriter;
         }
 
-        public string SystemUnit
-        {
-            get
-            {
-                return this.personAdditionalManager.GetAllUnits()
-                                                   .FirstOrDefault(u => u.ConversionRate == 1m)?.Name;
-            }
-        }
-
         public string GetUserName(string url)
         {
             if (url == null)
@@ -66,24 +57,18 @@ namespace Mihaylov.Core.Helpers.Site
                 person.AskDate = DateTime.Now;
             }
 
-            if (string.IsNullOrWhiteSpace(person.AnswerType))
-            {
-                AnswerType answerType = this.personAdditionalManager.GetAnswerTypeById(person.AnswerTypeId);
-                person.AnswerType = answerType.Name;
-            }
-
             if (person.Answer.HasValue)
             {
-                Unit unit = this.personAdditionalManager.GetUnitById(person.AnswerUnitId.Value);
+                Unit unit = this.personAdditionalManager.GetUnitById(person.AnswerUnitTypeId.Value);
 
                 person.AnswerUnit = unit.Name;
                 person.AnswerConverted = person.Answer.Value * unit.ConversionRate;
-                person.AnswerConvertedUnit = this.SystemUnit;
+                person.AnswerConvertedUnit = this.GetSystemUnit();
             }
             else
             {
                 person.AnswerUnit = null;
-                person.AnswerUnitId = null;
+                person.AnswerUnitTypeId = null;
                 person.AnswerConverted = null;
             }
         }
@@ -110,9 +95,9 @@ namespace Mihaylov.Core.Helpers.Site
                             Username = username,
                             IsAccountDisabled = true,
                             Ethnicity = ethnicityDtoNull.Name,
-                            EthnicityId = ethnicityDtoNull.Id,
+                            EthnicityTypeId = ethnicityDtoNull.Id,
                             Orientation = orientationDtoNull.Name,
-                            OrientationId = orientationDtoNull.Id,
+                            OrientationTypeId = orientationDtoNull.Id,
                             Country = countryDtoNull.Name,
                             CountryId = countryDtoNull.Id,
                         };
@@ -139,9 +124,9 @@ namespace Mihaylov.Core.Helpers.Site
                     LastBroadcastDate = ParseDate(lastBroadcastDate),
                     Age = int.Parse(age),
                     Ethnicity = ethnicityDTO.Name,
-                    EthnicityId = ethnicityDTO.Id,
+                    EthnicityTypeId = ethnicityDTO.Id,
                     Orientation = orientationDTO.Name,
-                    OrientationId = orientationDTO.Id,
+                    OrientationTypeId = orientationDTO.Id,
                     Country = countryDTO.Name,
                     CountryId = countryDTO.Id,
                     IsAccountDisabled = false,
@@ -161,15 +146,34 @@ namespace Mihaylov.Core.Helpers.Site
             var persons = this.personsProvider.GetAll()
                 .Where(p => p.IsAccountDisabled == false)
                 .Where(p => p.UpdatedDate < DateTime.Now.AddDays(-1))
+                .Take(200)
                 .ToList();
 
             foreach (var person in persons)
             {
-                if (!person.IsAccountDisabled)
+                var updatedPerson = this.GetUserInfo(person.Username);
+
+                if (!updatedPerson.IsAccountDisabled)
                 {
-                    var updatedPerson = this.GetUserInfo(person.Username);
-                    this.personsWriter.Update(updatedPerson);
+                    if (updatedPerson.LastBroadcastDate > DateTime.MinValue)
+                    {
+                        person.LastBroadcastDate = updatedPerson.LastBroadcastDate;
+                    }
+
+                    if (updatedPerson.Age > 0)
+                    {
+                        person.Age = updatedPerson.Age;
+                    }
+
+                    if (updatedPerson.CountryId > 0)
+                    {
+                        person.CountryId = updatedPerson.CountryId;
+                    }
                 }
+
+                person.IsAccountDisabled = updatedPerson.IsAccountDisabled;
+
+                this.personsWriter.AddOrUpdate(person);
             }
 
             return persons.Count;
@@ -183,6 +187,12 @@ namespace Mihaylov.Core.Helpers.Site
         public IEnumerable<AnswerType> GetAllAnswerTypes()
         {
             return this.personAdditionalManager.GetAllAnswerTypes();
+        }
+
+        public string GetSystemUnit()
+        {
+            return this.personAdditionalManager.GetAllUnits()
+                                               .FirstOrDefault(u => u.ConversionRate == 1m)?.Name;
         }
 
         #region Private Methods
