@@ -90,6 +90,7 @@
     <Compile Include="Repositories\Site\EthnicitiesRepository.cs" />
     <Compile Include="Repositories\Site\PersonsRepository.cs" />
     <Compile Include="Repositories\Site\OrientationsRepository.cs" />
+    <Compile Include="Repositories\Site\PhrasesRepository.cs" />
     <Compile Include="Repositories\Site\UnitsRepository.cs" />
     <Compile Include="UnitOfWorks\RecordsData.cs" />
   </ItemGroup>

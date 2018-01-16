@@ -67,6 +67,7 @@
     <Compile Include="Interfaces\Site\ICountriesRepository.cs" />
     <Compile Include="Interfaces\Site\IGetAllRepository.cs" />
     <Compile Include="Interfaces\Site\IPersonsRepository.cs" />
+    <Compile Include="Interfaces\Site\IPhrasesRepository.cs" />
     <Compile Include="Repositories\Dictionaries\Additional\RecordSearchModel.cs" />
     <Compile Include="Repositories\Dictionaries\Course.cs" />
     <Compile Include="Repositories\Dictionaries\Language.cs" />
@@ -82,6 +83,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\Site\Orientation.cs" />
     <Compile Include="Repositories\Site\PersonStatistics.cs" />
+    <Compile Include="Repositories\Site\Phrase.cs" />
     <Compile Include="Repositories\Site\Unit.cs" />
   </ItemGroup>
   <ItemGroup>

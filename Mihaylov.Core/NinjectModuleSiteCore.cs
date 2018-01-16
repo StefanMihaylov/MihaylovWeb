@@ -1,14 +1,13 @@
-﻿using Mihaylov.Core.Helpers.Site;
+﻿using Mihaylov.Common.MessageBus;
+using Mihaylov.Common.MessageBus.Interfaces;
+using Mihaylov.Core.Helpers.Site;
 using Mihaylov.Core.Interfaces.Site;
 using Mihaylov.Core.Managers.Site;
 using Mihaylov.Core.Providers.Site;
 using Mihaylov.Core.Writers.Site;
-using Mihaylov.Database.Interfaces;
-using DAL = Mihaylov.Database.Site;
-using Ninject.Modules;
 using Mihaylov.Data;
-using Mihaylov.Common.MessageBus.Interfaces;
-using Mihaylov.Common.MessageBus;
+
+using Ninject.Modules;
 
 namespace Mihaylov.Core
 {
@@ -31,12 +30,15 @@ namespace Mihaylov.Core
 
             Kernel.Bind<IPersonsProvider>().To<PersonsProvider>();
             Kernel.Bind<IPersonAdditionalInfoProvider>().To<PersonAdditionalInfoProvider>();
+            Kernel.Bind<IPhrasesProvider>().To<PhrasesProvider>();
 
             Kernel.Bind<IPersonsManager>().To<PersonsManager>().InSingletonScope();
             Kernel.Bind<IPersonAdditionalInfoManager>().To<PersonAdditionalInfoManager>().InSingletonScope();
+            Kernel.Bind<IPhrasesManager>().To<PhrasesManager>().InSingletonScope();
 
             Kernel.Bind<ICountriesWriter>().To<CountriesWriter>();
             Kernel.Bind<IPersonsWriter>().To<PersonsWriter>();
+            Kernel.Bind<IPhrasesWriter>().To<PhrasesWriter>();
 
             Kernel.Bind<ISiteHelper>().To<SiteHelper>().WithConstructorArgument("url", this.url);
         }

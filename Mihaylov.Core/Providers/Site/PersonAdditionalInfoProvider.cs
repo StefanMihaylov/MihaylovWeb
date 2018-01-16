@@ -35,9 +35,9 @@ namespace Mihaylov.Core.Providers.Site
 
         public IEnumerable<AnswerType> GetAllAnswerTypes()
         {
-            IEnumerable<AnswerType> answerType = this.answerTypeRepository.GetAll()
-                                                                          .ToList();
-            return answerType;
+            IEnumerable<AnswerType> answerTypes = this.answerTypeRepository.GetAll()
+                                                                           .ToList();
+            return answerTypes;
         }
 
         public IEnumerable<Ethnicity> GetAllEthnicities()

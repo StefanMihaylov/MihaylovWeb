@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Mihaylov.Core.Models.Site;
 using Mihaylov.Data.Models.Site;
 
 namespace Mihaylov.Core.Interfaces.Site
@@ -18,5 +19,7 @@ namespace Mihaylov.Core.Interfaces.Site
         string GetSystemUnit();
 
         int UpdatePersons();
+
+        PersonExtended GetPersonByName(string userName);
     }
 }

@@ -1,12 +1,11 @@
 ﻿using System;
-using System.Linq;
-
-using CsQuery;
-using Mihaylov.Data.Models.Site;
-using Mihaylov.Core.Interfaces.Site;
-using Ninject.Extensions.Logging;
-using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using CsQuery;
+using Mihaylov.Core.Interfaces.Site;
+using Mihaylov.Core.Models.Site;
+using Mihaylov.Data.Models.Site;
+using Ninject.Extensions.Logging;
 
 namespace Mihaylov.Core.Helpers.Site
 {
@@ -16,18 +15,21 @@ namespace Mihaylov.Core.Helpers.Site
         private readonly IPersonAdditionalInfoManager personAdditionalManager;
         private readonly ICountriesWriter countriesWriter;
         private readonly IPersonsProvider personsProvider;
+        private readonly IPersonsManager personsManager;
         private readonly IPersonsWriter personsWriter;
         private readonly ILogger logger;
 
         public SiteHelper(string url, ICountriesWriter countriesWriter,
             IPersonAdditionalInfoManager personAdditionalManager, ILogger logger,
-            IPersonsProvider personsProvider, IPersonsWriter personsWriter)
+            IPersonsProvider personsProvider, IPersonsManager personsManager,
+            IPersonsWriter personsWriter)
         {
             this.url = url;
             this.personAdditionalManager = personAdditionalManager;
             this.countriesWriter = countriesWriter;
             this.logger = logger;
             this.personsProvider = personsProvider;
+            this.personsManager = personsManager;
             this.personsWriter = personsWriter;
         }
 
@@ -146,7 +148,6 @@ namespace Mihaylov.Core.Helpers.Site
             var persons = this.personsProvider.GetAll()
                 .Where(p => p.IsAccountDisabled == false)
                 .Where(p => p.UpdatedDate < DateTime.Now.AddDays(-1))
-                .Take(200)
                 .ToList();
 
             foreach (var person in persons)
@@ -193,6 +194,23 @@ namespace Mihaylov.Core.Helpers.Site
         {
             return this.personAdditionalManager.GetAllUnits()
                                                .FirstOrDefault(u => u.ConversionRate == 1m)?.Name;
+        }
+
+        public PersonExtended GetPersonByName(string userName)
+        {
+            Person person = this.personsManager.GetByName(userName);
+            if (person == null)
+            {
+                person = this.GetUserInfo(userName);
+            }
+
+            var personExtended = new PersonExtended(person)
+            {
+                AnswerUnits = this.GetAllUnits(),
+                AnswerTypes = this.GetAllAnswerTypes()
+            };
+
+            return personExtended;
         }
 
         #region Private Methods

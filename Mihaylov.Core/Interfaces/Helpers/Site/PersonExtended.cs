@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Mihaylov.Data.Models.Site;
 
-namespace Mihaylov.Web.ViewModels.Site
+namespace Mihaylov.Core.Models.Site
 {
     public class PersonExtended : Person
     {

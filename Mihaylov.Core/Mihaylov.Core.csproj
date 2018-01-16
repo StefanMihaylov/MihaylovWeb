@@ -70,14 +70,17 @@
   <ItemGroup>
     <Compile Include="Helpers\Site\SiteHelper.cs" />
     <Compile Include="Interfaces\Helpers\Site\ISiteHelper.cs" />
+    <Compile Include="Interfaces\Helpers\Site\PersonExtended.cs" />
     <Compile Include="Interfaces\Managers\Dictionaries\ICoursesInfoManager.cs" />
     <Compile Include="Interfaces\Managers\Dictionaries\IRecordsManager.cs" />
     <Compile Include="Interfaces\Managers\Site\IPersonsManager.cs" />
     <Compile Include="Interfaces\Managers\Site\IPersonAdditionalInfoManager.cs" />
     <Compile Include="Managers\Dictionaries\CoursesInfoManager.cs" />
     <Compile Include="Managers\Dictionaries\RecordsManager.cs" />
+    <Compile Include="Interfaces\Managers\Site\IPhrasesManager.cs" />
     <Compile Include="Managers\Site\PersonAdditionalInfoManager.cs" />
     <Compile Include="Managers\Site\PersonsManager.cs" />
+    <Compile Include="Managers\Site\PhrasesManager.cs" />
     <Compile Include="NinjectModuleCore.cs" />
     <Compile Include="NinjectModuleDictionariesCore.cs" />
     <Compile Include="NinjectModuleSiteCore.cs" />
@@ -88,14 +91,18 @@
     <Compile Include="Interfaces\Providers\Dictionaries\ICoursesInfoProvider.cs" />
     <Compile Include="Interfaces\Providers\Dictionaries\IRecordsProvider.cs" />
     <Compile Include="Providers\Dictionaries\RecordsProvider.cs" />
+    <Compile Include="Interfaces\Providers\Site\IPhrasesProvider.cs" />
     <Compile Include="Providers\Site\PersonAdditionalInfoProvider.cs" />
     <Compile Include="Providers\Site\PersonsProvider.cs" />
     <Compile Include="Interfaces\Writers\Site\IPersonsWriter.cs" />
     <Compile Include="Interfaces\Writers\Dictionaries\IRecordsWriter.cs" />
+    <Compile Include="Providers\Site\PhrasesProvider.cs" />
     <Compile Include="Writers\Dictionaries\RecordsWriter.cs" />
     <Compile Include="Writers\Site\CountriesWriter.cs" />
     <Compile Include="Interfaces\Writers\Site\ICountriesWriter.cs" />
+    <Compile Include="Interfaces\Writers\Site\IPhrasesWriter.cs" />
     <Compile Include="Writers\Site\PersonsWriter.cs" />
+    <Compile Include="Writers\Site\PhrasesWriter.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Mihaylov.Common\Mihaylov.Common.csproj">

@@ -27,6 +27,7 @@ namespace Mihaylov.Data
             Kernel.Bind<IGetAllRepository<Unit>>().To<UnitsRepository>();
             Kernel.Bind<ICountriesRepository>().To<CountriesRepository>();
             Kernel.Bind<IPersonsRepository>().To<PersonsRepository>();
+            Kernel.Bind<IPhrasesRepository>().To<PhrasesRepository>();
         }
     }
 }

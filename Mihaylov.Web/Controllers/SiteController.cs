@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Web.Mvc;
 using Mihaylov.Core.Interfaces.Site;
+using Mihaylov.Core.Models.Site;
 using Mihaylov.Data.Models.Site;
 using Mihaylov.Web.Common.Toastr;
 using Mihaylov.Web.Controllers.Base;
@@ -50,18 +51,7 @@ namespace Mihaylov.Web.Controllers
                     return this.Json($"{url}: Error: Missing username", JsonRequestBehavior.AllowGet);
                 }
 
-                Person person = this.personManager.GetByName(userName);
-                if (person == null)
-                {
-                    person = this.siteHelper.GetUserInfo(userName);
-                }
-
-                var personExtended = new PersonExtended(person)
-                {
-                    AnswerUnits = this.siteHelper.GetAllUnits(),
-                    AnswerTypes = this.siteHelper.GetAllAnswerTypes()
-                };
-
+                PersonExtended personExtended = this.siteHelper.GetPersonByName(userName);
                 return this.PartialView(personExtended);
             }
             catch (Exception ex)
