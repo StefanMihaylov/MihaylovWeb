@@ -34,7 +34,7 @@ namespace Mihaylov.Data.Repositories.Site
             return phrase;
         }
 
-        public Phrase AddOrUpdatePhrase(Phrase inputPhrase)
+        public Phrase AddOrUpdatePhrase(Phrase inputPhrase, out bool isNew)
         {
             DAL.Phras phrase;
 
@@ -42,10 +42,12 @@ namespace Mihaylov.Data.Repositories.Site
             {
                 phrase = new DAL.Phras();
                 this.Add(phrase);
+                isNew = true;
             }
             else
             {
                 phrase = base.GetById(inputPhrase.Id);
+                isNew = false;
             }
 
             inputPhrase.Update(phrase);

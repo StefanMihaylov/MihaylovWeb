@@ -5,7 +5,7 @@ namespace Mihaylov.Data.Interfaces.Site
 {
     public interface IPhrasesRepository
     {
-        Phrase AddOrUpdatePhrase(Phrase inputPhrase);
+        Phrase AddOrUpdatePhrase(Phrase inputPhrase, out bool isNew);
 
         IEnumerable<Phrase> GetAll();
 

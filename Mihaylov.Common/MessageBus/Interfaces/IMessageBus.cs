@@ -1,4 +1,5 @@
 ﻿using System;
+using Mihaylov.Common.MessageBus.Models;
 
 namespace Mihaylov.Common.MessageBus.Interfaces
 {
@@ -6,6 +7,6 @@ namespace Mihaylov.Common.MessageBus.Interfaces
     {
         void Attach(Type type, Action<Message> action);
 
-        void SendMessage(object data, object sender);
+        void SendMessage(object data, object sender, MessageActionType actionType);
     }
 }

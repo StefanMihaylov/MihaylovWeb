@@ -1,5 +1,6 @@
 ﻿using System;
 using Mihaylov.Common.MessageBus.Interfaces;
+using Mihaylov.Common.MessageBus.Models;
 using Mihaylov.Core.Interfaces.Site;
 using Mihaylov.Data.Interfaces.Site;
 using Mihaylov.Data.Models.Site;
@@ -26,9 +27,10 @@ namespace Mihaylov.Core.Writers.Site
 
             inputPerson.UpdatedDate = DateTime.Now;
 
-            Person person = this.repository.AddOrUpdatePerson(inputPerson);
+            Person person = this.repository.AddOrUpdatePerson(inputPerson, out bool isNewPerson);
 
-            this.messageBus.SendMessage(person, this);
+            MessageActionType action = isNewPerson ? MessageActionType.Add : MessageActionType.Update;
+            this.messageBus.SendMessage(person, this, action);
 
             return person;
         }

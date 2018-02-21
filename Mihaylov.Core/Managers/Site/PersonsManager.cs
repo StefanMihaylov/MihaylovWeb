@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Mihaylov.Common.MessageBus;
 using Mihaylov.Common.MessageBus.Interfaces;
+using Mihaylov.Common.MessageBus.Models;
 using Mihaylov.Core.Interfaces.Site;
 using Mihaylov.Data.Models.Site;
 using Ninject.Extensions.Logging;
@@ -122,15 +123,16 @@ namespace Mihaylov.Core.Managers.Site
                 return;
             }
 
-            Person person = message.Data as Person;
-            if (person != null)
+            if (message.Data is Person person)
             {
-                if (this.personsById.ContainsKey(person.Id))
+                if (message.ActionType == MessageActionType.Add ||
+                   (message.ActionType == MessageActionType.Update && this.personsById.ContainsKey(person.Id)))
                 {
                     this.personsById.AddOrUpdate(person.Id, (id) => person, (updateId, existingPerson) => person);
                 }
 
-                if (this.personsByName.ContainsKey(person.Username))
+                if (message.ActionType == MessageActionType.Add ||
+                   (message.ActionType == MessageActionType.Update && this.personsByName.ContainsKey(person.Username)))
                 {
                     this.personsByName.AddOrUpdate(person.Username, (id) => person, (updateId, existingPerson) => person);
                 }

@@ -102,6 +102,7 @@
     <Compile Include="Mapping\IMapFrom.cs" />
     <Compile Include="Mapping\IMapTo.cs" />
     <Compile Include="Mapping\QueryableExtensions.cs" />
+    <Compile Include="MessageBus\Models\MessageActionType.cs" />
     <Compile Include="MessageBus\SimpleMessageBus.cs" />
     <Compile Include="MessageBus\Interfaces\IMessageBus.cs" />
     <Compile Include="MessageBus\Models\Message.cs" />

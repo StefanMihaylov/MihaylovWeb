@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Mihaylov.Common.MessageBus.Interfaces;
 using Mihaylov.Core.Interfaces;
 using Mihaylov.Core.Interfaces.Site;
 using Mihaylov.Core.Managers;
@@ -28,16 +29,27 @@ namespace Mihaylov.Core.Tests.Managers
         public void ConstructiorProviderNullMockedLoggerTest()
         {
             ILogger logger = GetLoggerMocked();
+            IMessageBus messageBus = GetMessageBusMocked();
 
-            Assert.ThrowsException<ArgumentNullException>(() => new PersonAdditionalInfoManager(null, logger));
+            Assert.ThrowsException<ArgumentNullException>(() => new PersonAdditionalInfoManager(null, logger, messageBus));
         }
 
         [TestMethod]
         public void ConstructiorLoggerNullTest()
         {
             IPersonAdditionalInfoProvider provider = Mock.Create<IPersonAdditionalInfoProvider>();
+            IMessageBus messageBus = GetMessageBusMocked();
 
-            Assert.ThrowsException<ArgumentNullException>(() => new PersonAdditionalInfoManager(provider, null));
+            Assert.ThrowsException<ArgumentNullException>(() => new PersonAdditionalInfoManager(provider, null, messageBus));
+        }
+
+        [TestMethod]
+        public void ConstructiorMessageBusNullTest()
+        {
+            IPersonAdditionalInfoProvider provider = Mock.Create<IPersonAdditionalInfoProvider>();
+            ILogger logger = GetLoggerMocked();
+
+            Assert.ThrowsException<ArgumentNullException>(() => new PersonAdditionalInfoManager(provider, logger, null));
         }
 
         [TestMethod]
@@ -45,7 +57,8 @@ namespace Mihaylov.Core.Tests.Managers
         {
             ILogger logger = GetLoggerMocked();
             IPersonAdditionalInfoProvider providerMock = this.GetPersonAdditionalInfoProviderMock();
-            var manager = new PersonAdditionalInfoManagerFake(providerMock, logger);
+            IMessageBus messageBus = GetMessageBusMocked();
+            var manager = new PersonAdditionalInfoManagerFake(providerMock, logger, messageBus);
 
             Assert.AreSame(providerMock, manager.ExposedProvider);
         }
@@ -55,9 +68,21 @@ namespace Mihaylov.Core.Tests.Managers
         {
             IPersonAdditionalInfoProvider providerMock = this.GetPersonAdditionalInfoProviderMock();
             ILogger logger = this.GetLoggerMocked();
-            var manager = new PersonAdditionalInfoManagerFake(providerMock, logger);
+            IMessageBus messageBus = GetMessageBusMocked();
+            var manager = new PersonAdditionalInfoManagerFake(providerMock, logger, messageBus);
 
             Assert.AreSame(logger, manager.ExposedLogger);
+        }
+
+        [TestMethod]
+        public void ConstructiorMEssageBusIsSetProperly()
+        {
+            IPersonAdditionalInfoProvider providerMock = this.GetPersonAdditionalInfoProviderMock();
+            ILogger logger = this.GetLoggerMocked();
+            IMessageBus messageBus = GetMessageBusMocked();
+            var manager = new PersonAdditionalInfoManagerFake(providerMock, logger, messageBus);
+
+            Assert.AreSame(messageBus, manager.ExposedMessageBus);
         }
 
         [TestMethod]
@@ -65,7 +90,8 @@ namespace Mihaylov.Core.Tests.Managers
         {
             IPersonAdditionalInfoProvider providerMock = this.GetPersonAdditionalInfoProviderMock();
             ILogger logger = GetLoggerMocked();
-            var manager = new PersonAdditionalInfoManagerFake(providerMock, logger);
+            IMessageBus messageBus = GetMessageBusMocked();
+            var manager = new PersonAdditionalInfoManagerFake(providerMock, logger, messageBus);
 
             Assert.IsNotNull(manager.ExposedAnswerTypeDictionaryById);
         }
@@ -75,7 +101,8 @@ namespace Mihaylov.Core.Tests.Managers
         {
             IPersonAdditionalInfoProvider providerMock = this.GetPersonAdditionalInfoProviderMock();
             ILogger logger = GetLoggerMocked();
-            var manager = new PersonAdditionalInfoManagerFake(providerMock, logger);
+            IMessageBus messageBus = GetMessageBusMocked();
+            var manager = new PersonAdditionalInfoManagerFake(providerMock, logger, messageBus);
 
             Assert.IsNotNull(manager.ExposedAnswerTypeDictionaryByName);
         }
@@ -85,7 +112,8 @@ namespace Mihaylov.Core.Tests.Managers
         {
             IPersonAdditionalInfoProvider providerMock = this.GetPersonAdditionalInfoProviderMock();
             ILogger logger = GetLoggerMocked();
-            var manager = new PersonAdditionalInfoManagerFake(providerMock, logger);
+            IMessageBus messageBus = GetMessageBusMocked();
+            var manager = new PersonAdditionalInfoManagerFake(providerMock, logger, messageBus);
 
           //  Mock.Assert(() => providerMock.GetAllAnswerTypes(), Occurs.Once());
             Assert.AreEqual(NUMBER_OF_ANSWER_TYPES, manager.ExposedAnswerTypeDictionaryById.Keys.Count);
@@ -96,7 +124,8 @@ namespace Mihaylov.Core.Tests.Managers
         {
             IPersonAdditionalInfoProvider providerMock = this.GetPersonAdditionalInfoProviderMock();
             ILogger logger = GetLoggerMocked();
-            var manager = new PersonAdditionalInfoManagerFake(providerMock, logger);
+            IMessageBus messageBus = GetMessageBusMocked();
+            var manager = new PersonAdditionalInfoManagerFake(providerMock, logger, messageBus);
 
            // Mock.Assert(() => providerMock.GetAllAnswerTypes(), Occurs.Once());
             Assert.AreEqual(NUMBER_OF_ANSWER_TYPES, manager.ExposedAnswerTypeDictionaryByName.Keys.Count);
@@ -107,7 +136,8 @@ namespace Mihaylov.Core.Tests.Managers
         {
             IPersonAdditionalInfoProvider providerMock = this.GetPersonAdditionalInfoProviderMock();
             ILogger logger = GetLoggerMocked();
-            var manager = new PersonAdditionalInfoManager(providerMock, logger);
+            IMessageBus messageBus = GetMessageBusMocked();
+            var manager = new PersonAdditionalInfoManager(providerMock, logger, messageBus);
 
             IEnumerable<AnswerType> result = manager.GetAllAnswerTypes();
 
@@ -123,7 +153,8 @@ namespace Mihaylov.Core.Tests.Managers
         {
             IPersonAdditionalInfoProvider providerMock = this.GetPersonAdditionalInfoProviderMock();
             ILogger logger = GetLoggerMocked();
-            var manager = new PersonAdditionalInfoManager(providerMock, logger);
+            IMessageBus messageBus = GetMessageBusMocked();
+            var manager = new PersonAdditionalInfoManager(providerMock, logger, messageBus);
 
             AnswerType result = manager.GetAnswerTypeById(id);
 
@@ -140,7 +171,8 @@ namespace Mihaylov.Core.Tests.Managers
         {
             IPersonAdditionalInfoProvider providerMock = this.GetPersonAdditionalInfoProviderMock();
             ILogger logger = this.GetLoggerMocked();
-            var manager = new PersonAdditionalInfoManager(providerMock, logger);
+            IMessageBus messageBus = GetMessageBusMocked();
+            var manager = new PersonAdditionalInfoManager(providerMock, logger, messageBus);
 
             Assert.ThrowsException<ApplicationException>(() => manager.GetAnswerTypeById(id));
         }
@@ -152,7 +184,8 @@ namespace Mihaylov.Core.Tests.Managers
 
             IPersonAdditionalInfoProvider providerMock = this.GetPersonAdditionalInfoProviderMock();
             ILogger logger = this.GetLoggerMocked();
-            var manager = new PersonAdditionalInfoManager(providerMock, logger);
+            IMessageBus messageBus = GetMessageBusMocked();
+            var manager = new PersonAdditionalInfoManager(providerMock, logger, messageBus);
 
             Assert.ThrowsException<ApplicationException>(() => manager.GetAnswerTypeByName(name));
         }
@@ -166,7 +199,8 @@ namespace Mihaylov.Core.Tests.Managers
         {
             IPersonAdditionalInfoProvider providerMock = this.GetPersonAdditionalInfoProviderMock();
             ILogger logger = this.GetLoggerMocked();
-            var manager = new PersonAdditionalInfoManager(providerMock, logger);
+            IMessageBus messageBus = GetMessageBusMocked();
+            var manager = new PersonAdditionalInfoManager(providerMock, logger, messageBus);
 
             AnswerType result = manager.GetAnswerTypeByName(inputName);
 
@@ -182,7 +216,8 @@ namespace Mihaylov.Core.Tests.Managers
 
             IPersonAdditionalInfoProvider providerMock = this.GetPersonAdditionalInfoProviderMock();
             ILogger logger = this.GetLoggerMocked();
-            var manager = new PersonAdditionalInfoManager(providerMock, logger);
+            IMessageBus messageBus = GetMessageBusMocked();
+            var manager = new PersonAdditionalInfoManager(providerMock, logger, messageBus);
 
             AnswerType result = manager.GetAnswerTypeByName(name);
 
@@ -198,7 +233,8 @@ namespace Mihaylov.Core.Tests.Managers
 
             IPersonAdditionalInfoProvider providerMock = this.GetPersonAdditionalInfoProviderMock();
             ILogger logger = this.GetLoggerMocked();
-            var manager = new PersonAdditionalInfoManager(providerMock, logger);
+            IMessageBus messageBus = GetMessageBusMocked();
+            var manager = new PersonAdditionalInfoManager(providerMock, logger, messageBus);
 
             AnswerType result = manager.GetAnswerTypeByName(name);
 
@@ -215,7 +251,8 @@ namespace Mihaylov.Core.Tests.Managers
         {
             IPersonAdditionalInfoProvider providerMock = this.GetPersonAdditionalInfoProviderMock();
             ILogger logger = this.GetLoggerMocked();
-            var manager = new PersonAdditionalInfoManagerFake(providerMock, logger);
+            IMessageBus messageBus = GetMessageBusMocked();
+            var manager = new PersonAdditionalInfoManagerFake(providerMock, logger, messageBus);
 
             Country result = manager.GetCountryById(id);
 
@@ -232,7 +269,8 @@ namespace Mihaylov.Core.Tests.Managers
         {
             IPersonAdditionalInfoProvider providerMock = this.GetPersonAdditionalInfoProviderMock();
             ILogger logger = this.GetLoggerMocked();
-            var manager = new PersonAdditionalInfoManagerFake(providerMock, logger);
+            IMessageBus messageBus = GetMessageBusMocked();
+            var manager = new PersonAdditionalInfoManagerFake(providerMock, logger, messageBus);
 
             Country result = manager.GetCountryById(id);
 
@@ -248,7 +286,8 @@ namespace Mihaylov.Core.Tests.Managers
         {
             IPersonAdditionalInfoProvider providerMock = this.GetPersonAdditionalInfoProviderMock();
             ILogger logger = this.GetLoggerMocked();
-            var manager = new PersonAdditionalInfoManager(providerMock, logger);
+            IMessageBus messageBus = GetMessageBusMocked();
+            var manager = new PersonAdditionalInfoManager(providerMock, logger, messageBus);
 
             Assert.ThrowsException<ArgumentOutOfRangeException>(() => manager.GetCountryById(id));
         }
@@ -260,7 +299,8 @@ namespace Mihaylov.Core.Tests.Managers
         {
             IPersonAdditionalInfoProvider providerMock = this.GetPersonAdditionalInfoProviderMock();
             ILogger logger = this.GetLoggerMocked();
-            var manager = new PersonAdditionalInfoManagerFake(providerMock, logger);
+            IMessageBus messageBus = GetMessageBusMocked();
+            var manager = new PersonAdditionalInfoManagerFake(providerMock, logger, messageBus);
 
             Country result = manager.GetCountryByName(inputName);
 
@@ -279,7 +319,8 @@ namespace Mihaylov.Core.Tests.Managers
 
             IPersonAdditionalInfoProvider providerMock = this.GetPersonAdditionalInfoProviderMock();
             ILogger logger = this.GetLoggerMocked();
-            var manager = new PersonAdditionalInfoManagerFake(providerMock, logger);
+            IMessageBus messageBus = GetMessageBusMocked();
+            var manager = new PersonAdditionalInfoManagerFake(providerMock, logger, messageBus);
 
             Country result = manager.GetCountryByName(name);
 
@@ -298,7 +339,8 @@ namespace Mihaylov.Core.Tests.Managers
 
             IPersonAdditionalInfoProvider providerMock = this.GetPersonAdditionalInfoProviderMock();
             ILogger logger = this.GetLoggerMocked();
-            var manager = new PersonAdditionalInfoManagerFake(providerMock, logger);
+            IMessageBus messageBus = GetMessageBusMocked();
+            var manager = new PersonAdditionalInfoManagerFake(providerMock, logger, messageBus);
 
             Country result = manager.GetCountryByName(name);
 
@@ -316,7 +358,8 @@ namespace Mihaylov.Core.Tests.Managers
 
             IPersonAdditionalInfoProvider providerMock = this.GetPersonAdditionalInfoProviderMock();
             ILogger logger = this.GetLoggerMocked();
-            var manager = new PersonAdditionalInfoManagerFake(providerMock, logger);
+            IMessageBus messageBus = GetMessageBusMocked();
+            var manager = new PersonAdditionalInfoManagerFake(providerMock, logger, messageBus);
 
             Country result = manager.GetCountryByName(name);
 
@@ -332,7 +375,8 @@ namespace Mihaylov.Core.Tests.Managers
 
             IPersonAdditionalInfoProvider providerMock = this.GetPersonAdditionalInfoProviderMock();
             ILogger logger = this.GetLoggerMocked();
-            var manager = new PersonAdditionalInfoManagerFake(providerMock, logger);
+            IMessageBus messageBus = GetMessageBusMocked();
+            var manager = new PersonAdditionalInfoManagerFake(providerMock, logger, messageBus);
 
             Country result = manager.GetCountryByName(name);
 
@@ -346,7 +390,8 @@ namespace Mihaylov.Core.Tests.Managers
 
             IPersonAdditionalInfoProvider providerMock = this.GetPersonAdditionalInfoProviderMock();
             ILogger logger = this.GetLoggerMocked();
-            var manager = new PersonAdditionalInfoManagerFake(providerMock, logger);
+            IMessageBus messageBus = GetMessageBusMocked();
+            var manager = new PersonAdditionalInfoManagerFake(providerMock, logger, messageBus);
 
             Country result = manager.GetCountryByName(name);
 
@@ -360,7 +405,8 @@ namespace Mihaylov.Core.Tests.Managers
 
             IPersonAdditionalInfoProvider providerMock = this.GetPersonAdditionalInfoProviderMock();
             ILogger logger = this.GetLoggerMocked();
-            var manager = new PersonAdditionalInfoManagerFake(providerMock, logger);
+            IMessageBus messageBus = GetMessageBusMocked();
+            var manager = new PersonAdditionalInfoManagerFake(providerMock, logger, messageBus);
 
             Country result = manager.GetCountryById(id);
 
@@ -433,6 +479,11 @@ namespace Mihaylov.Core.Tests.Managers
         private ILogger GetLoggerMocked()
         {
             return Mock.Create<ILogger>();
+        }
+
+        private IMessageBus GetMessageBusMocked()
+        {
+            return Mock.Create<IMessageBus>();
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using Mihaylov.Common.MessageBus.Interfaces;
+using Mihaylov.Common.MessageBus.Models;
 using Mihaylov.Core.Interfaces.Site;
 using Mihaylov.Data.Interfaces.Site;
 using Mihaylov.Data.Models.Site;
@@ -28,9 +29,11 @@ namespace Mihaylov.Core.Writers.Site
                 inputPhrase.OrderId = maxOrderId++;
             }
 
-            Phrase phrase = this.repository.AddOrUpdatePhrase(inputPhrase);
+            Phrase phrase = this.repository.AddOrUpdatePhrase(inputPhrase, out bool isNewPhrase);
 
-            this.messageBus.SendMessage(phrase, this);
+            MessageActionType action = isNewPhrase ? MessageActionType.Add : MessageActionType.Update;
+
+            this.messageBus.SendMessage(phrase, this, action);
 
             return phrase;
         }

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Mihaylov.Common.MessageBus.Interfaces;
 using Mihaylov.Core.Interfaces.Site;
 using Mihaylov.Core.Managers.Site;
 using Mihaylov.Data.Models.Site;
@@ -8,8 +9,8 @@ namespace Mihaylov.Core.Tests.Managers.Fakes
 {
     internal class PersonAdditionalInfoManagerFake : PersonAdditionalInfoManager
     {
-        public PersonAdditionalInfoManagerFake(IPersonAdditionalInfoProvider provider, ILogger logger)
-            : base(provider, logger)
+        public PersonAdditionalInfoManagerFake(IPersonAdditionalInfoProvider provider, ILogger logger, IMessageBus messageBus)
+            : base(provider, logger, messageBus)
         {
         }
 
@@ -23,14 +24,19 @@ namespace Mihaylov.Core.Tests.Managers.Fakes
             get { return this.logger; }
         }
 
+        public IMessageBus ExposedMessageBus
+        {
+            get { return this.messageBus; }
+        }
+
         public IDictionary<int, AnswerType> ExposedAnswerTypeDictionaryById
         {
-            get { return this.answerTypesById; }
+            get { return this.answerTypesById.Value; }
         }
 
         public IDictionary<string, AnswerType> ExposedAnswerTypeDictionaryByName
         {
-            get { return this.answerTypesByName; }
+            get { return this.answerTypesByName.Value; }
         }
 
         public IDictionary<int, Country> ExposedCountryDictionaryById

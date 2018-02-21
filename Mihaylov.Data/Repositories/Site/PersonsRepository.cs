@@ -45,17 +45,19 @@ namespace Mihaylov.Data.Repositories.Site
             return person;
         }
 
-        public Person AddOrUpdatePerson(Person inputPerson)
+        public Person AddOrUpdatePerson(Person inputPerson, out bool isNewPerson)
         {
             DAL.Person person;
             if (inputPerson.Id == 0)
             {
                 person = new DAL.Person();
                 this.Add(person);
+                isNewPerson = true;
             }
             else
             {
                 person = this.GetById((object)inputPerson.Id);
+                isNewPerson = false;
             }
 
             inputPerson.Update(person);

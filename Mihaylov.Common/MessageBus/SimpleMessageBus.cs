@@ -1,4 +1,5 @@
 ﻿using Mihaylov.Common.MessageBus.Interfaces;
+using Mihaylov.Common.MessageBus.Models;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -30,9 +31,9 @@ namespace Mihaylov.Common.MessageBus
                 });
         }
 
-        public virtual void SendMessage(object data, object sender)
+        public virtual void SendMessage(object data, object sender, MessageActionType actionType)
         {
-            var message = new Message(data, sender);
+            var message = new Message(data, sender, actionType);
 
             if (this.actions.ContainsKey(message.MessageType))
             {

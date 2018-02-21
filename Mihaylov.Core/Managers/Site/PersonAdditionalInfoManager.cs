@@ -1,6 +1,10 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
+using Mihaylov.Common.MessageBus;
+using Mihaylov.Common.MessageBus.Interfaces;
+using Mihaylov.Common.MessageBus.Models;
 using Mihaylov.Common.Validations;
 using Mihaylov.Core.Interfaces.Site;
 using Mihaylov.Data.Models.Site;
@@ -12,63 +16,97 @@ namespace Mihaylov.Core.Managers.Site
     {
         protected readonly IPersonAdditionalInfoProvider provider;
         protected readonly ILogger logger;
+        protected readonly IMessageBus messageBus;
 
-        protected readonly ConcurrentDictionary<int, AnswerType> answerTypesById;
-        protected readonly ConcurrentDictionary<string, AnswerType> answerTypesByName;
+        protected readonly Lazy<ConcurrentDictionary<int, AnswerType>> answerTypesById;
+        protected readonly Lazy<ConcurrentDictionary<string, AnswerType>> answerTypesByName;
+
+        private readonly Lazy<ConcurrentDictionary<int, Ethnicity>> ethnicitiesById;
+        private readonly Lazy<ConcurrentDictionary<string, Ethnicity>> ethnicitiesByName;
+
+        private readonly Lazy<ConcurrentDictionary<int, Orientation>> orientationsById;
+        private readonly Lazy<ConcurrentDictionary<string, Orientation>> orientationsByName;
+
+        private readonly Lazy<ConcurrentDictionary<int, Unit>> unitsById;
+        private readonly Lazy<ConcurrentDictionary<string, Unit>> unitsByName;
 
         protected readonly ConcurrentDictionary<int, Country> countriesById;
         protected readonly ConcurrentDictionary<string, Country> countriesByName;
 
-        private readonly ConcurrentDictionary<int, Ethnicity> ethnicitiesById;
-        private readonly ConcurrentDictionary<string, Ethnicity> ethnicitiesByName;
-
-        private readonly ConcurrentDictionary<int, Orientation> orientationsById;
-        private readonly ConcurrentDictionary<string, Orientation> orientationsByName;
-
-        private readonly ConcurrentDictionary<int, Unit> unitsById;
-        private readonly ConcurrentDictionary<string, Unit> unitsByName;
-
-        public PersonAdditionalInfoManager(IPersonAdditionalInfoProvider provider, ILogger logger)
+        public PersonAdditionalInfoManager(IPersonAdditionalInfoProvider provider, ILogger logger, IMessageBus messageBus)
         {
             ParameterValidation.IsNotNull(provider, nameof(provider));
             ParameterValidation.IsNotNull(logger, nameof(logger));
+            ParameterValidation.IsNotNull(messageBus, nameof(messageBus));
 
             this.provider = provider;
             this.logger = logger;
+            this.messageBus = messageBus;
 
-            this.answerTypesById = new ConcurrentDictionary<int, AnswerType>();
-            this.answerTypesByName = new ConcurrentDictionary<string, AnswerType>(StringComparer.OrdinalIgnoreCase);
+            this.answerTypesById = new Lazy<ConcurrentDictionary<int, AnswerType>>(() =>
+            {
+                IDictionary<int, AnswerType> answerTypes = this.provider.GetAllAnswerTypes().ToDictionary(p => p.Id);
+                return new ConcurrentDictionary<int, AnswerType>(answerTypes);
+            });
 
-            Initialize();
+            this.answerTypesByName = new Lazy<ConcurrentDictionary<string, AnswerType>>(() =>
+            {
+                IDictionary<string, AnswerType> answerTypes = this.provider.GetAllAnswerTypes().ToDictionary(p => p.Name);
+                return new ConcurrentDictionary<string, AnswerType>(answerTypes, StringComparer.OrdinalIgnoreCase);
+            });
+
+            this.ethnicitiesById = new Lazy<ConcurrentDictionary<int, Ethnicity>>(() =>
+            {
+                IDictionary<int, Ethnicity> ethnicities = this.provider.GetAllEthnicities().ToDictionary(e => e.Id);
+                return new ConcurrentDictionary<int, Ethnicity>(ethnicities);
+            });
+
+            this.ethnicitiesByName = new Lazy<ConcurrentDictionary<string, Ethnicity>>(() =>
+            {
+                IDictionary<string, Ethnicity> ethnicities = this.provider.GetAllEthnicities().ToDictionary(e => e.Name);
+                return new ConcurrentDictionary<string, Ethnicity>(ethnicities, StringComparer.OrdinalIgnoreCase);
+            });
+
+            this.orientationsById = new Lazy<ConcurrentDictionary<int, Orientation>>(() =>
+            {
+                IDictionary<int, Orientation> orientations = this.provider.GetAllOrientations().ToDictionary(o => o.Id);
+                return new ConcurrentDictionary<int, Orientation>(orientations);
+            });
+
+            this.orientationsByName = new Lazy<ConcurrentDictionary<string, Orientation>>(() =>
+            {
+                IDictionary<string, Orientation> orientations = this.provider.GetAllOrientations().ToDictionary(o => o.Name);
+                return new ConcurrentDictionary<string, Orientation>(orientations, StringComparer.OrdinalIgnoreCase);
+            });
+
+            this.unitsById = new Lazy<ConcurrentDictionary<int, Unit>>(() =>
+            {
+                IDictionary<int, Unit> units = this.provider.GetAllUnits().ToDictionary(u => u.Id);
+                return new ConcurrentDictionary<int, Unit>(units);
+            });
+            this.unitsByName = new Lazy<ConcurrentDictionary<string, Unit>>(()=> 
+            {
+                IDictionary<string, Unit> units = this.provider.GetAllUnits().ToDictionary(u => u.Name);
+                return new ConcurrentDictionary<string, Unit>(units, StringComparer.OrdinalIgnoreCase);
+            }); 
 
             this.countriesById = new ConcurrentDictionary<int, Country>();
             this.countriesByName = new ConcurrentDictionary<string, Country>(StringComparer.OrdinalIgnoreCase);
 
-            this.ethnicitiesById = new ConcurrentDictionary<int, Ethnicity>();
-            this.ethnicitiesByName = new ConcurrentDictionary<string, Ethnicity>(StringComparer.OrdinalIgnoreCase);
-
-            InitializeEthnicity();
-
-            this.orientationsById = new ConcurrentDictionary<int, Orientation>();
-            this.orientationsByName = new ConcurrentDictionary<string, Orientation>(StringComparer.OrdinalIgnoreCase);
-
-            InitializeOrientation();
-
-            this.unitsById = new ConcurrentDictionary<int, Unit>();
-            this.unitsByName = new ConcurrentDictionary<string, Unit>(StringComparer.OrdinalIgnoreCase);
-
-            InitializeUnit();
+            this.messageBus.Attach(typeof(Country), this.HandleMessageCountry);
         }
+
+        #region AnswerType
 
         public IEnumerable<AnswerType> GetAllAnswerTypes()
         {
-            IEnumerable<AnswerType> answerTypes = this.answerTypesById.Values;
+            IEnumerable<AnswerType> answerTypes = this.answerTypesById.Value.Values;
             return answerTypes;
         }
 
         public AnswerType GetAnswerTypeById(int id)
         {
-            if (this.answerTypesById.TryGetValue(id, out AnswerType type))
+            if (this.answerTypesById.Value.TryGetValue(id, out AnswerType type))
             {
                 return type;
             }
@@ -80,7 +118,7 @@ namespace Mihaylov.Core.Managers.Site
 
         public AnswerType GetAnswerTypeByName(string name)
         {
-            if (this.answerTypesByName.TryGetValue(name.Trim(), out AnswerType type))
+            if (this.answerTypesByName.Value.TryGetValue(name.Trim(), out AnswerType type))
             {
                 return type;
             }
@@ -90,14 +128,13 @@ namespace Mihaylov.Core.Managers.Site
             }
         }
 
-        private void Initialize()
+        #endregion
+
+        #region Country
+
+        public IEnumerable<Country> GetAllCountries()
         {
-            IEnumerable<AnswerType> answerTypes = this.provider.GetAllAnswerTypes();
-            foreach (var answerType in answerTypes)
-            {
-                this.answerTypesById.TryAdd(answerType.Id, answerType);
-                this.answerTypesByName.TryAdd(answerType.Name, answerType);
-            }
+            return this.countriesById.Values;
         }
 
         public Country GetCountryById(int id)
@@ -148,15 +185,19 @@ namespace Mihaylov.Core.Managers.Site
             }
         }
 
+        #endregion;
+
+        #region Ethnicity
+
         public IEnumerable<Ethnicity> GetAllEthnicities()
         {
-            IEnumerable<Ethnicity> ethnicities = this.ethnicitiesById.Values;
+            IEnumerable<Ethnicity> ethnicities = this.ethnicitiesById.Value.Values;
             return ethnicities;
         }
 
         public Ethnicity GetEthnicityById(int id)
         {
-            if (this.ethnicitiesById.TryGetValue(id, out Ethnicity ethnicity))
+            if (this.ethnicitiesById.Value.TryGetValue(id, out Ethnicity ethnicity))
             {
                 return ethnicity;
             }
@@ -168,7 +209,7 @@ namespace Mihaylov.Core.Managers.Site
 
         public Ethnicity GetEthnicityByName(string name)
         {
-            if (this.ethnicitiesByName.TryGetValue(name.Trim(), out Ethnicity ethnicity))
+            if (this.ethnicitiesByName.Value.TryGetValue(name.Trim(), out Ethnicity ethnicity))
             {
                 return ethnicity;
             }
@@ -178,25 +219,19 @@ namespace Mihaylov.Core.Managers.Site
             }
         }
 
-        private void InitializeEthnicity()
-        {
-            IEnumerable<Ethnicity> ethnicities = this.provider.GetAllEthnicities();
-            foreach (var ethnicity in ethnicities)
-            {
-                this.ethnicitiesById.TryAdd(ethnicity.Id, ethnicity);
-                this.ethnicitiesByName.TryAdd(ethnicity.Name, ethnicity);
-            }
-        }
+        #endregion
+
+        #region Orientation
 
         public IEnumerable<Orientation> GetAllOrientations()
         {
-            IEnumerable<Orientation> orientations = this.orientationsById.Values;
+            IEnumerable<Orientation> orientations = this.orientationsById.Value.Values;
             return orientations;
         }
 
         public Orientation GetOrientationById(int id)
         {
-            if (this.orientationsById.TryGetValue(id, out Orientation orientation))
+            if (this.orientationsById.Value.TryGetValue(id, out Orientation orientation))
             {
                 return orientation;
             }
@@ -208,7 +243,7 @@ namespace Mihaylov.Core.Managers.Site
 
         public Orientation GetOrientationByName(string name)
         {
-            if (this.orientationsByName.TryGetValue(name.Trim(), out Orientation orientation))
+            if (this.orientationsByName.Value.TryGetValue(name.Trim(), out Orientation orientation))
             {
                 return orientation;
             }
@@ -218,30 +253,19 @@ namespace Mihaylov.Core.Managers.Site
             }
         }
 
-        public IEnumerable<Country> GetAllCountries()
-        {
-            return this.countriesById.Values;
-        }
+        #endregion
 
-        private void InitializeOrientation()
-        {
-            IEnumerable<Orientation> orientations = this.provider.GetAllOrientations();
-            foreach (var orientation in orientations)
-            {
-                this.orientationsById.TryAdd(orientation.Id, orientation);
-                this.orientationsByName.TryAdd(orientation.Name, orientation);
-            }
-        }
+        #region Unit
 
         public IEnumerable<Unit> GetAllUnits()
         {
-            IEnumerable<Unit> units = this.unitsById.Values;
+            IEnumerable<Unit> units = this.unitsById.Value.Values;
             return units;
         }
 
         public Unit GetUnitById(int id)
         {
-            if (this.unitsById.TryGetValue(id, out Unit unit))
+            if (this.unitsById.Value.TryGetValue(id, out Unit unit))
             {
                 return unit;
             }
@@ -253,7 +277,7 @@ namespace Mihaylov.Core.Managers.Site
 
         public Unit GetUnitByName(string name)
         {
-            if (this.unitsByName.TryGetValue(name.Trim(), out Unit unit))
+            if (this.unitsByName.Value.TryGetValue(name.Trim(), out Unit unit))
             {
                 return unit;
             }
@@ -263,13 +287,28 @@ namespace Mihaylov.Core.Managers.Site
             }
         }
 
-        private void InitializeUnit()
+        #endregion
+
+        private void HandleMessageCountry(Message message)
         {
-            IEnumerable<Unit> units = this.provider.GetAllUnits();
-            foreach (var unit in units)
+            if (message == null)
             {
-                this.unitsById.TryAdd(unit.Id, unit);
-                this.unitsByName.TryAdd(unit.Name, unit);
+                return;
+            }
+
+            if (message.Data is Country country)
+            {
+                if (message.ActionType == MessageActionType.Add ||
+                   (message.ActionType == MessageActionType.Update && this.countriesById.ContainsKey(country.Id)))
+                {
+                    this.countriesById.AddOrUpdate(country.Id, (id) => country, (updateId, existingCountry) => country);
+                }
+
+                if (message.ActionType == MessageActionType.Add ||
+                    (message.ActionType == MessageActionType.Update && this.countriesByName.ContainsKey(country.Name)))
+                {
+                    this.countriesByName.AddOrUpdate(country.Name, (id) => country, (updateId, existingCountry) => country);
+                }
             }
         }
     }

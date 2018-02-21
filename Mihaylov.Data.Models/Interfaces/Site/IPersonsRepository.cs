@@ -11,7 +11,7 @@ namespace Mihaylov.Data.Interfaces.Site
 
         Person GetByName(string username);
 
-        Person AddOrUpdatePerson(Person inputPerson);
+        Person AddOrUpdatePerson(Person inputPerson, out bool isNewPerson);
 
         PersonStatistics GetStatictics();
     }

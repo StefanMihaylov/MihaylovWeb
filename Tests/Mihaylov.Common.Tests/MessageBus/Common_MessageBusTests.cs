@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Mihaylov.Common.MessageBus;
 using Mihaylov.Common.MessageBus.Interfaces;
+using Mihaylov.Common.MessageBus.Models;
 using Mihaylov.Common.Tests.MessageBus.Fakes;
 using Telerik.JustMock;
 
@@ -21,8 +22,8 @@ namespace Mihaylov.Common.Tests.MessageBus
 
             host.Init(messageBus);
 
-            messageBus.SendMessage(MESSAGE_STRING, this);
-            messageBus.SendMessage(MESSAGE_INT, this);
+            messageBus.SendMessage(MESSAGE_STRING, this, MessageActionType.Add);
+            messageBus.SendMessage(MESSAGE_INT, this, MessageActionType.Add);
 
             Mock.Assert(() => host.OnMessageOneReceived(Arg.IsAny<Message>()), Occurs.Once());
             Mock.Assert(() => host.OnMessageOneReceivedExtended(Arg.IsAny<Message>()), Occurs.Exactly(2));
@@ -37,7 +38,7 @@ namespace Mihaylov.Common.Tests.MessageBus
 
             host.Init(messageBus);
 
-            messageBus.SendMessage(MESSAGE_STRING, this);
+            messageBus.SendMessage(MESSAGE_STRING, this, MessageActionType.Add);
 
             Mock.Assert(() => host.OnMessageOneReceived(Arg.IsAny<Message>()), Occurs.Once());
             Mock.Assert(() => host.OnMessageOneReceivedExtended(Arg.IsAny<Message>()), Occurs.Once());
@@ -52,7 +53,7 @@ namespace Mihaylov.Common.Tests.MessageBus
 
             host.Init(messageBus);
 
-            messageBus.SendMessage(MESSAGE_INT, this);
+            messageBus.SendMessage(MESSAGE_INT, this, MessageActionType.Add);
 
             Mock.Assert(() => host.OnMessageOneReceived(Arg.IsAny<Message>()), Occurs.Never());
             Mock.Assert(() => host.OnMessageOneReceivedExtended(Arg.IsAny<Message>()), Occurs.Once());
@@ -80,7 +81,7 @@ namespace Mihaylov.Common.Tests.MessageBus
 
             host.Init(messageBus);
 
-            messageBus.SendMessage(MESSAGE_UNKNOWN, this);
+            messageBus.SendMessage(MESSAGE_UNKNOWN, this, MessageActionType.Add);
 
             Mock.Assert(() => host.OnMessageOneReceived(Arg.IsAny<Message>()), Occurs.Never());
             Mock.Assert(() => host.OnMessageOneReceivedExtended(Arg.IsAny<Message>()), Occurs.Never());
