@@ -25,7 +25,7 @@ namespace Mihaylov.Core.Writers.Site
                 inputPerson.LastBroadcastDate = inputPerson.AskDate.Value;
             }
 
-            inputPerson.UpdatedDate = DateTime.Now;
+            inputPerson.UpdatedDate = DateTime.UtcNow;
 
             Person person = this.repository.AddOrUpdatePerson(inputPerson, out bool isNewPerson);
 

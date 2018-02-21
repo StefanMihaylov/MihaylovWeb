@@ -56,7 +56,7 @@ namespace Mihaylov.Core.Helpers.Site
         {
             if (person.AskDate == null)
             {
-                person.AskDate = DateTime.Now;
+                person.AskDate = DateTime.UtcNow;
             }
 
             if (person.Answer.HasValue)
@@ -147,7 +147,7 @@ namespace Mihaylov.Core.Helpers.Site
         {
             var persons = this.personsProvider.GetAll()
                 .Where(p => p.IsAccountDisabled == false)
-                .Where(p => p.UpdatedDate < DateTime.Now.AddDays(-1))
+                .Where(p => p.UpdatedDate < DateTime.UtcNow.AddDays(-1))
                 .ToList();
 
             foreach (var person in persons)
