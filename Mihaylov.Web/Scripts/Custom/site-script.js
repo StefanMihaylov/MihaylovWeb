@@ -24,4 +24,12 @@
 
         });
     });
+
+    $detailsContainer.on('change', '.AnswerTypeId-dropdown', changeButtonColour);
+    $detailsContainer.on('input', '.Comments-input', changeButtonColour);
+
+    function changeButtonColour() {
+        var button = $detailsContainer.find('.submit-btn');
+        button.addClass('btn-success');
+    };
 });
