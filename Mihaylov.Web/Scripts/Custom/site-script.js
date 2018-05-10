@@ -21,7 +21,6 @@
             $detailsContainer.empty().append(res);
             // toastr.error(res.ErrorMessage); //???
         }).always(function () {
-
         });
     });
 

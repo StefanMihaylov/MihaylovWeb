@@ -23,10 +23,12 @@ namespace Mihaylov.Core.Writers.Site
             if (!inputPhrase.OrderId.HasValue)
             {
                 int maxOrderId = this.repository.GetAll()
-                                                .Where(p => p.OrderId.HasValue)
-                                                .Max(p => p.OrderId.Value);
+                                               .Where(p => p.OrderId.HasValue)
+                                               .Select(p => p.OrderId.Value)
+                                               .DefaultIfEmpty()
+                                               .Max();
 
-                inputPhrase.OrderId = maxOrderId++;
+                inputPhrase.OrderId = maxOrderId + 1;
             }
 
             Phrase phrase = this.repository.AddOrUpdatePhrase(inputPhrase, out bool isNewPhrase);

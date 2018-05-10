@@ -16,14 +16,18 @@ namespace Mihaylov.Web.Controllers
         private readonly ISiteHelper siteHelper;
         private readonly IPersonsManager personManager;
         private readonly IPersonsWriter personsWriter;
+        private readonly IPhrasesManager phrasesManager;
+        private readonly IPhrasesWriter phrasesWriter;
 
         public SiteController(ISiteHelper siteHelper, IPersonsManager personManager, IPersonsWriter personsWriter,
-            ILogger logger, IToastrHelper toaster)
+            IPhrasesManager phrasesManager, IPhrasesWriter phrasesWriter, ILogger logger, IToastrHelper toaster)
             : base(logger, toaster)
         {
             this.siteHelper = siteHelper;
             this.personManager = personManager;
             this.personsWriter = personsWriter;
+            this.phrasesManager = phrasesManager;
+            this.phrasesWriter = phrasesWriter;
         }
 
         // GET: Site
@@ -34,6 +38,7 @@ namespace Mihaylov.Web.Controllers
                 Statistics = this.personManager.GetStatictics(),
                 Persons = this.personManager.GetAllPersons(true, 0, 10),
                 SystemUnit = this.siteHelper.GetSystemUnit(),
+                Phrases = this.phrasesManager.GetAllPhrases(),
             };
 
             return View(model);
@@ -52,12 +57,23 @@ namespace Mihaylov.Web.Controllers
                 }
 
                 PersonExtended personExtended = this.siteHelper.GetPersonByName(userName);
-                return this.PartialView(personExtended);
+                return this.PartialView("_Find",personExtended);
             }
             catch (Exception ex)
             {
                 return this.Json($"{url}: Error: {ex.Message}", JsonRequestBehavior.AllowGet);
             }
+        }
+
+        public ActionResult AddPhrase(string phrase)
+        {
+            if (!string.IsNullOrWhiteSpace(phrase))
+            {
+                var newPhrase = new Phrase(0, phrase.Trim(), null);
+                this.phrasesWriter.AddOrUpdate(newPhrase);
+            }
+
+            return this.RedirectToAction(nameof(SiteController.Index));
         }
 
         public ActionResult Save(Person input)

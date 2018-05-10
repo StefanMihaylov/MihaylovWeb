@@ -10,5 +10,7 @@ namespace Mihaylov.Web.ViewModels.Site
         public IEnumerable<Person> Persons { get; set; }
 
         public string SystemUnit { get; set; }
+
+        public IEnumerable<Phrase> Phrases { get; set; }
     }
 }

@@ -2,12 +2,12 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using log4net.Core;
 using Mihaylov.Common.MessageBus;
 using Mihaylov.Common.MessageBus.Interfaces;
 using Mihaylov.Common.MessageBus.Models;
 using Mihaylov.Core.Interfaces.Site;
 using Mihaylov.Data.Models.Site;
+using Ninject.Extensions.Logging;
 
 namespace Mihaylov.Core.Managers.Site
 {

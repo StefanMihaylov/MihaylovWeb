@@ -337,13 +337,15 @@
     <Content Include="Views\Manage\VerifyPhoneNumber.cshtml" />
     <Content Include="Views\Shared\Lockout.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
-    <Content Include="Views\Site\Find.cshtml" />
+    <Content Include="Views\Site\_Find.cshtml" />
     <Content Include="Views\Site\Index.cshtml" />
     <Content Include="Views\Shared\_Toastr.cshtml" />
     <Content Include="Views\Dictionaries\ChooseCourse.cshtml" />
     <Content Include="Views\Dictionaries\Index.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\RecordTypeViewModel.cshtml" />
     <Content Include="Views\Dictionaries\_NewRecord.cshtml" />
+    <Content Include="Views\Site\_PersonsGrid.cshtml" />
+    <Content Include="Views\Site\_Phrases.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Mihaylov.Common\Mihaylov.Common.csproj">

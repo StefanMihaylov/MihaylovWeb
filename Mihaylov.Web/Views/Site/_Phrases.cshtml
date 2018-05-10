@@ -1,0 +1,31 @@
+﻿@using Mihaylov.Web.ViewModels.Site
+@using Mihaylov.Common.Extensions;
+@model PersonGridModel
+
+<table class="table table-bordered table-striped">
+    <tbody>
+        <tr>
+            @{ int count = 0; int maxColumns = 3; }
+            @foreach (var phrase in Model.Phrases)
+            {
+                <td class="col-sm-4" data-phrase-order="@phrase.OrderId">@phrase.Text</td>
+                if (++count % maxColumns == 0)
+                {
+                    @:</tr><tr>
+                }
+            }
+        </tr>
+    </tbody>
+</table>
+
+@using (Html.BeginForm("AddPhrase", "Site", FormMethod.Post, new { }))
+{
+    <div class="row">
+        <div class="panel">
+            @Html.Label("phrase")
+            @Html.TextBox("phrase", string.Empty, new { style = "width:470px" })
+        </div>
+
+        <button type="submit" class="submit-btn btn btn-default">Save</button>
+    </div>
+}
