@@ -79,12 +79,6 @@
     <Compile Include="WebConfigSettings\Common_CustomSettingsManagerTests.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Mihaylov.Common\Mihaylov.Common.csproj">
-      <Project>{d0c0fdcb-f718-418b-8425-2559c7f4c431}</Project>
-      <Name>Mihaylov.Common</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>

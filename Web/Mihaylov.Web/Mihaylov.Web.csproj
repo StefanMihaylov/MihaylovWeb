@@ -28,7 +28,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Mihaylov.Core\Mihaylov.Core.csproj" />
-    <ProjectReference Include="..\..\Site\Mihaylov.Site.Core.Interfaces\Mihaylov.Site.Core.Interfaces.csproj" />
+    <ProjectReference Include="..\..\Site\Mihaylov.Site.Core.Contracts\Mihaylov.Site.Core.Contracts.csproj" />
     <ProjectReference Include="..\..\Site\Mihaylov.Site.Core\Mihaylov.Site.Core.csproj" />
     <ProjectReference Include="..\Mihaylov.Web.Common\Mihaylov.Web.Common.csproj" />
   </ItemGroup>

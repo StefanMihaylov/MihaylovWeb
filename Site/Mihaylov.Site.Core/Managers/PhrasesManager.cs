@@ -2,25 +2,25 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using log4net;
 using Mihaylov.Common.MessageBus;
 using Mihaylov.Common.MessageBus.Interfaces;
 using Mihaylov.Common.MessageBus.Models;
 using Mihaylov.Site.Core.Interfaces;
 using Mihaylov.Site.Data.Interfaces;
 using Mihaylov.Site.Data.Models;
-using Ninject.Extensions.Logging;
 
 namespace Mihaylov.Site.Core.Managers
 {
     public class PhrasesManager : IPhrasesManager
     {
         private readonly IPhrasesRepository repository;
-        private readonly ILogger logger;
+        private readonly ILog logger;
         private readonly IMessageBus messageBus;
 
         private readonly Lazy<ConcurrentDictionary<int, Phrase>> phrasesById;
 
-        public PhrasesManager(IPhrasesRepository phrasesRepository, ILogger logger, IMessageBus messageBus)
+        public PhrasesManager(IPhrasesRepository phrasesRepository, ILog logger, IMessageBus messageBus)
         {
             this.repository = phrasesRepository;
             this.logger = logger;

@@ -2,7 +2,7 @@
 using System.IO;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Mihaylov.Site.Core.Interfaces;
+//using Mihaylov.Site.Core.Interfaces;
 using Ninject;
 
 namespace Mihaylov.Tests
@@ -36,22 +36,22 @@ namespace Mihaylov.Tests
         //[TestMethod]
         public void GetAdditionalInfo()
         {
-            string username = "aaa";
+            //string username = "aaa";
 
-            var siteHelper = kernel.Get<ISiteHelper>();
-            var person = siteHelper.GetUserInfo(username);
+            //var siteHelper = kernel.Get<ISiteHelper>();
+            //var person = siteHelper.GetUserInfo(username);
         }
 
         //[TestMethod]
         public void TestManager()
         {
-            var manager = kernel.Get<IPersonAdditionalInfoManager>();
-            var data2 = manager.GetAllAnswerTypes().ToList();
+            //var manager = kernel.Get<IPersonAdditionalInfoManager>();
+            //var data2 = manager.GetAllAnswerTypes().ToList();
 
-            var unknow = manager.GetAnswerTypeByName("notasked");
+            //var unknow = manager.GetAnswerTypeByName("notasked");
 
-            Assert.IsNotNull(data2);
-            Assert.IsTrue(data2.Count() > 0);
+            //Assert.IsNotNull(data2);
+            //Assert.IsTrue(data2.Count() > 0);
         }
     }
 }

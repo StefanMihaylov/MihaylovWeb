@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
+using log4net;
 using Mihaylov.Common.MessageBus.Interfaces;
 using Mihaylov.Site.Core.Managers;
 using Mihaylov.Site.Data.Interfaces;
 using Mihaylov.Site.Data.Models;
-using Ninject.Extensions.Logging;
 
 namespace Mihaylov.Site.Core.Tests.Managers
 {
@@ -15,7 +15,7 @@ namespace Mihaylov.Site.Core.Tests.Managers
             IGetAllRepository<Orientation> orientationRepository,
             IGetAllRepository<Unit> unitRepository,
             ICountriesRepository countryRepository,
-            ILogger logger, IMessageBus messageBus)
+            ILog logger, IMessageBus messageBus)
             : base(answerTypeRepository, ethnicitiesRepository, orientationRepository, unitRepository, countryRepository,
                   logger,messageBus)
         {
@@ -26,7 +26,7 @@ namespace Mihaylov.Site.Core.Tests.Managers
             get { return this.answerTypeRepository; }
         }
 
-        public ILogger ExposedLogger
+        public ILog ExposedLogger
         {
             get { return this.logger; }
         }

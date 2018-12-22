@@ -1,5 +1,6 @@
 ﻿using Autofac;
 using Mihaylov.Site.Database.Interfaces;
+using Mihaylov.Site.Database.Models;
 
 namespace Mihaylov.Site.Database
 {

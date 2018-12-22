@@ -79,10 +79,6 @@
     <Compile Include="Writers\Dictionaries\RecordsWriter.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Mihaylov.Common\Mihaylov.Common.csproj">
-      <Project>{D0C0FDCB-F718-418B-8425-2559C7F4C431}</Project>
-      <Name>Mihaylov.Common</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Mihaylov.Data.Models\Mihaylov.Data.Models.csproj">
       <Project>{5efcdd18-10b6-456d-ac0d-d19e7a8ec5f9}</Project>
       <Name>Mihaylov.Data.Models</Name>

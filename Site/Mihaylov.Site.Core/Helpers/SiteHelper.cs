@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using log4net;
+using Mihaylov.Site.Core.CsQuery;
 using Mihaylov.Site.Core.Interfaces;
 using Mihaylov.Site.Core.Models;
-using Mihaylov.Site.CsQuery;
 using Mihaylov.Site.Data.Interfaces;
 using Mihaylov.Site.Data.Models;
 
@@ -22,7 +23,7 @@ namespace Mihaylov.Core.Helpers.Site
         private readonly ILog logger;
 
         public SiteHelper(string url, ICountriesWriter countriesWriter,
-            IPersonAdditionalInfoManager personAdditionalManager, ILogger logger,
+            IPersonAdditionalInfoManager personAdditionalManager, ILog logger,
             IPersonsRepository personsRepository, IPersonsManager personsManager,
             IPersonsWriter personsWriter, ICsQueryWrapper csQueryWrapper)
         {
@@ -101,7 +102,7 @@ namespace Mihaylov.Core.Helpers.Site
             }
             catch (Exception ex)
             {
-                this.logger.ErrorException($"Error in Site helper, username: {username}, url: {this.url}", ex);
+                this.logger.Error($"Error in Site helper, username: {username}, url: {this.url}", ex);
                 throw;
             }
         }

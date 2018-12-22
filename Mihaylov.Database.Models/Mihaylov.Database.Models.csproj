@@ -105,12 +105,6 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Mihaylov.Common\Mihaylov.Common.csproj">
-      <Project>{d0c0fdcb-f718-418b-8425-2559c7f4c431}</Project>
-      <Name>Mihaylov.Common</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Dictionaries\DictionariesDbModel.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>DictionariesDbModel.cs</LastGenOutput>

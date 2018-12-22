@@ -87,10 +87,6 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Mihaylov.Common\Mihaylov.Common.csproj">
-      <Project>{d0c0fdcb-f718-418b-8425-2559c7f4c431}</Project>
-      <Name>Mihaylov.Common</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Mihaylov.Data.Models\Mihaylov.Data.Models.csproj">
       <Project>{5EFCDD18-10B6-456D-AC0D-D19E7A8EC5F9}</Project>
       <Name>Mihaylov.Data.Models</Name>

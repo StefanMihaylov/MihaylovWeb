@@ -2,6 +2,7 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using log4net;
 using Mihaylov.Common.MessageBus;
 using Mihaylov.Common.MessageBus.Interfaces;
 using Mihaylov.Common.MessageBus.Models;
@@ -9,7 +10,6 @@ using Mihaylov.Common.Validations;
 using Mihaylov.Site.Core.Interfaces;
 using Mihaylov.Site.Data.Interfaces;
 using Mihaylov.Site.Data.Models;
-using Ninject.Extensions.Logging;
 
 namespace Mihaylov.Site.Core.Managers
 {
@@ -21,7 +21,7 @@ namespace Mihaylov.Site.Core.Managers
         protected readonly IGetAllRepository<Unit> unitRepository;
         protected readonly ICountriesRepository countryRepository;
 
-        protected readonly ILogger logger;
+        protected readonly ILog logger;
         protected readonly IMessageBus messageBus;
 
         protected readonly Lazy<ConcurrentDictionary<int, AnswerType>> answerTypesById;
@@ -45,7 +45,7 @@ namespace Mihaylov.Site.Core.Managers
             IGetAllRepository<Orientation> orientationRepository,
             IGetAllRepository<Unit> unitRepository,
             ICountriesRepository countryRepository, 
-            ILogger logger, IMessageBus messageBus)
+            ILog logger, IMessageBus messageBus)
         {
             ParameterValidation.IsNotNull(logger, nameof(logger));
             ParameterValidation.IsNotNull(messageBus, nameof(messageBus));

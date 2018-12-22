@@ -5,7 +5,7 @@ using Mihaylov.Common.Mapping;
 using Mihaylov.Site.Data.Interfaces;
 using Mihaylov.Site.Data.Models;
 using Mihaylov.Site.Database.Interfaces;
-using DAL = Mihaylov.Site.Database;
+using DAL = Mihaylov.Site.Database.Models;
 
 namespace Mihaylov.Site.Data.Repositories
 {

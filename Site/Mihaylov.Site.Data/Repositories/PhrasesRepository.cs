@@ -5,11 +5,11 @@ using Mihaylov.Common.Mapping;
 using Mihaylov.Site.Data.Interfaces;
 using Mihaylov.Site.Data.Models;
 using Mihaylov.Site.Database.Interfaces;
-using DAL = Mihaylov.Site.Database;
+using DAL = Mihaylov.Site.Database.Models;
 
 namespace Mihaylov.Site.Data.Repositories
 {
-    public class PhrasesRepository : GenericRepository<DAL.Phras, ISiteDbContext>, IPhrasesRepository
+    public class PhrasesRepository : GenericRepository<DAL.Phrase, ISiteDbContext>, IPhrasesRepository
     {
         public PhrasesRepository(ISiteDbContext context)
             : base(context)
@@ -36,11 +36,11 @@ namespace Mihaylov.Site.Data.Repositories
 
         public Phrase AddOrUpdatePhrase(Phrase inputPhrase, out bool isNew)
         {
-            DAL.Phras phrase;
+            DAL.Phrase phrase;
 
             if (inputPhrase.Id == 0)
             {
-                phrase = new DAL.Phras();
+                phrase = new DAL.Phrase();
                 this.Add(phrase);
                 isNew = true;
             }

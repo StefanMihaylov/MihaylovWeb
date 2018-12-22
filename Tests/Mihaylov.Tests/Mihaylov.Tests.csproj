@@ -99,10 +99,6 @@
       <Project>{52279d7b-ef4e-40ca-8ccd-25a51eb2d561}</Project>
       <Name>Mihaylov.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Mihaylov.Common\Mihaylov.Common.csproj">
-      <Project>{D0C0FDCB-F718-418B-8425-2559C7F4C431}</Project>
-      <Name>Mihaylov.Common</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\Mihaylov.Data.Models\Mihaylov.Data.Models.csproj">
       <Project>{5efcdd18-10b6-456d-ac0d-d19e7a8ec5f9}</Project>
       <Name>Mihaylov.Data.Models</Name>
@@ -114,14 +110,6 @@
     <ProjectReference Include="..\..\Mihaylov.Data\Mihaylov.Data.csproj">
       <Project>{BF7D5FED-8954-47D7-98EB-8538F8251F31}</Project>
       <Name>Mihaylov.Data</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Site\Mihaylov.Site.Core.Interfaces\Mihaylov.Site.Core.Interfaces.csproj">
-      <Project>{3A2D305E-259E-469A-9099-BD1F84785FC5}</Project>
-      <Name>Mihaylov.Site.Core.Interfaces</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Site\Mihaylov.Site.Data.Models\Mihaylov.Site.Data.Models.csproj">
-      <Project>{8BB6291D-5972-48A0-A7B1-74C3E36FE102}</Project>
-      <Name>Mihaylov.Site.Data.Models</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

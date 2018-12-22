@@ -74,10 +74,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Mihaylov.Common\Mihaylov.Common.csproj">
-      <Project>{D0C0FDCB-F718-418B-8425-2559C7F4C431}</Project>
-      <Name>Mihaylov.Common</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Mihaylov.Database.Models\Mihaylov.Database.Models.csproj">
       <Project>{251a9623-1317-4232-801c-f21189557227}</Project>
       <Name>Mihaylov.Database.Models</Name>

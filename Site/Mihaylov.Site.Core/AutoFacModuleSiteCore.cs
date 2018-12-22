@@ -2,10 +2,10 @@
 using Mihaylov.Common.MessageBus;
 using Mihaylov.Common.MessageBus.Interfaces;
 using Mihaylov.Core.Helpers.Site;
+using Mihaylov.Site.Core.CsQuery;
 using Mihaylov.Site.Core.Interfaces;
 using Mihaylov.Site.Core.Managers;
 using Mihaylov.Site.Core.Writers;
-using Mihaylov.Site.CsQuery;
 using Mihaylov.Site.Data;
 
 namespace Mihaylov.Site.Core
@@ -23,6 +23,7 @@ namespace Mihaylov.Site.Core
 
         protected override void Load(ContainerBuilder builder)
         {
+            builder.RegisterModule(new LoggingModule());
             builder.RegisterModule(new AutoFacModuleSiteData(this.connectionString));
 
             builder.RegisterType<SimpleMessageBus>().As<IMessageBus>().SingleInstance();

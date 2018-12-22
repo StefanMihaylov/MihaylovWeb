@@ -1,10 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Linq;
+using System.Reflection;
+using Autofac;
+using Autofac.Core;
+using log4net;
 
 namespace Mihaylov.Site.Core
 {
-    public class LoggingModule : Module
+    public class LoggingModule : Autofac.Module
     {
         private static void InjectLoggerProperties(object instance)
         {

@@ -87,10 +87,6 @@
     <Compile Include="Providers\Dicts.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Mihaylov.Common\Mihaylov.Common.csproj">
-      <Project>{d0c0fdcb-f718-418b-8425-2559c7f4c431}</Project>
-      <Name>Mihaylov.Common</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\Mihaylov.Core\Mihaylov.Core.csproj">
       <Project>{52279d7b-ef4e-40ca-8ccd-25a51eb2d561}</Project>
       <Name>Mihaylov.Core</Name>

@@ -2,26 +2,26 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using log4net;
 using Mihaylov.Common.MessageBus;
 using Mihaylov.Common.MessageBus.Interfaces;
 using Mihaylov.Common.MessageBus.Models;
 using Mihaylov.Site.Core.Interfaces;
 using Mihaylov.Site.Data.Interfaces;
 using Mihaylov.Site.Data.Models;
-using Ninject.Extensions.Logging;
 
 namespace Mihaylov.Site.Core.Managers
 {
     public class PersonsManager : IPersonsManager
     {
         private readonly IPersonsRepository repository;
-        private readonly ILogger logger;
+        private readonly ILog logger;
         private readonly IMessageBus messageBus;
 
         private readonly ConcurrentDictionary<int, Person> personsById;
         private readonly ConcurrentDictionary<string, Person> personsByName;
 
-        public PersonsManager(IPersonsRepository personsRepository, ILogger logger, IMessageBus messageBus)
+        public PersonsManager(IPersonsRepository personsRepository, ILog logger, IMessageBus messageBus)
         {
             this.repository = personsRepository;
             this.logger = logger;
@@ -102,7 +102,7 @@ namespace Mihaylov.Site.Core.Managers
             }
             catch (Exception ex)
             {
-                this.logger.ErrorException($"Error in getting the person by name '{name}'", ex);
+                this.logger.Error($"Error in getting the person by name '{name}'", ex);
                 return null;
             }
         }
