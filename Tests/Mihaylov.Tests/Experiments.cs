@@ -1,9 +1,8 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
-
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Mihaylov.Core.Interfaces.Site;
+using Mihaylov.Site.Core.Interfaces;
 using Ninject;
 
 namespace Mihaylov.Tests

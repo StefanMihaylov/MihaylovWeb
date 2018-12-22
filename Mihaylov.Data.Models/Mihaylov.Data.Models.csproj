@@ -58,16 +58,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Helpers\Site\PersonInfo.cs" />
     <Compile Include="Interfaces\Dictionaries\IGetAllRepository.cs" />
     <Compile Include="Interfaces\Dictionaries\IPrepositionTypesRepository.cs" />
     <Compile Include="Interfaces\Dictionaries\IRecordsRepository.cs" />
     <Compile Include="Interfaces\Dictionaries\IRecordTypesRepository.cs" />
     <Compile Include="Interfaces\IRecordsData.cs" />
-    <Compile Include="Interfaces\Site\ICountriesRepository.cs" />
-    <Compile Include="Interfaces\Site\IGetAllRepository.cs" />
-    <Compile Include="Interfaces\Site\IPersonsRepository.cs" />
-    <Compile Include="Interfaces\Site\IPhrasesRepository.cs" />
     <Compile Include="Repositories\Dictionaries\Additional\RecordSearchModel.cs" />
     <Compile Include="Repositories\Dictionaries\Course.cs" />
     <Compile Include="Repositories\Dictionaries\Language.cs" />
@@ -76,15 +71,7 @@
     <Compile Include="Repositories\Dictionaries\PrepositionType.cs" />
     <Compile Include="Repositories\Dictionaries\Record.cs" />
     <Compile Include="Repositories\Dictionaries\RecordType.cs" />
-    <Compile Include="Repositories\Site\AnswerType.cs" />
-    <Compile Include="Repositories\Site\Country.cs" />
-    <Compile Include="Repositories\Site\Ethnicity.cs" />
-    <Compile Include="Repositories\Site\Person.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Repositories\Site\Orientation.cs" />
-    <Compile Include="Repositories\Site\PersonStatistics.cs" />
-    <Compile Include="Repositories\Site\Phrase.cs" />
-    <Compile Include="Repositories\Site\Unit.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Mihaylov.Common\Mihaylov.Common.csproj">

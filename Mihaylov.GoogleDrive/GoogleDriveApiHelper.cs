@@ -23,9 +23,9 @@ namespace Mihaylov.GoogleDrive
 
         private static Dictionary<string, Dictionary<string, string>> panoramas;
 
-        private DriveService service;
-        private string rootFolderId;
-        private ILogger logger;
+        private readonly DriveService service;
+        private readonly string rootFolderId;
+        private readonly ILogger logger;
 
         public GoogleDriveApiHelper(ILogger logger, string dataStoreFolder)
             : this(logger, ClientId, ClientSecret, FolderId, dataStoreFolder)
@@ -34,11 +34,6 @@ namespace Mihaylov.GoogleDrive
 
         public GoogleDriveApiHelper(ILogger logger, string clientId, string password, string rootFolderId, string dataStoreFolder)
         {
-            if (logger == null)
-            {
-                throw new ArgumentNullException(nameof(logger));
-            }
-
             this.ValidateString(clientId, nameof(clientId));
             this.ValidateString(password, nameof(password));
             this.ValidateString(rootFolderId, nameof(rootFolderId));
@@ -47,7 +42,7 @@ namespace Mihaylov.GoogleDrive
             var initialiser = this.GoogleApiSettings(clientId, password, dataStoreFolder);
 
             this.rootFolderId = rootFolderId;
-            this.logger = logger;
+            this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
             this.service = new DriveService(initialiser);
 
             panoramas = new Dictionary<string, Dictionary<string, string>>();

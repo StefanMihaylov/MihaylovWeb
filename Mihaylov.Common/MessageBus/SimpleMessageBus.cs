@@ -9,7 +9,7 @@ namespace Mihaylov.Common.MessageBus
 {
     public class SimpleMessageBus : IMessageBus
     {
-        private ConcurrentDictionary<Type, IReadOnlyCollection<Action<Message>>> actions;
+        private readonly ConcurrentDictionary<Type, IReadOnlyCollection<Action<Message>>> actions;
 
         public SimpleMessageBus()
         {

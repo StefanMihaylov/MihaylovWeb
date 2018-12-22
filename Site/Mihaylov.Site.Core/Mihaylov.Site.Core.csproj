@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Autofac" Version="4.8.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Mihaylov.Site.Core.Interfaces\Mihaylov.Site.Core.Interfaces.csproj" />
+    <ProjectReference Include="..\Mihaylov.Site.CsQuery\Mihaylov.Site.CsQuery.csproj" />
+    <ProjectReference Include="..\Mihaylov.Site.Data\Mihaylov.Site.Data.csproj" />
+  </ItemGroup>
+
+</Project>

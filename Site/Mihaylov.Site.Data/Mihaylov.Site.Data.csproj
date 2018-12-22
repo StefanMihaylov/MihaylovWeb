@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Autofac" Version="4.8.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Mihaylov.Site.Data.Models\Mihaylov.Site.Data.Models.csproj" />
+    <ProjectReference Include="..\Mihaylov.Site.Database.Models\Mihaylov.Site.Database.Models.csproj" />
+    <ProjectReference Include="..\Mihaylov.Site.Database\Mihaylov.Site.Database.csproj" />
+  </ItemGroup>
+
+</Project>
