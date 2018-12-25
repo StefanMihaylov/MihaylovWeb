@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using log4net;
 using Microsoft.AspNetCore.Mvc;
-using Mihaylov.Core.Interfaces.Dictionaries;
-using Mihaylov.Data.Models.Dictionaries;
+using Mihaylov.Dictionaries.Core.Interfaces;
+using Mihaylov.Dictionaries.Data.Models;
 using Mihaylov.Web.Common.Toastr;
 using Mihaylov.Web.Controllers.Base;
 using Mihaylov.Web.ViewModels.Dictionaries;
-using Ninject.Extensions.Logging;
 
 namespace Mihaylov.Web.Controllers
 {
@@ -20,7 +20,7 @@ namespace Mihaylov.Web.Controllers
         private readonly IRecordsWriter recordsWriter;
 
         public DictionariesController(ICoursesInfoManager coursesManager, IRecordsManager recordsManager,
-            IRecordsWriter recordsWriter, ILogger logger, IToastrHelper toaster)
+            IRecordsWriter recordsWriter, ILog logger, IToastrHelper toaster)
             : base(logger, toaster)
         {
             this.coursesManager = coursesManager;

@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Mihaylov.Dictionaries.Core.Contracts\Mihaylov.Dictionaries.Core.Contracts.csproj" />
+    <ProjectReference Include="..\MIhaylov.Dictionaries.Database\Mihaylov.Dictionaries.Database.csproj" />
+    <ProjectReference Include="..\Mihaylov.Dictionaries.Data\Mihaylov.Dictionaries.Data.csproj" />
+  </ItemGroup>
+
+</Project>

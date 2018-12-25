@@ -95,24 +95,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Mihaylov.Core\Mihaylov.Core.csproj">
-      <Project>{52279d7b-ef4e-40ca-8ccd-25a51eb2d561}</Project>
-      <Name>Mihaylov.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Mihaylov.Data.Models\Mihaylov.Data.Models.csproj">
-      <Project>{5efcdd18-10b6-456d-ac0d-d19e7a8ec5f9}</Project>
-      <Name>Mihaylov.Data.Models</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Mihaylov.Database.Models\Mihaylov.Database.Models.csproj">
-      <Project>{251a9623-1317-4232-801c-f21189557227}</Project>
-      <Name>Mihaylov.Database.Models</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Mihaylov.Data\Mihaylov.Data.csproj">
-      <Project>{BF7D5FED-8954-47D7-98EB-8538F8251F31}</Project>
-      <Name>Mihaylov.Data</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="app.config">
       <SubType>Designer</SubType>
     </None>

@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Linq;
+using System.Net;
+using System.Security.Policy;
+using System.Text;
 using CsQuery;
 using Mihaylov.Site.Data.Models;
 
@@ -9,7 +12,16 @@ namespace Mihaylov.Site.Core.CsQuery
     {
         public Person GetInfo(string url, string username)
         {
-            CQ dom = CQ.CreateFromUrl($"{url}/{username}");
+            string path = $"{url}/{username}";
+
+            var httpRequest = (HttpWebRequest)WebRequest.Create(new Uri(path));
+            httpRequest.AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate;
+            var response = httpRequest.GetResponse();
+            var responseStream = response.GetResponseStream();
+
+            CQ dom = CQ.CreateDocument(responseStream, Encoding.UTF8);
+
+            // CQ.CreateFromUrl(path);
             CQ bioContainer = dom.Select("div.miniBio ul li");
 
             if (bioContainer.Length == 0)

@@ -1,4 +1,4 @@
-﻿using System.Data.Entity.Validation;
+﻿using Microsoft.EntityFrameworkCore;
 using Mihaylov.Common.Database;
 using Mihaylov.Dictionaries.Database.Interfaces;
 
@@ -23,5 +23,17 @@ namespace Mihaylov.Dictionaries.Database.Models
         //        throw this.ConvertDbEntityValidationException(ex);
         //    }
         //}
+
+        private string connectionString;
+
+        public DictionariesDbContext(string connectionString)
+        {
+            this.connectionString = connectionString;
+        }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.UseSqlServer(this.connectionString);
+        }
     }
 }

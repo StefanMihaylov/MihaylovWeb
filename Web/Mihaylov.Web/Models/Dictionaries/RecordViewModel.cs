@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using Mihaylov.Data.Models.Dictionaries;
+using Mihaylov.Dictionaries.Data.Models;
 
 namespace Mihaylov.Web.ViewModels.Dictionaries
 {

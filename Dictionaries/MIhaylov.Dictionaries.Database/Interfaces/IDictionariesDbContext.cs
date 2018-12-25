@@ -4,7 +4,7 @@ using Mihaylov.Dictionaries.Database.Models;
 
 namespace Mihaylov.Dictionaries.Database.Interfaces
 {
-    public interface IDictionariesDbContext: IDbContext
+    public interface IDictionariesDbContext : IDbContext
     {
         DbSet<AspNetUser> AspNetUsers { get; set; }
 

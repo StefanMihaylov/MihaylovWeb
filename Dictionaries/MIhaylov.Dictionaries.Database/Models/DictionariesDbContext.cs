@@ -15,6 +15,7 @@ namespace Mihaylov.Dictionaries.Database.Models
         {
         }
 
+        public virtual DbSet<AspNetUser> AspNetUsers { get; set; }
         public virtual DbSet<Course> Courses { get; set; }
         public virtual DbSet<IncorrectAnswer> IncorrectAnswers { get; set; }
         public virtual DbSet<Language> Languages { get; set; }

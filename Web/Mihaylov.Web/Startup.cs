@@ -12,6 +12,7 @@ using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using System;
 using Mihaylov.Site.Core;
+using Mihaylov.Dictionaries.Core;
 
 namespace Mihaylov.Web
 {
@@ -37,7 +38,7 @@ namespace Mihaylov.Web
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             string connectionString = Configuration.GetConnectionString("Local");
             string siteUrl = Configuration.GetValue<string>("SiteUrl");
@@ -50,6 +51,7 @@ namespace Mihaylov.Web
             builder.Populate(services);
 
             builder.RegisterModule(new AutoFacModuleSiteCore(connectionString, siteUrl));
+            builder.RegisterModule(new AutofacModuleDictionariesCore(connectionString));
 
             this.ApplicationContainer = builder.Build();
             return new AutofacServiceProvider(this.ApplicationContainer);

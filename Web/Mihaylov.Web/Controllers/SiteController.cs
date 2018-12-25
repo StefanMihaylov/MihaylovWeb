@@ -1,4 +1,5 @@
 ﻿using System;
+using log4net;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Mihaylov.Site.Core.Interfaces;
@@ -7,7 +8,6 @@ using Mihaylov.Site.Data.Models;
 using Mihaylov.Web.Common.Toastr;
 using Mihaylov.Web.Controllers.Base;
 using Mihaylov.Web.Models.Site;
-using Ninject.Extensions.Logging;
 
 namespace Mihaylov.Web.Controllers
 {
@@ -21,7 +21,7 @@ namespace Mihaylov.Web.Controllers
         private readonly IPhrasesWriter phrasesWriter;
 
         public SiteController(ISiteHelper siteHelper, IPersonsManager personManager, IPersonsWriter personsWriter,
-            IPhrasesManager phrasesManager, IPhrasesWriter phrasesWriter, ILogger logger, IToastrHelper toaster)
+            IPhrasesManager phrasesManager, IPhrasesWriter phrasesWriter, ILog logger, IToastrHelper toaster)
             : base(logger, toaster)
         {
             this.siteHelper = siteHelper;
