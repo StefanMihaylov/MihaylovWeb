@@ -72,9 +72,7 @@ namespace Mihaylov.Site.Data.Repositories
         {
             IQueryable<DAL.Person> persons = this.All().Where(p => p.AnswerType.IsAsked);
 
-
             var countDictionary = persons.GroupBy(p => new { Description = p.AnswerType.Description, Id = p.AnswerTypeId })
-
                                          .Select(g => new { Key = g.Key.Description, Value = g.Count() })
                                          .OrderBy(g => g.Key)
                                          .ToDictionary(r => r.Key, r => r.Value);

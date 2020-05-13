@@ -13,6 +13,8 @@ using Autofac.Extensions.DependencyInjection;
 using System;
 using Mihaylov.Site.Core;
 using Mihaylov.Dictionaries.Core;
+using Mihaylov.Common.Log4net;
+using Mihaylov.Web.Common.Toastr;
 
 namespace Mihaylov.Web
 {
@@ -38,10 +40,13 @@ namespace Mihaylov.Web
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2).AddControllersAsServices();
 
             string connectionString = Configuration.GetConnectionString("Local");
             string siteUrl = Configuration.GetValue<string>("SiteUrl");
+            string loggerPath = Configuration.GetValue<string>("LoggerPath");
+
+            Log4netConfiguration.Setup(loggerPath);
 
             services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connectionString));
             services.AddDefaultIdentity<IdentityUser>().AddEntityFrameworkStores<ApplicationDbContext>();
@@ -50,6 +55,8 @@ namespace Mihaylov.Web
             var builder = new ContainerBuilder();
             builder.Populate(services);
 
+            builder.RegisterType<ToastrHelper>().As<IToastrHelper>();
+            builder.RegisterModule(new LoggingModule());
             builder.RegisterModule(new AutoFacModuleSiteCore(connectionString, siteUrl));
             builder.RegisterModule(new AutofacModuleDictionariesCore(connectionString));
 
