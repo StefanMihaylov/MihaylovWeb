@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28307.136
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30011.22
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Web", "Web", "{EB8036E8-B271-45FE-BC83-081108573BE7}"
 EndProject
@@ -47,9 +47,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mihaylov.Dictionaries.Core.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mihaylov.Common.Tests", "Tests\Mihaylov.Common.Tests\Mihaylov.Common.Tests.csproj", "{13E1E6D8-CCFE-42E4-9905-38A08F464118}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mihaylov.Web.Common", "Web\Mihaylov.Web.Common\Mihaylov.Web.Common.csproj", "{3BA416D8-C3A6-4FD2-98B4-66D22C0434C4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mihaylov.Web.Common", "Web\Mihaylov.Web.Common\Mihaylov.Web.Common.csproj", "{3BA416D8-C3A6-4FD2-98B4-66D22C0434C4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mihaylov.Web", "Web\Mihaylov.Web\Mihaylov.Web.csproj", "{A37E71AB-2A80-42C1-91D8-72E6806745A8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mihaylov.Web", "Web\Mihaylov.Web\Mihaylov.Web.csproj", "{A37E71AB-2A80-42C1-91D8-72E6806745A8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Users", "Users", "{7447BA8B-7BAA-456C-A77C-DFD97A5EAEC2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mihaylov.Users.Server", "Users\Mihaylov.Users.Server\Mihaylov.Users.Server.csproj", "{7094C3B7-7555-4621-8073-601881CC86FE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mihaylov.Users.Data", "Users\Mihaylov.Users.Data\Mihaylov.Users.Data.csproj", "{CDB3488B-9A1E-487B-8090-DD3E77479DA4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -129,6 +135,14 @@ Global
 		{A37E71AB-2A80-42C1-91D8-72E6806745A8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A37E71AB-2A80-42C1-91D8-72E6806745A8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A37E71AB-2A80-42C1-91D8-72E6806745A8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7094C3B7-7555-4621-8073-601881CC86FE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7094C3B7-7555-4621-8073-601881CC86FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7094C3B7-7555-4621-8073-601881CC86FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7094C3B7-7555-4621-8073-601881CC86FE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CDB3488B-9A1E-487B-8090-DD3E77479DA4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CDB3488B-9A1E-487B-8090-DD3E77479DA4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CDB3488B-9A1E-487B-8090-DD3E77479DA4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CDB3488B-9A1E-487B-8090-DD3E77479DA4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -152,6 +166,8 @@ Global
 		{13E1E6D8-CCFE-42E4-9905-38A08F464118} = {DA910199-2A46-45B8-82F7-4363C2EBE3F7}
 		{3BA416D8-C3A6-4FD2-98B4-66D22C0434C4} = {EB8036E8-B271-45FE-BC83-081108573BE7}
 		{A37E71AB-2A80-42C1-91D8-72E6806745A8} = {EB8036E8-B271-45FE-BC83-081108573BE7}
+		{7094C3B7-7555-4621-8073-601881CC86FE} = {7447BA8B-7BAA-456C-A77C-DFD97A5EAEC2}
+		{CDB3488B-9A1E-487B-8090-DD3E77479DA4} = {7447BA8B-7BAA-456C-A77C-DFD97A5EAEC2}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {ECF9C65D-96FF-4564-A762-B6C7EE02C0B9}
