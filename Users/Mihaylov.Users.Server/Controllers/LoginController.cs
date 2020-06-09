@@ -2,8 +2,8 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Mihaylov.Users.Data;
 using Mihaylov.Users.Data.Repository;
-using Mihaylov.Users.Data.Repository.Helpers;
 using Mihaylov.Users.Data.Repository.Models;
 
 namespace Mihaylov.Users.Server.Controllers
@@ -21,25 +21,35 @@ namespace Mihaylov.Users.Server.Controllers
             _repository = repository;
         }
 
+        [HttpGet]
         public IActionResult Test()
         {
             return Ok("Works unauthorized");
         }
 
-        [Authorize(AuthenticationSchemes = TokenHelper.AUTHENTICATION_SCHEME)]
-       // [Authorize()]
+        [HttpGet]
+        [JwtAuthorize()]     
         public IActionResult Test2()
         {
             return Ok("Works with authorization");
         }
 
-        [Authorize(AuthenticationSchemes = TokenHelper.AUTHENTICATION_SCHEME, Roles = "Admin")]
+        [HttpGet]
+        [JwtAuthorize(Roles = UserConstants.AdminRole)]
         public IActionResult Test3()
         {
             return Ok("Works with authorization, Admin");
         }
 
+        [HttpGet]
+        [Authorize()]
+        public IActionResult Test4()
+        {
+            return Ok("Works with authorization, no scheme");
+        }
+
         [HttpPost]
+        [AllowAnonymous]
         public async Task<IActionResult> Register(RegisterRequestModel request)
         {
             var response = await _repository.RegisterAsync(request);
@@ -48,6 +58,7 @@ namespace Mihaylov.Users.Server.Controllers
         }
 
         [HttpPost]
+        [AllowAnonymous]
         public async Task<IActionResult> Login(LoginRequestModel request)
         {
             var response = await _repository.LoginAsync(request);
