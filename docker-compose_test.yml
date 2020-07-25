@@ -1,0 +1,15 @@
+version: '2.4'
+services:
+  sql-server:
+    container_name: sql-server
+    image: microsoft/mssql-server-linux:2017-GA
+    environment:
+      ACCEPT_EULA: 'Y'
+      SA_PASSWORD: Passw0rd2020
+      MSSQL_PID: Express
+    ports:
+      - '1433:1433'
+    volumes:
+      - sql-volume
+    mem_swappiness: -1 # temp workaround
+
