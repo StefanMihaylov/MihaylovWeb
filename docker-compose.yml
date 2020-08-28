@@ -2,14 +2,27 @@ version: '3.4'
 
 services:
   mihaylov.webui:
-    image: ${DOCKER_REGISTRY-}mihaylovwebui
+    image: ${DOCKER_REGISTRY-}mihaylov-webui
     build:
       context: .
       dockerfile: Web/Mihaylov.WebUI/Dockerfile
+    ports:
+      - "8100:80"
 
   mihaylov.users.server:
-    image: ${DOCKER_REGISTRY-}mihaylovusersserver
+    image: ${DOCKER_REGISTRY-}mihaylov-users-server
     build:
       context: .
       dockerfile: Users/Mihaylov.Users.Server/Dockerfile
+    ports:
+      - "8101:80"
 
+  ms-sql-server:
+    container_name: ms-sql-server
+    image: mcr.microsoft.com/mssql/server:2017-latest-ubuntu
+    environment:
+      ACCEPT_EULA: 'Y'
+      SA_PASSWORD: Passw0rd2020
+      MSSQL_PID: Express
+    ports:
+      - '1433:1433'

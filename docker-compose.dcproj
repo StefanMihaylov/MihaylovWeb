@@ -14,5 +14,7 @@
     </None>
     <None Include="docker-compose.yml" />
     <None Include=".dockerignore" />
+    <None Include="docker-compose_all.txt" />
+    <None Include="docker-compose_test.txt" />
   </ItemGroup>
 </Project>
