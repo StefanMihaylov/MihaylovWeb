@@ -1,6 +1,6 @@
 
 pipeline {
-	def app
+	// def app
 	
     agent {
 		label 'docker-agent-dind'
@@ -23,7 +23,7 @@ pipeline {
 				
 				sh 'ls'
 				sh 'docker info'
-				app = docker.build("getintodevops/hellonode")				
+				// app = docker.build("getintodevops/hellonode")				
             }
         }
          stage('Test') {
