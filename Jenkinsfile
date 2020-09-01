@@ -10,16 +10,14 @@ pipeline {
 		// DOCKER_CREDENTIALS = credentials('')
 	}
 	stages {
-	    stage('Clone repository') {
+	  /*  stage('Clone repository') {
 			steps{
 				checkout scm
 			}		    
-		}
+		} */
         stage('Build') {
             steps {
-                echo 'building'
-                echo 'https://github.com/StefanMihaylov/MihaylovWeb.git'
-				echo "bulding version ${VERSION}.${BUILD_NUMBER}.${GIT_COMMIT}"
+				echo "building version ${VERSION}.${BUILD_NUMBER}.${GIT_COMMIT}"
 				
 				sh 'ls'
 				sh 'docker info'
