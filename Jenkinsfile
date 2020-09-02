@@ -17,10 +17,9 @@ pipeline {
 		} */
         stage('Build') {
             steps {
-				echo "building version ${VERSION}.${BUILD_NUMBER}.${GIT_COMMIT}"
-				
-				sh 'ls'
-				sh 'docker info'
+				echo "building version ${VERSION}.${BUILD_NUMBER}.${GIT_COMMIT}"				
+
+				sh 'docker build -t hades12/mihaylov-web-ui:${VERSION}.${BUILD_NUMBER}.${GIT_COMMIT} -t hades12/mihaylov-web-ui:latest . -f ./Web/Mihaylov.WebUI/Dockerfile'
 				// app = docker.build("getintodevops/hellonode")				
             }
         }
@@ -40,6 +39,7 @@ pipeline {
 		stage('Push image') {
 			steps {
 					echo 'Push image'
+					
 					// docker.withregistry('https://registry.hub.docker.com', 'docker-hub-credentials') {
 					// app.push("${env.build_number}")
 					//	app.push("latest")
