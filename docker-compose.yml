@@ -1,28 +1,81 @@
 version: '3.4'
 
 services:
+  reverse-proxy:
+    container_name: traefik
+    image: traefik:v2.3
+    # Enables the web UI and tells Traefik to listen to docker
+    command: --api.insecure=true --providers.docker
+    ports:
+      # The HTTP port
+      - "8050:80"
+      # The Web UI (enabled by --api.insecure=true)
+      - "8052:8080"
+    networks:
+      - local
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+
+#  envoygateway:
+#    container_name: envoy-gateway
+#    build:
+#      context: .
+#      dockerfile: Envoy/Dockerfile
+#    ports:
+#      - "8810:8810"
+#      - "8800:8800"
+#      - "8801:8801"
+#    networks:
+#      - local
+#    volumes:
+#      - './Envoy/envoy.yml:/etc/envoy/envoy.yaml'
+#      - './Envoy/https.crt:/etc/ssl/certs/https.crt'
+#      - './Envoy/key.pem:/etc/ssl/certs/key.pem'
+
   mihaylov.webui:
-    image: ${DOCKER_REGISTRY-}mihaylov-webui
+    image: mihaylov-webui
     build:
       context: .
       dockerfile: Web/Mihaylov.WebUI/Dockerfile
     ports:
       - "8100:80"
+      - "8101:443"
+    networks:
+      - local
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_URLS: 'https://+;http://+'
+      ASPNETCORE_HTTPS_PORT: 8101
+    volumes:
+      - '\\192.168.1.5\Nuc\Docker\Volumes\SSL\UserSecrets\:/root/.microsoft/usersecrets'
+      - '\\192.168.1.5\Nuc\Docker\Volumes\SSL\https:/root/.aspnet/https'
 
   mihaylov.users.server:
-    image: ${DOCKER_REGISTRY-}mihaylov-users-server
+    image: mihaylov-users-server
     build:
       context: .
       dockerfile: Users/Mihaylov.Users.Server/Dockerfile
     ports:
-      - "8101:80"
-
-  ms-sql-server:
-    container_name: ms-sql-server
-    image: mcr.microsoft.com/mssql/server:2017-latest-ubuntu
+      - "8102:80"
+      - "8103:443"
+    networks:
+      - local
     environment:
-      ACCEPT_EULA: 'Y'
-      SA_PASSWORD: Passw0rd2020
-      MSSQL_PID: Express
-    ports:
-      - '1433:1433'
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_URLS: 'https://+;http://+'
+      ASPNETCORE_HTTPS_PORT: 8103
+      JWT_AUTHENTICATION_SECRET: ac8P9eRC4zCWb6ySRr7ZJ83RMY
+      DB_Users_Address: 192.168.1.7
+      DB_Users_Name: Mihaylov_UsersDb
+      DB_Users_UserName: 
+      DB_Users_Password: 
+    volumes:
+      - '\\192.168.1.5\Nuc\Docker\Volumes\SSL\UserSecrets\:/root/.microsoft/usersecrets'
+      - '\\192.168.1.5\Nuc\Docker\Volumes\SSL\https:/root/.aspnet/https'
+
+networks:
+  local:
+    driver: bridge
+
+volumes:
+    https_sertificates:
