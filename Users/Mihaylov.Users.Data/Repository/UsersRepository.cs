@@ -4,9 +4,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Mihaylov.Users.Data.Database.Models;
 using Mihaylov.Users.Data.Repository.Helpers;
-using Mihaylov.Users.Data.Repository.Models;
+using Mihaylov.Users.Models.Requests;
+using Mihaylov.Users.Models.Responses;
 
 namespace Mihaylov.Users.Data.Repository
 {
@@ -15,39 +17,48 @@ namespace Mihaylov.Users.Data.Repository
         private readonly UserManager<User> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly ITokenHelper _tokenHelper;
+        private readonly ILogger _logger;
 
 
         public UsersRepository(UserManager<User> userManager, RoleManager<IdentityRole> roleManager,
-            ITokenHelper tokenHelper)
+            ITokenHelper tokenHelper, ILoggerFactory factory)
         {
             this._userManager = userManager;
             this._roleManager = roleManager;
             this._tokenHelper = tokenHelper;
+            this._logger = factory.CreateLogger(this.GetType().Name);
         }
 
         public async Task<GenericResponse> RegisterAsync(RegisterRequestModel request)
         {
             User user = new User(request.Username, request.Email);
-            IdentityResult result = await this._userManager.CreateAsync(user, request.Password);
+            user.Profile = new UserProfile(request.FirstName, request.LastName, request.Gender);
+
+            IdentityResult result = await this._userManager.CreateAsync(user, request.Password)
+                                                           .ConfigureAwait(false);
 
             return new GenericResponse(result);
         }
 
         public async Task<LoginResponseModel> LoginAsync(LoginRequestModel request)
         {
-            User user = await this._userManager.FindByNameAsync(request.UserName);
+            User user = await this._userManager.FindByNameAsync(request.UserName)
+                                               .ConfigureAwait(false);
             if (user == null)
             {
                 return new LoginResponseModel(false, null, null);
             }
 
-            bool isPasswordValid = await this._userManager.CheckPasswordAsync(user, request.Password);
+            bool isPasswordValid = await this._userManager.CheckPasswordAsync(user, request.Password)
+                                                          .ConfigureAwait(false);
             if (!isPasswordValid)
             {
                 return new LoginResponseModel(false, user.UserName, null);
             }
 
-            IList<string> roles = await this._userManager.GetRolesAsync(user);
+            IList<string> roles = await this._userManager.GetRolesAsync(user)
+                                                         .ConfigureAwait(false);
+
             string encryptedToken = this._tokenHelper.GetToken(user, roles);
 
             return new LoginResponseModel(true, user.UserName, encryptedToken);
@@ -61,9 +72,13 @@ namespace Mihaylov.Users.Data.Repository
                                         Id = new Guid(u.Id),
                                         UserName = u.UserName,
                                         Email = u.Email,
+                                        FirstName = u.Profile.FirstName,
+                                        LastName = u.Profile.LastName,
+                                        Gender = u.Profile.Gender,
                                         Roles = this._userManager.GetRolesAsync(u).Result
                                     })
-                                    .ToListAsync();
+                                    .ToListAsync()
+                                    .ConfigureAwait(false);
 
             return users;
         }
@@ -72,14 +87,14 @@ namespace Mihaylov.Users.Data.Repository
         {
             IdentityResult result = null;
 
-            var user = await this._userManager.FindByIdAsync(request.UserId.ToString());
+            var user = await this._userManager.FindByIdAsync(request.UserId.ToString()).ConfigureAwait(false);
             if (user != null)
             {
-                var role = await this._roleManager.FindByIdAsync(request.RoleId.ToString());
+                var role = await this._roleManager.FindByIdAsync(request.RoleId.ToString()).ConfigureAwait(false);
 
                 if (role != null)
                 {
-                    result = await this._userManager.AddToRoleAsync(user, role.Name);
+                    result = await this._userManager.AddToRoleAsync(user, role.Name).ConfigureAwait(false);
                 }
             }
 
@@ -90,31 +105,60 @@ namespace Mihaylov.Users.Data.Repository
         {
             IdentityResult result = null;
 
-            var user = await this._userManager.FindByIdAsync(id.ToString());
+            var user = await this._userManager.FindByIdAsync(id.ToString())
+                                              .ConfigureAwait(false);
             if (user != null)
             {
-                result = await this._userManager.DeleteAsync(user);
+                result = await this._userManager.DeleteAsync(user)
+                                                .ConfigureAwait(false);
             }
 
             return new GenericResponse(result);
         }
 
+
         public async Task<IEnumerable<RoleModel>> GetRolesAsync()
         {
-            var roles = await this._roleManager.Roles.Select(r => (RoleModel)r)
-                                                     .ToListAsync();
-            return roles;
+            try
+            {
+                var roles = await this._roleManager.Roles
+                             .Select(r => new RoleModel()
+                             {
+                                 Id = new Guid(r.Id),
+                                 Name = r.Name
+                             })
+                             .ToListAsync()
+                             .ConfigureAwait(false);
+                return roles;
+            }
+            catch (Exception ex)
+            {
+                this._logger.LogError(ex, "GetRoles failed.");
+                throw;
+            }
+
         }
 
         public async Task<GenericResponse> AddRoleAsync(CreateRoleRequest request)
         {
-            var result = await this._roleManager.CreateAsync(new IdentityRole(request.RoleName));
-            return new GenericResponse(result);
+            try
+            {
+                var result = await this._roleManager.CreateAsync(new IdentityRole(request.RoleName))
+                                                    .ConfigureAwait(false);
+                
+                return new GenericResponse(result);
+            }
+            catch (Exception ex)
+            {
+                this._logger.LogError(ex, "AddRole failed.");
+                return new GenericResponse(ex);
+            }
         }
 
-        public async Task InitializeDatabase()
+
+        public async Task InitializeDatabaseAsync()
         {
-            var roles = await this.GetRolesAsync();
+            var roles = await this.GetRolesAsync().ConfigureAwait(false);
             if (roles.Any() == false)
             {
                 var newRole = new CreateRoleRequest()
@@ -122,11 +166,11 @@ namespace Mihaylov.Users.Data.Repository
                     RoleName = UserConstants.AdminRole,
                 };
 
-                var result = await this.AddRoleAsync(newRole);
+                var result = await this.AddRoleAsync(newRole).ConfigureAwait(false);
             }
             else
             {
-                var users = await this.GetUsersAsync();
+                var users = await this.GetUsersAsync().ConfigureAwait(false);
                 if (roles.Count() == 1 && users.Count() == 1)
                 {
                     var role = roles.First();
@@ -140,7 +184,7 @@ namespace Mihaylov.Users.Data.Repository
                             RoleId = role.Id,
                         };
 
-                        var result = await this.AddRoleAsync(addRoleRequest);
+                        var result = await this.AddRoleAsync(addRoleRequest).ConfigureAwait(false);
                     }
                 }
             }

@@ -3,11 +3,11 @@
     "Mihaylov.Users.Server": {
       "commandName": "Project",
       "launchBrowser": true,
+      "applicationUrl": "https://localhost:5001;http://localhost:5000",
       "environmentVariables": {
-        "JWT_AUTHENTICATION_SECRET": "ac8P9eRC4zCWb6ySRr7ZJ83RMY",
-        "ASPNETCORE_ENVIRONMENT": "Development"
-      },
-      "applicationUrl": "https://localhost:5001;http://localhost:5000"
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "JWT_AUTHENTICATION_SECRET": "ac8P9eRC4zCWb6ySRr7ZJ83RMY"
+      }
     },
     "Docker": {
       "commandName": "Docker",

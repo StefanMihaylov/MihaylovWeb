@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Mihaylov.Users.Models.Enums;
 
-namespace Mihaylov.Users.Data.Repository.Models
+namespace Mihaylov.Users.Models.Requests
 {
     public class RegisterRequestModel
     {
@@ -9,6 +10,12 @@ namespace Mihaylov.Users.Data.Repository.Models
 
         [Required]
         public string Email { get; set; }
+
+        public string FirstName { get; set; }
+
+        public string LastName { get; set; }
+
+        public GenderType? Gender { get; set; }
 
         [Required]
         public string Password { get; set; }

@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Mihaylov.Users.Data.Database;
 
 namespace Mihaylov.Users.Data.Database.Migrations
 {
     [DbContext(typeof(MihaylovUsersDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200926174332_userProfile")]
+    partial class userProfile
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -148,33 +150,6 @@ namespace Mihaylov.Users.Data.Database.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens");
-                });
-
-            modelBuilder.Entity("Mihaylov.Users.Data.Database.Models.Gender", b =>
-                {
-                    b.Property<int>("Id")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(25)")
-                        .HasMaxLength(25);
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Genders");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Name = "Male"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Name = "Female"
-                        });
                 });
 
             modelBuilder.Entity("Mihaylov.Users.Data.Database.Models.User", b =>
@@ -322,28 +297,19 @@ namespace Mihaylov.Users.Data.Database.Migrations
                                 .HasColumnType("nvarchar(450)");
 
                             b1.Property<string>("FirstName")
-                                .HasColumnName("FirstName")
                                 .HasColumnType("nvarchar(25)")
                                 .HasMaxLength(25);
 
                             b1.Property<int?>("Gender")
-                                .HasColumnName("Gender")
                                 .HasColumnType("int");
 
                             b1.Property<string>("LastName")
-                                .HasColumnName("LastName")
                                 .HasColumnType("nvarchar(25)")
                                 .HasMaxLength(25);
 
                             b1.HasKey("UserId");
 
-                            b1.HasIndex("Gender");
-
                             b1.ToTable("AspNetUsers");
-
-                            b1.HasOne("Mihaylov.Users.Data.Database.Models.Gender", "GenderModel")
-                                .WithMany()
-                                .HasForeignKey("Gender");
 
                             b1.WithOwner()
                                 .HasForeignKey("UserId");

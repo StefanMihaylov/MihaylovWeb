@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <UserSecretsId>0f4023f5-de5b-431a-be72-0fa1b442ab6d</UserSecretsId>
+    <UserSecretsId>aspnet-Mihaylov.WebUI-0f4023f5-de5b-431a-be72-0fa1b442ab6d</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <DockerfileContext>..\..</DockerfileContext>
     <DockerComposeProjectPath>..\..\docker-compose.dcproj</DockerComposeProjectPath>

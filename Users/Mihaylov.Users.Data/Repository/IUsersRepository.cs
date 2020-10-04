@@ -1,7 +1,8 @@
-﻿using Mihaylov.Users.Data.Repository.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Mihaylov.Users.Models.Requests;
+using Mihaylov.Users.Models.Responses;
 
 namespace Mihaylov.Users.Data.Repository
 {
@@ -23,6 +24,6 @@ namespace Mihaylov.Users.Data.Repository
 
         Task<GenericResponse> AddRoleAsync(CreateRoleRequest request);
 
-        Task InitializeDatabase();
+        Task InitializeDatabaseAsync();
     }
 }

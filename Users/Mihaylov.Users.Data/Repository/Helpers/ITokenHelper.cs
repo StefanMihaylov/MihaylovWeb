@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Mihaylov.Users.Data.Database.Models;
 

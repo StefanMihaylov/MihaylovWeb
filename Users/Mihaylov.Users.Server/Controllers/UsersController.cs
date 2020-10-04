@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Mihaylov.Users.Data;
 using Mihaylov.Users.Data.Repository;
-using Mihaylov.Users.Data.Repository.Models;
+using Mihaylov.Users.Models.Requests;
+using Mihaylov.Users.Models.Responses;
 
 namespace Mihaylov.Users.Server.Controllers
 {
@@ -27,7 +27,7 @@ namespace Mihaylov.Users.Server.Controllers
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> GetUsers()
         {
-            var users = await this._usersRepository.GetUsersAsync();
+            var users = await this._usersRepository.GetUsersAsync().ConfigureAwait(false);
             return Ok(users);
         }
 
@@ -37,7 +37,7 @@ namespace Mihaylov.Users.Server.Controllers
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> AddRoleToUser(AddRoleToUserRequest request)
         {
-            var response = await this._usersRepository.AddRoleAsync(request);
+            var response = await this._usersRepository.AddRoleAsync(request).ConfigureAwait(false);
             return Ok(response);
         }
 
@@ -47,7 +47,7 @@ namespace Mihaylov.Users.Server.Controllers
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> DeleteUser(Guid id)
         {
-            var response = await this._usersRepository.DeleteUserAsync(id);
+            var response = await this._usersRepository.DeleteUserAsync(id).ConfigureAwait(false);
             return Ok(response);
         }
 
@@ -55,7 +55,7 @@ namespace Mihaylov.Users.Server.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(RoleModel))]
         public async Task<IActionResult> GetRoles()
         {
-            var roles = await this._usersRepository.GetRolesAsync();
+            var roles = await this._usersRepository.GetRolesAsync().ConfigureAwait(false);
             return Ok(roles);
         }
 
@@ -65,7 +65,7 @@ namespace Mihaylov.Users.Server.Controllers
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> AddRole(CreateRoleRequest request)
         {
-            var response = await this._usersRepository.AddRoleAsync(request);
+            var response = await this._usersRepository.AddRoleAsync(request).ConfigureAwait(false);
             return Ok(response);
         }
     }

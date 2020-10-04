@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Mihaylov.Users.Data.Database.Models;
@@ -29,34 +28,40 @@ namespace Mihaylov.Users.Data.Repository.Helpers
             };
 
             claims.AddRange(roles.Select(role => new Claim(ClaimsIdentity.DefaultRoleClaimType, role)));
-
-            var key = Encoding.ASCII.GetBytes(_appSettings.Secret);
+            
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(claims),
+                NotBefore = DateTime.UtcNow,
                 Expires = DateTime.UtcNow.AddDays(7),
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature),
+                SigningCredentials = new SigningCredentials(GetKey(), SecurityAlgorithms.HmacSha256Signature),
             };
 
             var tokenHandler = new JwtSecurityTokenHandler();
             SecurityToken securityToken = tokenHandler.CreateToken(tokenDescriptor);
             string encryptedToken = tokenHandler.WriteToken(securityToken);
+
             return encryptedToken;
         }
 
         public void SetJwtBearerOptions(JwtBearerOptions options)
         {
-            var key = Encoding.ASCII.GetBytes(_appSettings.Secret);
-
             options.RequireHttpsMetadata = false;
             options.SaveToken = true;
             options.TokenValidationParameters = new TokenValidationParameters
             {
+                IssuerSigningKey = GetKey(),
                 ValidateIssuerSigningKey = true,
-                IssuerSigningKey = new SymmetricSecurityKey(key),
+                ValidateLifetime = true,                
                 ValidateIssuer = false,
                 ValidateAudience = false
             };
+        }
+
+        private SecurityKey GetKey()
+        {
+            var key = Encoding.ASCII.GetBytes(_appSettings.Secret);
+            return new SymmetricSecurityKey(key);
         }
     }
 }

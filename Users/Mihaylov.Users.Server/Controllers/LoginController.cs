@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Mihaylov.Users.Data;
 using Mihaylov.Users.Data.Repository;
-using Mihaylov.Users.Data.Repository.Models;
+using Mihaylov.Users.Models.Requests;
 
 namespace Mihaylov.Users.Server.Controllers
 {
@@ -52,7 +52,7 @@ namespace Mihaylov.Users.Server.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Register(RegisterRequestModel request)
         {
-            var response = await _repository.RegisterAsync(request);
+            var response = await _repository.RegisterAsync(request).ConfigureAwait(false);
 
             return Ok(response);
         }
@@ -61,7 +61,7 @@ namespace Mihaylov.Users.Server.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Login(LoginRequestModel request)
         {
-            var response = await _repository.LoginAsync(request);
+            var response = await _repository.LoginAsync(request).ConfigureAwait(false);
 
             if (!response.Succeeded)
             {

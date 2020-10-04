@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace Mihaylov.Users.Data.Repository.Models
+namespace Mihaylov.Users.Models.Requests
 {
     public class AddRoleToUserRequest
     {

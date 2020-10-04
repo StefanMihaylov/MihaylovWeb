@@ -1,4 +1,4 @@
-﻿namespace Mihaylov.Users.Data.Repository.Models
+﻿namespace Mihaylov.Users.Models.Requests
 {
     public class CreateRoleRequest
     {
