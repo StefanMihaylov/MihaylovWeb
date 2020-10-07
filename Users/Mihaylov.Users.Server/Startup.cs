@@ -28,7 +28,7 @@ namespace Mihaylov.Users.Server
                 options.AddSwaggerAuthentication(UserConstants.AuthenticationScheme);
             });
 
-            services.AddControllers();
+            services.AddControllers();            
 
             services.AddDICommon()
                     .AddUserDatabase(opt =>

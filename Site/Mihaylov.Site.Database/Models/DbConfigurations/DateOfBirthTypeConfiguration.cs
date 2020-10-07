@@ -11,11 +11,11 @@ namespace Mihaylov.Site.Database.Models.DbConfigurations
         {
             builder.HasKey(e => e.Id);
 
-            builder.Property(e => e.Id);//.HasConversion<int>();
+            builder.Property(e => e.Id).HasConversion<int>();
             builder.Property(e => e.Name).HasMaxLength(25).IsRequired();
 
             builder.HasData(Enum.GetValues(typeof(DateOfBirthType)).Cast<DateOfBirthType>()
-                          .Select(e => new DateOfBirthModel() { Id = (int)e, Name = e.ToString() }));
+                          .Select(e => new DateOfBirthModel() { Id = e, Name = e.ToString() }));
         }
     }
 }

@@ -3,7 +3,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using log4net;
+using Microsoft.Extensions.Logging;
 using Mihaylov.Common.MessageBus;
 using Mihaylov.Common.MessageBus.Interfaces;
 using Mihaylov.Common.MessageBus.Models;
@@ -16,16 +16,16 @@ namespace Mihaylov.Site.Core.Managers
     public class PersonsManager : IPersonsManager
     {
         private readonly IPersonsRepository repository;
-        private readonly ILog logger;
+        private readonly ILogger logger;
         private readonly IMessageBus messageBus;
 
         private readonly ConcurrentDictionary<Guid, Person> personsById;
         private readonly ConcurrentDictionary<string, Person> personsByName;
 
-        public PersonsManager(IPersonsRepository personsRepository, ILog logger, IMessageBus messageBus)
+        public PersonsManager(IPersonsRepository personsRepository, ILoggerFactory loggerFactory, IMessageBus messageBus)
         {
             this.repository = personsRepository;
-            this.logger = logger;
+            this.logger = loggerFactory.CreateLogger(this.GetType().Name);
             this.messageBus = messageBus;
 
             this.personsById = new ConcurrentDictionary<Guid, Person>();
@@ -98,12 +98,12 @@ namespace Mihaylov.Site.Core.Managers
             }
             catch (ApplicationException)
             {
-                this.logger.Error($"Person with name '{name}' not found.");
+                this.logger.LogError($"Person with name '{name}' not found.");
                 return null;
             }
             catch (Exception ex)
             {
-                this.logger.Error($"Error in getting the person by name '{name}'", ex);
+                this.logger.LogError(ex, $"Error in getting the person by name '{name}'");
                 return null;
             }
         }

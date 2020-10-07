@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
-using log4net;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Mihaylov.Site.Core.Interfaces;
 using Mihaylov.Site.Core.Models;
 using Mihaylov.Site.Data.Models;
@@ -22,7 +22,7 @@ namespace Mihaylov.Web.Controllers
         private readonly IPhrasesWriter phrasesWriter;
 
         public SiteController(ISiteHelper siteHelper, IPersonsManager personManager, IPersonsWriter personsWriter,
-            IPhrasesManager phrasesManager, IPhrasesWriter phrasesWriter, ILog logger, IToastrHelper toaster)
+            IPhrasesManager phrasesManager, IPhrasesWriter phrasesWriter, ILoggerFactory logger, IToastrHelper toaster)
             : base(logger, toaster)
         {
             this.siteHelper = siteHelper;
@@ -50,7 +50,7 @@ namespace Mihaylov.Web.Controllers
         {
             try
             {
-                this.Logger.Debug($"Controller: hit find: {url}");
+                this.Logger.LogDebug($"Controller: hit find: {url}");
 
                 string userName = this.siteHelper.GetUserName(url);
                 if (string.IsNullOrWhiteSpace(userName))

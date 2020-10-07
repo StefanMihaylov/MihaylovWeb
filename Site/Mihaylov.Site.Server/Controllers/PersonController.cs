@@ -11,5 +11,10 @@ namespace Mihaylov.Site.Server.Controllers
     [ApiController]
     public class PersonController : ControllerBase
     {
+        [HttpGet]
+        public async Task<IActionResult> GetPerson()
+        {
+            return Ok();
+        }
     }
 }

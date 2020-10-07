@@ -1,8 +1,8 @@
 ﻿namespace Mihaylov.Site.Database.Models.Base
 {
-    public class EnumTable
+    public class EnumTable<T>
     {
-        public int Id { get; set; }
+        public T Id { get; set; }
 
         public string Name { get; set; }
     }

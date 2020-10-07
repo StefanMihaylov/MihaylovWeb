@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using log4net;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Mihaylov.Common.MessageBus.Interfaces;
 using Mihaylov.Site.Core.Managers;
@@ -24,7 +25,7 @@ namespace Mihaylov.Core.Tests.Managers
         [TestMethod]
         public void ConstructiorProviderNullMockedLoggerTest()
         {
-            ILog logger = GetLoggerMocked();
+            ILoggerFactory logger = GetLoggerMocked();
             IMessageBus messageBus = GetMessageBusMocked();
 
             Assert.ThrowsException<ArgumentNullException>(() => new PersonAdditionalInfoManager(null, null, logger, messageBus));
@@ -476,9 +477,9 @@ namespace Mihaylov.Core.Tests.Managers
 
      */
 
-        private ILog GetLoggerMocked()
+        private ILoggerFactory GetLoggerMocked()
         {
-            return new Mock<ILog>().Object;
+            return NullLoggerFactory.Instance;
         }
 
         private IMessageBus GetMessageBusMocked()

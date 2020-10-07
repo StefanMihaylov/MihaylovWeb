@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using log4net;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Mihaylov.Dictionaries.Core.Interfaces;
 using Mihaylov.Dictionaries.Data.Models;
 using Mihaylov.Web.Common.Toastr;
@@ -20,7 +20,7 @@ namespace Mihaylov.Web.Controllers
         private readonly IRecordsWriter recordsWriter;
 
         public DictionariesController(ICoursesInfoManager coursesManager, IRecordsManager recordsManager,
-            IRecordsWriter recordsWriter, ILog logger, IToastrHelper toaster)
+            IRecordsWriter recordsWriter, ILoggerFactory logger, IToastrHelper toaster)
             : base(logger, toaster)
         {
             this.coursesManager = coursesManager;

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.OpenApi.Models;
 using Mihaylov.Common;
 using Mihaylov.Site.Core;
 using Mihaylov.Site.Database;
@@ -22,15 +23,24 @@ namespace Mihaylov.Site.Server
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddSwaggerGen(options =>
+            {
+                options.SwaggerDoc("v1", new OpenApiInfo { Title = "Site API", Version = "v1" });
+                options.AddSwaggerAuthentication("Bearer");
+            });
+
+            services.AddHttpContextAccessor();
+            services.AddLogging();
+
             services.AddControllers();
 
             services.AddDICommon()
-                    .AddSiteCore(opt =>
+                    .AddSiteDatabase(opt =>
                     {
                         opt.ServerAddress = Environment.GetEnvironmentVariable("DB_Site_Address") ?? "192.168.1.7";
                         opt.DatabaseName = Environment.GetEnvironmentVariable("DB_Site_Name") ?? "Mihaylov_SiteDb";
-                        opt.UserName = Environment.GetEnvironmentVariable("DB_Site_UserName") ?? "SA";
-                        opt.Password = Environment.GetEnvironmentVariable("DB_Site_Password") ?? "Anubis12_4";
+                        opt.UserName = Environment.GetEnvironmentVariable("DB_Site_UserName");
+                        opt.Password = Environment.GetEnvironmentVariable("DB_Site_Password");
                     });
 
             services.MigrateDatabase<SiteDbContext>();
@@ -47,6 +57,13 @@ namespace Mihaylov.Site.Server
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Site API V1");
+                c.RoutePrefix = string.Empty;
+            });
 
             app.UseAuthorization();
 

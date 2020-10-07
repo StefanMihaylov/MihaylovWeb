@@ -2,7 +2,7 @@
 
 namespace Mihaylov.Site.Database.Models
 {
-    public class DateOfBirthModel : EnumTable
+    public class DateOfBirthModel : EnumTable<DateOfBirthType>
     {
     }
 }

@@ -1,19 +1,19 @@
-﻿using log4net;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.Extensions.Logging;
 using Mihaylov.Web.Common.Toastr;
 
 namespace Mihaylov.Web.Controllers.Base
 {
     public abstract class BaseController : Controller
     {
-        public BaseController(ILog logger, IToastrHelper toaster)
+        public BaseController(ILoggerFactory loggerFactory, IToastrHelper toaster)
         {
-            this.Logger = logger;
+            this.Logger = loggerFactory.CreateLogger(this.GetType().Name);
             this.Toaster = toaster;
         }
 
-        protected ILog Logger { get; private set; }
+        protected ILogger Logger { get; private set; }
         private IToastrHelper Toaster { get; set; }
 
         public ToastMessage AddToastMessage(string title, string message, ToastType toastType)

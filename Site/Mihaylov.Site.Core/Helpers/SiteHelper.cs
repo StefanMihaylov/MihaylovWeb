@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using log4net;
+using Microsoft.Extensions.Logging;
 using Mihaylov.Site.Core.CsQuery;
 using Mihaylov.Site.Core.Interfaces;
 using Mihaylov.Site.Core.Models;
@@ -21,17 +21,17 @@ namespace Mihaylov.Core.Helpers.Site
         private readonly IPersonsManager personsManager;
         private readonly IPersonsWriter personsWriter;
         private readonly ICsQueryWrapper csQueryWrapper;
-        private readonly ILog logger;
+        private readonly ILogger logger;
 
         public SiteHelper(string url, ICountriesWriter countriesWriter,
-            IPersonAdditionalInfoManager personAdditionalManager, ILog logger,
+            IPersonAdditionalInfoManager personAdditionalManager, ILoggerFactory loggerFactory,
             IPersonsRepository personsRepository, IPersonsManager personsManager,
             IPersonsWriter personsWriter, ICsQueryWrapper csQueryWrapper)
         {
             this.url = url;
             this.personAdditionalManager = personAdditionalManager;
             this.countriesWriter = countriesWriter;
-            this.logger = logger;
+            this.logger = loggerFactory.CreateLogger(this.GetType().Name);
             this.personsRepository = personsRepository;
             this.personsManager = personsManager;
             this.personsWriter = personsWriter;
@@ -84,7 +84,7 @@ namespace Mihaylov.Core.Helpers.Site
         {
             try
             {
-                this.logger.Debug($"Helper: Get person by name: {username}");
+                this.logger.LogDebug($"Helper: Get person by name: {username}");
 
                 Person person = this.csQueryWrapper.GetInfo(this.url, username);
 
@@ -103,7 +103,7 @@ namespace Mihaylov.Core.Helpers.Site
             }
             catch (Exception ex)
             {
-                this.logger.Error($"Error in Site helper, username: {username}, url: {this.url}", ex);
+                this.logger.LogError(ex, $"Error in Site helper, username: {username}, url: {this.url}");
                 throw;
             }
         }

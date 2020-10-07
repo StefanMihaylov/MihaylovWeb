@@ -2,7 +2,7 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using log4net;
+using Microsoft.Extensions.Logging;
 using Mihaylov.Common.MessageBus;
 using Mihaylov.Common.MessageBus.Interfaces;
 using Mihaylov.Common.MessageBus.Models;
@@ -18,7 +18,7 @@ namespace Mihaylov.Site.Core.Managers
         protected readonly ILookupTablesRepository _lookupTablesRepository;
         protected readonly ILocationsRepository _locationsRepository;
 
-        protected readonly ILog logger;
+        protected readonly ILogger logger;
         protected readonly IMessageBus messageBus;
 
         protected readonly Lazy<ConcurrentDictionary<int, AnswerType>> answerTypesById;
@@ -41,7 +41,7 @@ namespace Mihaylov.Site.Core.Managers
         public PersonAdditionalInfoManager(
             ILookupTablesRepository lookupTablesRepository,
             ILocationsRepository locationsRepository, 
-            ILog logger, IMessageBus messageBus)
+            ILoggerFactory loggerFactory, IMessageBus messageBus)
         {
             ParameterValidation.IsNotNull(logger, nameof(logger));
             ParameterValidation.IsNotNull(messageBus, nameof(messageBus));
@@ -49,7 +49,7 @@ namespace Mihaylov.Site.Core.Managers
             this._lookupTablesRepository = lookupTablesRepository;
             this._locationsRepository = locationsRepository;
 
-            this.logger = logger;
+            this.logger = loggerFactory.CreateLogger(this.GetType().Name);
             this.messageBus = messageBus;
 
 
@@ -198,13 +198,13 @@ namespace Mihaylov.Site.Core.Managers
 
         public Country GetCountryByName(string name)
         {
-            this.logger.Debug($"Manager: Get country by name: {name}");
+            this.logger.LogDebug($"Manager: Get country by name: {name}");
             try
             {
                 string key = name.Trim();
                 Country country = this.countriesByName.GetOrAdd(key, (newName) =>
                 {
-                    this.logger.Debug($"Provider: Get country by name: {name}");
+                    this.logger.LogDebug($"Provider: Get country by name: {name}");
 
                     Country newCountry = this._locationsRepository.GetCountryByNameAsync(newName).ConfigureAwait(false).GetAwaiter().GetResult();
                     if (newCountry == null)
@@ -212,7 +212,7 @@ namespace Mihaylov.Site.Core.Managers
                         throw new ApplicationException($"Country with name: {newName} was not found");
                     }
 
-                    this.logger.Debug($"Provider: Found country by name ({name}): {newCountry?.Name}");
+                    this.logger.LogDebug($"Provider: Found country by name ({name}): {newCountry?.Name}");
 
                     return newCountry;
                 });

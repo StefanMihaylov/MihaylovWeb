@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using log4net;
+using Microsoft.Extensions.Logging;
 using Mihaylov.Common.MessageBus.Interfaces;
 using Mihaylov.Site.Core.Managers;
 using Mihaylov.Site.Data.Interfaces;
@@ -12,8 +12,8 @@ namespace Mihaylov.Site.Core.Tests.Managers
         public PersonAdditionalInfoManagerFake(
             ILookupTablesRepository lookupTablesRepository,
             ILocationsRepository locationsRepository,
-            ILog logger, IMessageBus messageBus)
-            : base(lookupTablesRepository, locationsRepository, logger,messageBus)
+            ILoggerFactory loggerFactory, IMessageBus messageBus)
+            : base(lookupTablesRepository, locationsRepository, loggerFactory, messageBus)
         {
         }
 
@@ -22,7 +22,7 @@ namespace Mihaylov.Site.Core.Tests.Managers
             get { return this._lookupTablesRepository; }
         }
 
-        public ILog ExposedLogger
+        public ILogger ExposedLogger
         {
             get { return this.logger; }
         }

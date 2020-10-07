@@ -73,6 +73,28 @@ services:
       - '\\192.168.1.5\Nuc\Docker\Volumes\SSL\UserSecrets\:/root/.microsoft/usersecrets'
       - '\\192.168.1.5\Nuc\Docker\Volumes\SSL\https:/root/.aspnet/https'
 
+  mihaylov.site.server:
+    image: mihaylov.site.server
+    build:
+      context: .
+      dockerfile: Site/Mihaylov.Site.Server/Dockerfile
+    ports:
+      - "8104:80"
+      - "8105:443"
+    networks:
+      - local
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_URLS: 'https://+;http://+'
+      ASPNETCORE_HTTPS_PORT: 8105
+      DB_Site_Address: 192.168.1.7
+      DB_Site_Name: Mihaylov_SiteDb
+      DB_Site_UserName: 
+      DB_Site_Password: 
+#    volumes:
+#      - '\\192.168.1.5\Nuc\Docker\Volumes\SSL\UserSecrets\:/root/.microsoft/usersecrets'
+#      - '\\192.168.1.5\Nuc\Docker\Volumes\SSL\https:/root/.aspnet/https'
+
 networks:
   local:
     driver: bridge
