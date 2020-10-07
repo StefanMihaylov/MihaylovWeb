@@ -30,9 +30,8 @@ namespace Mihaylov.Users.Server
 
             services.AddControllers();
 
-            services.AddDICommon();
-
-            services.AddUserDatabase(opt =>
+            services.AddDICommon()
+                    .AddUserDatabase(opt =>
                         {
                             opt.ServerAddress = Environment.GetEnvironmentVariable("DB_Users_Address") ?? "192.168.1.7";
                             opt.DatabaseName = Environment.GetEnvironmentVariable("DB_Users_Name") ?? "Mihaylov_UsersDb";

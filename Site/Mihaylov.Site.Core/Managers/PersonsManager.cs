@@ -2,6 +2,7 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using log4net;
 using Mihaylov.Common.MessageBus;
 using Mihaylov.Common.MessageBus.Interfaces;
@@ -18,7 +19,7 @@ namespace Mihaylov.Site.Core.Managers
         private readonly ILog logger;
         private readonly IMessageBus messageBus;
 
-        private readonly ConcurrentDictionary<int, Person> personsById;
+        private readonly ConcurrentDictionary<Guid, Person> personsById;
         private readonly ConcurrentDictionary<string, Person> personsByName;
 
         public PersonsManager(IPersonsRepository personsRepository, ILog logger, IMessageBus messageBus)
@@ -27,13 +28,13 @@ namespace Mihaylov.Site.Core.Managers
             this.logger = logger;
             this.messageBus = messageBus;
 
-            this.personsById = new ConcurrentDictionary<int, Person>();
+            this.personsById = new ConcurrentDictionary<Guid, Person>();
             this.personsByName = new ConcurrentDictionary<string, Person>(StringComparer.OrdinalIgnoreCase);
 
             this.messageBus.Attach(typeof(Person), this.HandleMessage);
         }
 
-        public IEnumerable<Person> GetAllPersons(bool descOrder = false, int? pageNumber = null, int? pageSize = null)
+        public async Task<IEnumerable<Person>> GetAllPersonsAsync(bool descOrder = false, int? pageNumber = null, int? pageSize = null)
         {
             IEnumerable<Person> persons = this.personsByName.Values;
 
@@ -43,7 +44,7 @@ namespace Mihaylov.Site.Core.Managers
 
                 if (persons.Count() < pageSize.Value)
                 {
-                    IEnumerable<Person> dbPersons = this.GetAll(descOrder, pageNumber, pageSize);
+                    IEnumerable<Person> dbPersons = await this.repository.Search(descOrder, pageNumber, pageSize).ConfigureAwait(false);
                     foreach (var dbPerson in dbPersons)
                     {
                         this.personsByName.TryAdd(dbPerson.Username, dbPerson);
@@ -56,11 +57,11 @@ namespace Mihaylov.Site.Core.Managers
             return persons;
         }
 
-        public Person GetById(int id)
+        public Person GetById(Guid id)
         {
             Person person = this.personsById.GetOrAdd(id, (newId) =>
             {
-                Person newPerson = this.repository.GetById(newId);
+                Person newPerson = this.repository.GetByIdAsync(newId).ConfigureAwait(false).GetAwaiter().GetResult();
                 if (newPerson == null)
                 {
                     throw new ApplicationException($"Person with Id: {newId} was not found");
@@ -84,7 +85,7 @@ namespace Mihaylov.Site.Core.Managers
                 string key = name.Trim();
                 Person person = this.personsByName.GetOrAdd(key, (newName) =>
                 {
-                    Person newPerson = this.repository.GetByName(newName);
+                    Person newPerson = this.repository.GetByAccoutUserNameAsync(newName).ConfigureAwait(false).GetAwaiter().GetResult();
                     if (newPerson == null)
                     {
                         throw new ApplicationException($"Person with name: {newName} was not found");
@@ -107,33 +108,10 @@ namespace Mihaylov.Site.Core.Managers
             }
         }
 
-        public PersonStatistics GetStatictics()
+        public async Task<PersonStatistics> GetStaticticsAsync()
         {
-            PersonStatistics statistics = this.repository.GetStatictics();
+            PersonStatistics statistics = await this.repository.GetStaticticsAsync().ConfigureAwait(false);
             return statistics;
-        }
-
-        private IEnumerable<Person> GetAll(bool descOrder = false, int? pageNumber = null, int? pageSize = null)
-        {
-            IQueryable<Person> query = this.repository.GetAll().AsQueryable();
-
-            if (descOrder)
-            {
-                query = query.OrderByDescending(p => p.AskDate);
-            }
-            else
-            {
-                query = query.OrderBy(p => p.AskDate);
-            }
-
-            if (pageNumber.HasValue && pageSize.HasValue)
-            {
-                int skipCount = pageSize.Value * pageNumber.Value;
-                query = query.Skip(skipCount).Take(pageSize.Value);
-            }
-
-            IEnumerable<Person> persons = query.ToList();
-            return persons;
         }
 
         private IEnumerable<Person> FilterPage(IEnumerable<Person> persons, bool descOrder, int? pageNumber, int? pageSize)

@@ -1,18 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.OpenApi.Models;
 using Mihaylov.Common.Databases;
 using Mihaylov.Users.Data.Database;
 using Mihaylov.Users.Data.Database.Models;
 using Mihaylov.Users.Data.Repository;
 using Mihaylov.Users.Data.Repository.Helpers;
-using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace Mihaylov.Users.Data
 {

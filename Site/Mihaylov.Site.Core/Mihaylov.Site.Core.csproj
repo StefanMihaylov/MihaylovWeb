@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
@@ -14,12 +14,6 @@
     <ProjectReference Include="..\Mihaylov.Site.Core.Contracts\Mihaylov.Site.Core.Contracts.csproj" />
     <ProjectReference Include="..\Mihaylov.Site.Data.Contracts\Mihaylov.Site.Data.Contracts.csproj" />
     <ProjectReference Include="..\Mihaylov.Site.Data\Mihaylov.Site.Data.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Reference Include="mscorlib">
-      <HintPath>C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.6.1\mscorlib.dll</HintPath>
-    </Reference>
   </ItemGroup>
 
 </Project>

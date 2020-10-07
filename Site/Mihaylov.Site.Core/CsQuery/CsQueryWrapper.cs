@@ -54,7 +54,7 @@ namespace Mihaylov.Site.Core.CsQuery
             var person = new Person()
             {
                 Username = username,
-                CreateDate = ParseDate(createdDate),
+                CreatedOn = ParseDate(createdDate),
                 LastBroadcastDate = ParseDate(lastBroadcastDate),
                 Age = int.Parse(age),
                 Ethnicity = ethnicity,

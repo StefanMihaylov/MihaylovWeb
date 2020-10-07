@@ -1,6 +1,5 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
-using System.Linq.Expressions;
 using AutoMapper;
 using Mihaylov.Common.Mapping;
 using DAL = Mihaylov.Site.Database.Models;
@@ -13,14 +12,14 @@ namespace Mihaylov.Site.Data.Models
         {
         }
 
-        public Person(int id, string username, DateTime createDate, DateTime lastBroadcastDate, DateTime? askDate,
+        public Person(Guid id, string username, DateTime createdOn, DateTime lastBroadcastDate, DateTime? askDate,
             int age, int countryId, string country, int ethnicityId, string ethnicity, int orientationId, string orientation,
             int answerTypeId, string answerType, decimal? answer, decimal? answerConverted, int? answerUnitId, string answerUnit,
-            string comments, string recordsPath, bool isAccountDisabled, DateTime? updatedDate)
+            string comments, string recordsPath, bool isAccountDisabled, DateTime? modifiedOn)
         {
             Id = id;
             Username = username;
-            CreateDate = createDate;
+            CreatedOn = createdOn;
             LastBroadcastDate = lastBroadcastDate;
             AskDate = askDate;
             Age = age;
@@ -39,56 +38,56 @@ namespace Mihaylov.Site.Data.Models
             Comments = comments;
             RecordsPath = recordsPath;
             IsAccountDisabled = isAccountDisabled;
-            UpdatedDate = updatedDate;
+            ModifiedOn = modifiedOn;
         }
 
         public Person(Person person)
-            : this(person.Id, person.Username, person.CreateDate, person.LastBroadcastDate, person.AskDate,
+            : this(person.Id, person.Username, person.CreatedOn, person.LastBroadcastDate, person.AskDate,
             person.Age, person.CountryId, person.Country, person.EthnicityTypeId, person.Ethnicity, person.OrientationTypeId,
             person.Orientation, person.AnswerTypeId, person.AnswerType, person.Answer, person.AnswerConverted,
             person.AnswerUnitTypeId, person.AnswerUnit, person.Comments, person.RecordsPath, person.IsAccountDisabled,
-            person.UpdatedDate)
+            person.ModifiedOn)
         {
         }
 
         public void Update(DAL.Person person)
         {
-            person.Username = this.Username;
-            person.CreateDate = this.CreateDate;
-            person.LastBroadcastDate = this.LastBroadcastDate;
-            person.AskDate = this.AskDate;
+            //person.Username = this.Username;
+            person.CreatedOn = this.CreatedOn;
+            //person.LastBroadcastDate = this.LastBroadcastDate;
+            //person.AskDate = this.AskDate;
             person.Age = this.Age;
             person.CountryId = this.CountryId;
             person.EthnicityTypeId = this.EthnicityTypeId;
             person.OrientationTypeId = this.OrientationTypeId;
-            person.AnswerTypeId = this.AnswerTypeId;
-            person.Answer = this.Answer;
-            person.AnswerConverted = this.AnswerConverted;
-            person.AnswerUnitTypeId = this.AnswerUnitTypeId;
-            person.Comments = this.Comments;
-            person.RecordsPath = this.RecordsPath;
-            person.IsAccountDisabled = this.IsAccountDisabled;
-            person.UpdatedDate = this.UpdatedDate;
+            //person.AnswerTypeId = this.AnswerTypeId;
+            //person.Answer = this.Answer;
+            //person.AnswerConverted = this.AnswerConverted;
+            //person.AnswerUnitTypeId = this.AnswerUnitTypeId;
+            //person.Comments = this.Comments;
+            //person.RecordsPath = this.RecordsPath;
+            //person.IsAccountDisabled = this.IsAccountDisabled;
+            person.ModifiedOn = this.ModifiedOn;
         }
 
         public void CreateMappings(IMapperConfigurationExpression configuration)
         {
             configuration.CreateMap<DAL.Person, Person>()
-                .ForMember(x => x.Id, opt => opt.MapFrom(m => m.PersonId))
+                .ForMember(x => x.Id, opt => opt.MapFrom(m => m.Id))
                 .ForMember(x => x.Country, opt => opt.MapFrom(m => m.Country.Name))
                 .ForMember(x => x.Ethnicity, opt => opt.MapFrom(m => m.EthnicityType.Description))
-                .ForMember(x => x.Orientation, opt => opt.MapFrom(m => m.OrientationType.Description))
-                .ForMember(x => x.AnswerType, opt => opt.MapFrom(m => m.AnswerType.Description))
-                .ForMember(x => x.AnswerUnit, opt => opt.MapFrom(m => m.AnswerUnitType.Name));
+                .ForMember(x => x.Orientation, opt => opt.MapFrom(m => m.OrientationType.Description));
+                //.ForMember(x => x.AnswerType, opt => opt.MapFrom(m => m.AnswerType.Description))
+                //.ForMember(x => x.AnswerUnit, opt => opt.MapFrom(m => m.AnswerUnitType.Name));
         }
 
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
         [Display(Name = "Username:")]
         public string Username { get; set; }
 
         [Display(Name = "Create:")]
-        public DateTime CreateDate { get; set; }
+        public DateTime CreatedOn { get; set; }
 
         [Display(Name = "Broadcast:")]
         public DateTime LastBroadcastDate { get; set; }
@@ -138,7 +137,7 @@ namespace Mihaylov.Site.Data.Models
         [Display(Name = "Disabled:")]
         public bool IsAccountDisabled { get; set; }
 
-        public DateTime? UpdatedDate { get; set; }
+        public DateTime? ModifiedOn { get; set; }
 
 
         [Display(Name = "Answer:")]

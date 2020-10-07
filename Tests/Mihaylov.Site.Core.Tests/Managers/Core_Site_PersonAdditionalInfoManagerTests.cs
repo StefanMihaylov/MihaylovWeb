@@ -27,7 +27,7 @@ namespace Mihaylov.Core.Tests.Managers
             ILog logger = GetLoggerMocked();
             IMessageBus messageBus = GetMessageBusMocked();
 
-            Assert.ThrowsException<ArgumentNullException>(() => new PersonAdditionalInfoManager(null, null, null, null, null, logger, messageBus));
+            Assert.ThrowsException<ArgumentNullException>(() => new PersonAdditionalInfoManager(null, null, logger, messageBus));
         }
 
         /*

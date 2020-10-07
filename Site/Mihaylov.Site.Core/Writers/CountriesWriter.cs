@@ -1,4 +1,5 @@
-﻿using Mihaylov.Site.Core.Interfaces;
+﻿using System.Threading.Tasks;
+using Mihaylov.Site.Core.Interfaces;
 using Mihaylov.Site.Data.Interfaces;
 using Mihaylov.Site.Data.Models;
 
@@ -6,23 +7,23 @@ namespace Mihaylov.Site.Core.Writers
 {
     public class CountriesWriter : ICountriesWriter
     {
-        private readonly ICountriesRepository repository;
+        private readonly ILocationsRepository repository;
 
-        public CountriesWriter(ICountriesRepository countryRepository)
+        public CountriesWriter(ILocationsRepository locationsRepository)
         {
-            this.repository = countryRepository;
+            this.repository = locationsRepository;
         }
 
-        public Country Add(Country inputCountry)
+        public async Task<Country> AddAsync(Country inputCountry)
         {
-            Country country = this.repository.AddCountry(inputCountry);
+            Country country = await this.repository.AddCountryAsync(inputCountry).ConfigureAwait(false);
             return country;
         }
 
-        public Country Add(string countryName)
+        public async Task<Country> AddAsync(string countryName)
         {
             Country newCountry = new Country() { Name = countryName.Trim() };
-            Country country = this.Add(newCountry);
+            Country country = await this.AddAsync(newCountry).ConfigureAwait(false);
             return country;
         }
     }

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Mihaylov.Site.Core.Models;
 using Mihaylov.Site.Data.Models;
 
@@ -8,7 +9,7 @@ namespace Mihaylov.Site.Core.Interfaces
     {
         string GetUserName(string url);
 
-        Person GetUserInfo(string username);
+        Task<Person> GetUserInfoAsync(string username);
 
         void AddAdditionalInfo(Person person);
 
@@ -18,8 +19,8 @@ namespace Mihaylov.Site.Core.Interfaces
 
         string GetSystemUnit();
 
-        int UpdatePersons();
+        Task<int> UpdatePersonsAsync();
 
-        PersonExtended GetPersonByName(string userName);
+        Task<PersonExtended> GetPersonByNameAsync(string userName);
     }
 }

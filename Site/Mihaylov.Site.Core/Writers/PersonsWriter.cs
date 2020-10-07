@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Mihaylov.Common.MessageBus.Interfaces;
 using Mihaylov.Common.MessageBus.Models;
 using Mihaylov.Site.Core.Interfaces;
@@ -18,17 +19,18 @@ namespace Mihaylov.Site.Core.Writers
             this.messageBus = messageBus;
         }
 
-        public Person AddOrUpdate(Person inputPerson)
+        public async Task<Person> AddOrUpdateAsync(Person inputPerson)
         {
             if (inputPerson.LastBroadcastDate == default(DateTime))
             {
                 inputPerson.LastBroadcastDate = inputPerson.AskDate.Value;
             }
 
-            inputPerson.UpdatedDate = DateTime.UtcNow;
+            inputPerson.ModifiedOn = DateTime.UtcNow;
 
-            Person person = this.repository.AddOrUpdatePerson(inputPerson, out bool isNewPerson);
+            Person person = await this.repository.AddOrUpdatePersonAsync(inputPerson);//, out bool isNewPerson);
 
+            bool isNewPerson = false; // TODO;
             MessageActionType action = isNewPerson ? MessageActionType.Add : MessageActionType.Update;
             this.messageBus.SendMessage(person, this, action);
 

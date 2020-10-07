@@ -1,18 +1,24 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using Mihaylov.Site.Data.Models;
 
 namespace Mihaylov.Site.Data.Interfaces
 {
     public interface IPersonsRepository
     {
-        IEnumerable<Person> GetAll();
+        Task<IEnumerable<Person>> Search(bool descOrder = false, int? pageNumber = null, int? pageSize = null);
 
-        Person GetById(int id);
+        Task<IEnumerable<Person>> GetAllAsync();
 
-        Person GetByName(string username);
+        Task<IEnumerable<Person>> GetAllForUpdateAsync();
 
-        Person AddOrUpdatePerson(Person inputPerson, out bool isNewPerson);
+        Task<Person> GetByIdAsync(Guid id);
 
-        PersonStatistics GetStatictics();
+        Task<Person> GetByAccoutUserNameAsync(string username);
+
+        Task<Person> AddOrUpdatePersonAsync(Person inputPerson);
+
+        Task<PersonStatistics> GetStaticticsAsync();
     }
 }

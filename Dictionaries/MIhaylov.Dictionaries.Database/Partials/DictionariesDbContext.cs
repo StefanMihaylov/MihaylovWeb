@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Mihaylov.Common.Database;
 using Mihaylov.Dictionaries.Database.Interfaces;
 
 namespace Mihaylov.Dictionaries.Database.Models

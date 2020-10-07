@@ -1,4 +1,4 @@
-﻿using System.Linq;
+﻿using System.Threading.Tasks;
 using Mihaylov.Common.MessageBus.Interfaces;
 using Mihaylov.Common.MessageBus.Models;
 using Mihaylov.Site.Core.Interfaces;
@@ -18,21 +18,18 @@ namespace Mihaylov.Site.Core.Writers
             this.messageBus = messageBus;
         }
 
-        public Phrase AddOrUpdate(Phrase inputPhrase)
+        public async Task<Phrase> AddOrUpdateAsync(Phrase inputPhrase)
         {
             if (!inputPhrase.OrderId.HasValue)
             {
-                int maxOrderId = this.repository.GetAll()
-                                               .Where(p => p.OrderId.HasValue)
-                                               .Select(p => p.OrderId.Value)
-                                               .DefaultIfEmpty()
-                                               .Max();
+                int maxOrderId = await this.repository.GetMaxOrderId();
 
                 inputPhrase.OrderId = maxOrderId + 1;
             }
 
-            Phrase phrase = this.repository.AddOrUpdatePhrase(inputPhrase, out bool isNewPhrase);
+            Phrase phrase = await this.repository.AddOrUpdatePhraseAsync(inputPhrase);//, out bool isNewPhrase);
 
+            bool isNewPhrase = false; // TODO;
             MessageActionType action = isNewPhrase ? MessageActionType.Add : MessageActionType.Update;
 
             this.messageBus.SendMessage(phrase, this, action);

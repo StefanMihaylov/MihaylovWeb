@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Linq.Expressions;
+using Mihaylov.Site.Data.Models.Base;
 using DAL = Mihaylov.Site.Database.Models;
 
 namespace Mihaylov.Site.Data.Models
 {
-    public class Unit
+    public class Unit : LookupTable
     {
         public static Expression<Func<DAL.UnitType, Unit>> FromDb
         {
@@ -12,19 +13,13 @@ namespace Mihaylov.Site.Data.Models
             {
                 return unit => new Unit
                 {
-                    Id = unit.UnitTypeId,
+                    Id = unit.Id,
                     Name = unit.Name,
                     Description = unit.Description,
                     ConversionRate = unit.ConversionRate,
                 };
             }
         }
-
-        public int Id { get; set; }
-
-        public string Name { get; set; }
-
-        public string Description { get; set; }
 
         public decimal ConversionRate { get; set; }
     }

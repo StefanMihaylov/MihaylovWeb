@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Mihaylov.Site.Core\Mihaylov.Site.Core.csproj" />
+    <ProjectReference Include="..\Mihaylov.Site.Database\Mihaylov.Site.Database.csproj" />
+  </ItemGroup>
+
+
+</Project>

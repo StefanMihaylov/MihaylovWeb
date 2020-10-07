@@ -1,9 +1,10 @@
-﻿using Mihaylov.Site.Data.Models;
+﻿using System.Threading.Tasks;
+using Mihaylov.Site.Data.Models;
 
 namespace Mihaylov.Site.Core.Interfaces
 {
     public interface IPhrasesWriter
     {
-        Phrase AddOrUpdate(Phrase inputPhrase);
+        Task<Phrase> AddOrUpdateAsync(Phrase inputPhrase);
     }
 }

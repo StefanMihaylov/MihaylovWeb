@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using log4net;
 using Mihaylov.Site.Core.CsQuery;
 using Mihaylov.Site.Core.Interfaces;
@@ -79,7 +80,7 @@ namespace Mihaylov.Core.Helpers.Site
             }
         }
 
-        public Person GetUserInfo(string username)
+        public async Task<Person> GetUserInfoAsync(string username)
         {
             try
             {
@@ -89,7 +90,7 @@ namespace Mihaylov.Core.Helpers.Site
 
                 Ethnicity ethnicityDTO = GetEthnisityType(person.Ethnicity);
                 Orientation orientationDTO = GetOrientationType(person.Orientation);
-                Country countryDTO = GetCountry(person.Country);
+                Country countryDTO = await GetCountry(person.Country).ConfigureAwait(false);
 
                 person.Ethnicity = ethnicityDTO.Name;
                 person.EthnicityTypeId = ethnicityDTO.Id;
@@ -107,16 +108,13 @@ namespace Mihaylov.Core.Helpers.Site
             }
         }
 
-        public int UpdatePersons()
+        public async Task<int> UpdatePersonsAsync()
         {
-            var persons = this.personsRepository.GetAll()
-                .Where(p => p.IsAccountDisabled == false)
-                .Where(p => p.UpdatedDate < DateTime.UtcNow.AddDays(-1))
-                .ToList();
+            var persons = await this.personsRepository.GetAllForUpdateAsync().ConfigureAwait(false);
 
             foreach (var person in persons)
             {
-                var updatedPerson = this.GetUserInfo(person.Username);
+                var updatedPerson = await this.GetUserInfoAsync(person.Username).ConfigureAwait(false);
 
                 if (!updatedPerson.IsAccountDisabled)
                 {
@@ -138,10 +136,10 @@ namespace Mihaylov.Core.Helpers.Site
 
                 person.IsAccountDisabled = updatedPerson.IsAccountDisabled;
 
-                this.personsWriter.AddOrUpdate(person);
+               await this.personsWriter.AddOrUpdateAsync(person).ConfigureAwait(false);
             }
 
-            return persons.Count;
+            return persons.Count();
         }
 
         public IEnumerable<Unit> GetAllUnits()
@@ -160,12 +158,12 @@ namespace Mihaylov.Core.Helpers.Site
                                                .FirstOrDefault(u => u.ConversionRate == 1m)?.Name;
         }
 
-        public PersonExtended GetPersonByName(string userName)
+        public async Task<PersonExtended> GetPersonByNameAsync(string userName)
         {
             Person person = this.personsManager.GetByName(userName);
             if (person == null)
             {
-                person = this.GetUserInfo(userName);
+                person = await this.GetUserInfoAsync(userName).ConfigureAwait(false);
             }
 
             var personExtended = new PersonExtended(person)
@@ -208,7 +206,7 @@ namespace Mihaylov.Core.Helpers.Site
             return ethnisityDTO;
         }
 
-        private Country GetCountry(string country)
+        private async Task<Country> GetCountry(string country)
         {
             if (string.IsNullOrWhiteSpace(country))
             {
@@ -224,7 +222,7 @@ namespace Mihaylov.Core.Helpers.Site
             Country countryDTO = this.personAdditionalManager.GetCountryByName(country);
             if (countryDTO == null)
             {
-                countryDTO = this.countriesWriter.Add(country);
+                countryDTO = await this.countriesWriter.AddAsync(country);
             }
 
             return countryDTO;

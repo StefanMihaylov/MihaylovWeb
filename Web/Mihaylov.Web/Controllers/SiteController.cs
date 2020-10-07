@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using log4net;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -32,12 +33,12 @@ namespace Mihaylov.Web.Controllers
         }
 
         // GET: Site
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
             var model = new PersonGridModel()
             {
-                Statistics = this.personManager.GetStatictics(),
-                Persons = this.personManager.GetAllPersons(true, 0, 10),
+                Statistics = await this.personManager.GetStaticticsAsync().ConfigureAwait(false),
+                Persons = await this.personManager.GetAllPersonsAsync(true, 0, 10).ConfigureAwait(false),
                 SystemUnit = this.siteHelper.GetSystemUnit(),
                 Phrases = this.phrasesManager.GetAllPhrases(),
             };
@@ -45,7 +46,7 @@ namespace Mihaylov.Web.Controllers
             return View(model);
         }
 
-        public IActionResult Find(string url)
+        public async Task<IActionResult> Find(string url)
         {
             try
             {
@@ -57,7 +58,7 @@ namespace Mihaylov.Web.Controllers
                     return this.Json($"{url}: Error: Missing username");
                 }
 
-                PersonExtended personExtended = this.siteHelper.GetPersonByName(userName);
+                PersonExtended personExtended = await this.siteHelper.GetPersonByNameAsync(userName).ConfigureAwait(false);
                 return this.PartialView("_Find",personExtended);
             }
             catch (Exception ex)
@@ -66,28 +67,28 @@ namespace Mihaylov.Web.Controllers
             }
         }
 
-        public IActionResult AddPhrase(string phrase)
+        public async Task<IActionResult> AddPhrase(string phrase)
         {
             if (!string.IsNullOrWhiteSpace(phrase))
             {
                 var newPhrase = new Phrase(0, phrase.Trim(), null);
-                this.phrasesWriter.AddOrUpdate(newPhrase);
+                await this.phrasesWriter.AddOrUpdateAsync(newPhrase).ConfigureAwait(false);
             }
 
             return this.RedirectToAction(nameof(SiteController.Index));
         }
 
-        public IActionResult Save(Person input)
+        public async Task<IActionResult> Save(Person input)
         {
             this.siteHelper.AddAdditionalInfo(input);
-            this.personsWriter.AddOrUpdate(input);
+            await this.personsWriter.AddOrUpdateAsync(input).ConfigureAwait(false);
 
             return this.RedirectToAction(nameof(SiteController.Index));
         }
 
-        public IActionResult Update()
+        public async Task<IActionResult> Update()
         {
-            int updated = this.siteHelper.UpdatePersons();
+            int updated = await this.siteHelper.UpdatePersonsAsync().ConfigureAwait(false);
 
             this.AddToastMessage(string.Empty, $"{updated} persons were updated", ToastType.Success);
 

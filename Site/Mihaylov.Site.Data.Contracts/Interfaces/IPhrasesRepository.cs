@@ -1,14 +1,17 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Mihaylov.Site.Data.Models;
 
 namespace Mihaylov.Site.Data.Interfaces
 {
     public interface IPhrasesRepository
     {
-        Phrase AddOrUpdatePhrase(Phrase inputPhrase, out bool isNew);
+        Task<Phrase> AddOrUpdatePhraseAsync(Phrase inputPhrase);//, out bool isNew);
 
-        IEnumerable<Phrase> GetAll();
+        Task<IEnumerable<Phrase>> GetAllAsync();
 
-        Phrase GetById(int id);
+        Task<Phrase> GetByIdAsync(int id);
+
+        Task<int> GetMaxOrderId();
     }
 }

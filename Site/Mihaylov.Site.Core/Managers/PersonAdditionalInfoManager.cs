@@ -15,11 +15,8 @@ namespace Mihaylov.Site.Core.Managers
 {
     public class PersonAdditionalInfoManager : IPersonAdditionalInfoManager
     {
-        protected readonly IGetAllRepository<AnswerType> answerTypeRepository;
-        protected readonly IGetAllRepository<Ethnicity> ethnicitiesRepository;
-        protected readonly IGetAllRepository<Orientation> orientationRepository;
-        protected readonly IGetAllRepository<Unit> unitRepository;
-        protected readonly ICountriesRepository countryRepository;
+        protected readonly ILookupTablesRepository _lookupTablesRepository;
+        protected readonly ILocationsRepository _locationsRepository;
 
         protected readonly ILog logger;
         protected readonly IMessageBus messageBus;
@@ -39,77 +36,95 @@ namespace Mihaylov.Site.Core.Managers
         protected readonly ConcurrentDictionary<int, Country> countriesById;
         protected readonly ConcurrentDictionary<string, Country> countriesByName;
 
+        protected readonly Lazy<ConcurrentDictionary<int, State>> statesById;
+
         public PersonAdditionalInfoManager(
-            IGetAllRepository<AnswerType> answerTypeRepository,
-            IGetAllRepository<Ethnicity> ethnicitiesRepository,
-            IGetAllRepository<Orientation> orientationRepository,
-            IGetAllRepository<Unit> unitRepository,
-            ICountriesRepository countryRepository, 
+            ILookupTablesRepository lookupTablesRepository,
+            ILocationsRepository locationsRepository, 
             ILog logger, IMessageBus messageBus)
         {
             ParameterValidation.IsNotNull(logger, nameof(logger));
             ParameterValidation.IsNotNull(messageBus, nameof(messageBus));
 
-            this.answerTypeRepository = answerTypeRepository;
-            this.ethnicitiesRepository = ethnicitiesRepository;
-            this.orientationRepository = orientationRepository;
-            this.unitRepository = unitRepository;
-            this.countryRepository = countryRepository;
+            this._lookupTablesRepository = lookupTablesRepository;
+            this._locationsRepository = locationsRepository;
 
             this.logger = logger;
             this.messageBus = messageBus;
 
+
+            IEnumerable<AnswerType> answerTypeList = new List<AnswerType>();
+
             this.answerTypesById = new Lazy<ConcurrentDictionary<int, AnswerType>>(() =>
             {
-                IDictionary<int, AnswerType> answerTypes = this.answerTypeRepository.GetAll().ToDictionary(p => p.Id);
+                IDictionary<int, AnswerType> answerTypes = answerTypeList.ToDictionary(p => p.Id);
                 return new ConcurrentDictionary<int, AnswerType>(answerTypes);
             });
 
             this.answerTypesByName = new Lazy<ConcurrentDictionary<string, AnswerType>>(() =>
             {
-                IDictionary<string, AnswerType> answerTypes = this.answerTypeRepository.GetAll().ToDictionary(p => p.Name);
+                IDictionary<string, AnswerType> answerTypes = answerTypeList.ToDictionary(p => p.Name);
                 return new ConcurrentDictionary<string, AnswerType>(answerTypes, StringComparer.OrdinalIgnoreCase);
             });
 
+
+            var ethnicityList = this._lookupTablesRepository.GetAllEthnicitiesAsync().GetAwaiter().GetResult();
+
             this.ethnicitiesById = new Lazy<ConcurrentDictionary<int, Ethnicity>>(() =>
-            {
-                IDictionary<int, Ethnicity> ethnicities = this.ethnicitiesRepository.GetAll().ToDictionary(e => e.Id);
+            {                
+                IDictionary<int, Ethnicity> ethnicities = ethnicityList.ToDictionary(e => e.Id);
                 return new ConcurrentDictionary<int, Ethnicity>(ethnicities);
             });
 
             this.ethnicitiesByName = new Lazy<ConcurrentDictionary<string, Ethnicity>>(() =>
             {
-                IDictionary<string, Ethnicity> ethnicities = this.ethnicitiesRepository.GetAll().ToDictionary(e => e.Name);
+                IDictionary<string, Ethnicity> ethnicities = ethnicityList.ToDictionary(e => e.Name);
                 return new ConcurrentDictionary<string, Ethnicity>(ethnicities, StringComparer.OrdinalIgnoreCase);
             });
 
+
+            var orientationList = this._lookupTablesRepository.GetAllOrientationsAsync().GetAwaiter().GetResult();
+
             this.orientationsById = new Lazy<ConcurrentDictionary<int, Orientation>>(() =>
             {
-                IDictionary<int, Orientation> orientations = this.orientationRepository.GetAll().ToDictionary(o => o.Id);
+                IDictionary<int, Orientation> orientations = orientationList.ToDictionary(o => o.Id);
                 return new ConcurrentDictionary<int, Orientation>(orientations);
             });
 
             this.orientationsByName = new Lazy<ConcurrentDictionary<string, Orientation>>(() =>
             {
-                IDictionary<string, Orientation> orientations = this.orientationRepository.GetAll().ToDictionary(o => o.Name);
+                IDictionary<string, Orientation> orientations = orientationList.ToDictionary(o => o.Name);
                 return new ConcurrentDictionary<string, Orientation>(orientations, StringComparer.OrdinalIgnoreCase);
             });
 
+
+            IEnumerable<Unit> unitList = new List<Unit>();
+
             this.unitsById = new Lazy<ConcurrentDictionary<int, Unit>>(() =>
             {
-                IDictionary<int, Unit> units = this.unitRepository.GetAll().ToDictionary(u => u.Id);
+                IDictionary<int, Unit> units = unitList.ToDictionary(u => u.Id);
                 return new ConcurrentDictionary<int, Unit>(units);
             });
+
             this.unitsByName = new Lazy<ConcurrentDictionary<string, Unit>>(()=> 
             {
-                IDictionary<string, Unit> units = this.unitRepository.GetAll().ToDictionary(u => u.Name);
+                IDictionary<string, Unit> units = unitList.ToDictionary(u => u.Name);
                 return new ConcurrentDictionary<string, Unit>(units, StringComparer.OrdinalIgnoreCase);
             }); 
+
 
             this.countriesById = new ConcurrentDictionary<int, Country>();
             this.countriesByName = new ConcurrentDictionary<string, Country>(StringComparer.OrdinalIgnoreCase);
 
             this.messageBus.Attach(typeof(Country), this.HandleMessageCountry);
+
+            var stateList = this._locationsRepository.GetAllStatesAsync().GetAwaiter().GetResult();
+
+            this.statesById = new Lazy<ConcurrentDictionary<int, State>>(() =>
+            {
+                IDictionary<int, State> units = stateList.ToDictionary(u => u.Id);
+                return new ConcurrentDictionary<int, State>(units);
+            });
         }
 
         #region AnswerType
@@ -164,11 +179,12 @@ namespace Mihaylov.Site.Core.Managers
             {
                 Country country = this.countriesById.GetOrAdd(id, (newId) =>
                 {
-                    Country newCountry = this.countryRepository.GetById(newId);
+                    Country newCountry = this._locationsRepository.GetCountryByIdAsync(newId).ConfigureAwait(false).GetAwaiter().GetResult();
                     if (newCountry == null)
                     {
                         throw new ApplicationException($"Country with Id: {newId} was not found");
                     }
+
                     return newCountry;
                 });
 
@@ -190,7 +206,7 @@ namespace Mihaylov.Site.Core.Managers
                 {
                     this.logger.Debug($"Provider: Get country by name: {name}");
 
-                    Country newCountry = this.countryRepository.GetByName(newName);
+                    Country newCountry = this._locationsRepository.GetCountryByNameAsync(newName).ConfigureAwait(false).GetAwaiter().GetResult();
                     if (newCountry == null)
                     {
                         throw new ApplicationException($"Country with name: {newName} was not found");
@@ -210,6 +226,16 @@ namespace Mihaylov.Site.Core.Managers
         }
 
         #endregion;
+
+        #region State
+
+        public IEnumerable<State> GetAllStates()
+        {
+            IEnumerable<State> states = this.statesById.Value.Values;
+            return states;
+        }
+
+        #endregion
 
         #region Ethnicity
 

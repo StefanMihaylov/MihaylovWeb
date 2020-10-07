@@ -10,20 +10,16 @@ namespace Mihaylov.Site.Core.Tests.Managers
     internal class PersonAdditionalInfoManagerFake : PersonAdditionalInfoManager
     {
         public PersonAdditionalInfoManagerFake(
-            IGetAllRepository<AnswerType> answerTypeRepository,
-            IGetAllRepository<Ethnicity> ethnicitiesRepository,
-            IGetAllRepository<Orientation> orientationRepository,
-            IGetAllRepository<Unit> unitRepository,
-            ICountriesRepository countryRepository,
+            ILookupTablesRepository lookupTablesRepository,
+            ILocationsRepository locationsRepository,
             ILog logger, IMessageBus messageBus)
-            : base(answerTypeRepository, ethnicitiesRepository, orientationRepository, unitRepository, countryRepository,
-                  logger,messageBus)
+            : base(lookupTablesRepository, locationsRepository, logger,messageBus)
         {
         }
 
-        public IGetAllRepository<AnswerType> ExposedAnswerTypeRepository
+        public ILookupTablesRepository ExposedLookupTablesRepository
         {
-            get { return this.answerTypeRepository; }
+            get { return this._lookupTablesRepository; }
         }
 
         public ILog ExposedLogger

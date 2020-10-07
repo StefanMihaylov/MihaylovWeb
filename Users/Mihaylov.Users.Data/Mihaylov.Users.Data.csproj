@@ -23,7 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Common\Mihaylov.Common.Core\Mihaylov.Common.Core.csproj" />
+    <ProjectReference Include="..\..\Common\Mihaylov.Common\Mihaylov.Common.csproj" />
     <ProjectReference Include="..\Mihaylov.Users.Models\Mihaylov.Users.Models.csproj" />
   </ItemGroup>
 

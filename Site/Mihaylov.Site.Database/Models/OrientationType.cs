@@ -1,19 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Mihaylov.Site.Database.Models.Base;
 
 namespace Mihaylov.Site.Database.Models
 {
-    public partial class OrientationType
+    public class OrientationType : LookupTable
     {
-        public OrientationType()
-        {
-            Persons = new HashSet<Person>();
-        }
-
-        public int OrientationTypeId { get; set; }
-        public string Name { get; set; }
-        public string Description { get; set; }
-
-        public virtual ICollection<Person> Persons { get; set; }
     }
 }

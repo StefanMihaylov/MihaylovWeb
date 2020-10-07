@@ -1,11 +1,12 @@
-﻿using Mihaylov.Site.Data.Models;
+﻿using System.Threading.Tasks;
+using Mihaylov.Site.Data.Models;
 
 namespace Mihaylov.Site.Core.Interfaces
 {
     public interface ICountriesWriter
     {
-        Country Add(Country inputCountry);
+        Task<Country> AddAsync(Country inputCountry);
 
-        Country Add(string countryName);
+        Task<Country> AddAsync(string countryName);
     }
 }

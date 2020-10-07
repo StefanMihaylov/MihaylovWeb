@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Linq.Expressions;
+using Mihaylov.Site.Data.Models.Base;
 using DAL = Mihaylov.Site.Database.Models;
 
 namespace Mihaylov.Site.Data.Models
 {
-    public class Country
+    public class Country : LookupTable
     {
         public static Expression<Func<DAL.Country, Country>> FromDb
         {
@@ -12,7 +13,7 @@ namespace Mihaylov.Site.Data.Models
             {
                 return country => new Country
                 {
-                    Id = country.CountryId,
+                    Id = country.Id,
                     Name = country.Name,
                     Description = country.Description,
                 };
@@ -28,7 +29,7 @@ namespace Mihaylov.Site.Data.Models
 
             Country countryDTO = new Country
             {
-                Id = countryDAL.CountryId,
+                Id = countryDAL.Id,
                 Name = countryDAL.Name,
                 Description = countryDAL.Description,
             };
@@ -40,18 +41,12 @@ namespace Mihaylov.Site.Data.Models
         {
             DAL.Country country = new DAL.Country()
             {
-                CountryId = this.Id,
+                Id = this.Id,
                 Name = this.Name,
                 Description = this.Description,
             };
 
             return country;
         }
-
-        public int Id { get; set; }
-
-        public string Name { get; set; }
-
-        public string Description { get; set; }
     }
 }

@@ -28,7 +28,8 @@ namespace Mihaylov.Site.Core.Managers
 
             this.phrasesById = new Lazy<ConcurrentDictionary<int, Phrase>>(() =>
             {
-                IDictionary<int, Phrase> dictionary = this.repository.GetAll().ToDictionary(p => p.Id);
+                var phraseList = this.repository.GetAllAsync().ConfigureAwait(false).GetAwaiter().GetResult();
+                IDictionary<int, Phrase> dictionary = phraseList.ToDictionary(p => p.Id);
                 return new ConcurrentDictionary<int, Phrase>(dictionary);
             });
 
@@ -37,8 +38,7 @@ namespace Mihaylov.Site.Core.Managers
 
         public IEnumerable<Phrase> GetAllPhrases()
         {
-            IEnumerable<Phrase> phrases = this.phrasesById.Value
-                                                          .Values
+            IEnumerable<Phrase> phrases = this.phrasesById.Value.Values
                                                           .OrderBy(p => p.OrderId);
             return phrases;
         }

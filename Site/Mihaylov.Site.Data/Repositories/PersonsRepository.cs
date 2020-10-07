@@ -1,96 +1,145 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
-using Mihaylov.Common.Database;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using Mihaylov.Common.Mapping;
 using Mihaylov.Site.Data.Interfaces;
 using Mihaylov.Site.Data.Models;
-using Mihaylov.Site.Database.Interfaces;
+using Mihaylov.Site.Database;
 using DAL = Mihaylov.Site.Database.Models;
 
 namespace Mihaylov.Site.Data.Repositories
 {
-    public class PersonsRepository : GenericRepository<DAL.Person, ISiteDbContext>, IPersonsRepository
+    public class PersonsRepository : IPersonsRepository
     {
-        public PersonsRepository(ISiteDbContext context)
-            : base(context)
+        private readonly SiteDbContext _context;
+
+        public PersonsRepository(SiteDbContext context)
         {
+            _context = context;
         }
 
-        public IEnumerable<Person> GetAll()
+        public async Task<IEnumerable<Person>> GetAllAsync()
         {
-            IEnumerable<Person> persons = this.All()
-                                              .To<Person>()
-                                              .AsQueryable();
+            var persons = await this._context.Persons
+                                             .To<Person>()
+                                             .ToListAsync()
+                                             .ConfigureAwait(false);
+            return persons;
+        }
+
+        public async Task<IEnumerable<Person>> Search(bool descOrder = false, int? pageNumber = null, int? pageSize = null)
+        {
+            var query = this._context.Persons.AsQueryable();
+
+            //if (descOrder)
+            //{
+            //    query = query.OrderByDescending(p => p.AskDate);
+            //}
+            //else
+            //{
+            //    query = query.OrderBy(p => p.AskDate);
+            //}
+
+            if (pageNumber.HasValue && pageSize.HasValue)
+            {
+                int skipCount = pageSize.Value * pageNumber.Value;
+                query = query.Skip(skipCount).Take(pageSize.Value);
+            }
+
+            IEnumerable<Person> persons = await query.To<Person>()
+                                                     .ToListAsync()
+                                                     .ConfigureAwait(false);
+            return persons;
+        }
+
+        public async Task<IEnumerable<Person>> GetAllForUpdateAsync()
+        {
+            var persons = await this._context.Persons
+                                             //.Where(p => p.IsAccountDisabled == false)
+                                             .Where(p => p.ModifiedOn < DateTime.UtcNow.AddDays(-1))
+                                             .To<Person>()
+                                             .ToListAsync()
+                                             .ConfigureAwait(false);
 
             return persons;
         }
 
-        public Person GetById(int id)
+        public async Task<Person> GetByIdAsync(Guid id)
         {
-            Person person = this.All()
-                                .Where(p => p.PersonId == id)
-                                .To<Person>()
-                                .FirstOrDefault();
+            Person person = await this._context.Persons
+                                               .Where(p => p.Id == id)
+                                               .To<Person>()
+                                               .FirstOrDefaultAsync()
+                                               .ConfigureAwait(false);
 
             return person;
         }
 
-        public Person GetByName(string username)
+        public async Task<Person> GetByAccoutUserNameAsync(string username)
         {
-            Person person = this.All()
-                                .Where(p => p.Username == username)
-                                .To<Person>()
-                                .FirstOrDefault();
+            Person person = await this._context.Accounts
+                                               .Where(a => a.Username == username)
+                                               .Select(a => a.Person)
+                                               .To<Person>()
+                                               .FirstOrDefaultAsync()
+                                               .ConfigureAwait(false);
 
             return person;
         }
 
-        public Person AddOrUpdatePerson(Person inputPerson, out bool isNewPerson)
+        public async Task<Person> AddOrUpdatePersonAsync(Person inputPerson)
         {
+            bool isNewPerson;
             DAL.Person person;
-            if (inputPerson.Id == 0)
+            if (inputPerson.Id == Guid.Empty)
             {
                 person = new DAL.Person();
-                this.Add(person);
+                this._context.Persons.Add(person);
                 isNewPerson = true;
             }
             else
             {
-                person = this.GetById((object)inputPerson.Id);
+                person = await this._context.Persons.Where(p=>p.Id == inputPerson.Id)
+                                                    .FirstOrDefaultAsync()
+                                                    .ConfigureAwait(false);
                 isNewPerson = false;
             }
 
             inputPerson.Update(person);
 
-            this.Context.SaveChanges();
+            await this._context.SaveChangesAsync().ConfigureAwait(false);
 
-            Person personDTO = this.GetById(person.PersonId);
+            Person personDTO = await this.GetByIdAsync(person.Id);
             return personDTO;
         }
 
-        public PersonStatistics GetStatictics()
+        public async Task<PersonStatistics> GetStaticticsAsync()
         {
-            IQueryable<DAL.Person> persons = this.All().Where(p => p.AnswerType.IsAsked);
+            //IQueryable<DAL.Person> persons = this.All().Where(p => p.AnswerType.IsAsked);
 
-            var countDictionary = persons.GroupBy(p => new { Description = p.AnswerType.Description, Id = p.AnswerTypeId })
-                                         .Select(g => new { Key = g.Key.Description, Value = g.Count() })
-                                         .OrderBy(g => g.Key)
-                                         .ToDictionary(r => r.Key, r => r.Value);
+            //var countDictionary = persons.GroupBy(p => new { Description = p.AnswerType.Description, Id = p.AnswerTypeId })
+            //                             .Select(g => new { Key = g.Key.Description, Value = g.Count() })
+            //                             .OrderBy(g => g.Key)
+            //                             .ToDictionary(r => r.Key, r => r.Value);
 
-            IQueryable<decimal> answers = persons.Where(p => p.AnswerConverted.HasValue)
-                                                 .Select(p => p.AnswerConverted.Value);
+            //IQueryable<decimal> answers = persons.Where(p => p.AnswerConverted.HasValue)
+            //                                     .Select(p => p.AnswerConverted.Value);
 
-            var statistics = new PersonStatistics()
-            {
-                CountDictionary = countDictionary,
-                Average = answers.Average(),
-                Min = answers.Min(),
-                Max = answers.Max(),
-                TotalCount = this.All().Count(),
-                Disabled = persons.Count(p => p.IsAccountDisabled),
-            };
+            //var statistics = new PersonStatistics()
+            //{
+            //    CountDictionary = countDictionary,
+            //    Average = answers.Average(),
+            //    Min = answers.Min(),
+            //    Max = answers.Max(),
+            //    TotalCount = this.All().Count(),
+            //    Disabled = persons.Count(p => p.IsAccountDisabled),
+            //};
 
-            return statistics;
+            //return statistics;
+
+            return new PersonStatistics();
         }
     }
 }

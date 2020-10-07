@@ -1,61 +1,81 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Mihaylov.Common.Database;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using Mihaylov.Common.Mapping;
 using Mihaylov.Site.Data.Interfaces;
 using Mihaylov.Site.Data.Models;
-using Mihaylov.Site.Database.Interfaces;
+using Mihaylov.Site.Database;
 using DAL = Mihaylov.Site.Database.Models;
 
 namespace Mihaylov.Site.Data.Repositories
 {
-    public class PhrasesRepository : GenericRepository<DAL.Phrase, ISiteDbContext>, IPhrasesRepository
+    public class PhrasesRepository : IPhrasesRepository
     {
-        public PhrasesRepository(ISiteDbContext context)
-            : base(context)
+        private readonly SiteDbContext _context;
+
+        public PhrasesRepository(SiteDbContext context)
         {
+            this._context = context;
         }
 
-        public IEnumerable<Phrase> GetAll()
+
+        public async Task<IEnumerable<Phrase>> GetAllAsync()
         {
-            IEnumerable<Phrase> phrases = this.All()
-                                              .OrderBy(p => p.OrderId)
-                                              .To<Phrase>()
-                                              .AsQueryable();
+            var phrases = await this._context.Phrases
+                                             .OrderBy(p => p.OrderId)
+                                             .To<Phrase>()
+                                             .ToListAsync()
+                                             .ConfigureAwait(false);
             return phrases;
         }
 
-        public Phrase GetById(int id)
+        public async Task<Phrase> GetByIdAsync(int id)
         {
-            Phrase phrase = this.All()
-                                .Where(p => p.PhraseId == id)
+            Phrase phrase = await this._context.Phrases
+                                .Where(p => p.Id == id)
                                 .To<Phrase>()
-                                .FirstOrDefault();
+                                .FirstOrDefaultAsync()
+                                .ConfigureAwait(false);
             return phrase;
         }
 
-        public Phrase AddOrUpdatePhrase(Phrase inputPhrase, out bool isNew)
+        public async Task<Phrase> AddOrUpdatePhraseAsync(Phrase inputPhrase)
         {
             DAL.Phrase phrase;
+            bool isNew;
 
             if (inputPhrase.Id == 0)
             {
                 phrase = new DAL.Phrase();
-                this.Add(phrase);
+                this._context.Phrases.Add(phrase);
                 isNew = true;
             }
             else
             {
-                phrase = base.GetById(inputPhrase.Id);
+                phrase = await this._context.Phrases.Where(a => a.Id == inputPhrase.Id)
+                                                    .FirstOrDefaultAsync()
+                                                    .ConfigureAwait(false);
                 isNew = false;
             }
 
             inputPhrase.Update(phrase);
 
-            this.Context.SaveChanges();
+            await this._context.SaveChangesAsync().ConfigureAwait(false);
 
-            Phrase phraseDTO = this.GetById(phrase.PhraseId);
+            Phrase phraseDTO = await this.GetByIdAsync(phrase.Id).ConfigureAwait(false);
             return phraseDTO;
+        }
+
+        public async Task<int> GetMaxOrderId()
+        {
+            int maxOrderId = await this._context.Phrases
+                                                .Select(p => p.OrderId)
+                                                .DefaultIfEmpty()
+                                                .MaxAsync()
+                                                .ConfigureAwait(false);
+
+            return maxOrderId;
         }
     }
 }

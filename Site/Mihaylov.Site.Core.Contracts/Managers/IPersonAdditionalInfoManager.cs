@@ -24,5 +24,7 @@ namespace Mihaylov.Site.Core.Interfaces
         IEnumerable<Country> GetAllCountries();
         Country GetCountryById(int id);
         Country GetCountryByName(string name);
+
+        IEnumerable<State> GetAllStates();
     }
 }
