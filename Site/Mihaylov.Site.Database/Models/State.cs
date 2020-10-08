@@ -6,6 +6,8 @@ namespace Mihaylov.Site.Database.Models
     {
         public int CountryId { get; set; }
 
+        public string StateCode { get; set; }
+
         public virtual Country Country { get; set; }
     }
 }

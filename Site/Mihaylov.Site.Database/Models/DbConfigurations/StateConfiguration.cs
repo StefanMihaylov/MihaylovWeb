@@ -14,6 +14,7 @@ namespace Mihaylov.Site.Database.Models.DbConfigurations
         {
             base.Configure(builder);
 
+            builder.Property(s => s.StateCode).HasMaxLength(2);
             builder.HasOne(t => t.Country).WithMany().HasForeignKey(t => t.CountryId).OnDelete(DeleteBehavior.Restrict);
         }
     }

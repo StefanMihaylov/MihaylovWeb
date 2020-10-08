@@ -16,6 +16,7 @@ namespace Mihaylov.Site.Data.Models
                     Id = country.Id,
                     Name = country.Name,
                     Description = country.Description,
+                    CountryCode = country.CountryCode,
                 };
             }
         }
@@ -32,10 +33,13 @@ namespace Mihaylov.Site.Data.Models
                 Id = countryDAL.Id,
                 Name = countryDAL.Name,
                 Description = countryDAL.Description,
+                CountryCode = countryDAL.CountryCode,
             };
 
             return countryDTO;
         }
+
+        public string CountryCode { get; set; }
 
         public DAL.Country Create()
         {
@@ -44,6 +48,7 @@ namespace Mihaylov.Site.Data.Models
                 Id = this.Id,
                 Name = this.Name,
                 Description = this.Description,
+                CountryCode = this.CountryCode,
             };
 
             return country;

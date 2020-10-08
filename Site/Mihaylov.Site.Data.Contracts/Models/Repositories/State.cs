@@ -17,10 +17,13 @@ namespace Mihaylov.Site.Data.Models
                     Name = state.Name,
                     Description = state.Description,
                     CountryId = state.CountryId,
+                    StateCode = state.StateCode,
                 };
             }
         }
 
         public int CountryId { get; set; }
+
+        public string StateCode { get; set; }
     }    
 }

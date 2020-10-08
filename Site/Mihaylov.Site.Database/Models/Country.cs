@@ -4,5 +4,6 @@ namespace Mihaylov.Site.Database.Models
 {
     public class Country : LookupTable
     {
+        public string CountryCode { get; set; }
     }
 }

@@ -64,7 +64,7 @@ namespace Mihaylov.Site.Database
 
             modelBuilder.ApplyConfiguration(new DateOfBirthTypeConfiguration());
             modelBuilder.ApplyConfiguration(new LookupTableConfiguration<AccountType>(25));
-            modelBuilder.ApplyConfiguration(new LookupTableConfiguration<Country>(50));
+            modelBuilder.ApplyConfiguration(new CountryConfiguration());
             modelBuilder.ApplyConfiguration(new StateConfiguration());
             modelBuilder.ApplyConfiguration(new LookupTableConfiguration<EthnicityType>(25));
             modelBuilder.ApplyConfiguration(new LookupTableConfiguration<OrientationType>(25));
