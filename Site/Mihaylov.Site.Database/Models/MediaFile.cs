@@ -2,11 +2,17 @@
 
 namespace Mihaylov.Site.Database.Models
 {
-    public class Media
+    public class MediaFile
     {
         public Guid Id { get; set; }
 
-        public Guid SourceAccountId { get; set; }
+        public Guid AccountId { get; set; }
+
+        public virtual Account Account { get; set; }
+
+        public int SourceId { get; set; }
+
+        public virtual AccountType Source { get; set; }
 
         public byte[] Data { get; set; }
 

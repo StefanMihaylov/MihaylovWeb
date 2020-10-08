@@ -22,6 +22,8 @@ namespace Mihaylov.Site.Database
 
         public DbSet<Account> Accounts { get; set; }
 
+        public DbSet<MediaFile> MediaFiles { get; set; }
+
         public DbSet<Phrase> Phrases { get; set; }
 
 
@@ -60,6 +62,7 @@ namespace Mihaylov.Site.Database
         {
             modelBuilder.ApplyConfiguration(new PersonConfiguration());
             modelBuilder.ApplyConfiguration(new AccountConfiguration());
+            modelBuilder.ApplyConfiguration(new MediaFileConfiguration());
             modelBuilder.ApplyConfiguration(new PhraseConfiguration());
 
             modelBuilder.ApplyConfiguration(new DateOfBirthTypeConfiguration());
