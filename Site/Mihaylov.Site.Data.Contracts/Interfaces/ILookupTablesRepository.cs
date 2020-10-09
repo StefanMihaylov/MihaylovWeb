@@ -9,5 +9,7 @@ namespace Mihaylov.Site.Data.Interfaces
         Task<IEnumerable<Ethnicity>> GetAllEthnicitiesAsync();
 
         Task<IEnumerable<Orientation>> GetAllOrientationsAsync();
+
+        Task<IEnumerable<AccountType>> GetAllAccountTypesAsync();
     }
 }

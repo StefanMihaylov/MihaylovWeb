@@ -30,6 +30,9 @@ namespace Mihaylov.Site.Core.Managers
         private readonly Lazy<ConcurrentDictionary<int, Orientation>> orientationsById;
         private readonly Lazy<ConcurrentDictionary<string, Orientation>> orientationsByName;
 
+        protected readonly Lazy<ConcurrentDictionary<int, AccountType>> accountTypesById;
+        protected readonly Lazy<ConcurrentDictionary<string, AccountType>> accountTypesByName;
+
         private readonly Lazy<ConcurrentDictionary<int, Unit>> unitsById;
         private readonly Lazy<ConcurrentDictionary<string, Unit>> unitsByName;
 
@@ -43,7 +46,7 @@ namespace Mihaylov.Site.Core.Managers
             ILocationsRepository locationsRepository, 
             ILoggerFactory loggerFactory, IMessageBus messageBus)
         {
-            ParameterValidation.IsNotNull(logger, nameof(logger));
+            ParameterValidation.IsNotNull(loggerFactory, nameof(loggerFactory));
             ParameterValidation.IsNotNull(messageBus, nameof(messageBus));
 
             this._lookupTablesRepository = lookupTablesRepository;
@@ -97,6 +100,19 @@ namespace Mihaylov.Site.Core.Managers
                 return new ConcurrentDictionary<string, Orientation>(orientations, StringComparer.OrdinalIgnoreCase);
             });
 
+            var accountTypeList = this._lookupTablesRepository.GetAllAccountTypesAsync().GetAwaiter().GetResult();
+
+            this.accountTypesById = new Lazy<ConcurrentDictionary<int, AccountType>>(() =>
+            {
+                IDictionary<int, AccountType> accoutTypes = accountTypeList.ToDictionary(o => o.Id);
+                return new ConcurrentDictionary<int, AccountType>(accoutTypes);
+            });
+
+            this.accountTypesByName = new Lazy<ConcurrentDictionary<string, AccountType>>(() =>
+            {
+                IDictionary<string, AccountType> accoutTypes = accountTypeList.ToDictionary(o => o.Name);
+                return new ConcurrentDictionary<string, AccountType>(accoutTypes, StringComparer.OrdinalIgnoreCase);
+            });
 
             IEnumerable<Unit> unitList = new List<Unit>();
 
@@ -300,6 +316,40 @@ namespace Mihaylov.Site.Core.Managers
             else
             {
                 throw new ApplicationException($"Orientation with name: {name} was not found");
+            }
+        }
+
+        #endregion
+
+        #region AccountType
+
+        public IEnumerable<AccountType> GetAllAccountTypes()
+        {
+            IEnumerable<AccountType> accountTypes = this.accountTypesById.Value.Values;
+            return accountTypes;
+        }
+
+        public AccountType GetAccountTypeById(int id)
+        {
+            if (this.accountTypesById.Value.TryGetValue(id, out AccountType accountType))
+            {
+                return accountType;
+            }
+            else
+            {
+                throw new ApplicationException($"AccountType with id: {id} was not found");
+            }
+        }
+
+        public AccountType GetAccountTypeByName(string name)
+        {
+            if (this.accountTypesByName.Value.TryGetValue(name.Trim(), out AccountType accountType))
+            {
+                return accountType;
+            }
+            else
+            {
+                throw new ApplicationException($"AccountType with name: {name} was not found");
             }
         }
 

@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Mihaylov.Common.Mapping;
 using Mihaylov.Site.Data.Interfaces;
 using Mihaylov.Site.Data.Models;
 using Mihaylov.Site.Database;
@@ -34,6 +35,15 @@ namespace Mihaylov.Site.Data.Repositories
                                                 .ToListAsync()
                                                 .ConfigureAwait(false);
             return preference;
+        }
+
+        public async Task<IEnumerable<AccountType>> GetAllAccountTypesAsync()
+        {
+            var accountTypes = await this._context.AccountTypes
+                                                .To<AccountType>()
+                                                .ToListAsync()
+                                                .ConfigureAwait(false);
+            return accountTypes;
         }
 
         //public async Task<IEnumerable<Unit>> GetAllUnitsAsync()

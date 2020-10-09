@@ -17,6 +17,10 @@ namespace Mihaylov.Site.Core.Interfaces
         Orientation GetOrientationById(int id);
         Orientation GetOrientationByName(string name);
 
+        IEnumerable<AccountType> GetAllAccountTypes();
+        AccountType GetAccountTypeById(int id);
+        AccountType GetAccountTypeByName(string name);
+
         IEnumerable<Unit> GetAllUnits();
         Unit GetUnitById(int id);
         Unit GetUnitByName(string name);

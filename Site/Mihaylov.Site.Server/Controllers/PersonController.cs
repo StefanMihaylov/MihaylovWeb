@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Mihaylov.Site.Core.Interfaces;
 
 namespace Mihaylov.Site.Server.Controllers
 {
@@ -11,10 +12,18 @@ namespace Mihaylov.Site.Server.Controllers
     [ApiController]
     public class PersonController : ControllerBase
     {
-        [HttpGet]
-        public async Task<IActionResult> GetPerson()
+        private readonly IPersonAdditionalInfoManager _additionalInfo;
+
+        public PersonController(IPersonAdditionalInfoManager additionalInfo)
         {
-            return Ok();
+            _additionalInfo = additionalInfo;
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAccountTypes()
+        {
+            var accountTypes = _additionalInfo.GetAllAccountTypes();
+            return Ok(accountTypes);
         }
     }
 }

@@ -15,10 +15,11 @@ namespace Mihaylov.Site.Core
     public static class HostConfigurations
     {
         public static IServiceCollection AddSiteCore(this IServiceCollection services, 
-            Action<ConnectionStringSettings> connectionString)
+            Action<ConnectionStringSettings> connectionString, Action<SiteCoreOptions> siteOption)
         {
-            services.AddSiteRepositories(connectionString);
+            services.AddSiteRepositories(connectionString, ServiceLifetime.Singleton);
 
+            services.Configure<SiteCoreOptions>(siteOption);
             services.AddSingleton<IMessageBus, SimpleMessageBus>();
 
             services.AddSingleton<IPersonsManager, PersonsManager>();
@@ -30,8 +31,8 @@ namespace Mihaylov.Site.Core
             services.AddScoped<IPhrasesWriter, PhrasesWriter>();
 
             services.AddScoped<ICsQueryWrapper, CsQueryWrapper>();
-
-            services.AddScoped<ISiteHelper, SiteHelper>(); //.WithParameter("url", this.url);
+            
+            services.AddScoped<ISiteHelper, SiteHelper>();
 
             return services;
         }

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using Mihaylov.Site.Core;
 using Mihaylov.Site.Core.CsQuery;
 using Mihaylov.Site.Core.Interfaces;
 using Mihaylov.Site.Core.Models;
@@ -23,12 +25,12 @@ namespace Mihaylov.Core.Helpers.Site
         private readonly ICsQueryWrapper csQueryWrapper;
         private readonly ILogger logger;
 
-        public SiteHelper(string url, ICountriesWriter countriesWriter,
+        public SiteHelper(IOptions<SiteCoreOptions> options, ICountriesWriter countriesWriter,
             IPersonAdditionalInfoManager personAdditionalManager, ILoggerFactory loggerFactory,
             IPersonsRepository personsRepository, IPersonsManager personsManager,
             IPersonsWriter personsWriter, ICsQueryWrapper csQueryWrapper)
         {
-            this.url = url;
+            this.url = options.Value.SiteUrl;
             this.personAdditionalManager = personAdditionalManager;
             this.countriesWriter = countriesWriter;
             this.logger = loggerFactory.CreateLogger(this.GetType().Name);

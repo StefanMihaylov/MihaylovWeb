@@ -1,4 +1,5 @@
 using System;
+using System.Reflection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -34,14 +35,17 @@ namespace Mihaylov.Site.Server
 
             services.AddControllers();
 
-            services.AddDICommon()
-                    .AddSiteDatabase(opt =>
+            services.AddMapping(Assembly.GetExecutingAssembly(), "Mihaylov.Site.Data.Contracts")
+                    .AddCommon(ServiceLifetime.Singleton)
+                    .AddSiteCore(opt =>
                     {
                         opt.ServerAddress = Environment.GetEnvironmentVariable("DB_Site_Address") ?? "192.168.1.7";
                         opt.DatabaseName = Environment.GetEnvironmentVariable("DB_Site_Name") ?? "Mihaylov_SiteDb";
                         opt.UserName = Environment.GetEnvironmentVariable("DB_Site_UserName");
                         opt.Password = Environment.GetEnvironmentVariable("DB_Site_Password");
-                    });
+                    },
+                    siteOpt => siteOpt.SiteUrl = "http://"
+                    );
 
             services.MigrateDatabase<SiteDbContext>();
         }

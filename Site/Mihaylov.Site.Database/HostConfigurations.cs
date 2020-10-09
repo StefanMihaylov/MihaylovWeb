@@ -7,13 +7,15 @@ namespace Mihaylov.Site.Database
 {
     public static class HostConfigurations
     {
-        public static IServiceCollection AddSiteDatabase(this IServiceCollection services, Action<ConnectionStringSettings> connectionString)
+        public static IServiceCollection AddSiteDatabase(this IServiceCollection services, 
+            Action<ConnectionStringSettings> connectionString, ServiceLifetime serviceLifetime)
         {
             var connectionStringSettings = new ConnectionStringSettings();
             connectionString(connectionStringSettings);
 
             services.AddDbContext<SiteDbContext>(options =>
-                        options.UseSqlServer(connectionStringSettings.GetConnectionString()));
+                        options.UseSqlServer(connectionStringSettings.GetConnectionString()),
+                        serviceLifetime);
 
             return services;
         }

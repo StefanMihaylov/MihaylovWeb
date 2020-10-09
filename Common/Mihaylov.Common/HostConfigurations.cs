@@ -1,13 +1,43 @@
 ﻿using System.Collections.Generic;
+using System.Reflection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
+using Mihaylov.Common.Databases.Interfaces;
+using Mihaylov.Common.Databases.Services;
+using Mihaylov.Common.Infrastructure.Interfaces;
+using Mihaylov.Common.Infrastructure.Services;
+using Mihaylov.Common.Mapping;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace Mihaylov.Common
 {
     public static class HostConfigurations
     {
+        public static IServiceCollection AddMapping(this IServiceCollection services, Assembly currentAssembly, params string[] assemblies)
+        {
+            var autoMapper = new AutoMapperConfigurator(currentAssembly, assemblies);
+            autoMapper.Execute();
+
+            return services;
+        }
+
+        public static IServiceCollection AddCommon(this IServiceCollection services, ServiceLifetime lifetime = ServiceLifetime.Scoped)
+        {
+            services
+                .Add<ICurrentUserService, CurrentUserService>(lifetime)
+                .Add<IAuditService, AuditService>(lifetime);
+
+            return services;
+        }
+        
+        public static IServiceCollection Add<TInterface, TImplementation>(this IServiceCollection services, ServiceLifetime lifetime)
+        {
+            services.Add(new ServiceDescriptor(typeof(TInterface), typeof(TImplementation), lifetime));
+
+            return services;
+        }
+
         public static void AddSwaggerAuthentication(this SwaggerGenOptions options, string authenticationScheme)
         {
             options.AddSecurityDefinition(authenticationScheme, new OpenApiSecurityScheme

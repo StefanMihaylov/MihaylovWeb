@@ -9,7 +9,7 @@
 
     public class AutoMapperConfigurator
     {
-        private ICollection<Assembly> assemblies;
+        private ICollection<Assembly> _assemblyList;
 
         public static MapperConfiguration Configuration { get; private set; }
 
@@ -23,11 +23,11 @@
 
         public AutoMapperConfigurator(Assembly currentAssembly, params string[] assemblies)
         {
-            this.assemblies = new List<Assembly>();
+            this._assemblyList = new List<Assembly>();
 
             if (currentAssembly != null)
             {
-                this.assemblies.Add(currentAssembly);
+                this._assemblyList.Add(currentAssembly);
             }
 
             if (assemblies != null && assemblies.Length > 0)
@@ -39,7 +39,7 @@
 
                     if (assembly != null)
                     {
-                        this.assemblies.Add(assembly);
+                        this._assemblyList.Add(assembly);
                     }
                 }
             }
@@ -51,7 +51,7 @@
                 configuration =>
                 {
                     List<Type> types = new List<Type>();
-                    foreach (var assembly in this.assemblies)
+                    foreach (var assembly in this._assemblyList)
                     {
                         types.AddRange(assembly.GetExportedTypes());
                     }
