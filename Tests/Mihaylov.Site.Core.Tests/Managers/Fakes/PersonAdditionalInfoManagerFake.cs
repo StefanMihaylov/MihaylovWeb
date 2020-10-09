@@ -7,7 +7,7 @@ using Mihaylov.Site.Data.Models;
 
 namespace Mihaylov.Site.Core.Tests.Managers
 {
-    internal class PersonAdditionalInfoManagerFake : PersonAdditionalInfoManager
+    internal class PersonAdditionalInfoManagerFake : CollectionsManager
     {
         public PersonAdditionalInfoManagerFake(
             ILookupTablesRepository lookupTablesRepository,

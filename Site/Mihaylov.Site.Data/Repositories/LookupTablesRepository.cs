@@ -21,7 +21,7 @@ namespace Mihaylov.Site.Data.Repositories
         public async Task<IEnumerable<Ethnicity>> GetAllEthnicitiesAsync()
         {
             var ethnicities = await this._context.EthnicityTypes
-                                                 .Select(Ethnicity.FromDb)
+                                                 .To<Ethnicity>()
                                                  .ToListAsync()
                                                  .ConfigureAwait(false);
 
@@ -31,7 +31,7 @@ namespace Mihaylov.Site.Data.Repositories
         public async Task<IEnumerable<Orientation>> GetAllOrientationsAsync()
         {
             var preference = await this._context.OrientationTypes
-                                                .Select(Orientation.FromDb)
+                                                .To<Orientation>()
                                                 .ToListAsync()
                                                 .ConfigureAwait(false);
             return preference;

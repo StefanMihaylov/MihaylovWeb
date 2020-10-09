@@ -17,7 +17,7 @@ namespace Mihaylov.Core.Helpers.Site
     {
         private readonly string url;
 
-        private readonly IPersonAdditionalInfoManager personAdditionalManager;
+        private readonly ICollectionsManager personAdditionalManager;
         private readonly ICountriesWriter countriesWriter;
         private readonly IPersonsRepository personsRepository;
         private readonly IPersonsManager personsManager;
@@ -26,7 +26,7 @@ namespace Mihaylov.Core.Helpers.Site
         private readonly ILogger logger;
 
         public SiteHelper(IOptions<SiteCoreOptions> options, ICountriesWriter countriesWriter,
-            IPersonAdditionalInfoManager personAdditionalManager, ILoggerFactory loggerFactory,
+            ICollectionsManager personAdditionalManager, ILoggerFactory loggerFactory,
             IPersonsRepository personsRepository, IPersonsManager personsManager,
             IPersonsWriter personsWriter, ICsQueryWrapper csQueryWrapper)
         {

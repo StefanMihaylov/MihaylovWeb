@@ -8,19 +8,19 @@ using Mihaylov.Site.Core.Interfaces;
 
 namespace Mihaylov.Site.Server.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[action]")]
     [ApiController]
     public class PersonController : ControllerBase
     {
-        private readonly IPersonAdditionalInfoManager _additionalInfo;
+        private readonly ICollectionsManager _additionalInfo;
 
-        public PersonController(IPersonAdditionalInfoManager additionalInfo)
+        public PersonController(ICollectionsManager additionalInfo)
         {
             _additionalInfo = additionalInfo;
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAccountTypes()
+        public IActionResult GetAccountTypes()
         {
             var accountTypes = _additionalInfo.GetAllAccountTypes();
             return Ok(accountTypes);

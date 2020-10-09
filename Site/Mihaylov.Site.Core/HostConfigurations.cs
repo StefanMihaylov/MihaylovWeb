@@ -23,7 +23,7 @@ namespace Mihaylov.Site.Core
             services.AddSingleton<IMessageBus, SimpleMessageBus>();
 
             services.AddSingleton<IPersonsManager, PersonsManager>();
-            services.AddSingleton<IPersonAdditionalInfoManager, PersonAdditionalInfoManager>();
+            services.AddSingleton<ICollectionsManager, CollectionsManager>();
             services.AddSingleton<IPhrasesManager, PhrasesManager>();
 
             services.AddScoped<ICountriesWriter, CountriesWriter>();

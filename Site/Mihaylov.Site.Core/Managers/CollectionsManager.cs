@@ -13,7 +13,7 @@ using Mihaylov.Site.Data.Models;
 
 namespace Mihaylov.Site.Core.Managers
 {
-    public class PersonAdditionalInfoManager : IPersonAdditionalInfoManager
+    public class CollectionsManager : ICollectionsManager
     {
         protected readonly ILookupTablesRepository _lookupTablesRepository;
         protected readonly ILocationsRepository _locationsRepository;
@@ -39,11 +39,11 @@ namespace Mihaylov.Site.Core.Managers
         protected readonly ConcurrentDictionary<int, Country> countriesById;
         protected readonly ConcurrentDictionary<string, Country> countriesByName;
 
-        protected readonly Lazy<ConcurrentDictionary<int, State>> statesById;
+        protected readonly Lazy<ConcurrentDictionary<int, IEnumerable<State>>> statesById;
 
-        public PersonAdditionalInfoManager(
+        public CollectionsManager(
             ILookupTablesRepository lookupTablesRepository,
-            ILocationsRepository locationsRepository, 
+            ILocationsRepository locationsRepository,
             ILoggerFactory loggerFactory, IMessageBus messageBus)
         {
             ParameterValidation.IsNotNull(loggerFactory, nameof(loggerFactory));
@@ -74,7 +74,7 @@ namespace Mihaylov.Site.Core.Managers
             var ethnicityList = this._lookupTablesRepository.GetAllEthnicitiesAsync().GetAwaiter().GetResult();
 
             this.ethnicitiesById = new Lazy<ConcurrentDictionary<int, Ethnicity>>(() =>
-            {                
+            {
                 IDictionary<int, Ethnicity> ethnicities = ethnicityList.ToDictionary(e => e.Id);
                 return new ConcurrentDictionary<int, Ethnicity>(ethnicities);
             });
@@ -122,24 +122,26 @@ namespace Mihaylov.Site.Core.Managers
                 return new ConcurrentDictionary<int, Unit>(units);
             });
 
-            this.unitsByName = new Lazy<ConcurrentDictionary<string, Unit>>(()=> 
+            this.unitsByName = new Lazy<ConcurrentDictionary<string, Unit>>(() =>
             {
                 IDictionary<string, Unit> units = unitList.ToDictionary(u => u.Name);
                 return new ConcurrentDictionary<string, Unit>(units, StringComparer.OrdinalIgnoreCase);
-            }); 
+            });
 
+            var countryList = this._locationsRepository.GetAllCountriesAsync().GetAwaiter().GetResult();
+            
+            var countries = countryList.ToDictionary(u => u.Id);
+            this.countriesById = new ConcurrentDictionary<int, Country>(countries);
 
-            this.countriesById = new ConcurrentDictionary<int, Country>();
             this.countriesByName = new ConcurrentDictionary<string, Country>(StringComparer.OrdinalIgnoreCase);
 
             this.messageBus.Attach(typeof(Country), this.HandleMessageCountry);
 
-            var stateList = this._locationsRepository.GetAllStatesAsync().GetAwaiter().GetResult();
+            var stateDictionary = this._locationsRepository.GetAllStatesAsync().GetAwaiter().GetResult();
 
-            this.statesById = new Lazy<ConcurrentDictionary<int, State>>(() =>
+            this.statesById = new Lazy<ConcurrentDictionary<int, IEnumerable<State>>>(() =>
             {
-                IDictionary<int, State> units = stateList.ToDictionary(u => u.Id);
-                return new ConcurrentDictionary<int, State>(units);
+                return new ConcurrentDictionary<int, IEnumerable<State>>(stateDictionary);
             });
         }
 
@@ -245,10 +247,16 @@ namespace Mihaylov.Site.Core.Managers
 
         #region State
 
-        public IEnumerable<State> GetAllStates()
+        public IEnumerable<State> GetAllStatesByCountryId(int countryId)
         {
-            IEnumerable<State> states = this.statesById.Value.Values;
-            return states;
+            if (this.statesById.Value.TryGetValue(countryId, out IEnumerable<State> states))
+            {
+                return states;
+            }
+            else
+            {
+                return new List<State>();
+            }
         }
 
         #endregion

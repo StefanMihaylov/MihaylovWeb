@@ -14,6 +14,6 @@ namespace Mihaylov.Site.Data.Interfaces
 
         Task<Country> GetCountryByNameAsync(string name);
 
-        Task<IEnumerable<State>> GetAllStatesAsync();
+        Task<IDictionary<int, IEnumerable<State>>> GetAllStatesAsync();
     }
 }

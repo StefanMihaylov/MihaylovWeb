@@ -3,7 +3,7 @@ using Mihaylov.Site.Data.Models;
 
 namespace Mihaylov.Site.Core.Interfaces
 {
-    public interface IPersonAdditionalInfoManager
+    public interface ICollectionsManager
     {
         IEnumerable<AnswerType> GetAllAnswerTypes();
         AnswerType GetAnswerTypeById(int id);
@@ -29,6 +29,6 @@ namespace Mihaylov.Site.Core.Interfaces
         Country GetCountryById(int id);
         Country GetCountryByName(string name);
 
-        IEnumerable<State> GetAllStates();
+        IEnumerable<State> GetAllStatesByCountryId(int countryId);
     }
 }

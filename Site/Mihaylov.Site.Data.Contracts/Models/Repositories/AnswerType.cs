@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Linq.Expressions;
+using Mihaylov.Common.Mapping;
 using Mihaylov.Site.Data.Models.Base;
 using DAL = Mihaylov.Site.Database.Models;
 
 namespace Mihaylov.Site.Data.Models
 {
-    public class AnswerType: LookupTable
+    public class AnswerType : LookupTable, IMapFrom<DAL.AnswerType>
     {
         public static Expression<Func<DAL.AnswerType, AnswerType>> FromDb
         {
