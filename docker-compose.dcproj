@@ -5,13 +5,8 @@
     <DockerTargetOS>Linux</DockerTargetOS>
     <ProjectGuid>2bdc2ae1-c9f0-475d-9f05-8c62bc58a15f</ProjectGuid>
     <DockerLaunchAction>LaunchBrowser</DockerLaunchAction>
-    <DockerServiceUrl>{Scheme}://localhost:{ServicePort}/{Scheme}://{ServiceHost}:{ServicePort}</DockerServiceUrl>
-    <DockerServiceName>mihaylov.webui</DockerServiceName>
   </PropertyGroup>
   <ItemGroup>
-    <None Include="docker-compose.override.yml">
-      <DependentUpon>docker-compose.yml</DependentUpon>
-    </None>
     <None Include="docker-compose.yml" />
     <None Include=".dockerignore" />
     <None Include="docker-compose_all.txt" />
