@@ -54,7 +54,7 @@ namespace Mihaylov.WebUI
 
             app.Use(async (context, next) =>
             {
-                context.Response.Headers.Add("X-Frame-Options", "SAMEORIGIN"); // SAMEORIGIN, DENY
+                context.Response.Headers.Add("X-Frame-Options", "ALLOW-FROM http://192.168.1.7:8088"); // SAMEORIGIN, DENY
                 await next();
             });
 
