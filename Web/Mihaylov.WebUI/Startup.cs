@@ -24,11 +24,6 @@ namespace Mihaylov.WebUI
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
-
-            services.AddAntiforgery(options =>
-            {
-                options.SuppressXFrameOptionsHeader = true;
-            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -51,12 +46,6 @@ namespace Mihaylov.WebUI
             app.UseRouting();
 
             app.UseAuthorization();
-
-            app.Use(async (context, next) =>
-            {
-                context.Response.Headers.Add("X-Frame-Options", "ALLOW-FROM http://192.168.1.7:8088"); // SAMEORIGIN, DENY
-                await next();
-            });
 
             app.UseEndpoints(endpoints =>
             {
