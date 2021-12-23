@@ -7,17 +7,24 @@ using Microsoft.Extensions.DependencyInjection;
 using Mihaylov.Common.Databases;
 using Mihaylov.Users.Data.Database;
 using Mihaylov.Users.Data.Database.Models;
-using Mihaylov.Users.Data.Repository;
-using Mihaylov.Users.Data.Repository.Helpers;
+using Mihaylov.Users.Data.Helpers;
+using Mihaylov.Users.Data.Interfaces;
 
 namespace Mihaylov.Users.Data
 {
     public static class HostConfigurations
     {
-        public static IServiceCollection AddUserDatabase(this IServiceCollection services, Action<ConnectionStringSettings> connectionString)
+        public static IServiceCollection AddUserDatabase(this IServiceCollection services, Action<ConnectionStringSettings> connectionString, Action<PasswordOptions> passwordOptions)
         {
             var connectionStringSettings = new ConnectionStringSettings();
             connectionString(connectionStringSettings);
+
+            var password = new PasswordOptions();
+
+            if(passwordOptions != null)
+            {
+                passwordOptions(password);
+            }
 
             services.AddScoped<IUsersRepository, UsersRepository>();
 
@@ -27,11 +34,7 @@ namespace Mihaylov.Users.Data
             services.AddIdentity<User, IdentityRole>(options =>
                         {
                             options.User.RequireUniqueEmail = true;
-
-                            options.Password.RequireNonAlphanumeric = false;
-                            options.Password.RequireUppercase = false;
-                            options.Password.RequireDigit = false;
-                            options.Password.RequiredLength = 6;
+                            options.Password = password;
                         })
                     //.AddRoles<IdentityRole>()
                     .AddEntityFrameworkStores<MihaylovUsersDbContext>();
@@ -39,12 +42,12 @@ namespace Mihaylov.Users.Data
             return services;
         }
 
-        public static IServiceCollection AddJwtAuthentication(this IServiceCollection services, Action<AppUserSettings> settings)
+        public static IServiceCollection AddJwtAuthentication(this IServiceCollection services, Action<TokenSettings> settings)
         {
-            services.Configure<AppUserSettings>(settings);
+            services.Configure<TokenSettings>(settings);
             services.AddScoped<ITokenHelper, TokenHelper>();
 
-            using (ServiceProvider provider = GetServiceProvider(services))
+            using (var provider = GetServiceProvider(services))
             {
                 ITokenHelper tokenHelper = provider.GetRequiredService<ITokenHelper>();
 

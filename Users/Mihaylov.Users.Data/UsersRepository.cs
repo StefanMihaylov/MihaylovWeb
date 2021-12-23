@@ -6,11 +6,11 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Mihaylov.Users.Data.Database.Models;
-using Mihaylov.Users.Data.Repository.Helpers;
+using Mihaylov.Users.Data.Interfaces;
 using Mihaylov.Users.Models.Requests;
 using Mihaylov.Users.Models.Responses;
 
-namespace Mihaylov.Users.Data.Repository
+namespace Mihaylov.Users.Data
 {
     public class UsersRepository : IUsersRepository
     {

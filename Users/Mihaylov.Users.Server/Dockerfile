@@ -1,16 +1,16 @@
 #See https://aka.ms/containerfastmode to understand how Visual Studio uses this Dockerfile to build your images for faster debugging.
 
-FROM mcr.microsoft.com/dotnet/core/aspnet:3.1-buster-slim AS base
+FROM mcr.microsoft.com/dotnet/aspnet:5.0 AS base
 WORKDIR /app
 EXPOSE 80
 EXPOSE 443
 
-FROM mcr.microsoft.com/dotnet/core/sdk:3.1-buster AS build
+FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build
 WORKDIR /src
 COPY ["Users/Mihaylov.Users.Server/Mihaylov.Users.Server.csproj", "Users/Mihaylov.Users.Server/"]
 COPY ["Users/Mihaylov.Users.Data/Mihaylov.Users.Data.csproj", "Users/Mihaylov.Users.Data/"]
-COPY ["Common/Mihaylov.Common.Core/Mihaylov.Common.Core.csproj", "Common/Mihaylov.Common.Core/"]
 COPY ["Users/Mihaylov.Users.Models/Mihaylov.Users.Models.csproj", "Users/Mihaylov.Users.Models/"]
+COPY ["Common/Mihaylov.Common/Mihaylov.Common.csproj", "Common/Mihaylov.Common/"]
 RUN dotnet restore "Users/Mihaylov.Users.Server/Mihaylov.Users.Server.csproj"
 COPY . .
 WORKDIR "/src/Users/Mihaylov.Users.Server"

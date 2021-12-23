@@ -43,20 +43,17 @@ namespace Mihaylov.Site.Data.Repositories
         public async Task<Phrase> AddOrUpdatePhraseAsync(Phrase inputPhrase)
         {
             DAL.Phrase phrase;
-            bool isNew;
 
             if (inputPhrase.Id == 0)
             {
                 phrase = new DAL.Phrase();
                 this._context.Phrases.Add(phrase);
-                isNew = true;
             }
             else
             {
                 phrase = await this._context.Phrases.Where(a => a.Id == inputPhrase.Id)
                                                     .FirstOrDefaultAsync()
                                                     .ConfigureAwait(false);
-                isNew = false;
             }
 
             inputPhrase.Update(phrase);

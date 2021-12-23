@@ -80,6 +80,5 @@ namespace Mihaylov.Common
 
             return serviceProvider;
         }
-
     }
 }

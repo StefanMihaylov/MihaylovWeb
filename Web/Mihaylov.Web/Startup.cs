@@ -39,7 +39,7 @@ namespace Mihaylov.Web
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2).AddControllersAsServices();
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_3_0).AddControllersAsServices();
 
             string connectionString = Configuration.GetConnectionString("Local");
             string siteUrl = Configuration.GetValue<string>("SiteUrl");
@@ -61,7 +61,6 @@ namespace Mihaylov.Web
             return new AutofacServiceProvider(this.ApplicationContainer);
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             if (env.IsDevelopment())
@@ -74,6 +73,8 @@ namespace Mihaylov.Web
                 app.UseExceptionHandler("/Home/Error");
                 app.UseHsts();
             }
+
+            app.UseRouting();
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();

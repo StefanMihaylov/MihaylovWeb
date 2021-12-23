@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -25,22 +26,30 @@ namespace Mihaylov.Users.Server
             services.AddSwaggerGen(options =>
             {
                 options.SwaggerDoc("v1", new OpenApiInfo { Title = "Users API", Version = "v1" });
-                options.AddSwaggerAuthentication(UserConstants.AuthenticationScheme);
+                //options.AddSwaggerAuthentication(UserConstants.AuthenticationScheme);
             });
 
-            services.AddControllers();            
+            services.AddDatabaseDeveloperPageExceptionFilter();
+            services.AddControllers();
 
             services.AddCommon()
                     .AddUserDatabase(opt =>
                         {
-                            opt.ServerAddress = Environment.GetEnvironmentVariable("DB_Users_Address") ?? "192.168.1.7";
-                            opt.DatabaseName = Environment.GetEnvironmentVariable("DB_Users_Name") ?? "Mihaylov_UsersDb";
-                            opt.UserName = Environment.GetEnvironmentVariable("DB_Users_UserName");
-                            opt.Password = Environment.GetEnvironmentVariable("DB_Users_Password");
+                            opt.ServerAddress = Environment.GetEnvironmentVariable("DB_Users_Address") ?? throw new ArgumentException("DB_Users_Address missing");
+                            opt.DatabaseName = Environment.GetEnvironmentVariable("DB_Users_Name") ?? throw new ArgumentException("DB_Users_Name missing");
+                            opt.UserName = Environment.GetEnvironmentVariable("DB_Users_UserName") ?? throw new ArgumentException("DB_Users_UserName missing");
+                            opt.Password = Environment.GetEnvironmentVariable("DB_Users_Password") ?? throw new ArgumentException("DB_Users_Password missing");
+                        },
+                        password => 
+                        {
+                            password.RequireNonAlphanumeric = GetEnvironmentVariable("Password_RequireNonAlphanumeric", bool.TryParse, false);
+                            password.RequireUppercase = GetEnvironmentVariable("Password_RequireUppercase", bool.TryParse, false);
+                            password.RequireDigit = GetEnvironmentVariable("Password_RequireDigit", bool.TryParse, false);
+                            password.RequiredLength = GetEnvironmentVariable("Password_RequiredLength", int.TryParse, 6);
                         })
                     .AddJwtAuthentication(opt =>
                        {
-                           opt.Secret = Environment.GetEnvironmentVariable("JWT_AUTHENTICATION_SECRET");
+                           opt.Secret = Environment.GetEnvironmentVariable("JWT_AUTHENTICATION_SECRET") ?? throw new ArgumentException("JWT_AUTHENTICATION_SECRET missing");
                        });
 
             services.MigrateDatabase<MihaylovUsersDbContext>();
@@ -54,7 +63,8 @@ namespace Mihaylov.Users.Server
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseDatabaseErrorPage();
+                app.UseDeveloperExceptionPage();
+                app.UseMigrationsEndPoint();
             }
 
             app.UseHttpsRedirection();
@@ -79,5 +89,19 @@ namespace Mihaylov.Users.Server
                 endpoints.MapControllers();
             });
         }
+
+        private T GetEnvironmentVariable<T>(string key, TryParseHandler<T> tryParseHandler, T defaultValue) 
+        {
+            var configValue = Environment.GetEnvironmentVariable(key);
+
+            if (!string.IsNullOrWhiteSpace(configValue) && tryParseHandler(configValue, out T result))
+            {
+                return result;
+            }
+
+            return defaultValue;
+        }
+
+        private delegate bool TryParseHandler<T>(string value, out T result);
     }
 }

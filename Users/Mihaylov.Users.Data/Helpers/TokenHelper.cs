@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Mihaylov.Users.Data.Database.Models;
+using Mihaylov.Users.Data.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
@@ -9,13 +10,13 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 
-namespace Mihaylov.Users.Data.Repository.Helpers
+namespace Mihaylov.Users.Data.Helpers
 {
     public class TokenHelper : ITokenHelper
     {
-        private readonly AppUserSettings _appSettings;
+        private readonly TokenSettings _appSettings;
 
-        public TokenHelper(IOptions<AppUserSettings> appSettings)
+        public TokenHelper(IOptions<TokenSettings> appSettings)
         {
             this._appSettings = appSettings.Value;
         }

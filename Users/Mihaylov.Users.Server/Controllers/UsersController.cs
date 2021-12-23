@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Mihaylov.Users.Data;
-using Mihaylov.Users.Data.Repository;
+using Mihaylov.Users.Data.Interfaces;
 using Mihaylov.Users.Models.Requests;
 using Mihaylov.Users.Models.Responses;
 

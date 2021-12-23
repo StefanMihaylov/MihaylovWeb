@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Mihaylov.Users.Data.Database.Models;
 
-namespace Mihaylov.Users.Data.Repository.Helpers
+namespace Mihaylov.Users.Data.Interfaces
 {
     public interface ITokenHelper
     {

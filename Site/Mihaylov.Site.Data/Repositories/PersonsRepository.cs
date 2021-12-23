@@ -91,20 +91,17 @@ namespace Mihaylov.Site.Data.Repositories
 
         public async Task<Person> AddOrUpdatePersonAsync(Person inputPerson)
         {
-            bool isNewPerson;
             DAL.Person person;
             if (inputPerson.Id == Guid.Empty)
             {
                 person = new DAL.Person();
                 this._context.Persons.Add(person);
-                isNewPerson = true;
             }
             else
             {
                 person = await this._context.Persons.Where(p=>p.Id == inputPerson.Id)
                                                     .FirstOrDefaultAsync()
                                                     .ConfigureAwait(false);
-                isNewPerson = false;
             }
 
             inputPerson.Update(person);

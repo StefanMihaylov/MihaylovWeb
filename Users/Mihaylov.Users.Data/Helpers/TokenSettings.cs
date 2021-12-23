@@ -1,6 +1,6 @@
 ﻿namespace Mihaylov.Users.Data
 {
-    public class AppUserSettings
+    public class TokenSettings
     {
         public string Secret { get; set; }
     }
