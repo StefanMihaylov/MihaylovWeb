@@ -53,12 +53,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mihaylov.WebUI", "Web\Mihay
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mihaylov.Users.Models", "Users\Mihaylov.Users.Models\Mihaylov.Users.Models.csproj", "{794CB834-764E-4E1C-B06E-78F434FA8E9F}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Envoy", "Envoy", "{2A575A7B-6C16-4AD4-B704-F0FEBCEBD432}"
-	ProjectSection(SolutionItems) = preProject
-		Envoy\Dockerfile = Envoy\Dockerfile
-		Envoy\envoy.yml = Envoy\envoy.yml
-	EndProjectSection
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mihaylov.Site.Server", "Site\Mihaylov.Site.Server\Mihaylov.Site.Server.csproj", "{B8CF7E45-F016-42C7-BD65-30A3ACBB4047}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{5F2AD13B-B260-43FE-BB2D-74D3CEB6ED28}"

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -34,12 +35,12 @@ namespace Mihaylov.Users.Server
             services.AddCommon()
                     .AddUserDatabase(opt =>
                         {
-                            opt.ServerAddress = Environment.GetEnvironmentVariable("DB_Users_Address") ?? throw new ArgumentException("DB_Users_Address missing");
-                            opt.DatabaseName = Environment.GetEnvironmentVariable("DB_Users_Name") ?? throw new ArgumentException("DB_Users_Name missing");
-                            opt.UserName = Environment.GetEnvironmentVariable("DB_Users_UserName") ?? throw new ArgumentException("DB_Users_UserName missing");
-                            opt.Password = Environment.GetEnvironmentVariable("DB_Users_Password") ?? throw new ArgumentException("DB_Users_Password missing");
+                            opt.ServerAddress = Config.GetEnvironmentVariable("DB_Users_Address");
+                            opt.DatabaseName = Config.GetEnvironmentVariable("DB_Users_Name");
+                            opt.UserName = Config.GetEnvironmentVariable("DB_Users_UserName");
+                            opt.Password = Config.GetEnvironmentVariable("DB_Users_Password");
                         },
-                        password => 
+                        password =>
                         {
                             password.RequireNonAlphanumeric = Config.GetEnvironmentVariable("Password_RequireNonAlphanumeric", bool.TryParse, false);
                             password.RequireUppercase = Config.GetEnvironmentVariable("Password_RequireUppercase", bool.TryParse, false);
@@ -48,7 +49,7 @@ namespace Mihaylov.Users.Server
                         })
                     .AddJwtAuthentication(opt =>
                        {
-                           opt.Secret = Environment.GetEnvironmentVariable("JWT_AUTHENTICATION_SECRET") ?? throw new ArgumentException("JWT_AUTHENTICATION_SECRET missing");
+                           opt.Secret = Config.GetEnvironmentVariable("JWT_AUTHENTICATION_SECRET");
                        });
 
             services.MigrateDatabase<MihaylovUsersDbContext>();
@@ -57,24 +58,35 @@ namespace Mihaylov.Users.Server
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            string basePath = Config.GetEnvironmentVariable("APP_PathPrefix", "/");
+            basePath = $"/{basePath.Trim('/')}";
+
             //  app.InitializeUsersDb();
 
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseDeveloperExceptionPage();
                 app.UseMigrationsEndPoint();
             }
 
-            //app.UseHttpsRedirection();
-            app.UseRouting();
-
-            app.UseSwagger();
+            app.UseSwagger(c =>
+            {
+                c.PreSerializeFilters.Add((swaggerDoc, httpReq) =>
+                {
+                    swaggerDoc.Servers = new List<OpenApiServer>
+                    {
+                        new OpenApiServer { Url = $"{httpReq.Scheme}://{httpReq.Host.Value}{basePath}" }
+                    };
+                });
+            });
             app.UseSwaggerUI(c =>
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "Users API V1");
                 c.RoutePrefix = string.Empty;
             });
+
+            //app.UseHttpsRedirection();
+            app.UseRouting();
 
             app.UseCors(x => x.AllowAnyOrigin()
                               .AllowAnyMethod()
