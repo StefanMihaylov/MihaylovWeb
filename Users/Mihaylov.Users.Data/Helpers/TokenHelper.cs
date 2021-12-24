@@ -23,18 +23,44 @@ namespace Mihaylov.Users.Data.Helpers
 
         public string GetToken(User user, IEnumerable<string> roles)
         {
-            var claims = new List<Claim>()
+            var claims = new List<Claim>
             {
-                new Claim(ClaimTypes.Name, user.Id.ToString())
+                new Claim("sub", user.Id.ToString()),
             };
 
+            if (IsEnabled(_appSettings.ClaimTypes, ClaimType.Username))
+            {
+                claims.Add(new Claim(ClaimTypes.NameIdentifier, user.UserName));
+            }
+
+            if (IsEnabled(_appSettings.ClaimTypes, ClaimType.Email))
+            {
+                claims.Add(new Claim(ClaimTypes.Email, user.Email));
+            }
+
+            if (IsEnabled(_appSettings.ClaimTypes, ClaimType.FullName))
+            {
+                claims.Add(new Claim(ClaimTypes.Name, $"{user.Profile?.FirstName} {user.Profile?.LastName}"));
+            }
+
+            if (IsEnabled(_appSettings.ClaimTypes, ClaimType.FirstName))
+            {
+                claims.Add(new Claim(ClaimTypes.GivenName, user.Profile?.FirstName));
+            }
+
+            if (IsEnabled(_appSettings.ClaimTypes, ClaimType.LastName))
+            {
+                claims.Add(new Claim(ClaimTypes.Surname, user.Profile?.LastName));
+            }
+
             claims.AddRange(roles.Select(role => new Claim(ClaimsIdentity.DefaultRoleClaimType, role)));
-            
+
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(claims),
+                
                 NotBefore = DateTime.UtcNow,
-                Expires = DateTime.UtcNow.AddDays(7),
+                Expires = DateTime.UtcNow.AddDays(_appSettings.ExpiresIn),
                 SigningCredentials = new SigningCredentials(GetKey(), SecurityAlgorithms.HmacSha256Signature),
             };
 
@@ -53,7 +79,7 @@ namespace Mihaylov.Users.Data.Helpers
             {
                 IssuerSigningKey = GetKey(),
                 ValidateIssuerSigningKey = true,
-                ValidateLifetime = true,                
+                ValidateLifetime = true,
                 ValidateIssuer = false,
                 ValidateAudience = false
             };
@@ -63,6 +89,12 @@ namespace Mihaylov.Users.Data.Helpers
         {
             var key = Encoding.ASCII.GetBytes(_appSettings.Secret);
             return new SymmetricSecurityKey(key);
+        }
+
+        private bool IsEnabled(int config, ClaimType claim)
+        {
+            var configType = (ClaimType)config;
+            return (configType & claim) == claim;
         }
     }
 }

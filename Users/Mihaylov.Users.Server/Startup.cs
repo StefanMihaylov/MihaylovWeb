@@ -49,6 +49,8 @@ namespace Mihaylov.Users.Server
                     .AddJwtAuthentication(opt =>
                        {
                            opt.Secret = Config.GetEnvironmentVariable("JWT_AUTHENTICATION_SECRET");
+                           opt.ExpiresIn = Config.GetEnvironmentVariable("JWT_ExpiresIn", int.TryParse, 14);
+                           opt.ClaimTypes = Config.GetEnvironmentVariable("JWT_Claims", int.TryParse, 0);
                        });
 
             services.MigrateDatabase<MihaylovUsersDbContext>();
@@ -81,7 +83,7 @@ namespace Mihaylov.Users.Server
             });
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint($"{basePath}/swagger/v1/swagger.json", "Users API V1");
+                c.SwaggerEndpoint($"{basePath.TrimEnd('/')}/swagger/v1/swagger.json", "Users API V1");
                 c.RoutePrefix = string.Empty;
             });
 
