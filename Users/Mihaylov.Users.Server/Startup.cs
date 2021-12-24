@@ -1,5 +1,4 @@
 using System;
-using System.Globalization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -42,10 +41,10 @@ namespace Mihaylov.Users.Server
                         },
                         password => 
                         {
-                            password.RequireNonAlphanumeric = GetEnvironmentVariable("Password_RequireNonAlphanumeric", bool.TryParse, false);
-                            password.RequireUppercase = GetEnvironmentVariable("Password_RequireUppercase", bool.TryParse, false);
-                            password.RequireDigit = GetEnvironmentVariable("Password_RequireDigit", bool.TryParse, false);
-                            password.RequiredLength = GetEnvironmentVariable("Password_RequiredLength", int.TryParse, 6);
+                            password.RequireNonAlphanumeric = Config.GetEnvironmentVariable("Password_RequireNonAlphanumeric", bool.TryParse, false);
+                            password.RequireUppercase = Config.GetEnvironmentVariable("Password_RequireUppercase", bool.TryParse, false);
+                            password.RequireDigit = Config.GetEnvironmentVariable("Password_RequireDigit", bool.TryParse, false);
+                            password.RequiredLength = Config.GetEnvironmentVariable("Password_RequiredLength", int.TryParse, 6);
                         })
                     .AddJwtAuthentication(opt =>
                        {
@@ -67,7 +66,7 @@ namespace Mihaylov.Users.Server
                 app.UseMigrationsEndPoint();
             }
 
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
             app.UseRouting();
 
             app.UseSwagger();
@@ -89,19 +88,5 @@ namespace Mihaylov.Users.Server
                 endpoints.MapControllers();
             });
         }
-
-        private T GetEnvironmentVariable<T>(string key, TryParseHandler<T> tryParseHandler, T defaultValue) 
-        {
-            var configValue = Environment.GetEnvironmentVariable(key);
-
-            if (!string.IsNullOrWhiteSpace(configValue) && tryParseHandler(configValue, out T result))
-            {
-                return result;
-            }
-
-            return defaultValue;
-        }
-
-        private delegate bool TryParseHandler<T>(string value, out T result);
     }
 }
