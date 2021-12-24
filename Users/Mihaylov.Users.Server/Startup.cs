@@ -72,9 +72,10 @@ namespace Mihaylov.Users.Server
             {
                 c.PreSerializeFilters.Add((swaggerDoc, httpReq) =>
                 {
+                    var scheme = Config.GetEnvironmentVariable("APP_Scheme", httpReq.Scheme);
                     swaggerDoc.Servers = new List<OpenApiServer>
                     {
-                        new OpenApiServer { Url = $"{httpReq.Scheme}://{httpReq.Host.Value}{basePath}" }
+                        new OpenApiServer { Url = $"{scheme}://{httpReq.Host.Value}{basePath}" }
                     };
                 });
             });
