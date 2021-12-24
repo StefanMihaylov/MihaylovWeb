@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -81,7 +80,7 @@ namespace Mihaylov.Users.Server
             });
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Users API V1");
+                c.SwaggerEndpoint($"{basePath}/swagger/v1/swagger.json", "Users API V1");
                 c.RoutePrefix = string.Empty;
             });
 
