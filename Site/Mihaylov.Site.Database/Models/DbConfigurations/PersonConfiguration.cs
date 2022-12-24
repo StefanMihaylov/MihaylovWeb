@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Mihaylov.Common.Core.Databases.DbConfigurations;
+using Mihaylov.Common.Abstract.Databases.DbConfigurations;
 
 namespace Mihaylov.Site.Database.Models.DbConfigurations
 {

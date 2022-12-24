@@ -3,7 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Mihaylov.Common.Databases.Interfaces;
+using Mihaylov.Common.Abstract.Databases.Interfaces;
 using Mihaylov.Users.Data.Database.DbConfigurations;
 using Mihaylov.Users.Data.Database.Models;
 

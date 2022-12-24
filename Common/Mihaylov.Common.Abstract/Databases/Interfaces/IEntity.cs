@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Mihaylov.Common.Databases.Models
+namespace Mihaylov.Common.Abstract.Databases.Interfaces
 {
     public interface IEntity
     {

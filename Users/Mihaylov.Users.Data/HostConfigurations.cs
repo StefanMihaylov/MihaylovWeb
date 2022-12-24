@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Mihaylov.Common.Databases;
+using Mihaylov.Common.Abstract.Databases;
 using Mihaylov.Users.Data.Database;
 using Mihaylov.Users.Data.Database.Models;
 using Mihaylov.Users.Data.Helpers;

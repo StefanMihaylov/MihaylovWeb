@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Mihaylov.Common.MessageBus.Interfaces;
-using Mihaylov.Common.MessageBus.Models;
 using Mihaylov.Site.Core.Interfaces;
 using Mihaylov.Site.Data.Interfaces;
 using Mihaylov.Site.Data.Models;
@@ -11,12 +9,12 @@ namespace Mihaylov.Site.Core.Writers
     public class PersonsWriter : IPersonsWriter
     {
         private readonly IPersonsRepository repository;
-        private readonly IMessageBus messageBus;
+        // private readonly IMessageBus messageBus;
 
-        public PersonsWriter(IPersonsRepository personsRepository, IMessageBus messageBus)
+        public PersonsWriter(IPersonsRepository personsRepository)
         {
             this.repository = personsRepository;
-            this.messageBus = messageBus;
+            // this.messageBus = messageBus;
         }
 
         public async Task<Person> AddOrUpdateAsync(Person inputPerson)
@@ -31,8 +29,8 @@ namespace Mihaylov.Site.Core.Writers
             Person person = await this.repository.AddOrUpdatePersonAsync(inputPerson);//, out bool isNewPerson);
 
             bool isNewPerson = false; // TODO;
-            MessageActionType action = isNewPerson ? MessageActionType.Add : MessageActionType.Update;
-            this.messageBus.SendMessage(person, this, action);
+            //MessageActionType action = isNewPerson ? MessageActionType.Add : MessageActionType.Update;
+            //this.messageBus.SendMessage(person, this, action);
 
             return person;
         }

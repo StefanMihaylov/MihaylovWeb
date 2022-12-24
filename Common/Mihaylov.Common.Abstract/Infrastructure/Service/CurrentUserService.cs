@@ -1,9 +1,9 @@
 ﻿using System.Linq;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
-using Mihaylov.Common.Infrastructure.Interfaces;
+using Mihaylov.Common.Abstract.Infrastructure.Interfaces;
 
-namespace Mihaylov.Common.Infrastructure.Services
+namespace Mihaylov.Common.Abstract.Infrastructure.Service
 {
     public class CurrentUserService : ICurrentUserService
     {
@@ -11,17 +11,17 @@ namespace Mihaylov.Common.Infrastructure.Services
 
         public CurrentUserService(IHttpContextAccessor httpContextAccessor)
         {
-            this.user = httpContextAccessor.HttpContext?.User;
+            user = httpContextAccessor.HttpContext?.User;
         }
 
         public string GetUserName()
         {
-            return this.user?.Identity?.Name;
+            return user?.Identity?.Name;
         }
 
         public string GetId()
         {
-            return this.user?.Claims
+            return user?.Claims
                              .FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)
                              ?.Value;
         }

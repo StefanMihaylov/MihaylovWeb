@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Mihaylov.Common.Databases;
+using Mihaylov.Common.Abstract.Databases;
 
 namespace Mihaylov.Site.Database
 {

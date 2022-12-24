@@ -4,9 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using Mihaylov.Common.MessageBus;
-using Mihaylov.Common.MessageBus.Interfaces;
-using Mihaylov.Common.MessageBus.Models;
 using Mihaylov.Site.Core.Interfaces;
 using Mihaylov.Site.Data.Interfaces;
 using Mihaylov.Site.Data.Models;
@@ -17,21 +14,21 @@ namespace Mihaylov.Site.Core.Managers
     {
         private readonly IPersonsRepository repository;
         private readonly ILogger logger;
-        private readonly IMessageBus messageBus;
+       // private readonly IMessageBus messageBus;
 
         private readonly ConcurrentDictionary<Guid, Person> personsById;
         private readonly ConcurrentDictionary<string, Person> personsByName;
 
-        public PersonsManager(IPersonsRepository personsRepository, ILoggerFactory loggerFactory, IMessageBus messageBus)
+        public PersonsManager(IPersonsRepository personsRepository, ILoggerFactory loggerFactory)
         {
             this.repository = personsRepository;
             this.logger = loggerFactory.CreateLogger(this.GetType().Name);
-            this.messageBus = messageBus;
+           // this.messageBus = messageBus;
 
             this.personsById = new ConcurrentDictionary<Guid, Person>();
             this.personsByName = new ConcurrentDictionary<string, Person>(StringComparer.OrdinalIgnoreCase);
 
-            this.messageBus.Attach(typeof(Person), this.HandleMessage);
+            //this.messageBus.Attach(typeof(Person), this.HandleMessage);
         }
 
         public async Task<IEnumerable<Person>> GetAllPersonsAsync(bool descOrder = false, int? pageNumber = null, int? pageSize = null)
@@ -128,27 +125,27 @@ namespace Mihaylov.Site.Core.Managers
             }
         }
 
-        private void HandleMessage(Message message)
-        {
-            if (message == null)
-            {
-                return;
-            }
+        //private void HandleMessage(Message message)
+        //{
+        //    if (message == null)
+        //    {
+        //        return;
+        //    }
 
-            if (message.Data is Person person)
-            {
-                if (message.ActionType == MessageActionType.Add ||
-                   (message.ActionType == MessageActionType.Update && this.personsById.ContainsKey(person.Id)))
-                {
-                    this.personsById.AddOrUpdate(person.Id, (id) => person, (updateId, existingPerson) => person);
-                }
+        //    if (message.Data is Person person)
+        //    {
+        //        if (message.ActionType == MessageActionType.Add ||
+        //           (message.ActionType == MessageActionType.Update && this.personsById.ContainsKey(person.Id)))
+        //        {
+        //            this.personsById.AddOrUpdate(person.Id, (id) => person, (updateId, existingPerson) => person);
+        //        }
 
-                if (message.ActionType == MessageActionType.Add ||
-                   (message.ActionType == MessageActionType.Update && this.personsByName.ContainsKey(person.Username)))
-                {
-                    this.personsByName.AddOrUpdate(person.Username, (id) => person, (updateId, existingPerson) => person);
-                }
-            }
-        }
+        //        if (message.ActionType == MessageActionType.Add ||
+        //           (message.ActionType == MessageActionType.Update && this.personsByName.ContainsKey(person.Username)))
+        //        {
+        //            this.personsByName.AddOrUpdate(person.Username, (id) => person, (updateId, existingPerson) => person);
+        //        }
+        //    }
+        //}
     }
 }

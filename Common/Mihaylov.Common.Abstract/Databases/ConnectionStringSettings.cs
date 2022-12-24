@@ -1,6 +1,6 @@
 ﻿using System.Data.SqlClient;
 
-namespace Mihaylov.Common.Databases
+namespace Mihaylov.Common.Abstract.Databases
 {
     public class ConnectionStringSettings
     {

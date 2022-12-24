@@ -1,6 +1,4 @@
 ﻿using System.Threading.Tasks;
-using Mihaylov.Common.MessageBus.Interfaces;
-using Mihaylov.Common.MessageBus.Models;
 using Mihaylov.Site.Core.Interfaces;
 using Mihaylov.Site.Data.Interfaces;
 using Mihaylov.Site.Data.Models;
@@ -10,12 +8,11 @@ namespace Mihaylov.Site.Core.Writers
     public class PhrasesWriter : IPhrasesWriter
     {
         private readonly IPhrasesRepository repository;
-        private readonly IMessageBus messageBus;
+        // private readonly IMessageBus messageBus;
 
-        public PhrasesWriter(IPhrasesRepository phrasesRepository, IMessageBus messageBus)
+        public PhrasesWriter(IPhrasesRepository phrasesRepository)
         {
-            this.repository = phrasesRepository;
-            this.messageBus = messageBus;
+            this.repository = phrasesRepository;    
         }
 
         public async Task<Phrase> AddOrUpdateAsync(Phrase inputPhrase)
@@ -30,9 +27,8 @@ namespace Mihaylov.Site.Core.Writers
             Phrase phrase = await this.repository.AddOrUpdatePhraseAsync(inputPhrase);//, out bool isNewPhrase);
 
             bool isNewPhrase = false; // TODO;
-            MessageActionType action = isNewPhrase ? MessageActionType.Add : MessageActionType.Update;
-
-            this.messageBus.SendMessage(phrase, this, action);
+            //MessageActionType action = isNewPhrase ? MessageActionType.Add : MessageActionType.Update;
+            //this.messageBus.SendMessage(phrase, this, action);
 
             return phrase;
         }

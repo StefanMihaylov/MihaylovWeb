@@ -37,7 +37,7 @@ namespace Mihaylov.Users.Data
             IdentityResult result = await this._userManager.CreateAsync(user, request.Password)
                                                            .ConfigureAwait(false);
 
-            return new GenericResponse(result);
+            return GetGenericResponse(result);
         }
 
         public async Task<LoginResponseModel> LoginAsync(LoginRequestModel request)
@@ -98,7 +98,7 @@ namespace Mihaylov.Users.Data
                 }
             }
 
-            return new GenericResponse(result);
+            return GetGenericResponse(result);
         }
 
         public async Task<GenericResponse> DeleteUserAsync(Guid id)
@@ -113,7 +113,7 @@ namespace Mihaylov.Users.Data
                                                 .ConfigureAwait(false);
             }
 
-            return new GenericResponse(result);
+            return GetGenericResponse(result);
         }
 
 
@@ -146,7 +146,7 @@ namespace Mihaylov.Users.Data
                 var result = await this._roleManager.CreateAsync(new IdentityRole(request.RoleName))
                                                     .ConfigureAwait(false);
                 
-                return new GenericResponse(result);
+                return GetGenericResponse(result);
             }
             catch (Exception ex)
             {
@@ -188,6 +188,11 @@ namespace Mihaylov.Users.Data
                     }
                 }
             }
+        }
+
+        private GenericResponse GetGenericResponse(IdentityResult result)
+        {
+            return new GenericResponse(result?.Succeeded ?? false, result?.Errors.Select(e => e.Description));
         }
     }
 }

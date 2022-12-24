@@ -2,11 +2,10 @@
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
-using Mihaylov.Common.Databases.Interfaces;
-using Mihaylov.Common.Databases.Models;
-using Mihaylov.Common.Infrastructure.Interfaces;
+using Mihaylov.Common.Abstract.Databases.Interfaces;
+using Mihaylov.Common.Abstract.Infrastructure.Interfaces;
 
-namespace Mihaylov.Common.Databases.Services
+namespace Mihaylov.Common.Abstract.Databases.Services
 {
     public class AuditService : IAuditService
     {

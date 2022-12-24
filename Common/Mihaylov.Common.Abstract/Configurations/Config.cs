@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Mihaylov.Common
+namespace Mihaylov.Common.Abstract
 {
     public class Config
     {

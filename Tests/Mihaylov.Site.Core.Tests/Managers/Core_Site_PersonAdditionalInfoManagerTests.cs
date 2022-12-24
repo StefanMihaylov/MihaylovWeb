@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Mihaylov.Common.MessageBus.Interfaces;
 using Mihaylov.Site.Core.Managers;
-using Mihaylov.Site.Data.Models;
 using Moq;
+using System;
 
 namespace Mihaylov.Core.Tests.Managers
 {
@@ -26,9 +22,9 @@ namespace Mihaylov.Core.Tests.Managers
         public void ConstructiorProviderNullMockedLoggerTest()
         {
             ILoggerFactory logger = GetLoggerMocked();
-            IMessageBus messageBus = GetMessageBusMocked();
+           // IMessageBus messageBus = GetMessageBusMocked();
 
-            Assert.ThrowsException<ArgumentNullException>(() => new CollectionsManager(null, null, logger, messageBus));
+            Assert.ThrowsException<ArgumentNullException>(() => new CollectionsManager(null, null, logger));
         }
 
         /*
@@ -482,10 +478,10 @@ namespace Mihaylov.Core.Tests.Managers
             return NullLoggerFactory.Instance;
         }
 
-        private IMessageBus GetMessageBusMocked()
-        {
-            return new Mock<IMessageBus>().Object;
-        }
+        //private IMessageBus GetMessageBusMocked()
+        //{
+        //    return new Mock<IMessageBus>().Object;
+        //}
        
     }
 }

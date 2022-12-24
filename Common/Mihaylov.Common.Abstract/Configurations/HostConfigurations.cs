@@ -3,14 +3,14 @@ using System.Reflection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
-using Mihaylov.Common.Databases.Interfaces;
-using Mihaylov.Common.Databases.Services;
-using Mihaylov.Common.Infrastructure.Interfaces;
-using Mihaylov.Common.Infrastructure.Services;
+using Mihaylov.Common.Abstract.Databases.Interfaces;
+using Mihaylov.Common.Abstract.Databases.Services;
+using Mihaylov.Common.Abstract.Infrastructure.Interfaces;
+using Mihaylov.Common.Abstract.Infrastructure.Service;
 using Mihaylov.Common.Mapping;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace Mihaylov.Common
+namespace Mihaylov.Common.Abstract
 {
     public static class HostConfigurations
     {

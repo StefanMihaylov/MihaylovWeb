@@ -1,8 +1,6 @@
 ﻿using System;
 using Microsoft.Extensions.DependencyInjection;
-using Mihaylov.Common.Databases;
-using Mihaylov.Common.MessageBus;
-using Mihaylov.Common.MessageBus.Interfaces;
+using Mihaylov.Common.Abstract.Databases;
 using Mihaylov.Core.Helpers.Site;
 using Mihaylov.Site.Core.CsQuery;
 using Mihaylov.Site.Core.Interfaces;
@@ -20,7 +18,7 @@ namespace Mihaylov.Site.Core
             services.AddSiteRepositories(connectionString, ServiceLifetime.Singleton);
 
             services.Configure<SiteCoreOptions>(siteOption);
-            services.AddSingleton<IMessageBus, SimpleMessageBus>();
+            //services.AddSingleton<IMessageBus, SimpleMessageBus>();
 
             services.AddSingleton<IPersonsManager, PersonsManager>();
             services.AddSingleton<ICollectionsManager, CollectionsManager>();

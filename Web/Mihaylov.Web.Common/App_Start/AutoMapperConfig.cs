@@ -1,5 +1,5 @@
-﻿using System.Reflection;
-using Mihaylov.Common.Mapping;
+﻿using Mihaylov.Common.Mapping;
+using System.Reflection;
 
 namespace Mihaylov.Web.Common
 {

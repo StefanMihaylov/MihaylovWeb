@@ -1,4 +1,4 @@
-﻿namespace Mihaylov.Common.Infrastructure.Interfaces
+﻿namespace Mihaylov.Common.Abstract.Infrastructure.Interfaces
 {
     public interface ICurrentUserService
     {

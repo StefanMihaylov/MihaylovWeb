@@ -1,19 +1,17 @@
-﻿using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Identity;
+﻿using Autofac;
+using Autofac.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Mihaylov.Web.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Mihaylov.Web.Common;
-using Autofac;
-using Autofac.Extensions.DependencyInjection;
-using System;
-using Mihaylov.Site.Core;
-using Mihaylov.Dictionaries.Core;
 using Mihaylov.Web.Common.Toastr;
+using Mihaylov.Web.Data;
+using System;
 
 namespace Mihaylov.Web
 {
@@ -39,7 +37,7 @@ namespace Mihaylov.Web
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_3_0).AddControllersAsServices();
+            services.AddMvc().AddControllersAsServices();
 
             string connectionString = Configuration.GetConnectionString("Local");
             string siteUrl = Configuration.GetValue<string>("SiteUrl");
@@ -55,13 +53,13 @@ namespace Mihaylov.Web
             builder.RegisterType<ToastrHelper>().As<IToastrHelper>();
             //builder.RegisterModule(new LoggingModule());
             //builder.RegisterModule(new AutoFacModuleSiteCore(connectionString, siteUrl));
-            builder.RegisterModule(new AutofacModuleDictionariesCore(connectionString));
+            //builder.RegisterModule(new AutofacModuleDictionariesCore(connectionString));
 
             this.ApplicationContainer = builder.Build();
             return new AutofacServiceProvider(this.ApplicationContainer);
         }
 
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {
@@ -82,12 +80,12 @@ namespace Mihaylov.Web
 
             app.UseAuthentication();
 
-            app.UseMvc(routes =>
-            {
-                routes.MapRoute(
-                    name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
-            });
+            //app.UseMvc(routes =>
+            //{
+            //    routes.MapRoute(
+            //        name: "default",
+            //        template: "{controller=Home}/{action=Index}/{id?}");
+            //});
         }
     }
 }

@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Mihaylov.Common.Databases.Models;
+using Mihaylov.Common.Abstract.Databases.Models;
 
-namespace Mihaylov.Common.Core.Databases.DbConfigurations
+namespace Mihaylov.Common.Abstract.Databases.DbConfigurations
 {
     public abstract class EntityConfiguration<T> : IEntityTypeConfiguration<T> where T : Entity
     {

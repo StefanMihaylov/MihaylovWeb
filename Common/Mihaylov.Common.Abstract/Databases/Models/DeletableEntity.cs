@@ -1,6 +1,7 @@
 ﻿using System;
+using Mihaylov.Common.Abstract.Databases.Interfaces;
 
-namespace Mihaylov.Common.Databases.Models
+namespace Mihaylov.Common.Abstract.Databases.Models
 {
     public abstract class DeletableEntity : Entity, IDeletableEntity
     {

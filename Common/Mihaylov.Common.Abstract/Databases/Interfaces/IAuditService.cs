@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 
-namespace Mihaylov.Common.Databases.Interfaces
+namespace Mihaylov.Common.Abstract.Databases.Interfaces
 {
     public interface IAuditService
     {

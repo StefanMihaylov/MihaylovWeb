@@ -2,7 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using Mihaylov.Common.Databases.Interfaces;
+using Mihaylov.Common.Abstract.Databases.Interfaces;
 using Mihaylov.Site.Database.Models;
 using Mihaylov.Site.Database.Models.DbConfigurations;
 

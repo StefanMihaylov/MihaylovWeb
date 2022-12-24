@@ -3,9 +3,6 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Extensions.Logging;
-using Mihaylov.Common.MessageBus;
-using Mihaylov.Common.MessageBus.Interfaces;
-using Mihaylov.Common.MessageBus.Models;
 using Mihaylov.Common.Validations;
 using Mihaylov.Site.Core.Interfaces;
 using Mihaylov.Site.Data.Interfaces;
@@ -19,7 +16,7 @@ namespace Mihaylov.Site.Core.Managers
         protected readonly ILocationsRepository _locationsRepository;
 
         protected readonly ILogger logger;
-        protected readonly IMessageBus messageBus;
+       // protected readonly IMessageBus messageBus;
 
         protected readonly Lazy<ConcurrentDictionary<int, AnswerType>> answerTypesById;
         protected readonly Lazy<ConcurrentDictionary<string, AnswerType>> answerTypesByName;
@@ -44,16 +41,16 @@ namespace Mihaylov.Site.Core.Managers
         public CollectionsManager(
             ILookupTablesRepository lookupTablesRepository,
             ILocationsRepository locationsRepository,
-            ILoggerFactory loggerFactory, IMessageBus messageBus)
+            ILoggerFactory loggerFactory)
         {
             ParameterValidation.IsNotNull(loggerFactory, nameof(loggerFactory));
-            ParameterValidation.IsNotNull(messageBus, nameof(messageBus));
+           // ParameterValidation.IsNotNull(messageBus, nameof(messageBus));
 
             this._lookupTablesRepository = lookupTablesRepository;
             this._locationsRepository = locationsRepository;
 
             this.logger = loggerFactory.CreateLogger(this.GetType().Name);
-            this.messageBus = messageBus;
+           // this.messageBus = messageBus;
 
 
             IEnumerable<AnswerType> answerTypeList = new List<AnswerType>();
@@ -135,7 +132,7 @@ namespace Mihaylov.Site.Core.Managers
 
             this.countriesByName = new ConcurrentDictionary<string, Country>(StringComparer.OrdinalIgnoreCase);
 
-            this.messageBus.Attach(typeof(Country), this.HandleMessageCountry);
+           // this.messageBus.Attach(typeof(Country), this.HandleMessageCountry);
 
             var stateDictionary = this._locationsRepository.GetAllStatesAsync().GetAwaiter().GetResult();
 
@@ -397,27 +394,27 @@ namespace Mihaylov.Site.Core.Managers
 
         #endregion
 
-        private void HandleMessageCountry(Message message)
-        {
-            if (message == null)
-            {
-                return;
-            }
+        //private void HandleMessageCountry(Message message)
+        //{
+        //    if (message == null)
+        //    {
+        //        return;
+        //    }
 
-            if (message.Data is Country country)
-            {
-                if (message.ActionType == MessageActionType.Add ||
-                   (message.ActionType == MessageActionType.Update && this.countriesById.ContainsKey(country.Id)))
-                {
-                    this.countriesById.AddOrUpdate(country.Id, (id) => country, (updateId, existingCountry) => country);
-                }
+        //    if (message.Data is Country country)
+        //    {
+        //        if (message.ActionType == MessageActionType.Add ||
+        //           (message.ActionType == MessageActionType.Update && this.countriesById.ContainsKey(country.Id)))
+        //        {
+        //            this.countriesById.AddOrUpdate(country.Id, (id) => country, (updateId, existingCountry) => country);
+        //        }
 
-                if (message.ActionType == MessageActionType.Add ||
-                    (message.ActionType == MessageActionType.Update && this.countriesByName.ContainsKey(country.Name)))
-                {
-                    this.countriesByName.AddOrUpdate(country.Name, (id) => country, (updateId, existingCountry) => country);
-                }
-            }
-        }
+        //        if (message.ActionType == MessageActionType.Add ||
+        //            (message.ActionType == MessageActionType.Update && this.countriesByName.ContainsKey(country.Name)))
+        //        {
+        //            this.countriesByName.AddOrUpdate(country.Name, (id) => country, (updateId, existingCountry) => country);
+        //        }
+        //    }
+        //}
     }
 }

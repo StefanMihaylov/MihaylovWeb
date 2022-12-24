@@ -1,10 +1,10 @@
 ﻿using System;
 using Microsoft.Extensions.DependencyInjection;
-using Mihaylov.Common;
-using Mihaylov.Common.Databases;
+using Mihaylov.Common.Abstract.Databases;
 using Mihaylov.Site.Data.Interfaces;
 using Mihaylov.Site.Data.Repositories;
 using Mihaylov.Site.Database;
+using Mihaylov.Common.Abstract;
 
 namespace Mihaylov.Site.Data
 {

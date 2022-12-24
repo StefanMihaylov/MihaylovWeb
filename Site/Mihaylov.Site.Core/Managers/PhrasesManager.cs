@@ -3,9 +3,6 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Extensions.Logging;
-using Mihaylov.Common.MessageBus;
-using Mihaylov.Common.MessageBus.Interfaces;
-using Mihaylov.Common.MessageBus.Models;
 using Mihaylov.Site.Core.Interfaces;
 using Mihaylov.Site.Data.Interfaces;
 using Mihaylov.Site.Data.Models;
@@ -16,15 +13,15 @@ namespace Mihaylov.Site.Core.Managers
     {
         private readonly IPhrasesRepository repository;
         private readonly ILogger logger;
-        private readonly IMessageBus messageBus;
+        // private readonly IMessageBus messageBus;
 
         private readonly Lazy<ConcurrentDictionary<int, Phrase>> phrasesById;
 
-        public PhrasesManager(IPhrasesRepository phrasesRepository, ILoggerFactory loggerFactory, IMessageBus messageBus)
+        public PhrasesManager(IPhrasesRepository phrasesRepository, ILoggerFactory loggerFactory)
         {
             this.repository = phrasesRepository;
             this.logger = loggerFactory.CreateLogger(this.GetType().Name);
-            this.messageBus = messageBus;
+            //this.messageBus = messageBus;
 
             this.phrasesById = new Lazy<ConcurrentDictionary<int, Phrase>>(() =>
             {
@@ -33,7 +30,7 @@ namespace Mihaylov.Site.Core.Managers
                 return new ConcurrentDictionary<int, Phrase>(dictionary);
             });
 
-            this.messageBus.Attach(typeof(Phrase), this.HandleMessage);
+            //this.messageBus.Attach(typeof(Phrase), this.HandleMessage);
         }
 
         public IEnumerable<Phrase> GetAllPhrases()
@@ -43,21 +40,21 @@ namespace Mihaylov.Site.Core.Managers
             return phrases;
         }
 
-        private void HandleMessage(Message message)
-        {
-            if (message == null || !this.phrasesById.IsValueCreated)
-            {
-                return;
-            }
+        //private void HandleMessage(Message message)
+        //{
+        //    if (message == null || !this.phrasesById.IsValueCreated)
+        //    {
+        //        return;
+        //    }
 
-            if (message.Data is Phrase phrase)
-            {
-                if (message.ActionType == MessageActionType.Add ||
-                   (message.ActionType == MessageActionType.Update && this.phrasesById.Value.ContainsKey(phrase.Id)))
-                {
-                    this.phrasesById.Value.AddOrUpdate(phrase.Id, (id) => phrase, (updateId, existingPhrase) => phrase);
-                }
-            }
-        }
+        //    if (message.Data is Phrase phrase)
+        //    {
+        //        if (message.ActionType == MessageActionType.Add ||
+        //           (message.ActionType == MessageActionType.Update && this.phrasesById.Value.ContainsKey(phrase.Id)))
+        //        {
+        //            this.phrasesById.Value.AddOrUpdate(phrase.Id, (id) => phrase, (updateId, existingPhrase) => phrase);
+        //        }
+        //    }
+        //}
     }
 }
