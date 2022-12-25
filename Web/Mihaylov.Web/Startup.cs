@@ -80,12 +80,12 @@ namespace Mihaylov.Web
 
             app.UseAuthentication();
 
-            //app.UseMvc(routes =>
-            //{
-            //    routes.MapRoute(
-            //        name: "default",
-            //        template: "{controller=Home}/{action=Index}/{id?}");
-            //});
+            app.UseEndpoints(routes =>
+            {
+                routes.MapControllerRoute(
+                    name: "default",
+                    pattern: "{controller=Home}/{action=Index}/{id?}");
+            });
         }
     }
 }

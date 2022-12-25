@@ -5,6 +5,7 @@ using Mihaylov.Users.Data;
 namespace Mihaylov.Users.Server.Controllers
 {
     [Route("api/[controller]/[action]")]
+    [ApiExplorerSettings(IgnoreApi = true)]
     [ApiController]
     public class TestController : ControllerBase
     {
