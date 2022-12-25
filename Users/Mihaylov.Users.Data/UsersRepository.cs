@@ -32,7 +32,7 @@ namespace Mihaylov.Users.Data
         public async Task<GenericResponse> RegisterAsync(RegisterRequestModel request)
         {
             User user = new User(request.Username, request.Email);
-            user.Profile = new UserProfile(request.FirstName, request.LastName, request.Gender);
+            user.Profile = new UserProfile(request.FirstName, request.LastName);
 
             IdentityResult result = await this._userManager.CreateAsync(user, request.Password)
                                                            .ConfigureAwait(false);
@@ -74,7 +74,6 @@ namespace Mihaylov.Users.Data
                                         Email = u.Email,
                                         FirstName = u.Profile.FirstName,
                                         LastName = u.Profile.LastName,
-                                        Gender = u.Profile.Gender,
                                         Roles = this._userManager.GetRolesAsync(u).Result
                                     })
                                     .ToListAsync()

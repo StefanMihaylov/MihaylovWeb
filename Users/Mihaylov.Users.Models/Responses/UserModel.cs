@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Mihaylov.Users.Models.Enums;
 
 namespace Mihaylov.Users.Models.Responses
 {
@@ -15,8 +14,6 @@ namespace Mihaylov.Users.Models.Responses
         public string FirstName { get; set; }
 
         public string LastName { get; set; }
-
-        public GenderType? Gender { get; set; }
 
         public IEnumerable<string> Roles { get; set; }
     }

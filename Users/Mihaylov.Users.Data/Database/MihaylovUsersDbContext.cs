@@ -19,9 +19,6 @@ namespace Mihaylov.Users.Data.Database
             this._auditService = auditService;
         }
 
-        public DbSet<Gender> Genders { get; set; }
-
-
         public override int SaveChanges(bool acceptAllChangesOnSuccess)
         {
             this.ApplyAuditInformation();
@@ -39,7 +36,6 @@ namespace Mihaylov.Users.Data.Database
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.ApplyConfiguration(new UserConfiguration());
-            builder.ApplyConfiguration(new GenderConfiguration());
 
             base.OnModelCreating(builder);
         }
