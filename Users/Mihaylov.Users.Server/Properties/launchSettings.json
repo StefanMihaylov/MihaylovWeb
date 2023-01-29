@@ -6,7 +6,11 @@
       "applicationUrl": "https://localhost:5001;http://localhost:5000",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
-        "JWT_AUTHENTICATION_SECRET": "ac8P9eRC4zCWb6ySRr7ZJ83RMY"
+        "JWT_AUTHENTICATION_SECRET": "ac8P9eRC4zCWb6ySRr7ZJ83RMY",
+        "DB_Users_Address": "192.168.1.100",
+        "DB_Users_Name": "",
+        "DB_Users_UserName": "",
+        "DB_Users_Password": ""
       }
     },
     "Docker": {
