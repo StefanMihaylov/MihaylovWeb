@@ -43,7 +43,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mihaylov.Web.Common", "Web\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mihaylov.Web", "Web\Mihaylov.Web\Mihaylov.Web.csproj", "{A37E71AB-2A80-42C1-91D8-72E6806745A8}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Users", "Users", "{7447BA8B-7BAA-456C-A77C-DFD97A5EAEC2}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ApiUsers", "ApiUsers", "{7447BA8B-7BAA-456C-A77C-DFD97A5EAEC2}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mihaylov.Users.Server", "Users\Mihaylov.Users.Server\Mihaylov.Users.Server.csproj", "{7094C3B7-7555-4621-8073-601881CC86FE}"
 EndProject
@@ -59,7 +59,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{5F2AD13B
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{4626EA9C-C657-4019-81FA-BF4CFF3095CF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mihaylov.Common.Abstract", "Common\Mihaylov.Common.Abstract\Mihaylov.Common.Abstract.csproj", "{5B85B6CE-6BFB-480E-AA67-CFAD1E086F2C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mihaylov.Common.Abstract", "Common\Mihaylov.Common.Abstract\Mihaylov.Common.Abstract.csproj", "{5B85B6CE-6BFB-480E-AA67-CFAD1E086F2C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ApiWeather", "ApiWeather", "{2ED76864-3B2F-4DBF-B310-D08E291465E3}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WeatherApi", "ApiWeather\WeatherApi.csproj", "{45F7110B-DB56-4F4C-9420-7E7AC901509B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -155,6 +159,10 @@ Global
 		{5B85B6CE-6BFB-480E-AA67-CFAD1E086F2C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5B85B6CE-6BFB-480E-AA67-CFAD1E086F2C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5B85B6CE-6BFB-480E-AA67-CFAD1E086F2C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{45F7110B-DB56-4F4C-9420-7E7AC901509B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{45F7110B-DB56-4F4C-9420-7E7AC901509B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{45F7110B-DB56-4F4C-9420-7E7AC901509B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{45F7110B-DB56-4F4C-9420-7E7AC901509B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -184,6 +192,7 @@ Global
 		{5F2AD13B-B260-43FE-BB2D-74D3CEB6ED28} = {00B4A411-DDC5-4AA4-BDD2-A612203B563F}
 		{4626EA9C-C657-4019-81FA-BF4CFF3095CF} = {0A3C5789-3F0B-4BBF-99F0-AC85E99E608B}
 		{5B85B6CE-6BFB-480E-AA67-CFAD1E086F2C} = {3708EE14-BC99-4F33-AADA-62C57718525C}
+		{45F7110B-DB56-4F4C-9420-7E7AC901509B} = {2ED76864-3B2F-4DBF-B310-D08E291465E3}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {ECF9C65D-96FF-4564-A762-B6C7EE02C0B9}
