@@ -6,10 +6,10 @@ EXPOSE 80
 
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
-COPY ["WeatherApi/WeatherApi.csproj", "WeatherApi/"]
-RUN dotnet restore "WeatherApi/WeatherApi.csproj"
+COPY ["ApiWeather/WeatherApi.csproj", "ApiWeather/"]
+RUN dotnet restore "ApiWeather/WeatherApi.csproj"
 COPY . .
-WORKDIR "/src/WeatherApi"
+WORKDIR "/src/ApiWeather"
 RUN dotnet build "WeatherApi.csproj" -c Release -o /app/build
 
 FROM build AS publish
