@@ -1,4 +1,4 @@
-#See https://aka.ms/containerfastmode to understand how Visual Studio uses this Dockerfile to build your images for faster debugging.
+#See https://aka.ms/customizecontainer to learn how to customize your debug container and how Visual Studio uses this Dockerfile to build your images for faster debugging.
 
 FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS base
 WORKDIR /app
@@ -8,6 +8,7 @@ EXPOSE 443
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
 COPY ["Users/Mihaylov.Users.Server/Mihaylov.Users.Server.csproj", "Users/Mihaylov.Users.Server/"]
+COPY ["Users/Mihaylov.Users.Controllers/Mihaylov.Users.Controllers.csproj", "Users/Mihaylov.Users.Controllers/"]
 COPY ["Users/Mihaylov.Users.Data/Mihaylov.Users.Data.csproj", "Users/Mihaylov.Users.Data/"]
 COPY ["Common/Mihaylov.Common.Abstract/Mihaylov.Common.Abstract.csproj", "Common/Mihaylov.Common.Abstract/"]
 COPY ["Users/Mihaylov.Users.Models/Mihaylov.Users.Models.csproj", "Users/Mihaylov.Users.Models/"]

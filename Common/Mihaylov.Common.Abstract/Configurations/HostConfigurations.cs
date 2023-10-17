@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Reflection;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
@@ -30,7 +31,7 @@ namespace Mihaylov.Common.Abstract
 
             return services;
         }
-        
+
         public static IServiceCollection Add<TInterface, TImplementation>(this IServiceCollection services, ServiceLifetime lifetime)
         {
             services.Add(new ServiceDescriptor(typeof(TInterface), typeof(TImplementation), lifetime));
@@ -38,7 +39,65 @@ namespace Mihaylov.Common.Abstract
             return services;
         }
 
-        public static void AddSwaggerAuthentication(this SwaggerGenOptions options, string authenticationScheme)
+        public static IServiceCollection AddSwaggerCustom(this IServiceCollection services, string name, string version, string title, string description, bool isPrivate)
+        {
+            services.AddSwaggerGen(options =>
+            {
+                options.SwaggerDoc(name, new OpenApiInfo
+                {
+                    Version = version,
+                    Title = title,
+                    Description = description
+                });
+
+                if (isPrivate)
+                {
+                    options.AddSwaggerAuthentication("Bearer");
+                }
+            });
+
+            return services;
+        }
+
+        public static IApplicationBuilder UseSwaggerCustom(this IApplicationBuilder app, string schemeKey, string pathPrefixKey, string verion, string name)
+        {
+            string basePath = Config.GetEnvironmentVariable(pathPrefixKey, "/");
+            basePath = $"/{basePath.Trim('/')}";
+
+            app.UseSwagger(c =>
+            {
+                c.PreSerializeFilters.Add((swaggerDoc, httpReq) =>
+                {
+                    var scheme = Config.GetEnvironmentVariable(schemeKey, httpReq.Scheme);
+                    swaggerDoc.Servers = new List<OpenApiServer>
+                    {
+                        new OpenApiServer { Url = $"{scheme}://{httpReq.Host.Value}{basePath}" }
+                    };
+                });
+            });
+
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint($"{basePath.TrimEnd('/')}/swagger/{verion}/swagger.json", name);
+                c.RoutePrefix = string.Empty;
+            });
+
+
+            return app;
+        }
+
+        public static IServiceCollection MigrateDatabase<T>(this IServiceCollection serviceProvider) where T : DbContext
+        {
+            using (var provider = serviceProvider.BuildServiceProvider())
+            {
+                var dbContect = provider.GetRequiredService<T>();
+                dbContect.Database.Migrate();
+            }
+
+            return serviceProvider;
+        }
+
+        private static void AddSwaggerAuthentication(this SwaggerGenOptions options, string authenticationScheme)
         {
             options.AddSecurityDefinition(authenticationScheme, new OpenApiSecurityScheme
             {
@@ -68,17 +127,6 @@ namespace Mihaylov.Common.Abstract
                     new List<string>()
                 }
             });
-        }
-
-        public static IServiceCollection MigrateDatabase<T>(this IServiceCollection serviceProvider) where T : DbContext
-        {
-            using (var provider = serviceProvider.BuildServiceProvider())
-            {
-                var dbContect = provider.GetRequiredService<T>();
-                dbContect.Database.Migrate();
-            }
-
-            return serviceProvider;
         }
     }
 }

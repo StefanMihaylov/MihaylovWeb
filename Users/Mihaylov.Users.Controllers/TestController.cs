@@ -2,11 +2,11 @@
 using Microsoft.AspNetCore.Mvc;
 using Mihaylov.Users.Data;
 
-namespace Mihaylov.Users.Server.Controllers
+namespace Mihaylov.Users.Controllers
 {
-    [Route("api/[controller]/[action]")]
-    [ApiExplorerSettings(IgnoreApi = true)]
     [ApiController]
+    [Route("api/[controller]/[action]")]
+    [ApiExplorerSettings(IgnoreApi = true)]    
     public class TestController : ControllerBase
     {
         [HttpGet]

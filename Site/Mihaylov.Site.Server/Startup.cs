@@ -24,11 +24,7 @@ namespace Mihaylov.Site.Server
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddSwaggerGen(options =>
-            {
-                options.SwaggerDoc("v1", new OpenApiInfo { Title = "Site API", Version = "v1" });
-                options.AddSwaggerAuthentication("Bearer");
-            });
+            services.AddSwaggerCustom("v1", "v1", "Site API", null, true);
 
             services.AddHttpContextAccessor();
             services.AddLogging();
@@ -39,7 +35,7 @@ namespace Mihaylov.Site.Server
                     .AddCommon(ServiceLifetime.Singleton)
                     .AddSiteCore(opt =>
                     {
-                        opt.ServerAddress = Environment.GetEnvironmentVariable("DB_Site_Address") ?? "192.168.1.7";
+                        opt.ServerAddress = Environment.GetEnvironmentVariable("DB_Site_Address") ?? "192.168.1.100";
                         opt.DatabaseName = Environment.GetEnvironmentVariable("DB_Site_Name") ?? "Mihaylov_SiteDb";
                         opt.UserName = Environment.GetEnvironmentVariable("DB_Site_UserName");
                         opt.Password = Environment.GetEnvironmentVariable("DB_Site_Password");
@@ -58,17 +54,10 @@ namespace Mihaylov.Site.Server
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseHttpsRedirection();
+            app.UseSwaggerCustom("APP_Scheme", "APP_PathPrefix", "v1", "Site API V1");
 
+            // app.UseHttpsRedirection();
             app.UseRouting();
-
-            app.UseSwagger();
-            app.UseSwaggerUI(c =>
-            {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Site API V1");
-                c.RoutePrefix = string.Empty;
-            });
-
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

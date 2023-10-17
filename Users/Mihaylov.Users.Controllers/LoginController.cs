@@ -1,11 +1,13 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Mihaylov.Users.Data.Interfaces;
 using Mihaylov.Users.Models.Requests;
+using Mihaylov.Users.Models.Responses;
 
-namespace Mihaylov.Users.Server.Controllers
+namespace Mihaylov.Users.Controllers
 {
     [ApiController]
     [AllowAnonymous]
@@ -21,7 +23,8 @@ namespace Mihaylov.Users.Server.Controllers
             _repository = repository;
         }
 
-        [HttpPost]        
+        [HttpPost]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(GenericResponse))]
         public async Task<IActionResult> Register(RegisterRequestModel request)
         {
             var response = await _repository.RegisterAsync(request).ConfigureAwait(false);
@@ -30,13 +33,15 @@ namespace Mihaylov.Users.Server.Controllers
         }
 
         [HttpPost]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(LoginResponseModel))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Login(LoginRequestModel request)
         {
             var response = await _repository.LoginAsync(request).ConfigureAwait(false);
 
             if (!response.Succeeded)
             {
-                return Unauthorized();
+                return BadRequest();
             }
 
             return Ok(response);

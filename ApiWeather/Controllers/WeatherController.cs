@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using WeatherApi.Interfaces;
+using WeatherApi.Models;
 
 namespace WeatherApi.Controllers
 {
@@ -20,6 +22,9 @@ namespace WeatherApi.Controllers
         }
 
         [HttpGet]
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(CurrentWeatherModel))]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
         public async Task<IActionResult> Current(string city, bool? metricUnits)
         {
             try
@@ -35,6 +40,9 @@ namespace WeatherApi.Controllers
         }
 
         [HttpGet]
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ForecastWeatherModel))]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
         public async Task<IActionResult> Forecast(string city, bool? metricUnits)
         {
             try

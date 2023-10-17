@@ -154,6 +154,22 @@ namespace Mihaylov.Users.Data
             }
         }
 
+        public async Task<GenericResponse> ChangePasswordAsync(ChangePasswordRequest request)
+        {
+            try
+            {
+                User user = await this._userManager.FindByNameAsync(request.UserName).ConfigureAwait(false);
+                var result = await this._userManager.ChangePasswordAsync(user, request.OldPassword, request.NewPassword).ConfigureAwait(false);
+
+                return GetGenericResponse(result);
+            }
+            catch (Exception ex)
+            {
+                this._logger.LogError(ex, "ChangePassword failed.");
+                return new GenericResponse(ex);
+            }
+        }
+
 
         public async Task InitializeDatabaseAsync()
         {

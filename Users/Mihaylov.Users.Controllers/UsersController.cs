@@ -7,7 +7,7 @@ using Mihaylov.Users.Data.Interfaces;
 using Mihaylov.Users.Models.Requests;
 using Mihaylov.Users.Models.Responses;
 
-namespace Mihaylov.Users.Server.Controllers
+namespace Mihaylov.Users.Controllers
 {
     [ApiController]
     [Route("api/[controller]/[action]")]
@@ -66,6 +66,16 @@ namespace Mihaylov.Users.Server.Controllers
         public async Task<IActionResult> AddRole(CreateRoleRequest request)
         {
             var response = await this._usersRepository.AddRoleAsync(request).ConfigureAwait(false);
+            return Ok(response);
+        }
+
+        [HttpPost]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(GenericResponse))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        public async Task<IActionResult> ChangePassword(ChangePasswordRequest request)
+        {
+            var response = await this._usersRepository.ChangePasswordAsync(request).ConfigureAwait(false);
             return Ok(response);
         }
     }

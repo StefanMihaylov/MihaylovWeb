@@ -22,11 +22,7 @@ namespace Mihaylov.Users.Server
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddSwaggerGen(options =>
-            {
-                options.SwaggerDoc("v1", new OpenApiInfo { Title = "Users API", Version = "v1" });
-                //options.AddSwaggerAuthentication(UserConstants.AuthenticationScheme);
-            });
+            services.AddSwaggerCustom("v1", "v1", "Users API", null, false);
 
             services.AddDatabaseDeveloperPageExceptionFilter();
             services.AddControllers();
@@ -59,9 +55,6 @@ namespace Mihaylov.Users.Server
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            string basePath = Config.GetEnvironmentVariable("APP_PathPrefix", "/");
-            basePath = $"/{basePath.Trim('/')}";
-
             //  app.InitializeUsersDb();
 
             if (env.IsDevelopment())
@@ -70,22 +63,7 @@ namespace Mihaylov.Users.Server
                 app.UseMigrationsEndPoint();
             }
 
-            app.UseSwagger(c =>
-            {
-                c.PreSerializeFilters.Add((swaggerDoc, httpReq) =>
-                {
-                    var scheme = Config.GetEnvironmentVariable("APP_Scheme", httpReq.Scheme);
-                    swaggerDoc.Servers = new List<OpenApiServer>
-                    {
-                        new OpenApiServer { Url = $"{scheme}://{httpReq.Host.Value}{basePath}" }
-                    };
-                });
-            });
-            app.UseSwaggerUI(c =>
-            {
-                c.SwaggerEndpoint($"{basePath.TrimEnd('/')}/swagger/v1/swagger.json", "Users API V1");
-                c.RoutePrefix = string.Empty;
-            });
+            app.UseSwaggerCustom("APP_Scheme", "APP_PathPrefix", "v1", "Users API V1");
 
             //app.UseHttpsRedirection();
             app.UseRouting();

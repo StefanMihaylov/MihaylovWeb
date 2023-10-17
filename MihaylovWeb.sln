@@ -65,6 +65,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ApiWeather", "ApiWeather", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WeatherApi", "ApiWeather\WeatherApi.csproj", "{45F7110B-DB56-4F4C-9420-7E7AC901509B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mihaylov.Users.Controllers", "Users\Mihaylov.Users.Controllers\Mihaylov.Users.Controllers.csproj", "{0766B14B-A654-48F4-A15E-031450D60B7E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -163,6 +165,10 @@ Global
 		{45F7110B-DB56-4F4C-9420-7E7AC901509B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{45F7110B-DB56-4F4C-9420-7E7AC901509B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{45F7110B-DB56-4F4C-9420-7E7AC901509B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0766B14B-A654-48F4-A15E-031450D60B7E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0766B14B-A654-48F4-A15E-031450D60B7E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0766B14B-A654-48F4-A15E-031450D60B7E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0766B14B-A654-48F4-A15E-031450D60B7E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -193,6 +199,7 @@ Global
 		{4626EA9C-C657-4019-81FA-BF4CFF3095CF} = {0A3C5789-3F0B-4BBF-99F0-AC85E99E608B}
 		{5B85B6CE-6BFB-480E-AA67-CFAD1E086F2C} = {3708EE14-BC99-4F33-AADA-62C57718525C}
 		{45F7110B-DB56-4F4C-9420-7E7AC901509B} = {2ED76864-3B2F-4DBF-B310-D08E291465E3}
+		{0766B14B-A654-48F4-A15E-031450D60B7E} = {7447BA8B-7BAA-456C-A77C-DFD97A5EAEC2}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {ECF9C65D-96FF-4564-A762-B6C7EE02C0B9}

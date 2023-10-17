@@ -7,6 +7,7 @@ EXPOSE 80
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
 COPY ["ApiWeather/WeatherApi.csproj", "ApiWeather/"]
+COPY ["Common/Mihaylov.Common.Abstract/Mihaylov.Common.Abstract.csproj", "Common/Mihaylov.Common.Abstract/"]
 RUN dotnet restore "ApiWeather/WeatherApi.csproj"
 COPY . .
 WORKDIR "/src/ApiWeather"

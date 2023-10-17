@@ -2,8 +2,8 @@ using System;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using Mihaylov.Common.Abstract;
 using WeatherApi.Interfaces;
 using WeatherApi.Services;
 
@@ -24,46 +24,14 @@ namespace WeatherApi
 
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen(options =>
-            {
-                options.SwaggerDoc("v1", new OpenApiInfo
-                {
-                    Version = "v1",
-                    Title = "Weather API",
-                    Description = "Seek-Ah Weather API",
-                });
-            });
+            builder.Services.AddSwaggerCustom("v1", "v1", "Weather API", "Seek-Ah Weather API", false);
 
             var app = builder.Build();
 
-            string basePath = Environment.GetEnvironmentVariable("APP_PathPrefix") ?? "/";
-            basePath = $"/{basePath.Trim('/')}";
-
-            app.UseSwagger(c =>
-            {
-                c.PreSerializeFilters.Add((swaggerDoc, httpReq) =>
-                {
-                    var scheme = Environment.GetEnvironmentVariable("APP_Scheme") ?? httpReq.Scheme;
-                    swaggerDoc.Servers = new List<OpenApiServer>
-                    {
-                        new OpenApiServer { Url = $"{scheme}://{httpReq.Host.Value}{basePath}" }
-                    };
-                });
-            });
-            app.UseSwaggerUI(c =>
-            {
-                c.SwaggerEndpoint($"{basePath.TrimEnd('/')}/swagger/v1/swagger.json", "Users API V1");
-                c.RoutePrefix = string.Empty;
-            });
+            app.UseSwaggerCustom("APP_Scheme", "APP_PathPrefix", "v1", "Weather API V1");
 
             app.UseRouting();
             app.UseAuthorization();
-
-            app.UseSwaggerUI(options =>
-            {
-                options.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
-                options.RoutePrefix = string.Empty;
-            });
 
             app.UseEndpoints(endpoints =>
             {

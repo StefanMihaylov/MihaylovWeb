@@ -24,6 +24,8 @@ namespace Mihaylov.Users.Data.Interfaces
 
         Task<GenericResponse> AddRoleAsync(CreateRoleRequest request);
 
+        Task<GenericResponse> ChangePasswordAsync(ChangePasswordRequest request);
+
         Task InitializeDatabaseAsync();
     }
 }
