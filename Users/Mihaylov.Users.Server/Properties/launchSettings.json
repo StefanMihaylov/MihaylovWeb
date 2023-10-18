@@ -8,17 +8,10 @@
         "ASPNETCORE_ENVIRONMENT": "Development",
         "JWT_AUTHENTICATION_SECRET": "ac8P9eRC4zCWb6ySRr7ZJ83RMY",
         "DB_Users_Address": "192.168.1.100",
-        "DB_Users_Name": "",
+        "DB_Users_Name": "Mihaylov_UsersDb",
         "DB_Users_UserName": "",
         "DB_Users_Password": ""
       }
-    },
-    "Docker": {
-      "commandName": "Docker",
-      "launchBrowser": true,
-      "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}",
-      "publishAllPorts": true,
-      "useSSL": true
     }
   }
 }

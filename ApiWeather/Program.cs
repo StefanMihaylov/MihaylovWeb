@@ -1,44 +1,20 @@
-using System;
-using System.Collections.Generic;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.OpenApi.Models;
-using Mihaylov.Common.Abstract;
-using WeatherApi.Interfaces;
-using WeatherApi.Services;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Hosting;
 
 namespace WeatherApi
 {
-    public class Programs
+    public class Program
     {
-        public static void Main()
+        public static void Main(string[] args)
         {
-            var builder = WebApplication.CreateBuilder();
-
-            builder.Services.AddScoped<IWeatherService, WeatherService>();
-
-            builder.Services.AddHttpClient("Weather", config =>
-            {
-                config.BaseAddress = new Uri("http://api.weatherapi.com");
-            });
-
-            builder.Services.AddControllers();
-            builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerCustom("v1", "v1", "Weather API", "Seek-Ah Weather API", false);
-
-            var app = builder.Build();
-
-            app.UseSwaggerCustom("APP_Scheme", "APP_PathPrefix", "v1", "Weather API V1");
-
-            app.UseRouting();
-            app.UseAuthorization();
-
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllers();
-            });
-
-            app.Run();
+            CreateHostBuilder(args).Build().Run();
         }
+
+        public static IHostBuilder CreateHostBuilder(string[] args) =>
+            Host.CreateDefaultBuilder(args)
+                .ConfigureWebHostDefaults(webBuilder =>
+                {
+                    webBuilder.UseStartup<Startup>();
+                });
     }
 }
