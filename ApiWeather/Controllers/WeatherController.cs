@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -9,6 +10,7 @@ using WeatherApi.Models;
 namespace WeatherApi.Controllers
 {
     [ApiController]
+    [AllowAnonymous]
     [Route("/api/[controller]/[action]")]
     public class WeatherController : ControllerBase
     {
