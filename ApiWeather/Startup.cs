@@ -24,7 +24,7 @@ namespace WeatherApi
             services.AddSwaggerCustom("v1", "v1", "Weather API", "Seek-Ah Weather API", false);
 
             services.AddControllers();
-            services.AddEndpointsApiExplorer();
+           // services.AddEndpointsApiExplorer();
 
             services.AddScoped<IWeatherService, WeatherService>();
             services.AddHttpClient("Weather", config =>
@@ -42,7 +42,7 @@ namespace WeatherApi
 
             app.UseSwaggerCustom("APP_Scheme", "APP_PathPrefix", "v1", "Weather API V1");
 
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
             app.UseRouting();
 
             app.UseCors(x => x.AllowAnyOrigin()
