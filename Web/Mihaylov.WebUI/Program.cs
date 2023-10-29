@@ -2,6 +2,9 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Mihaylov.Common.Host;
+using Mihaylov.Web.Service;
+using Mihaylov.Web.Service.Interfaces;
 
 namespace Mihaylov.WebUI
 {
@@ -53,7 +56,10 @@ namespace Mihaylov.WebUI
             services.AddControllersWithViews();
             services.AddRazorPages();
 
-           // services.AddDatabaseDeveloperPageExceptionFilter();
+            // services.AddDatabaseDeveloperPageExceptionFilter();
+
+            services.AddModuleInfo();
+            services.AddScoped<IModuleService, ModuleService>();
         }
     }
 }

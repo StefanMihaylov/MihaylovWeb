@@ -1,6 +1,25 @@
-﻿@{
-    ViewData["Title"] = "Privacy Policy";
-}
-<h1>@ViewData["Title"]</h1>
+﻿@using Mihaylov.Common.Host.AssemblyVersion.Models;
+@model IEnumerable<ModuleInfo>
 
-<p>Use this page to detail your site's privacy policy.</p>
+<h1>Modules</h1>
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>@Html.LabelFor(m => m.First().ModuleName)</th>
+            <th>@Html.LabelFor(m => m.First().Version)</th>
+            <th>@Html.LabelFor(m => m.First().Framework)</th>
+            <th>@Html.LabelFor(m => m.First().BuildDate)</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var version in Model)
+        {
+            <tr>
+                <td><my-value>@version.ModuleName</my-value></td>
+                <td><my-value>@version.Version</my-value></td>
+                <td><my-value>@version.Framework</my-value></td>
+                <td><my-value>@version.BuildDate UTC</my-value></td>
+            </tr>
+        }
+    </tbody>
+</table>

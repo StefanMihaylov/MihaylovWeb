@@ -24,7 +24,6 @@ namespace WeatherApi
             services.AddSwaggerCustom("v1", "v1", "Weather API", "Seek-Ah Weather API", false);
 
             services.AddControllers();
-           // services.AddEndpointsApiExplorer();
 
             services.AddScoped<IWeatherService, WeatherService>();
             services.AddHttpClient("Weather", config =>
