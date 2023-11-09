@@ -15,8 +15,8 @@
 	</PropertyGroup>
 
 	<PropertyGroup>
-		<Title>Mihaylov.Api.Users</Title>
-		<Version>0.1.8</Version>
+		<Product>Mihaylov.Api.Users</Product>
+		<Version>0.1.8</Version>		
 	</PropertyGroup>
 
   <ItemGroup>

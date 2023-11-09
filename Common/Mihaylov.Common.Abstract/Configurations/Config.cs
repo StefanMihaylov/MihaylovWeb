@@ -8,7 +8,7 @@ namespace Mihaylov.Common.Abstract
 
         public static T GetEnvironmentVariable<T>(string key, TryParseHandler<T> tryParseHandler, T defaultValue)
         {
-            string? configValue = Environment.GetEnvironmentVariable(key);
+            string configValue = Environment.GetEnvironmentVariable(key);
 
             if (!string.IsNullOrWhiteSpace(configValue) && tryParseHandler(configValue, out T result))
             {
@@ -25,7 +25,7 @@ namespace Mihaylov.Common.Abstract
 
         public static string GetEnvironmentVariable(string key)
         {
-            string? configValue = Environment.GetEnvironmentVariable(key);
+            string configValue = Environment.GetEnvironmentVariable(key);
 
             if (string.IsNullOrWhiteSpace(configValue))
             {
