@@ -7,14 +7,14 @@ EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
-COPY ["Users/Mihaylov.Users.Server/Mihaylov.Users.Server.csproj", "Users/Mihaylov.Users.Server/"]
-COPY ["Users/Mihaylov.Users.Controllers/Mihaylov.Users.Controllers.csproj", "Users/Mihaylov.Users.Controllers/"]
-COPY ["Users/Mihaylov.Users.Data/Mihaylov.Users.Data.csproj", "Users/Mihaylov.Users.Data/"]
+COPY ["ApiUsers/Mihaylov.Users.Server/Mihaylov.Users.Server.csproj", "ApiUsers/Mihaylov.Users.Server/"]
+COPY ["ApiUsers/Mihaylov.Users.Controllers/Mihaylov.Users.Controllers.csproj", "ApiUsers/Mihaylov.Users.Controllers/"]
+COPY ["ApiUsers/Mihaylov.Users.Data/Mihaylov.Users.Data.csproj", "ApiUsers/Mihaylov.Users.Data/"]
 COPY ["Common/Mihaylov.Common.Abstract/Mihaylov.Common.Abstract.csproj", "Common/Mihaylov.Common.Abstract/"]
-COPY ["Users/Mihaylov.Users.Models/Mihaylov.Users.Models.csproj", "Users/Mihaylov.Users.Models/"]
-RUN dotnet restore "Users/Mihaylov.Users.Server/Mihaylov.Users.Server.csproj"
+COPY ["ApiUsers/Mihaylov.Users.Models/Mihaylov.Users.Models.csproj", "ApiUsers/Mihaylov.Users.Models/"]
+RUN dotnet restore "ApiUsers/Mihaylov.Users.Server/Mihaylov.Users.Server.csproj"
 COPY . .
-WORKDIR "/src/Users/Mihaylov.Users.Server"
+WORKDIR "/src/ApiUsers/Mihaylov.Users.Server"
 RUN dotnet build "Mihaylov.Users.Server.csproj" -c Release -o /app/build
 
 FROM build AS publish

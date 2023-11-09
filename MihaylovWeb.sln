@@ -45,13 +45,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mihaylov.Web", "Web\Mihaylo
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ApiUsers", "ApiUsers", "{7447BA8B-7BAA-456C-A77C-DFD97A5EAEC2}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mihaylov.Users.Server", "Users\Mihaylov.Users.Server\Mihaylov.Users.Server.csproj", "{7094C3B7-7555-4621-8073-601881CC86FE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mihaylov.Users.Server", "ApiUsers\Mihaylov.Users.Server\Mihaylov.Users.Server.csproj", "{7094C3B7-7555-4621-8073-601881CC86FE}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mihaylov.Users.Data", "Users\Mihaylov.Users.Data\Mihaylov.Users.Data.csproj", "{CDB3488B-9A1E-487B-8090-DD3E77479DA4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mihaylov.Users.Data", "ApiUsers\Mihaylov.Users.Data\Mihaylov.Users.Data.csproj", "{CDB3488B-9A1E-487B-8090-DD3E77479DA4}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mihaylov.WebUI", "Web\Mihaylov.WebUI\Mihaylov.WebUI.csproj", "{70925FC2-0635-4185-989B-44D171D14111}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mihaylov.Users.Models", "Users\Mihaylov.Users.Models\Mihaylov.Users.Models.csproj", "{794CB834-764E-4E1C-B06E-78F434FA8E9F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mihaylov.Users.Models", "ApiUsers\Mihaylov.Users.Models\Mihaylov.Users.Models.csproj", "{794CB834-764E-4E1C-B06E-78F434FA8E9F}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mihaylov.Site.Server", "Site\Mihaylov.Site.Server\Mihaylov.Site.Server.csproj", "{B8CF7E45-F016-42C7-BD65-30A3ACBB4047}"
 EndProject
@@ -65,7 +65,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ApiWeather", "ApiWeather", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WeatherApi", "ApiWeather\WeatherApi.csproj", "{45F7110B-DB56-4F4C-9420-7E7AC901509B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mihaylov.Users.Controllers", "Users\Mihaylov.Users.Controllers\Mihaylov.Users.Controllers.csproj", "{0766B14B-A654-48F4-A15E-031450D60B7E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mihaylov.Users.Controllers", "ApiUsers\Mihaylov.Users.Controllers\Mihaylov.Users.Controllers.csproj", "{0766B14B-A654-48F4-A15E-031450D60B7E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mihaylov.Web.Service", "Web\Mihaylov.Web.Service\Mihaylov.Web.Service.csproj", "{7DD9BD84-8F05-4305-BCB2-CA62B3DB63E1}"
 EndProject
