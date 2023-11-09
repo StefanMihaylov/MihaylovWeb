@@ -11,7 +11,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Site", "Site", "{00B4A411-D
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Dictionaries", "Dictionaries", "{0A3C5789-3F0B-4BBF-99F0-AC85E99E608B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mihaylov.Dictionaries.Database", "Dictionaries\MIhaylov.Dictionaries.Database\Mihaylov.Dictionaries.Database.csproj", "{9B7A157B-B26C-48FE-B384-801AE0EA2E9A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mihaylov.Dictionaries.Database", "Dictionaries\Mihaylov.Dictionaries.Database\Mihaylov.Dictionaries.Database.csproj", "{9B7A157B-B26C-48FE-B384-801AE0EA2E9A}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mihaylov.Site.Data", "Site\Mihaylov.Site.Data\Mihaylov.Site.Data.csproj", "{D9321097-B18E-4F29-ACBF-D1454C10F5B3}"
 EndProject
