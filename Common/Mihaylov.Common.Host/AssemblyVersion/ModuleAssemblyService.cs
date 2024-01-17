@@ -22,7 +22,7 @@ namespace Mihaylov.Common.Host.AssemblyVersion
         public ModuleInfo GetModuleInfo()
         {
             var assemblyName = _rootAssembly.GetName();
-            var targetFramework = _rootAssembly.GetCustomAttribute<TargetFrameworkAttribute>()?.FrameworkDisplayName ?? string.Empty;
+            var targetFramework = _rootAssembly.GetCustomAttribute<TargetFrameworkAttribute>()?.FrameworkDisplayName ?? assemblyName.Name;
             var name = _rootAssembly.GetCustomAttribute<AssemblyProductAttribute>()?.Product ?? assemblyName.Name;
             var version = _rootAssembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion ?? assemblyName.Version.ToString();
 
