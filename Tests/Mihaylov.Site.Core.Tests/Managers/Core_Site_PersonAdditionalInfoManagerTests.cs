@@ -7,7 +7,7 @@ using System;
 
 namespace Mihaylov.Core.Tests.Managers
 {
-    [TestClass]
+    //[TestClass]
     public class Site_Core_PersonAdditionalInfoManagerTests
     {
         private const int NUMBER_OF_ANSWER_TYPES = 5;

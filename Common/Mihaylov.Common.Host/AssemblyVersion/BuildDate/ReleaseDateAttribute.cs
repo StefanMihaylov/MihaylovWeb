@@ -17,7 +17,7 @@ namespace Mihaylov.Common.Host.BuildDate
         {
             ReleaseDate = DateTime.ParseExact(utcDateString, "O", CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind);
         }
-        
+
         /// <summary>
         /// The date the assembly was built
         /// </summary>

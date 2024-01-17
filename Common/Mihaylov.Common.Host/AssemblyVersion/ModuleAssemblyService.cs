@@ -2,9 +2,9 @@
 using System.Reflection;
 using System.Runtime.Versioning;
 using Microsoft.Extensions.Options;
+using Mihaylov.Common.Host.BuildDate;
 using Mihaylov.Common.Host.AssemblyVersion.Interfaces;
 using Mihaylov.Common.Host.AssemblyVersion.Models;
-using Mihaylov.Common.Host.BuildDate;
 
 namespace Mihaylov.Common.Host.AssemblyVersion
 {
@@ -23,12 +23,13 @@ namespace Mihaylov.Common.Host.AssemblyVersion
         {
             var assemblyName = _rootAssembly.GetName();
             var targetFramework = _rootAssembly.GetCustomAttribute<TargetFrameworkAttribute>()?.FrameworkDisplayName ?? string.Empty;
+            var name = _rootAssembly.GetCustomAttribute<AssemblyProductAttribute>()?.Product ?? assemblyName.Name;
+            var version = _rootAssembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion ?? assemblyName.Version.ToString();
 
             DateTime? buildDate = _currentAssembly.GetCustomAttribute<ReleaseDateAttribute>()?.ReleaseDate;
             var buildDateStr = buildDate?.ToString("yyyy.MM.dd HH:mm") ?? string.Empty;
 
-            var result = new ModuleInfo(assemblyName.Name, assemblyName.Version.ToString(), targetFramework, buildDateStr);
-
+            var result = new ModuleInfo(name, version, targetFramework, buildDateStr);
             return result;
         }
     }

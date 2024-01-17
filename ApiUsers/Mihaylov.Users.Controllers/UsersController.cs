@@ -11,7 +11,7 @@ namespace Mihaylov.Users.Controllers
 {
     [ApiController]
     [Route("api/[controller]/[action]")]
-    [Produces("application/json")]    
+    [Produces("application/json")]
     [JwtAuthorize(Roles = UserConstants.AdminRole)]
     public class UsersController : ControllerBase
     {

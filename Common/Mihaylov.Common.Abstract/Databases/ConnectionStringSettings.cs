@@ -1,4 +1,4 @@
-﻿using System.Data.SqlClient;
+﻿using System.Collections.Generic;
 
 namespace Mihaylov.Common.Abstract.Databases
 {
@@ -15,26 +15,20 @@ namespace Mihaylov.Common.Abstract.Databases
 
         public string GetConnectionString()
         {
-            var connectionStringBuilder = new SqlConnectionStringBuilder()
+            var parts = new List<string>()
             {
-                DataSource = this.ServerAddress,
-                InitialCatalog = this.DatabaseName,
-                TrustServerCertificate = true,
-                MultipleActiveResultSets = true,
+                $"Data Source={this.ServerAddress}",
+                $"Initial Catalog={this.DatabaseName}",
+                "Integrated Security=False",
+                $"User ID={this.UserName}",
+                $"Password={this.Password}",
+                "MultipleActiveResultSets=True",
+                "TrustServerCertificate=True"
             };
 
-            if (string.IsNullOrWhiteSpace(UserName))
-            {
-                connectionStringBuilder.IntegratedSecurity = true;
-            }
-            else
-            {
-                connectionStringBuilder.UserID = this.UserName;
-                connectionStringBuilder.Password = this.Password;
-                connectionStringBuilder.IntegratedSecurity = false;
-            }
+            var result = string.Join(';',parts);
 
-            return connectionStringBuilder.ConnectionString;
+            return result;
         }
     }
 }

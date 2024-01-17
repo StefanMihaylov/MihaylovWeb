@@ -2,9 +2,11 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Mihaylov.Common.Host;
 using Mihaylov.Web.Service;
 using Mihaylov.Web.Service.Interfaces;
+using Mihaylov.Api.Users.Client;
+using Mihaylov.Common.Host.AssemblyVersion;
+using Mihaylov.Common.Host.Configurations;
 
 namespace Mihaylov.WebUI
 {
@@ -60,6 +62,7 @@ namespace Mihaylov.WebUI
 
             services.AddModuleInfo();
             services.AddScoped<IModuleService, ModuleService>();
+            services.AddUsersApiClient(Config.GetEnvironmentVariable("Users_Api_Client"));
         }
     }
 }

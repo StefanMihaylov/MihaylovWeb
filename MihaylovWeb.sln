@@ -67,9 +67,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WeatherApi", "ApiWeather\We
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mihaylov.Users.Controllers", "ApiUsers\Mihaylov.Users.Controllers\Mihaylov.Users.Controllers.csproj", "{0766B14B-A654-48F4-A15E-031450D60B7E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mihaylov.Web.Service", "Web\Mihaylov.Web.Service\Mihaylov.Web.Service.csproj", "{7DD9BD84-8F05-4305-BCB2-CA62B3DB63E1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mihaylov.Web.Service", "Web\Mihaylov.Web.Service\Mihaylov.Web.Service.csproj", "{7DD9BD84-8F05-4305-BCB2-CA62B3DB63E1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mihaylov.Common.Host", "Common\Mihaylov.Common.Host\Mihaylov.Common.Host.csproj", "{E243C75A-1750-473C-BD45-2679D5E2119B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mihaylov.Common.Host", "Common\Mihaylov.Common.Host\Mihaylov.Common.Host.csproj", "{E243C75A-1750-473C-BD45-2679D5E2119B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mihaylov.Api.Users.Client", "ApiUsers\Mihaylov.Api.Users.Client\Mihaylov.Api.Users.Client.csproj", "{7E2EFE69-131A-4A27-A06D-1DBA43F90BFB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -181,6 +183,10 @@ Global
 		{E243C75A-1750-473C-BD45-2679D5E2119B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E243C75A-1750-473C-BD45-2679D5E2119B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E243C75A-1750-473C-BD45-2679D5E2119B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7E2EFE69-131A-4A27-A06D-1DBA43F90BFB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7E2EFE69-131A-4A27-A06D-1DBA43F90BFB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7E2EFE69-131A-4A27-A06D-1DBA43F90BFB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7E2EFE69-131A-4A27-A06D-1DBA43F90BFB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -214,6 +220,7 @@ Global
 		{0766B14B-A654-48F4-A15E-031450D60B7E} = {7447BA8B-7BAA-456C-A77C-DFD97A5EAEC2}
 		{7DD9BD84-8F05-4305-BCB2-CA62B3DB63E1} = {EB8036E8-B271-45FE-BC83-081108573BE7}
 		{E243C75A-1750-473C-BD45-2679D5E2119B} = {3708EE14-BC99-4F33-AADA-62C57718525C}
+		{7E2EFE69-131A-4A27-A06D-1DBA43F90BFB} = {7447BA8B-7BAA-456C-A77C-DFD97A5EAEC2}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {ECF9C65D-96FF-4564-A762-B6C7EE02C0B9}

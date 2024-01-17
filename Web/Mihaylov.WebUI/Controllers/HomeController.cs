@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Mihaylov.Web.Service.Interfaces;
@@ -22,9 +23,9 @@ namespace Mihaylov.WebUI.Controllers
             return View();
         }
 
-        public IActionResult Privacy()
+        public async Task<IActionResult> Privacy()
         {
-            var moduleVersions = _moduleService.GetModuleVersions();
+            var moduleVersions = await _moduleService.GetModuleVersionsAsync().ConfigureAwait(false);
             return View(moduleVersions);
         }
 

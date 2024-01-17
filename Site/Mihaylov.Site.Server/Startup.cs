@@ -5,10 +5,11 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.OpenApi.Models;
+using Mihaylov.Common.Host.Configurations;
 using Mihaylov.Common.Abstract;
 using Mihaylov.Site.Core;
 using Mihaylov.Site.Database;
+using Microsoft.EntityFrameworkCore;
 
 namespace Mihaylov.Site.Server
 {
@@ -43,7 +44,7 @@ namespace Mihaylov.Site.Server
                     siteOpt => siteOpt.SiteUrl = "http://"
                     );
 
-            services.MigrateDatabase<SiteDbContext>();
+            services.MigrateDatabase<SiteDbContext>(c => c.Migrate());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

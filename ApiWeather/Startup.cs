@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Mihaylov.Common.Abstract;
+using Mihaylov.Common.Host.Configurations;
 using WeatherApi.Interfaces;
 using WeatherApi.Services;
 

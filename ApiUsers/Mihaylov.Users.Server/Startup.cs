@@ -1,9 +1,12 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Mihaylov.Common.Abstract;
+using Mihaylov.Common.Host.AssemblyVersion;
+using Mihaylov.Common.Host.Configurations;
 using Mihaylov.Users.Data;
 using Mihaylov.Users.Data.Database;
 
@@ -47,8 +50,9 @@ namespace Mihaylov.Users.Server
                            opt.ClaimTypes = Config.GetEnvironmentVariable("JWT_Claims", int.TryParse, 0);
                        });
 
-            services.MigrateDatabase<MihaylovUsersDbContext>();
+            services.MigrateDatabase<MihaylovUsersDbContext>(c => c.Migrate());
             services.InitializeUsersDb();
+            services.AddModuleInfo();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

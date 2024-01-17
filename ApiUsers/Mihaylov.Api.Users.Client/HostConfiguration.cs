@@ -1,0 +1,28 @@
+﻿using System;
+using System.Net.Http;
+using Microsoft.Extensions.DependencyInjection;
+
+namespace Mihaylov.Api.Users.Client
+{
+    public static class HostConfiguration
+    {
+        public static IServiceCollection AddUsersApiClient(this IServiceCollection services, string url)
+        {
+            services.AddHttpClient(UsersApiClient.USERS_API_CLIENT_NAME, c =>
+            {
+                c.BaseAddress = new Uri(url);
+            });
+
+            // services.AddScoped<IUsersApiClient, UsersApiClient>();
+
+            services.AddScoped<IUsersApiClient>(provider =>
+            {
+                var dependency = provider.GetRequiredService<IHttpClientFactory>();
+
+                return new UsersApiClient(dependency);
+            });
+
+            return services;
+        }
+    }
+}

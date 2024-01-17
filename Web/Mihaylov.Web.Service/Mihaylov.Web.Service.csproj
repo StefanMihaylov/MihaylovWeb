@@ -5,6 +5,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<ProjectReference Include="..\..\ApiUsers\Mihaylov.Api.Users.Client\Mihaylov.Api.Users.Client.csproj" />
 		<ProjectReference Include="..\..\Common\Mihaylov.Common.Host\Mihaylov.Common.Host.csproj" />
 	</ItemGroup>
 </Project>

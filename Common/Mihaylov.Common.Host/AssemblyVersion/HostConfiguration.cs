@@ -1,10 +1,9 @@
 ﻿using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
-using Mihaylov.Common.Host.AssemblyVersion;
 using Mihaylov.Common.Host.AssemblyVersion.Interfaces;
 using Mihaylov.Common.Host.AssemblyVersion.Models;
 
-namespace Mihaylov.Common.Host
+namespace Mihaylov.Common.Host.AssemblyVersion
 {
     public static class HostConfiguration
     {
