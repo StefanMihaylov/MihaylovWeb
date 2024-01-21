@@ -58,8 +58,6 @@ namespace Mihaylov.WebUI
             services.AddControllersWithViews();
             services.AddRazorPages();
 
-            // services.AddDatabaseDeveloperPageExceptionFilter();
-
             services.AddModuleInfo();
             services.AddScoped<IModuleService, ModuleService>();
             services.AddUsersApiClient(Config.GetEnvironmentVariable("Users_Api_Client"));

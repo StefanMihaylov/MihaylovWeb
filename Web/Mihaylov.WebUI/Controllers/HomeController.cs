@@ -23,7 +23,7 @@ namespace Mihaylov.WebUI.Controllers
             return View();
         }
 
-        public async Task<IActionResult> Privacy()
+        public async Task<IActionResult> ModuleInfo()
         {
             var moduleVersions = await _moduleService.GetModuleVersionsAsync().ConfigureAwait(false);
             return View(moduleVersions);

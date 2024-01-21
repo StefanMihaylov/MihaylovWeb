@@ -7,7 +7,7 @@
       "applicationUrl": "https://localhost:7027;http://localhost:5186",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
-        "Users_Api_Client": "https://localhost:5011"
+        "Users_Api_Client": "https://api.mihaylov-s.eu/users" // "https://localhost:5011"
       }
     }
   }
