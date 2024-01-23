@@ -6,6 +6,6 @@ namespace Mihaylov.Web.Service.Interfaces
 {
     public interface IModuleService
     {
-        Task<IEnumerable<ModuleInfo>> GetModuleVersionsAsync();
+        Task<IEnumerable<IModuleInfo>> GetModuleVersionsAsync();
     }
 }

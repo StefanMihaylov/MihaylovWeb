@@ -1,5 +1,5 @@
 ﻿@using Mihaylov.Common.Host.AssemblyVersion.Models;
-@model IEnumerable<ModuleInfo>
+@model IEnumerable<IModuleInfo>
 
 <h1>Modules</h1>
 <table class="table table-bordered table-striped">
@@ -9,6 +9,7 @@
             <th>@Html.LabelFor(m => m.First().Version)</th>
             <th>@Html.LabelFor(m => m.First().Framework)</th>
             <th>@Html.LabelFor(m => m.First().BuildDate)</th>
+            <th>@Html.LabelFor(m => m.First().GitCommit)</th>
         </tr>
     </thead>
     <tbody>
@@ -19,6 +20,7 @@
                 <td><my-value>@version.Version</my-value></td>
                 <td><my-value>@version.Framework</my-value></td>
                 <td><my-value>@version.BuildDate UTC</my-value></td>
+                <td><my-value>@version.GitCommit</my-value></td>
             </tr>
         }
     </tbody>

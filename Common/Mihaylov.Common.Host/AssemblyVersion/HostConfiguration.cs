@@ -15,6 +15,7 @@ namespace Mihaylov.Common.Host.AssemblyVersion
             });
 
             services.AddScoped<IModuleAssemblyService, ModuleAssemblyService>();
+            services.AddScoped<ISystemConfiguration, SystemConfiguration>();
 
             return services;
         }

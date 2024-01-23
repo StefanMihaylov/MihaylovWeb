@@ -9,6 +9,7 @@ FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
 COPY ["ApiUsers/Mihaylov.Users.Server/Mihaylov.Users.Server.csproj", "ApiUsers/Mihaylov.Users.Server/"]
 COPY ["ApiUsers/Mihaylov.Users.Controllers/Mihaylov.Users.Controllers.csproj", "ApiUsers/Mihaylov.Users.Controllers/"]
+COPY ["Common/Mihaylov.Common.Host/Mihaylov.Common.Host.csproj", "Common/Mihaylov.Common.Host/"]
 COPY ["ApiUsers/Mihaylov.Users.Data/Mihaylov.Users.Data.csproj", "ApiUsers/Mihaylov.Users.Data/"]
 COPY ["Common/Mihaylov.Common.Abstract/Mihaylov.Common.Abstract.csproj", "Common/Mihaylov.Common.Abstract/"]
 COPY ["ApiUsers/Mihaylov.Users.Models/Mihaylov.Users.Models.csproj", "ApiUsers/Mihaylov.Users.Models/"]

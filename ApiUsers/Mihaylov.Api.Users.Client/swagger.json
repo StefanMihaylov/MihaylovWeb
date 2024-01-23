@@ -531,6 +531,10 @@
           "buildDate": {
             "type": "string",
             "nullable": true
+          },
+          "gitCommit": {
+            "type": "string",
+            "nullable": true
           }
         },
         "additionalProperties": false

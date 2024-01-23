@@ -2,27 +2,26 @@
 
 namespace Mihaylov.Common.Host.AssemblyVersion.Models
 {
-    public class ModuleInfo
-    {
-        [Display(Name = "Module")]
+    public class ModuleInfo : IModuleInfo
+    {        
         public string ModuleName { get; private set; }
-
-        [Display(Name = "Version")]
+        
         public string Version { get; private set; }
-
-        [Display(Name = "Framework")]
+        
         public string Framework { get; private set; }
-
-        [Display(Name = "Build Date")]
+        
         public string BuildDate { get; private set; }
+        
+        public string GitCommit { get; private set; }
 
 
-        public ModuleInfo(string moduleName, string version, string framework, string buildDate)
+        public ModuleInfo(string moduleName, string version, string framework, string buildDate, string gitCommit)
         {
             ModuleName = moduleName;
             Version = version;
             Framework = framework;
             BuildDate = buildDate;
+            GitCommit = gitCommit;
         }
     }
 }

@@ -267,6 +267,9 @@ namespace Mihaylov.Api.Users.Client
         [Newtonsoft.Json.JsonProperty("buildDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string BuildDate { get; set; }
 
+        [Newtonsoft.Json.JsonProperty("gitCommit", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string GitCommit { get; set; }
+
         public string ToJson()
         {
 

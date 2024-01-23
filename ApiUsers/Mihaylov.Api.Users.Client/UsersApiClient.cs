@@ -1,8 +1,9 @@
 ﻿using System.Net.Http;
+using Mihaylov.Common.Host.AssemblyVersion.Models;
 
 namespace Mihaylov.Api.Users.Client
 {
-    internal partial class UsersApiClient : IUsersApiClient
+    public partial class UsersApiClient : IUsersApiClient
     {
         public const string USERS_API_CLIENT_NAME = "UsersApiClient";
 
@@ -11,5 +12,9 @@ namespace Mihaylov.Api.Users.Client
         {
             _baseUrl = _httpClient.BaseAddress.AbsoluteUri;
         }
+    }
+
+    public partial class ModuleInfo : IModuleInfo
+    {
     }
 }
