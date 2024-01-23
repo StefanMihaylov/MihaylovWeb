@@ -9,7 +9,7 @@
 	<PropertyGroup>
 		<SatelliteResourceLanguages>en-US</SatelliteResourceLanguages>
 		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
-		<AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+		<AppendRuntimeIdentifierToOutputPath>true</AppendRuntimeIdentifierToOutputPath>
 		<EnableDynamicLoading>true</EnableDynamicLoading>
 		<ImplicitUsings>disable</ImplicitUsings>
 		<Nullable>disable</Nullable>
