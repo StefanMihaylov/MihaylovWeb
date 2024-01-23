@@ -535,6 +535,10 @@
           "gitCommit": {
             "type": "string",
             "nullable": true
+          },
+          "jenkinsBuildNumber": {
+            "type": "string",
+            "nullable": true
           }
         },
         "additionalProperties": false

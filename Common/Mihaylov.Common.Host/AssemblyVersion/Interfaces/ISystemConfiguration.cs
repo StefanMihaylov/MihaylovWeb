@@ -2,7 +2,10 @@
 {
     public interface ISystemConfiguration
     {
-        string GetGitCommit();
         string GetVersion();
+
+        string GetGitCommit();
+
+        string GetJenkinsBuildNumber();
     }
 }

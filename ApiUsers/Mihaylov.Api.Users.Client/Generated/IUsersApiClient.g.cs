@@ -270,6 +270,9 @@ namespace Mihaylov.Api.Users.Client
         [Newtonsoft.Json.JsonProperty("gitCommit", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string GitCommit { get; set; }
 
+        [Newtonsoft.Json.JsonProperty("jenkinsBuildNumber", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string JenkinsBuildNumber { get; set; }
+
         public string ToJson()
         {
 

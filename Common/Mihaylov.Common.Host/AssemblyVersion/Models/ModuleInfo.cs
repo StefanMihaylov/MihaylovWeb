@@ -14,14 +14,17 @@ namespace Mihaylov.Common.Host.AssemblyVersion.Models
         
         public string GitCommit { get; private set; }
 
+        public string JenkinsBuildNumber { get; private set; }
 
-        public ModuleInfo(string moduleName, string version, string framework, string buildDate, string gitCommit)
+
+        public ModuleInfo(string moduleName, string version, string framework, string buildDate, string gitCommit, string jenkinsBuildNumber)
         {
             ModuleName = moduleName;
             Version = version;
             Framework = framework;
             BuildDate = buildDate;
             GitCommit = gitCommit;
+            JenkinsBuildNumber = jenkinsBuildNumber;
         }
     }
 }

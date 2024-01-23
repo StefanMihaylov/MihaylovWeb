@@ -19,5 +19,12 @@ namespace Mihaylov.Common.Host.AssemblyVersion
 
             return commit;
         }
+
+        public string GetJenkinsBuildNumber()
+        {
+            var build = Config.GetEnvironmentVariable("Jenkins_Build", string.Empty);
+
+            return build;
+        }
     }
 }

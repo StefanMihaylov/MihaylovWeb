@@ -18,5 +18,8 @@ namespace Mihaylov.Common.Host.AssemblyVersion.Models
 
         [Display(Name = "Git Commit")]
         string GitCommit { get; }
+
+        [Display(Name = "Build Number")]
+        string JenkinsBuildNumber { get; }
     }
 }

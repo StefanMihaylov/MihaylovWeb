@@ -2,7 +2,6 @@
 using System.IO;
 using System.Reflection;
 using System.Runtime.Versioning;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using Mihaylov.Common.Host.AssemblyVersion.Interfaces;
 using Mihaylov.Common.Host.AssemblyVersion.Models;
@@ -40,8 +39,9 @@ namespace Mihaylov.Common.Host.AssemblyVersion
             DateTime buildDate = new FileInfo(_rootAssembly.Location).LastWriteTimeUtc;
 
             var gitCommit = _config.GetGitCommit();
+            var buildNumber = _config.GetJenkinsBuildNumber();
 
-            var result = new ModuleInfo(name, version, framework, buildDate.ToString("yyyy.MM.dd HH:mm"), gitCommit);
+            var result = new ModuleInfo(name, version, framework, buildDate.ToString("yyyy.MM.dd HH:mm"), gitCommit, buildNumber);
             return result;
         }
     }
