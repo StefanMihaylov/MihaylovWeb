@@ -11,10 +11,5 @@
 		<PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="6.5.0" />
 		<PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="6.5.0" />
 	</ItemGroup>
-
-	<ItemGroup>
-		<AssemblyAttribute Include="Mihaylov.Common.Host.BuildDate.ReleaseDate">
-			<_Parameter1>$([System.DateTime]::UtcNow.ToString("O"))</_Parameter1>
-		</AssemblyAttribute>
-	</ItemGroup>
+	
 </Project>
