@@ -4,11 +4,13 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Mihaylov.Api.Weather.Contracts.Interfaces;
+using Mihaylov.Api.Weather.Data;
+using Mihaylov.Api.Weather.Data.Configuration;
+using Mihaylov.Common.Host.AssemblyVersion;
 using Mihaylov.Common.Host.Configurations;
-using WeatherApi.Interfaces;
-using WeatherApi.Services;
 
-namespace WeatherApi
+namespace Mihaylov.Api.Weather
 {
     public class Startup
     {
@@ -24,12 +26,18 @@ namespace WeatherApi
             services.AddSwaggerCustom("v1", "v1", "Weather API", "Seek-Ah Weather API", false);
 
             services.AddControllers();
+            services.AddModuleInfo();
 
-            services.AddScoped<IWeatherService, WeatherService>();
-            services.AddHttpClient("Weather", config =>
-             {
-                 config.BaseAddress = new Uri("http://api.weatherapi.com");
-             });
+            services.AddScoped<IWeatherApiService, WeatherApiService>();
+            services.AddHttpClient(WeatherApiService.WEATHER_CLIENT, config =>
+            {
+                config.BaseAddress = new Uri(Config.GetEnvironmentVariable("WeatherApi_Url"));
+            });
+
+            services.Configure<WeatherApiSettings>(opt =>
+            {
+                opt.AppId = Config.GetEnvironmentVariable("WeatherApi_AppId");
+            });
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -41,9 +49,7 @@ namespace WeatherApi
 
             app.UseSwaggerCustom("APP_Scheme", "APP_PathPrefix", "v1", "Weather API V1");
 
-            //app.UseHttpsRedirection();
             app.UseRouting();
-
             app.UseCors(x => x.AllowAnyOrigin()
                               .AllowAnyMethod()
                               .AllowAnyHeader());

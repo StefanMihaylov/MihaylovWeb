@@ -1,12 +1,10 @@
-﻿using System;
-
-namespace WeatherApi.Models
+﻿namespace Mihaylov.Api.Weather.Contracts.Models
 {
     public class CurrentWeatherModel
     {
         public string Location { get; set; }
 
-        public string Country { get; set; }      
+        public string Country { get; set; }
 
         public string CurrentDate { get; set; }
 
@@ -14,8 +12,12 @@ namespace WeatherApi.Models
 
         public decimal Temperature { get; set; }
 
+        public decimal FeelsLike { get; set; }
+
+        public string TemperatureUnit { get; set; }
+
         public decimal Wind { get; set; }
 
-        public decimal FeelsLike { get; set; }
+        public string WindUnit { get; set; }
     }
 }

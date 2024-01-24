@@ -1,14 +1,5 @@
-﻿using System.Collections.Generic;
-
-namespace WeatherApi.Models
+﻿namespace Mihaylov.Api.Weather.Contracts.Models
 {
-    public class ForecastWeatherModel
-    {
-        public CurrentWeatherModel Current { get; set; }
-
-        public IEnumerable<ForecastDayModel> Forecast { get; set; }
-    }
-
     public class ForecastDayModel
     {
         public string Date { get; set; }

@@ -4,10 +4,10 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using WeatherApi.Interfaces;
-using WeatherApi.Models;
+using Mihaylov.Api.Weather.Contracts.Interfaces;
+using Mihaylov.Api.Weather.Contracts.Models;
 
-namespace WeatherApi.Controllers
+namespace Mihaylov.Api.Weather.Controllers
 {
     [ApiController]
     [AllowAnonymous]
@@ -15,9 +15,9 @@ namespace WeatherApi.Controllers
     public class WeatherController : ControllerBase
     {
         private readonly ILogger _logger;
-        private readonly IWeatherService _weatherService;
+        private readonly IWeatherApiService _weatherService;
 
-        public WeatherController(ILoggerFactory loggerFactory, IWeatherService weatherService)
+        public WeatherController(ILoggerFactory loggerFactory, IWeatherApiService weatherService)
         {
             _logger = loggerFactory.CreateLogger(GetType());
             _weatherService = weatherService;

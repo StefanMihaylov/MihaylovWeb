@@ -3,28 +3,34 @@ using System.Linq;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
-using WeatherApi.Interfaces;
-using WeatherApi.Models;
+using Microsoft.Extensions.Options;
+using Mihaylov.Api.Weather.Contracts.Interfaces;
+using Mihaylov.Api.Weather.Contracts.Models;
+using Mihaylov.Api.Weather.Data.Configuration;
+using Mihaylov.Api.Weather.Data.Models;
+using DTO = Mihaylov.Api.Weather.Contracts.Models;
 
-namespace WeatherApi.Services
+namespace Mihaylov.Api.Weather.Data
 {
-    public class WeatherService : IWeatherService
+    public class WeatherApiService : IWeatherApiService
     {
+        public const string WEATHER_CLIENT = "Weather_client";
+
         private readonly string _baseUrl;
-        private readonly string _appId;
         private HttpClient _httpClient;
+        private readonly WeatherApiSettings _config;
 
-        public WeatherService(IHttpClientFactory httpClientFactory)
+        public WeatherApiService(IHttpClientFactory httpClientFactory, IOptions<WeatherApiSettings> settings)
         {
-            _httpClient = httpClientFactory.CreateClient("Weather");
-            _baseUrl = _httpClient.BaseAddress?.AbsoluteUri.TrimEnd('/') ?? string.Empty;
+            _httpClient = httpClientFactory.CreateClient(WEATHER_CLIENT);
+            _config = settings.Value;
 
-            _appId = "7c51c35505764326af9190913231104";
+            _baseUrl = _httpClient.BaseAddress?.AbsoluteUri.TrimEnd('/') ?? string.Empty;
         }
 
         public async Task<CurrentWeatherModel> CurrentAsync(string city, bool metricUnits = true)
         {
-            var queryString = $"key={_appId}&q={city}&aqi=no";
+            var queryString = $"key={_config.AppId}&q={city}&aqi=no";
             var response = await GetResponseAsync<CurrentWeatherResponse>("v1/current.json", queryString).ConfigureAwait(false);
 
             var result = MapCurrentWeather(response, metricUnits);
@@ -32,16 +38,15 @@ namespace WeatherApi.Services
             return result;
         }
 
-
         public async Task<ForecastWeatherModel> ForecastAsync(string city, int days, bool metricUnits = true)
         {
-            var queryString = $"key={_appId}&q={city}&days={days}&aqi=no&alerts=no";
+            var queryString = $"key={_config.AppId}&q={city}&days={days}&aqi=no&alerts=no";
             var response = await GetResponseAsync<ForecastWeatherResponse>("v1/forecast.json", queryString).ConfigureAwait(false);
 
             var result = new ForecastWeatherModel
             {
                 Current = MapCurrentWeather(response, metricUnits),
-                Forecast = response.Forecast.ForecastDay.Select(f => new Models.ForecastDayModel()
+                Forecast = response.Forecast.ForecastDay.Select(f => new DTO.ForecastDayModel()
                 {
                     Date = f.Date,
                     Condition = f.Day.Condition.Text,
@@ -60,7 +65,7 @@ namespace WeatherApi.Services
             var url = $"{_baseUrl}/{endpoint}?{queryString}";
             var request = new HttpRequestMessage(HttpMethod.Get, url);
 
-            var responseMessage = await _httpClient.SendAsync(request).ConfigureAwait(false);
+            using var responseMessage = await _httpClient.SendAsync(request).ConfigureAwait(false);
             if (!responseMessage.IsSuccessStatusCode)
             {
                 throw new ApplicationException("Error");
@@ -87,8 +92,10 @@ namespace WeatherApi.Services
                 CurrentDate = response.Location.LocalTime,
                 Condition = response.Current.Condition.Text,
                 Temperature = metricUnits ? response.Current.Temp_c : response.Current.Temp_f,
-                Wind = metricUnits ? response.Current.Wind_kph : response.Current.Wind_mph,
                 FeelsLike = metricUnits ? response.Current.Feelslike_c : response.Current.Feelslike_f,
+                TemperatureUnit = metricUnits ? "°C" : "°F",
+                Wind = metricUnits ? response.Current.Wind_kph : response.Current.Wind_mph,
+                WindUnit = metricUnits ? "km/h" : "mph",
             };
         }
     }

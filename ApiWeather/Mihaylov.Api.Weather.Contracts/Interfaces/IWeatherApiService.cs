@@ -1,9 +1,9 @@
 ﻿using System.Threading.Tasks;
-using WeatherApi.Models;
+using Mihaylov.Api.Weather.Contracts.Models;
 
-namespace WeatherApi.Interfaces
+namespace Mihaylov.Api.Weather.Contracts.Interfaces
 {
-    public interface IWeatherService
+    public interface IWeatherApiService
     {
         Task<CurrentWeatherModel> CurrentAsync(string city, bool metricUnits = true);
 

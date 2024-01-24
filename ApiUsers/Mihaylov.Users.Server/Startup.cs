@@ -57,8 +57,6 @@ namespace Mihaylov.Users.Server
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            //  app.InitializeUsersDb();
-
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -67,9 +65,7 @@ namespace Mihaylov.Users.Server
 
             app.UseSwaggerCustom("APP_Scheme", "APP_PathPrefix", "v1", "Users API V1");
 
-            //app.UseHttpsRedirection();
             app.UseRouting();
-
             app.UseCors(x => x.AllowAnyOrigin()
                               .AllowAnyMethod()
                               .AllowAnyHeader());
