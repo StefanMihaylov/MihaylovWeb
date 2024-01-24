@@ -33,21 +33,21 @@ namespace Mihaylov.Api.Weather.Client
 
         /// <returns>Success</returns>
         /// <exception cref="SwaggerException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task<CurrentWeatherModel> CurrentAsync(string city, bool? metricUnits);
+        System.Threading.Tasks.Task<CurrentWeatherModel> CurrentAsync(string city, bool? metricUnits, string language);
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>Success</returns>
         /// <exception cref="SwaggerException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task<CurrentWeatherModel> CurrentAsync(string city, bool? metricUnits, System.Threading.CancellationToken cancellationToken);
+        System.Threading.Tasks.Task<CurrentWeatherModel> CurrentAsync(string city, bool? metricUnits, string language, System.Threading.CancellationToken cancellationToken);
 
         /// <returns>Success</returns>
         /// <exception cref="SwaggerException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task<ForecastWeatherModel> ForecastAsync(string city, bool? metricUnits);
+        System.Threading.Tasks.Task<ForecastWeatherModel> ForecastAsync(string city, bool? metricUnits, string language);
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>Success</returns>
         /// <exception cref="SwaggerException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task<ForecastWeatherModel> ForecastAsync(string city, bool? metricUnits, System.Threading.CancellationToken cancellationToken);
+        System.Threading.Tasks.Task<ForecastWeatherModel> ForecastAsync(string city, bool? metricUnits, string language, System.Threading.CancellationToken cancellationToken);
 
     }
 
@@ -65,6 +65,9 @@ namespace Mihaylov.Api.Weather.Client
 
         [Newtonsoft.Json.JsonProperty("condition", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string Condition { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("conditionIcon", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string ConditionIcon { get; set; }
 
         [Newtonsoft.Json.JsonProperty("temperature", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public double Temperature { get; set; }
@@ -104,6 +107,9 @@ namespace Mihaylov.Api.Weather.Client
 
         [Newtonsoft.Json.JsonProperty("condition", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string Condition { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("conditionIcon", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string ConditionIcon { get; set; }
 
         [Newtonsoft.Json.JsonProperty("maxTemp", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public double MaxTemp { get; set; }

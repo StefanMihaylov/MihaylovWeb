@@ -131,25 +131,29 @@ namespace Mihaylov.Api.Weather.Client
 
         /// <returns>Success</returns>
         /// <exception cref="SwaggerException">A server side error occurred.</exception>
-        public virtual System.Threading.Tasks.Task<CurrentWeatherModel> CurrentAsync(string city, bool? metricUnits)
+        public virtual System.Threading.Tasks.Task<CurrentWeatherModel> CurrentAsync(string city, bool? metricUnits, string language)
         {
-            return CurrentAsync(city, metricUnits, System.Threading.CancellationToken.None);
+            return CurrentAsync(city, metricUnits, language, System.Threading.CancellationToken.None);
         }
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>Success</returns>
         /// <exception cref="SwaggerException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<CurrentWeatherModel> CurrentAsync(string city, bool? metricUnits, System.Threading.CancellationToken cancellationToken)
+        public virtual async System.Threading.Tasks.Task<CurrentWeatherModel> CurrentAsync(string city, bool? metricUnits, string language, System.Threading.CancellationToken cancellationToken)
         {
+            if (city == null)
+                throw new System.ArgumentNullException("city");
+
             var urlBuilder_ = new System.Text.StringBuilder();
             urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/api/Weather/Current?");
-            if (city != null)
-            {
-                urlBuilder_.Append(System.Uri.EscapeDataString("city") + "=").Append(System.Uri.EscapeDataString(ConvertToString(city, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
-            }
+            urlBuilder_.Append(System.Uri.EscapeDataString("City") + "=").Append(System.Uri.EscapeDataString(ConvertToString(city, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
             if (metricUnits != null)
             {
-                urlBuilder_.Append(System.Uri.EscapeDataString("metricUnits") + "=").Append(System.Uri.EscapeDataString(ConvertToString(metricUnits, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+                urlBuilder_.Append(System.Uri.EscapeDataString("MetricUnits") + "=").Append(System.Uri.EscapeDataString(ConvertToString(metricUnits, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+            }
+            if (language != null)
+            {
+                urlBuilder_.Append(System.Uri.EscapeDataString("Language") + "=").Append(System.Uri.EscapeDataString(ConvertToString(language, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
             }
             urlBuilder_.Length--;
 
@@ -224,25 +228,29 @@ namespace Mihaylov.Api.Weather.Client
 
         /// <returns>Success</returns>
         /// <exception cref="SwaggerException">A server side error occurred.</exception>
-        public virtual System.Threading.Tasks.Task<ForecastWeatherModel> ForecastAsync(string city, bool? metricUnits)
+        public virtual System.Threading.Tasks.Task<ForecastWeatherModel> ForecastAsync(string city, bool? metricUnits, string language)
         {
-            return ForecastAsync(city, metricUnits, System.Threading.CancellationToken.None);
+            return ForecastAsync(city, metricUnits, language, System.Threading.CancellationToken.None);
         }
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>Success</returns>
         /// <exception cref="SwaggerException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<ForecastWeatherModel> ForecastAsync(string city, bool? metricUnits, System.Threading.CancellationToken cancellationToken)
+        public virtual async System.Threading.Tasks.Task<ForecastWeatherModel> ForecastAsync(string city, bool? metricUnits, string language, System.Threading.CancellationToken cancellationToken)
         {
+            if (city == null)
+                throw new System.ArgumentNullException("city");
+
             var urlBuilder_ = new System.Text.StringBuilder();
             urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/api/Weather/Forecast?");
-            if (city != null)
-            {
-                urlBuilder_.Append(System.Uri.EscapeDataString("city") + "=").Append(System.Uri.EscapeDataString(ConvertToString(city, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
-            }
+            urlBuilder_.Append(System.Uri.EscapeDataString("City") + "=").Append(System.Uri.EscapeDataString(ConvertToString(city, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
             if (metricUnits != null)
             {
-                urlBuilder_.Append(System.Uri.EscapeDataString("metricUnits") + "=").Append(System.Uri.EscapeDataString(ConvertToString(metricUnits, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+                urlBuilder_.Append(System.Uri.EscapeDataString("MetricUnits") + "=").Append(System.Uri.EscapeDataString(ConvertToString(metricUnits, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+            }
+            if (language != null)
+            {
+                urlBuilder_.Append(System.Uri.EscapeDataString("Language") + "=").Append(System.Uri.EscapeDataString(ConvertToString(language, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
             }
             urlBuilder_.Length--;
 

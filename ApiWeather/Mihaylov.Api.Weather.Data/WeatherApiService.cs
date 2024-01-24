@@ -28,9 +28,9 @@ namespace Mihaylov.Api.Weather.Data
             _baseUrl = _httpClient.BaseAddress?.AbsoluteUri.TrimEnd('/') ?? string.Empty;
         }
 
-        public async Task<CurrentWeatherModel> CurrentAsync(string city, bool metricUnits = true)
+        public async Task<CurrentWeatherModel> CurrentAsync(string city, bool metricUnits, string language)
         {
-            var queryString = $"key={_config.AppId}&q={city}&aqi=no";
+            var queryString = $"key={_config.AppId}&q={city}&aqi=no&lang={language}";
             var response = await GetResponseAsync<CurrentWeatherResponse>("v1/current.json", queryString).ConfigureAwait(false);
 
             var result = MapCurrentWeather(response, metricUnits);
@@ -38,9 +38,9 @@ namespace Mihaylov.Api.Weather.Data
             return result;
         }
 
-        public async Task<ForecastWeatherModel> ForecastAsync(string city, int days, bool metricUnits = true)
+        public async Task<ForecastWeatherModel> ForecastAsync(string city, int days, bool metricUnits, string language)
         {
-            var queryString = $"key={_config.AppId}&q={city}&days={days}&aqi=no&alerts=no";
+            var queryString = $"key={_config.AppId}&q={city}&days={days}&aqi=no&lang={language}&alerts=no";
             var response = await GetResponseAsync<ForecastWeatherResponse>("v1/forecast.json", queryString).ConfigureAwait(false);
 
             var result = new ForecastWeatherModel
@@ -50,6 +50,7 @@ namespace Mihaylov.Api.Weather.Data
                 {
                     Date = f.Date,
                     Condition = f.Day.Condition.Text,
+                    ConditionIcon = f.Day.Condition.Icon,
                     MinTemp = metricUnits ? f.Day.MinTemp_c : f.Day.MinTemp_f,
                     MaxTemp = metricUnits ? f.Day.MaxTemp_c : f.Day.MaxTemp_f,
                     DailyChanceOfRain = f.Day.Daily_Chance_of_Rain,
@@ -91,6 +92,7 @@ namespace Mihaylov.Api.Weather.Data
                 Country = response.Location.Country,
                 CurrentDate = response.Location.LocalTime,
                 Condition = response.Current.Condition.Text,
+                ConditionIcon = response.Current.Condition.Icon,
                 Temperature = metricUnits ? response.Current.Temp_c : response.Current.Temp_f,
                 FeelsLike = metricUnits ? response.Current.Feelslike_c : response.Current.Feelslike_f,
                 TemperatureUnit = metricUnits ? "°C" : "°F",

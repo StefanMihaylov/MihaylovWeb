@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Mihaylov.Api.Weather.Contracts.Interfaces;
 using Mihaylov.Api.Weather.Contracts.Models;
+using Mihaylov.Api.Weather.Models;
 
 namespace Mihaylov.Api.Weather.Controllers
 {
@@ -27,11 +28,13 @@ namespace Mihaylov.Api.Weather.Controllers
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(CurrentWeatherModel))]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
-        public async Task<IActionResult> Current(string city, bool? metricUnits)
+        public async Task<IActionResult> Current([FromQuery]RequestModel model)
         {
             try
             {
-                var response = await _weatherService.CurrentAsync(city, metricUnits ?? true).ConfigureAwait(false);
+                model.AddDefault();
+
+                var response = await _weatherService.CurrentAsync(model.City, model.MetricUnits.Value, model.Language).ConfigureAwait(false);
 
                 return Ok(response);
             }
@@ -45,11 +48,13 @@ namespace Mihaylov.Api.Weather.Controllers
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ForecastWeatherModel))]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
-        public async Task<IActionResult> Forecast(string city, bool? metricUnits)
+        public async Task<IActionResult> Forecast([FromQuery] RequestModel model)
         {
             try
             {
-                var response = await _weatherService.ForecastAsync(city, 3, metricUnits ?? true).ConfigureAwait(false);
+                model.AddDefault();
+
+                var response = await _weatherService.ForecastAsync(model.City, 3, model.MetricUnits.Value, model.Language).ConfigureAwait(false);
 
                 return Ok(response);
             }

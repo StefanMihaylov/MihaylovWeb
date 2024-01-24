@@ -6,6 +6,8 @@
 
         public string Condition { get; set; }
 
+        public string ConditionIcon { get; set; }
+
         public decimal MaxTemp { get; set; }
 
         public decimal MinTemp { get; set; }

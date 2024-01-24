@@ -37,17 +37,25 @@
         ],
         "parameters": [
           {
-            "name": "city",
+            "name": "City",
             "in": "query",
+            "required": true,
             "schema": {
               "type": "string"
             }
           },
           {
-            "name": "metricUnits",
+            "name": "MetricUnits",
             "in": "query",
             "schema": {
               "type": "boolean"
+            }
+          },
+          {
+            "name": "Language",
+            "in": "query",
+            "schema": {
+              "type": "string"
             }
           }
         ],
@@ -82,17 +90,25 @@
         ],
         "parameters": [
           {
-            "name": "city",
+            "name": "City",
             "in": "query",
+            "required": true,
             "schema": {
               "type": "string"
             }
           },
           {
-            "name": "metricUnits",
+            "name": "MetricUnits",
             "in": "query",
             "schema": {
               "type": "boolean"
+            }
+          },
+          {
+            "name": "Language",
+            "in": "query",
+            "schema": {
+              "type": "string"
             }
           }
         ],
@@ -142,6 +158,10 @@
             "type": "string",
             "nullable": true
           },
+          "conditionIcon": {
+            "type": "string",
+            "nullable": true
+          },
           "temperature": {
             "type": "number",
             "format": "double"
@@ -173,6 +193,10 @@
             "nullable": true
           },
           "condition": {
+            "type": "string",
+            "nullable": true
+          },
+          "conditionIcon": {
             "type": "string",
             "nullable": true
           },

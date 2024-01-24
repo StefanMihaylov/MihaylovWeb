@@ -10,6 +10,8 @@
 
         public string Condition { get; set; }
 
+        public string ConditionIcon { get; set; }
+
         public decimal Temperature { get; set; }
 
         public decimal FeelsLike { get; set; }

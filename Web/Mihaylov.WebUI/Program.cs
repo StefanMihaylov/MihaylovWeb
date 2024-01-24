@@ -5,6 +5,7 @@ using Microsoft.Extensions.Hosting;
 using Mihaylov.Web.Service;
 using Mihaylov.Web.Service.Interfaces;
 using Mihaylov.Api.Users.Client;
+using Mihaylov.Api.Weather.Client;
 using Mihaylov.Common.Host.AssemblyVersion;
 using Mihaylov.Common.Host.Configurations;
 
@@ -61,6 +62,7 @@ namespace Mihaylov.WebUI
             services.AddModuleInfo();
             services.AddScoped<IModuleService, ModuleService>();
             services.AddUsersApiClient(Config.GetEnvironmentVariable("Users_Api_Client"));
+            services.AddWeatherApiClient(Config.GetEnvironmentVariable("Weather_Api_Client"));
         }
     }
 }
