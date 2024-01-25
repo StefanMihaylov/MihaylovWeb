@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace Mihaylov.Common.Host.AssemblyVersion.Models
+﻿namespace Mihaylov.Common.Host.AssemblyVersion.Models
 {
     public class ModuleInfo : IModuleInfo
     {        

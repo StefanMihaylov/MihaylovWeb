@@ -2,12 +2,13 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Mihaylov.Web.Service;
-using Mihaylov.Web.Service.Interfaces;
 using Mihaylov.Api.Users.Client;
 using Mihaylov.Api.Weather.Client;
 using Mihaylov.Common.Host.AssemblyVersion;
 using Mihaylov.Common.Host.Configurations;
+using Mihaylov.Web.Service;
+using Mihaylov.Web.Service.Interfaces;
+using Mihaylov.Web.Service.Models;
 
 namespace Mihaylov.WebUI
 {
@@ -63,6 +64,16 @@ namespace Mihaylov.WebUI
             services.AddScoped<IModuleService, ModuleService>();
             services.AddUsersApiClient(Config.GetEnvironmentVariable("Users_Api_Client"));
             services.AddWeatherApiClient(Config.GetEnvironmentVariable("Weather_Api_Client"));
+
+            services.AddScoped<IWeatherService, WeatherService>();
+            services.Configure<WeatherConfig>(opt =>
+            {
+                var cities = Config.GetEnvironmentVariable("Weather_Api_Cities", "Sofia");
+
+                opt.Cities = cities.Split(new char[] { ';', ',', ' ' }, System.StringSplitOptions.RemoveEmptyEntries);
+                opt.MetricUnits = Config.GetEnvironmentVariable<bool>("Weather_Api_MetricUnits", bool.TryParse ,true);
+                opt.Language = Config.GetEnvironmentVariable("Weather_Api_Language", "bg");
+            });
         }
     }
 }

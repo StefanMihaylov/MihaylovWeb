@@ -1,0 +1,50 @@
+﻿@using Mihaylov.WebUI.Models;
+@model CurrentWeatherModel
+
+<div class="weather-details-container">
+
+    <ul class="nav nav-tabs">
+        <li class="nav-item">
+            <a class="nav-link active" data-toggle="tab" href="#current-weather">В момента</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" data-toggle="tab" href="#weather-forecast">Прогноза</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" data-toggle="tab" href="#mountains-forecast">Планини</a>
+        </li>
+    </ul>
+
+    <div class="tab-content">
+        <div id="current-weather" class="tab-pane container fade in show active">
+            @await Html.PartialAsync("_CurrentWeather", Model.Current)
+        </div>
+        <div id="weather-forecast" class="tab-pane container fade">
+            <span>Прогноза</span>
+        </div>
+        <div id="mountains-forecast" class="tab-pane container fade">
+            <span>Планини</span>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $("#current-weather-table-body").off("click").on("click", ".current-add-new-button", function () {
+                var cityValue = $("#current-new-city-imput").val();
+                $.ajax({
+                    type: "Post",
+                    url: "@Url.Action("AddNewCurrentCity","Weather")",
+                    data: { city: cityValue },
+                    success: function (viewHTML) {
+                        $(viewHTML).insertBefore("#current-add-new-row");
+                    },
+                    error: function (errorData) {
+                        console.log(errorData);
+                    }
+                });
+            });
+        });
+    </script>
+}

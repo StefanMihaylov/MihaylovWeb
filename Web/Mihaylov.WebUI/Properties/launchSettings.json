@@ -8,7 +8,10 @@
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
         "Users_Api_Client": "https://api.mihaylov-s.eu/users", // "https://localhost:5011"
-        "Weather_Api_Client": "https://api.mihaylov-s.eu/weather"
+        "Weather_Api_Client": "https://api.mihaylov-s.eu/weather",
+        "Weather_Api_Cities": "Sofia, Tsenovo, Bjala, London",
+        "Weather_Api_MetricUnits": "true",
+        "Weather_Api_Language": "bg"
       }
     }
   }

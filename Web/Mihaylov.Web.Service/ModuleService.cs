@@ -6,6 +6,7 @@ using Mihaylov.Api.Weather.Client;
 using Mihaylov.Common.Host.AssemblyVersion.Interfaces;
 using Mihaylov.Common.Host.AssemblyVersion.Models;
 using Mihaylov.Web.Service.Interfaces;
+using Mihaylov.Web.Service.Models;
 
 namespace Mihaylov.Web.Service
 {
@@ -22,7 +23,7 @@ namespace Mihaylov.Web.Service
             _weatherApiClient = weatherApiClient;
         }
 
-        public async Task<IEnumerable<IModuleInfo>> GetModuleVersionsAsync()
+        public async Task<IEnumerable<ModuleInfoModel>> GetModuleVersionsAsync()
         {
             var modules = new List<IModuleInfo>()
             {
@@ -30,12 +31,12 @@ namespace Mihaylov.Web.Service
                 await _weatherApiClient.GetInfoAsync().ConfigureAwait(false),
             };
 
-            var result = new List<IModuleInfo>()
+            var result = new List<ModuleInfoModel>()
             {
-                _module.GetModuleInfo(),
+                new ModuleInfoModel(_module.GetModuleInfo()),
             };
 
-            result.AddRange(modules.OrderByDescending(m => m.BuildDate));
+            result.AddRange(modules.OrderByDescending(m => m.BuildDate).Select(m => new ModuleInfoModel(m)));
 
             return result;
         }

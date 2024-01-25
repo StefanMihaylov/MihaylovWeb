@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Mihaylov.Common.Host.AssemblyVersion.Models;
+using Mihaylov.Web.Service.Models;
 
 namespace Mihaylov.Web.Service.Interfaces
 {
     public interface IModuleService
     {
-        Task<IEnumerable<IModuleInfo>> GetModuleVersionsAsync();
+        Task<IEnumerable<ModuleInfoModel>> GetModuleVersionsAsync();
     }
 }

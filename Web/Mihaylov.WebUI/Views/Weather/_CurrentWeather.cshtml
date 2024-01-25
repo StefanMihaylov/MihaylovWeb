@@ -1,0 +1,35 @@
+﻿@using Mihaylov.Web.Service.Models;
+@model IEnumerable<CurrentWeatherResponse>
+
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>@Html.LabelFor(m => m.First().Location)</th>
+            <th>@Html.LabelFor(m => m.First().CurrentDate)</th>
+            <th>@Html.LabelFor(m => m.First().Condition)</th>
+            <th>@Html.LabelFor(m => m.First().ConditionIcon)</th>
+            <th>@Html.LabelFor(m => m.First().Temperature)</th>
+            <th>@Html.LabelFor(m => m.First().FeelsLike)</th>
+            <th>@Html.LabelFor(m => m.First().Wind)</th>
+        </tr>
+    </thead>
+    <tbody id="current-weather-table-body">
+        @foreach (var weather in Model)
+        {
+            @await Html.PartialAsync("_CurrentWeatherRow", weather)
+        }
+
+        <tr id="current-add-new-row">
+            <td colspan="2">
+                <input type="text" id="current-new-city-imput" placeholder="Добави нов град" role="presentation" aria-autocomplete="none" autocomplete="false" />
+                <span class="btn btn-primary current-add-new-button">Добави</span>
+            </td>
+            <td colspan="5">
+                <a href="https://www.weatherapi.com/" title="Free Weather API">
+                    <img src='//cdn.weatherapi.com/v4/images/weatherapi_logo.png' alt="Weather data by WeatherAPI.com" border="0" height="30">
+                </a>
+            </td>
+        </tr>
+
+    </tbody>
+</table>
