@@ -1,5 +1,5 @@
 ﻿@using Mihaylov.WebUI.Models;
-@model CurrentWeatherModel
+@model WeatherModel
 
 <div class="weather-details-container">
 
@@ -15,12 +15,12 @@
         </li>
     </ul>
 
-    <div class="tab-content">
+    <div class="tab-content" id="weather-container">
         <div id="current-weather" class="tab-pane container fade in show active">
             @await Html.PartialAsync("_CurrentWeather", Model.Current)
         </div>
         <div id="weather-forecast" class="tab-pane container fade">
-            <span>Прогноза</span>
+            @await Html.PartialAsync("_ForecastWeather", Model.Forecast)
         </div>
         <div id="mountains-forecast" class="tab-pane container fade">
             <span>Планини</span>
@@ -31,13 +31,19 @@
 @section Scripts {
     <script>
         $(document).ready(function () {
-            $("#current-weather-table-body").off("click").on("click", ".current-add-new-button", function () {
-                var cityValue = $("#current-new-city-imput").val();
+            var $container = $("#weather-container");
+            $container.off("click")
+
+            $container.on("click", ".current-add-new-button", function () {
+                var $cityInput = $("#current-new-city-imput");
+                var cityValue = $cityInput.val();                
+
                 $.ajax({
                     type: "Post",
                     url: "@Url.Action("AddNewCurrentCity","Weather")",
                     data: { city: cityValue },
                     success: function (viewHTML) {
+                        $cityInput.val('');
                         $(viewHTML).insertBefore("#current-add-new-row");
                     },
                     error: function (errorData) {
@@ -45,6 +51,25 @@
                     }
                 });
             });
+
+            $container.on("click", ".forecast-add-new-button", function () {
+                var $cityInput = $("#forecast-new-city-imput");
+                var cityValue = $cityInput.val();
+
+                $.ajax({
+                    type: "Post",
+                    url: "@Url.Action("AddNewForecastCity","Weather")",
+                    data: { city: cityValue },
+                    success: function (viewHTML) {
+                        $cityInput.val('');
+                        $(viewHTML).insertBefore("#forecast-add-new-row");
+                    },
+                    error: function (errorData) {
+                        console.log(errorData);
+                    }
+                });
+            });
+
         });
     </script>
 }

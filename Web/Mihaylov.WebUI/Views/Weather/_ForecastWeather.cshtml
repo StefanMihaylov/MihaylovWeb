@@ -1,0 +1,32 @@
+﻿@using Mihaylov.Web.Service.Models;
+@model IEnumerable<ForecastWeatherResponse>
+
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>@Html.LabelFor(m => m.First().Current.Location)</th>
+            <th>@Html.LabelFor(m => m.First().Forecast.First().Date)</th>
+            <th>@Html.LabelFor(m => m.First().Forecast.First().Condition)</th>
+            <th>@Html.LabelFor(m => m.First().Forecast.First().ConditionIcon)</th>
+            <th>@Html.LabelFor(m => m.First().Forecast.First().Temperatures)</th>
+            <th>@Html.LabelFor(m => m.First().Forecast.First().Rains)</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var weather in Model)
+        {
+            @await Html.PartialAsync("_ForecastWeatherRow", weather)
+        }
+
+        <tr id="forecast-add-new-row">
+            <td colspan="2">
+                <input type="text" id="forecast-new-city-imput" placeholder="Добави нов град" role="presentation" aria-autocomplete="none" autocomplete="false" />
+                <span class="btn btn-primary forecast-add-new-button">Добави</span>
+            </td>
+            <td colspan="5">
+                @await Html.PartialAsync("_WeatherApiLogo")
+            </td>
+        </tr>
+
+    </tbody>
+</table>

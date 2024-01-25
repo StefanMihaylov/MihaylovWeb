@@ -63,5 +63,50 @@ namespace Mihaylov.Web.Service
 
             return result;
         }
+
+        public async Task<ForecastWeatherResponse> GetForecastWeatherAsync(string city)
+        {
+            var key = $"{city}_forecast";
+
+            if (!_cache.TryGetValue(key, out ForecastWeatherResponse weather))
+            {
+                try
+                {
+                    var response = await _weatherApiClient.ForecastAsync(city, _config.MetricUnits, _config.Language).ConfigureAwait(false);
+                    var result = new ForecastWeatherResponse(response);
+
+                    _cache.Set(key, result, TimeSpan.FromMinutes(30));
+
+                    return result;
+                }
+                catch (SwaggerException ex)
+                {
+                    return new ForecastWeatherResponse(city, ex.Message);
+                }
+                catch (Exception ex)
+                {
+                    return new ForecastWeatherResponse(city, ex.Message);
+                }
+            }
+
+            return weather;
+        }
+
+
+        public async Task<IEnumerable<ForecastWeatherResponse>> GetForecastWeatherAsync()
+        {
+            var result = new List<ForecastWeatherResponse>();
+
+            foreach (var city in _config.Cities)
+            {
+                var response = await GetForecastWeatherAsync(city).ConfigureAwait(false);
+                if (response != null)
+                {
+                    result.Add(response);
+                }
+            }
+
+            return result;
+        }
     }
 }

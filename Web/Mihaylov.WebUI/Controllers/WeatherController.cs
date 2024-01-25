@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Mihaylov.Web.Service.Interfaces;
 using Mihaylov.WebUI.Models;
@@ -17,11 +18,12 @@ namespace Mihaylov.WebUI.Controllers
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            var currrent = await _weatherService.GetCurrentWeatherAsync().ConfigureAwait(false);
+            var weather = await _weatherService.GetForecastWeatherAsync().ConfigureAwait(false);
 
-            var result = new CurrentWeatherModel()
+            var result = new WeatherModel()
             {
-                Current = currrent,
+                Current = weather.Select(w => w.Current),
+                Forecast = weather,
             };
 
             return View(result);
@@ -33,6 +35,14 @@ namespace Mihaylov.WebUI.Controllers
             var response = await _weatherService.GetCurrentWeatherAsync(city).ConfigureAwait(false);
 
             return PartialView("_CurrentWeatherRow", response);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddNewForecastCity(string city)
+        {
+            var response = await _weatherService.GetForecastWeatherAsync(city).ConfigureAwait(false);
+
+            return PartialView("_ForecastWeatherRow", response);
         }
     }
 }

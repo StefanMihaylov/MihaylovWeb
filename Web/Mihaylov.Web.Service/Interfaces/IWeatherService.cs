@@ -9,5 +9,9 @@ namespace Mihaylov.Web.Service.Interfaces
         Task<IEnumerable<CurrentWeatherResponse>> GetCurrentWeatherAsync();
 
         Task<CurrentWeatherResponse> GetCurrentWeatherAsync(string city);
+
+        Task<IEnumerable<ForecastWeatherResponse>> GetForecastWeatherAsync();
+
+        Task<ForecastWeatherResponse> GetForecastWeatherAsync(string city);
     }
 }

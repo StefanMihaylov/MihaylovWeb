@@ -1,0 +1,33 @@
+﻿@using Mihaylov.Web.Service.Models;
+@model ForecastWeatherResponse
+
+@{ int count = 0; }
+
+@foreach (var forecast in Model.Forecast)
+{
+    <tr>
+        @if (count == 0)
+        {
+            <td><my-value>@Model.Current.Location</my-value></td>
+        }
+        else
+        {
+            <td></td>
+        }
+        <td><my-value>@forecast.Date</my-value></td>
+        <td><my-value>@forecast.Condition</my-value></td>
+        <td>
+            <my-value>
+                @if (!string.IsNullOrEmpty(forecast.ConditionIcon))
+                {
+                    <img src=@forecast.ConditionIcon width="40" height="40" />
+                }
+            </my-value>
+        </td>
+        <td><my-value>@forecast.Temperatures</my-value></td>
+        <td><my-value>@forecast.Rains</my-value></td>
+    </tr>
+
+    count++;
+}
+
