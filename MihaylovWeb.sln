@@ -77,7 +77,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mihaylov.Api.Weather.Data",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mihaylov.Api.Weather.Contracts", "ApiWeather\Mihaylov.Api.Weather.Contracts\Mihaylov.Api.Weather.Contracts.csproj", "{22B64764-48D8-4430-8F19-2AC25A65D1AF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mihaylov.Api.Weather.Client", "ApiWeather\Mihaylov.Api.Weather.Client\Mihaylov.Api.Weather.Client.csproj", "{A6F6FCCC-1C82-4A9F-940F-B0A31058F9E3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mihaylov.Api.Weather.Client", "ApiWeather\Mihaylov.Api.Weather.Client\Mihaylov.Api.Weather.Client.csproj", "{A6F6FCCC-1C82-4A9F-940F-B0A31058F9E3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mihaylov.Site.Media", "Site\Mihaylov.Site.Media\Mihaylov.Site.Media.csproj", "{A1BDD6D7-EB80-4697-AF52-9AE889FA1F22}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -205,6 +207,10 @@ Global
 		{A6F6FCCC-1C82-4A9F-940F-B0A31058F9E3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A6F6FCCC-1C82-4A9F-940F-B0A31058F9E3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A6F6FCCC-1C82-4A9F-940F-B0A31058F9E3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A1BDD6D7-EB80-4697-AF52-9AE889FA1F22}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A1BDD6D7-EB80-4697-AF52-9AE889FA1F22}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A1BDD6D7-EB80-4697-AF52-9AE889FA1F22}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A1BDD6D7-EB80-4697-AF52-9AE889FA1F22}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -242,6 +248,7 @@ Global
 		{1C701DA5-93B7-489F-9C49-797EAA69CDA9} = {2ED76864-3B2F-4DBF-B310-D08E291465E3}
 		{22B64764-48D8-4430-8F19-2AC25A65D1AF} = {2ED76864-3B2F-4DBF-B310-D08E291465E3}
 		{A6F6FCCC-1C82-4A9F-940F-B0A31058F9E3} = {2ED76864-3B2F-4DBF-B310-D08E291465E3}
+		{A1BDD6D7-EB80-4697-AF52-9AE889FA1F22} = {00B4A411-DDC5-4AA4-BDD2-A612203B563F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {ECF9C65D-96FF-4564-A762-B6C7EE02C0B9}

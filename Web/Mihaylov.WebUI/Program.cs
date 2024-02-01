@@ -9,6 +9,8 @@ using Mihaylov.Common.Host.Configurations;
 using Mihaylov.Web.Service;
 using Mihaylov.Web.Service.Interfaces;
 using Mihaylov.Web.Service.Models;
+using Mihaylov.Site.Media;
+using Mihaylov.WebUI.Hubs;
 
 namespace Mihaylov.WebUI
 {
@@ -17,6 +19,9 @@ namespace Mihaylov.WebUI
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+            var configuration = builder.Configuration;
+
+            //  builder.Services.Configure<aaa>(configuration.GetSection("AppSettings")); 150x150
 
             AddDependencies(builder.Services);
 
@@ -51,6 +56,7 @@ namespace Mihaylov.WebUI
                 pattern: "{controller=Home}/{action=Index}/{id?}");
 
             app.MapRazorPages();
+            app.MapHub<ScanProgressHub>("/ScanProgressHub");
 
             app.Run();
         }
@@ -59,6 +65,7 @@ namespace Mihaylov.WebUI
         {
             services.AddControllersWithViews();
             services.AddRazorPages();
+            services.AddSignalR();
 
             services.AddModuleInfo();
             services.AddScoped<IModuleService, ModuleService>();
@@ -74,6 +81,10 @@ namespace Mihaylov.WebUI
                 opt.MetricUnits = Config.GetEnvironmentVariable<bool>("Weather_Api_MetricUnits", bool.TryParse ,true);
                 opt.Language = Config.GetEnvironmentVariable("Weather_Api_Language", "bg");
             });
+
+            services.AddMediaServices();
+
+            services.AddScoped<IProgressReporterFactory, ProgressReporterFactory>();
         }
     }
 }

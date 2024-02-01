@@ -20,10 +20,13 @@
 
 	<ItemGroup>
 		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.19.6" />
+		<PackageReference Include="Microsoft.Web.LibraryManager.Build" Version="2.1.175" />
 	</ItemGroup>
 
 	<ItemGroup>
 	  <ProjectReference Include="..\..\Common\Mihaylov.Common.Host\Mihaylov.Common.Host.csproj" />
+	  <ProjectReference Include="..\..\Site\Mihaylov.Site.Media\Mihaylov.Site.Media.csproj" />
 	  <ProjectReference Include="..\Mihaylov.Web.Service\Mihaylov.Web.Service.csproj" />
 	</ItemGroup>
+
 </Project>

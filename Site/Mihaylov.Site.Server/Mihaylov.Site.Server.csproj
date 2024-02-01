@@ -16,6 +16,7 @@
     <ProjectReference Include="..\..\Common\Mihaylov.Common.Host\Mihaylov.Common.Host.csproj" />
     <ProjectReference Include="..\Mihaylov.Site.Core\Mihaylov.Site.Core.csproj" />
     <ProjectReference Include="..\Mihaylov.Site.Database\Mihaylov.Site.Database.csproj" />
+    <ProjectReference Include="..\Mihaylov.Site.Media\Mihaylov.Site.Media.csproj" />
   </ItemGroup>
 
 

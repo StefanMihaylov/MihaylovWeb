@@ -2,14 +2,15 @@ using System;
 using System.Reflection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Mihaylov.Common.Host.Configurations;
 using Mihaylov.Common.Abstract;
+using Mihaylov.Common.Host.Configurations;
 using Mihaylov.Site.Core;
+using Mihaylov.Site.Media;
 using Mihaylov.Site.Database;
-using Microsoft.EntityFrameworkCore;
 
 namespace Mihaylov.Site.Server
 {
@@ -45,6 +46,8 @@ namespace Mihaylov.Site.Server
                     );
 
             services.MigrateDatabase<SiteDbContext>(c => c.Migrate());
+
+            services.AddMediaServices();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -162,3 +162,4 @@ $RECYCLE.BIN/
 .gitignore
 
 Kendo/
+Web/Mihaylov.WebUI/wwwroot/lib/
