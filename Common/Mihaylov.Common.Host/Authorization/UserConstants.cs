@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 
-namespace Mihaylov.Users.Data
+namespace Mihaylov.Common.Host.Authorization
 {
     public class UserConstants
     {

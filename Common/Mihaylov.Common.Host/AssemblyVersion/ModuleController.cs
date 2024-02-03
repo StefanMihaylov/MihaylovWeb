@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Mihaylov.Common.Host.AssemblyVersion.Interfaces;
+using Mihaylov.Common.Host.Abstract.AssemblyVersion;
 using Mihaylov.Common.Host.AssemblyVersion.Models;
 
-namespace Mihaylov.Common.Host.Controllers
+namespace Mihaylov.Common.Host.AssemblyVersion
 {
     [ApiController]
     [Route("api/[controller]/[action]")]

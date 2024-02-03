@@ -3,8 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Mihaylov.Api.Users.Client;
 using Mihaylov.Api.Weather.Client;
-using Mihaylov.Common.Host.AssemblyVersion.Interfaces;
-using Mihaylov.Common.Host.AssemblyVersion.Models;
+using Mihaylov.Common.Host.Abstract.AssemblyVersion;
 using Mihaylov.Web.Service.Interfaces;
 using Mihaylov.Web.Service.Models;
 

@@ -59,7 +59,7 @@ namespace Mihaylov.Users.Data
             IList<string> roles = await this._userManager.GetRolesAsync(user)
                                                          .ConfigureAwait(false);
 
-            string encryptedToken = this._tokenHelper.GetToken(user, roles);
+            string encryptedToken = this._tokenHelper.GetToken(user, roles, request.ClaimTypes);
 
             return new LoginResponseModel(true, user.UserName, encryptedToken);
         }
@@ -171,14 +171,14 @@ namespace Mihaylov.Users.Data
         }
 
 
-        public async Task InitializeDatabaseAsync()
+        public async Task InitializeDatabaseAsync(string adminRole)
         {
             var roles = await this.GetRolesAsync().ConfigureAwait(false);
             if (roles.Any() == false)
             {
                 var newRole = new CreateRoleRequest()
                 {
-                    RoleName = UserConstants.AdminRole,
+                    RoleName = adminRole,
                 };
 
                 var result = await this.AddRoleAsync(newRole).ConfigureAwait(false);

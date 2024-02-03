@@ -4,7 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Mihaylov.Api.Weather.Client
 {
-    public static class HostConfiguration
+    public static class _HostConfiguration
     {
         public static IServiceCollection AddWeatherApiClient(this IServiceCollection services, string url)
         {

@@ -7,5 +7,9 @@
         public int ExpiresIn { get; set; }
 
         public int ClaimTypes { get; set; }
+
+        public string Issuer { get; set; }
+
+        public string Audience { get; set; }
     }
 }

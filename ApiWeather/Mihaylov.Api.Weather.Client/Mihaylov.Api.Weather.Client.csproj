@@ -9,14 +9,14 @@
 	<ItemGroup>
 		<PackageReference Include="Microsoft.Extensions.Http" Version="8.0.0" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-		<PackageReference Include="NSwag.MSBuild" Version="13.20.0">
+		<PackageReference Include="NSwag.MSBuild" Version="14.0.2">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\..\Common\Mihaylov.Common.Host\Mihaylov.Common.Host.csproj" />
+	  <ProjectReference Include="..\..\Common\Mihaylov.Common.Host.Abstract\Mihaylov.Common.Host.Abstract.csproj" />
 	</ItemGroup>
 
 	<Target Name="NSwag" BeforeTargets="AfterBuild" Condition="'$(TF_BUILD)'!='True'">

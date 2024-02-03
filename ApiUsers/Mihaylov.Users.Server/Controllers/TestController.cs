@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Mihaylov.Users.Data;
+using Mihaylov.Common.Host.Authorization;
 
-namespace Mihaylov.Users.Controllers
+namespace Mihaylov.Users.Server.Controllers
 {
     [ApiController]
     [Route("api/[controller]/[action]")]

@@ -1,14 +1,18 @@
 ﻿using System;
 
-namespace Mihaylov.Users.Data.Helpers
+namespace Mihaylov.Common.Host.Abstract.Authorization
 {
     [Flags]
-    public enum ClaimType
+    public enum ClaimType : int
     {
         Username = 1,
+
         Email = 2,
+        
         FullName = 4,
+        
         FirstName = 8,
+        
         LastName = 16,
     }
 }

@@ -12,6 +12,7 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\..\Common\Mihaylov.Common.Abstract\Mihaylov.Common.Abstract.csproj" />
+		<ProjectReference Include="..\..\Common\Mihaylov.Common.Host.Abstract\Mihaylov.Common.Host.Abstract.csproj" />
 		<ProjectReference Include="..\Mihaylov.Users.Models\Mihaylov.Users.Models.csproj" />
 	</ItemGroup>
 

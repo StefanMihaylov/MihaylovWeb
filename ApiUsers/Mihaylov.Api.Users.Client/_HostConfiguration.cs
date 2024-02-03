@@ -4,7 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Mihaylov.Api.Users.Client
 {
-    public static class HostConfiguration
+    public static class _HostConfiguration
     {
         public static IServiceCollection AddUsersApiClient(this IServiceCollection services, string url)
         {
@@ -12,8 +12,6 @@ namespace Mihaylov.Api.Users.Client
             {
                 c.BaseAddress = new Uri(url);
             });
-
-            // services.AddScoped<IUsersApiClient, UsersApiClient>();
 
             services.AddScoped<IUsersApiClient>(provider =>
             {

@@ -1,5 +1,6 @@
 ﻿using System.Net.Http;
-using Mihaylov.Common.Host.AssemblyVersion.Models;
+using Mihaylov.Common.Host.Abstract.AssemblyVersion;
+using Mihaylov.Common.Host.Abstract.Authorization;
 
 namespace Mihaylov.Api.Users.Client
 {
@@ -16,5 +17,20 @@ namespace Mihaylov.Api.Users.Client
 
     public partial class ModuleInfo : IModuleInfo
     {
+    }
+
+    public partial class LoginRequestModel
+    {
+        public ClaimType? ClaimTypesEnum
+        {
+            get
+            {
+                return (ClaimType?)this.ClaimTypes;
+            }
+            set
+            {
+                this.ClaimTypes = (int?)value;
+            }
+        }
     }
 }

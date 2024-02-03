@@ -1,5 +1,5 @@
 ﻿using System.Net.Http;
-using Mihaylov.Common.Host.AssemblyVersion.Models;
+using Mihaylov.Common.Host.Abstract.AssemblyVersion;
 
 namespace Mihaylov.Api.Weather.Client
 {

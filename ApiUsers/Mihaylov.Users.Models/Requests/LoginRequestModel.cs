@@ -9,5 +9,7 @@ namespace Mihaylov.Users.Models.Requests
 
         [Required]
         public string Password { get; set; }
+
+        public int? ClaimTypes { get; set; }
     }
 }

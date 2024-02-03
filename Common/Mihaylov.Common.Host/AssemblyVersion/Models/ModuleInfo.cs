@@ -1,4 +1,6 @@
-﻿namespace Mihaylov.Common.Host.AssemblyVersion.Models
+﻿using Mihaylov.Common.Host.Abstract.AssemblyVersion;
+
+namespace Mihaylov.Common.Host.AssemblyVersion.Models
 {
     public class ModuleInfo : IModuleInfo
     {        

@@ -7,7 +7,7 @@ using Mihaylov.Users.Data.Interfaces;
 using Mihaylov.Users.Models.Requests;
 using Mihaylov.Users.Models.Responses;
 
-namespace Mihaylov.Users.Controllers
+namespace Mihaylov.Users.Server.Controllers
 {
     [ApiController]
     [AllowAnonymous]

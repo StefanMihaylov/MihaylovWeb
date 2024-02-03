@@ -26,6 +26,6 @@ namespace Mihaylov.Users.Data.Interfaces
 
         Task<GenericResponse> ChangePasswordAsync(ChangePasswordRequest request);
 
-        Task InitializeDatabaseAsync();
+        Task InitializeDatabaseAsync(string adminRole);
     }
 }

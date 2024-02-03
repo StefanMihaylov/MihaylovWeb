@@ -10,6 +10,6 @@
 	<ItemGroup>
 		<ProjectReference Include="..\..\ApiUsers\Mihaylov.Api.Users.Client\Mihaylov.Api.Users.Client.csproj" />
 		<ProjectReference Include="..\..\ApiWeather\Mihaylov.Api.Weather.Client\Mihaylov.Api.Weather.Client.csproj" />
-		<ProjectReference Include="..\..\Common\Mihaylov.Common.Host\Mihaylov.Common.Host.csproj" />
+		<ProjectReference Include="..\..\Common\Mihaylov.Common.Host.Abstract\Mihaylov.Common.Host.Abstract.csproj" />
 	</ItemGroup>
 </Project>

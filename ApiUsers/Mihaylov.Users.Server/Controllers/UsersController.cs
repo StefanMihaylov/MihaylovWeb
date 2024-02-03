@@ -2,12 +2,12 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Mihaylov.Users.Data;
+using Mihaylov.Common.Host.Authorization;
 using Mihaylov.Users.Data.Interfaces;
 using Mihaylov.Users.Models.Requests;
 using Mihaylov.Users.Models.Responses;
 
-namespace Mihaylov.Users.Controllers
+namespace Mihaylov.Users.Server.Controllers
 {
     [ApiController]
     [Route("api/[controller]/[action]")]

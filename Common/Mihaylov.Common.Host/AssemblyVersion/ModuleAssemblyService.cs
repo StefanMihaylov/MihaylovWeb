@@ -3,6 +3,7 @@ using System.IO;
 using System.Reflection;
 using System.Runtime.Versioning;
 using Microsoft.Extensions.Options;
+using Mihaylov.Common.Host.Abstract.AssemblyVersion;
 using Mihaylov.Common.Host.AssemblyVersion.Interfaces;
 using Mihaylov.Common.Host.AssemblyVersion.Models;
 
@@ -11,19 +12,19 @@ namespace Mihaylov.Common.Host.AssemblyVersion
     public class ModuleAssemblyService : IModuleAssemblyService
     {
         private readonly Assembly _rootAssembly;
-        private readonly ISystemConfiguration _config;
+        private readonly ISystemConfiguration _systemConfig;
 
         public ModuleAssemblyService(IOptions<AssemblyWrapper> currentAssembly, ISystemConfiguration configuration)
         {
             _rootAssembly = currentAssembly.Value.Assembly;
-            _config = configuration;
+            _systemConfig = configuration;
         }
 
-        public ModuleInfo GetModuleInfo()
+        public IModuleInfo GetModuleInfo()
         {
             var assemblyName = _rootAssembly.GetName();
 
-            var framework = _config.GetVersion();
+            var framework = _systemConfig.GetVersion();
             if (string.IsNullOrEmpty(framework))
             {
                 framework = _rootAssembly.GetCustomAttribute<TargetFrameworkAttribute>()?.FrameworkDisplayName;
@@ -38,8 +39,8 @@ namespace Mihaylov.Common.Host.AssemblyVersion
 
             DateTime buildDate = new FileInfo(_rootAssembly.Location).LastWriteTimeUtc;
 
-            var gitCommit = _config.GetGitCommit();
-            var buildNumber = _config.GetJenkinsBuildNumber();
+            var gitCommit = _systemConfig.GetGitCommit();
+            var buildNumber = _systemConfig.GetJenkinsBuildNumber();
 
             var result = new ModuleInfo(name, version, framework, buildDate.ToString("yyyy.MM.dd HH:mm"), gitCommit, buildNumber);
             return result;

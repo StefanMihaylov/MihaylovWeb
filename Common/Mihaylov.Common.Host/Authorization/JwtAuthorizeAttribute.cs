@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 
-namespace Mihaylov.Users.Data
+namespace Mihaylov.Common.Host.Authorization
 {
     public class JwtAuthorizeAttribute : AuthorizeAttribute
     {

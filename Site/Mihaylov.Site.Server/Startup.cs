@@ -7,10 +7,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Mihaylov.Common.Abstract;
-using Mihaylov.Common.Host.Configurations;
+using Mihaylov.Common.Host;
 using Mihaylov.Site.Core;
-using Mihaylov.Site.Media;
 using Mihaylov.Site.Database;
+using Mihaylov.Site.Media;
 
 namespace Mihaylov.Site.Server
 {

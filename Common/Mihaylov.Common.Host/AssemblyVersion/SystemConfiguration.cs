@@ -1,6 +1,6 @@
 ﻿using System;
+using Mihaylov.Common.Host.Abstract.Configurations;
 using Mihaylov.Common.Host.AssemblyVersion.Interfaces;
-using Mihaylov.Common.Host.Configurations;
 
 namespace Mihaylov.Common.Host.AssemblyVersion
 {
@@ -10,7 +10,7 @@ namespace Mihaylov.Common.Host.AssemblyVersion
         {
             var version = Environment.Version?.ToString();
 
-            return version;
+            return $".NET {version}";
         }
 
         public string GetGitCommit()
