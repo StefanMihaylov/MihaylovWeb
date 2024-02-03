@@ -7,6 +7,10 @@
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
         "JWT_AUTHENTICATION_SECRET": "zVPYwdmUsMUzs7NNti2oygifSfBnUezmtiIPV8jioR3K6yuSF12D9kddDTLtC2yw",
+        "JWT_ISSUER": "http://example.com",
+        "JWT_ExpiresIn": "14",
+        "JWT_Claims": "1",
+        "JWT_AUDIENCE": "AUDIENCE",
         "DB_Users_Address": "192.168.1.100",
         "DB_Users_Name": "Mihaylov_UsersDb",
         "DB_Users_UserName": "",
