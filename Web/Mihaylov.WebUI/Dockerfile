@@ -8,6 +8,11 @@ EXPOSE 443
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
 COPY ["Web/Mihaylov.WebUI/Mihaylov.WebUI.csproj", "Web/Mihaylov.WebUI/"]
+COPY ["Common/Mihaylov.Common.Host/Mihaylov.Common.Host.csproj", "Common/Mihaylov.Common.Host/"]
+COPY ["Site/Mihaylov.Site.Media/Mihaylov.Site.Media.csproj", "Site/Mihaylov.Site.Media/"]
+COPY ["Web/Mihaylov.Web.Service/Mihaylov.Web.Service.csproj", "Web/Mihaylov.Web.Service/"]
+COPY ["ApiUsers/Mihaylov.Api.Users.Client/Mihaylov.Api.Users.Client.csproj", "ApiUsers/Mihaylov.Api.Users.Client/"]
+COPY ["ApiWeather/Mihaylov.Api.Weather.Client/Mihaylov.Api.Weather.Client.csproj", "ApiWeather/Mihaylov.Api.Weather.Client/"]
 RUN dotnet restore "Web/Mihaylov.WebUI/Mihaylov.WebUI.csproj"
 COPY . .
 WORKDIR "/src/Web/Mihaylov.WebUI"

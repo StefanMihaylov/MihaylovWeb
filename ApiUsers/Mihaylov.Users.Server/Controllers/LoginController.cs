@@ -23,7 +23,7 @@ namespace Mihaylov.Users.Server.Controllers
             _repository = repository;
         }
 
-        [HttpPost]
+        [HttpPost(Name = "LoginRegister")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(GenericResponse))]
         public async Task<IActionResult> Register(RegisterRequestModel request)
         {
@@ -32,7 +32,7 @@ namespace Mihaylov.Users.Server.Controllers
             return Ok(response);
         }
 
-        [HttpPost]
+        [HttpPost(Name = "LoginLogin")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(LoginResponseModel))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Login(LoginRequestModel request)

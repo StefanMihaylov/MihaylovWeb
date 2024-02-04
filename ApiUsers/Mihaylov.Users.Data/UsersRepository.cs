@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -67,22 +68,53 @@ namespace Mihaylov.Users.Data
         public async Task<IEnumerable<UserModel>> GetUsersAsync()
         {
             var users = await this._userManager.Users
-                                    .Select(u => new UserModel()
-                                    {
-                                        Id = new Guid(u.Id),
-                                        UserName = u.UserName,
-                                        Email = u.Email,
-                                        FirstName = u.Profile.FirstName,
-                                        LastName = u.Profile.LastName,
-                                        Roles = this._userManager.GetRolesAsync(u).Result
-                                    })
+                                    .Select(FromDbUser())
                                     .ToListAsync()
                                     .ConfigureAwait(false);
-
             return users;
         }
 
-        public async Task<GenericResponse> AddRoleAsync(AddRoleToUserRequest request)
+        public async Task<UserModel> GetUserAsync(string userId)
+        {
+            var user = await _userManager.Users
+                                    .Where(u => u.Id == userId)
+                                    .Select(FromDbUser())
+                                    .FirstOrDefaultAsync()
+                                    .ConfigureAwait(false);
+
+            return user;
+        }
+
+        public async Task<GenericResponse> UpdateUserAsync(UpdateUserModel update)
+        {
+            var dbUser = await _userManager.FindByIdAsync(update.Id).ConfigureAwait(false);
+            if (dbUser == null)
+            {
+                return null;
+            }
+
+            if (!string.IsNullOrEmpty(update.Email))
+            {
+                dbUser.Email = update.Email;
+            }
+
+            if (!string.IsNullOrEmpty(update.FirstName))
+            {
+                dbUser.Profile.FirstName = update.FirstName;
+            }
+
+            if (!string.IsNullOrEmpty(update.LastName))
+            {
+                dbUser.Profile.LastName = update.LastName;
+            }
+
+            IdentityResult result = await _userManager.UpdateAsync(dbUser).ConfigureAwait(false);
+
+            return GetGenericResponse(result);
+        }
+
+
+        public async Task<GenericResponse> AddRoleToUserAsync(AddRoleToUserRequest request)
         {
             IdentityResult result = null;
 
@@ -95,6 +127,37 @@ namespace Mihaylov.Users.Data
                 {
                     result = await this._userManager.AddToRoleAsync(user, role.Name).ConfigureAwait(false);
                 }
+            }
+
+            return GetGenericResponse(result);
+        }
+
+        public async Task<GenericResponse> UpdateRoleAsync(UpdateRoleRequest request, string adminRole)
+        {
+            IdentityResult result = null;
+
+            var role = await _roleManager.FindByIdAsync(request.RoleId.ToString()).ConfigureAwait(false);
+            if (role != null)
+            {
+                if (role.Name != adminRole && !string.IsNullOrWhiteSpace(request.RoleName))
+                {
+                    role.Name = request.RoleName;
+                }
+
+                result = await _roleManager.UpdateAsync(role).ConfigureAwait(false);
+            }
+
+            return GetGenericResponse(result);
+        }
+
+        public async Task<GenericResponse> DeleteRoleAsync(Guid roleId)
+        {
+            IdentityResult result = null;
+
+            var dbRole = await _roleManager.FindByIdAsync(roleId.ToString()).ConfigureAwait(false);
+            if (dbRole != null)
+            {
+                result = await _roleManager.DeleteAsync(dbRole).ConfigureAwait(false);
             }
 
             return GetGenericResponse(result);
@@ -120,12 +183,8 @@ namespace Mihaylov.Users.Data
         {
             try
             {
-                var roles = await this._roleManager.Roles
-                             .Select(r => new RoleModel()
-                             {
-                                 Id = new Guid(r.Id),
-                                 Name = r.Name
-                             })
+                var roles = await _roleManager.Roles
+                             .Select(FromDbRole())
                              .ToListAsync()
                              .ConfigureAwait(false);
                 return roles;
@@ -135,7 +194,25 @@ namespace Mihaylov.Users.Data
                 this._logger.LogError(ex, "GetRoles failed.");
                 throw;
             }
+        }
 
+        public async Task<RoleModel> GetRoleByIdAsync(Guid roleId)
+        {
+            try
+            {
+                var role = await _roleManager.Roles
+                            .Where(r => r.Id == roleId.ToString())
+                            .Select(FromDbRole())
+                            .FirstOrDefaultAsync()
+                            .ConfigureAwait(false);
+
+                return role;
+            }
+            catch (Exception ex)
+            {
+                this._logger.LogError(ex, "GetRole failed.");
+                throw;
+            }
         }
 
         public async Task<GenericResponse> AddRoleAsync(CreateRoleRequest request)
@@ -144,7 +221,7 @@ namespace Mihaylov.Users.Data
             {
                 var result = await this._roleManager.CreateAsync(new IdentityRole(request.RoleName))
                                                     .ConfigureAwait(false);
-                
+
                 return GetGenericResponse(result);
             }
             catch (Exception ex)
@@ -199,7 +276,7 @@ namespace Mihaylov.Users.Data
                             RoleId = role.Id,
                         };
 
-                        var result = await this.AddRoleAsync(addRoleRequest).ConfigureAwait(false);
+                        var result = await this.AddRoleToUserAsync(addRoleRequest).ConfigureAwait(false);
                     }
                 }
             }
@@ -208,6 +285,28 @@ namespace Mihaylov.Users.Data
         private GenericResponse GetGenericResponse(IdentityResult result)
         {
             return new GenericResponse(result?.Succeeded ?? false, result?.Errors.Select(e => e.Description));
+        }
+
+        private Expression<Func<User, UserModel>> FromDbUser()
+        {
+            return u => new UserModel()
+            {
+                Id = new Guid(u.Id),
+                UserName = u.UserName,
+                Email = u.Email,
+                FirstName = u.Profile.FirstName,
+                LastName = u.Profile.LastName,
+                Roles = this._userManager.GetRolesAsync(u).Result
+            };
+        }
+
+        private Expression<Func<IdentityRole, RoleModel>> FromDbRole()
+        {
+            return r => new RoleModel()
+            {
+                Id = new Guid(r.Id),
+                Name = r.Name
+            };
         }
     }
 }

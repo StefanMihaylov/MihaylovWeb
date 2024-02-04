@@ -1,15 +1,18 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Mihaylov.Api.Users.Client;
 using Mihaylov.Api.Weather.Client;
-using Mihaylov.Common.Host.AssemblyVersion;
-using Mihaylov.Common.Host.Configurations;
+using Mihaylov.Common.Host;
+using Mihaylov.Common.Host.Abstract.Authorization;
+using Mihaylov.Common.Host.Abstract.Configurations;
+using Mihaylov.Site.Media;
 using Mihaylov.Web.Service;
 using Mihaylov.Web.Service.Interfaces;
 using Mihaylov.Web.Service.Models;
-using Mihaylov.Site.Media;
+using Mihaylov.WebUI.Areas.Identity.Pages.Account;
 using Mihaylov.WebUI.Hubs;
 
 namespace Mihaylov.WebUI
@@ -20,7 +23,6 @@ namespace Mihaylov.WebUI
         {
             var builder = WebApplication.CreateBuilder(args);
             var configuration = builder.Configuration;
-
             //  builder.Services.Configure<aaa>(configuration.GetSection("AppSettings")); 150x150
 
             AddDependencies(builder.Services);
@@ -43,7 +45,6 @@ namespace Mihaylov.WebUI
             app.UseStaticFiles();
 
             app.UseRouting();
-
             app.UseAuthentication();
             app.UseAuthorization();
 
@@ -67,6 +68,16 @@ namespace Mihaylov.WebUI
             services.AddRazorPages();
             services.AddSignalR();
 
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                .AddCookie("Identity.External");
+
+            services.AddClientJwtAuthentication(LoginModel.COOKIE_NAME, ClaimType.Username, opt =>
+            {
+                opt.Secret = Config.GetEnvironmentVariable("JWT_AUTHENTICATION_SECRET");
+                opt.Issuer = Config.GetEnvironmentVariable("JWT_ISSUER");
+                opt.Audience = Config.GetEnvironmentVariable("JWT_AUDIENCE");
+            });
+
             services.AddModuleInfo();
             services.AddScoped<IModuleService, ModuleService>();
             services.AddUsersApiClient(Config.GetEnvironmentVariable("Users_Api_Client"));
@@ -78,7 +89,7 @@ namespace Mihaylov.WebUI
                 var cities = Config.GetEnvironmentVariable("Weather_Api_Cities", "Sofia");
 
                 opt.Cities = cities.Split(new char[] { ';', ',', ' ' }, System.StringSplitOptions.RemoveEmptyEntries);
-                opt.MetricUnits = Config.GetEnvironmentVariable<bool>("Weather_Api_MetricUnits", bool.TryParse ,true);
+                opt.MetricUnits = Config.GetEnvironmentVariable<bool>("Weather_Api_MetricUnits", bool.TryParse, true);
                 opt.Language = Config.GetEnvironmentVariable("Weather_Api_Language", "bg");
             });
 

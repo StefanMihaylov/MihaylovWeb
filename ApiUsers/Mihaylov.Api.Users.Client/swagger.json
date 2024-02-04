@@ -15,6 +15,7 @@
         "tags": [
           "Login"
         ],
+        "operationId": "LoginRegister",
         "requestBody": {
           "content": {
             "application/json": {
@@ -63,6 +64,7 @@
         "tags": [
           "Login"
         ],
+        "operationId": "LoginLogin",
         "requestBody": {
           "content": {
             "application/json": {
@@ -131,6 +133,7 @@
         "tags": [
           "Module"
         ],
+        "operationId": "ModuleGetInfo",
         "responses": {
           "200": {
             "description": "Success",
@@ -145,10 +148,44 @@
         }
       }
     },
-    "/api/Users/GetUsers": {
+    "/api/Roles/GetRoles": {
       "get": {
         "tags": [
-          "Users"
+          "Roles"
+        ],
+        "operationId": "RolesGetRoles",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RoleModel"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Roles/GetRoleById": {
+      "get": {
+        "tags": [
+          "Roles"
+        ],
+        "operationId": "RolesGetRoleById",
+        "parameters": [
+          {
+            "name": "roleId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
         ],
         "responses": {
           "200": {
@@ -156,7 +193,56 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/UserModel"
+                  "$ref": "#/components/schemas/RoleModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Roles/AddRole": {
+      "post": {
+        "tags": [
+          "Roles"
+        ],
+        "operationId": "RolesAddRole",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateRoleRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateRoleRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateRoleRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GenericResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
                 }
               }
             }
@@ -174,11 +260,71 @@
         }
       }
     },
-    "/api/Users/AddRoleToUser": {
+    "/api/Roles/UpdateRole": {
       "put": {
         "tags": [
-          "Users"
+          "Roles"
         ],
+        "operationId": "RolesUpdateRole",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateRoleRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateRoleRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateRoleRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GenericResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Roles/AddRoleToUser": {
+      "put": {
+        "tags": [
+          "Roles"
+        ],
+        "operationId": "RolesAddRoleToUser",
         "requestBody": {
           "content": {
             "application/json": {
@@ -232,16 +378,16 @@
         }
       }
     },
-    "/api/Users/DeleteUser/{id}": {
+    "/api/Roles/DeleteRole": {
       "delete": {
         "tags": [
-          "Users"
+          "Roles"
         ],
+        "operationId": "RolesDeleteRole",
         "parameters": [
           {
-            "name": "id",
-            "in": "path",
-            "required": true,
+            "name": "roleId",
+            "in": "query",
             "schema": {
               "type": "string",
               "format": "uuid"
@@ -282,18 +428,32 @@
         }
       }
     },
-    "/api/Users/GetRoles": {
+    "/api/Users/GetUsers": {
       "get": {
         "tags": [
           "Users"
         ],
+        "operationId": "UsersGetUsers",
         "responses": {
           "200": {
             "description": "Success",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/RoleModel"
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/UserModel"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
                 }
               }
             }
@@ -301,26 +461,67 @@
         }
       }
     },
-    "/api/Users/AddRole": {
-      "post": {
+    "/api/Users/GetUserById": {
+      "get": {
         "tags": [
           "Users"
         ],
+        "operationId": "UsersGetUserById",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserModel"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Users/ChangePassword": {
+      "put": {
+        "tags": [
+          "Users"
+        ],
+        "operationId": "UsersChangePassword",
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/CreateRoleRequest"
+                "$ref": "#/components/schemas/ChangePasswordRequest"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/CreateRoleRequest"
+                "$ref": "#/components/schemas/ChangePasswordRequest"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/CreateRoleRequest"
+                "$ref": "#/components/schemas/ChangePasswordRequest"
               }
             }
           }
@@ -359,30 +560,81 @@
         }
       }
     },
-    "/api/Users/ChangePassword": {
-      "post": {
+    "/api/Users/UpdateUser": {
+      "put": {
         "tags": [
           "Users"
         ],
+        "operationId": "UsersUpdateUser",
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/ChangePasswordRequest"
+                "$ref": "#/components/schemas/UpdateUserModel"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/ChangePasswordRequest"
+                "$ref": "#/components/schemas/UpdateUserModel"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/ChangePasswordRequest"
+                "$ref": "#/components/schemas/UpdateUserModel"
               }
             }
           }
         },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GenericResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Users/DeleteUser": {
+      "delete": {
+        "tags": [
+          "Users"
+        ],
+        "operationId": "UsersDeleteUser",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "Success",
@@ -614,6 +866,42 @@
             "format": "uuid"
           },
           "name": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "UpdateRoleRequest": {
+        "type": "object",
+        "properties": {
+          "roleId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "roleName": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "UpdateUserModel": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "nullable": true
+          },
+          "email": {
+            "type": "string",
+            "nullable": true
+          },
+          "firstName": {
+            "type": "string",
+            "nullable": true
+          },
+          "lastName": {
             "type": "string",
             "nullable": true
           }

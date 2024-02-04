@@ -17,7 +17,7 @@ namespace Mihaylov.Common.Host.AssemblyVersion
             _moduleService = moduleService;
         }
 
-        [HttpGet]
+        [HttpGet(Name = "ModuleGetInfo")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ModuleInfo))]
         public IActionResult GetInfo()
         {

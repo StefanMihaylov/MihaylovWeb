@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -22,60 +23,51 @@ namespace Mihaylov.Users.Server.Controllers
             this._usersRepository = usersRepository;
         }
 
-        [HttpGet]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UserModel))]
+        [HttpGet(Name = "UsersGetUsers")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<UserModel>))]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> GetUsers()
         {
-            var users = await this._usersRepository.GetUsersAsync().ConfigureAwait(false);
+            IEnumerable<UserModel> users = await this._usersRepository.GetUsersAsync().ConfigureAwait(false);
             return Ok(users);
         }
 
-        [HttpPut]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(GenericResponse))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [HttpGet(Name = "UsersGetUserById")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UserModel))]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public async Task<IActionResult> AddRoleToUser(AddRoleToUserRequest request)
+        public async Task<IActionResult> GetUserById(Guid userId)
         {
-            var response = await this._usersRepository.AddRoleAsync(request).ConfigureAwait(false);
-            return Ok(response);
+            UserModel users = await this._usersRepository.GetUserAsync(userId.ToString()).ConfigureAwait(false);
+            return Ok(users);
         }
 
-        [HttpDelete("{id}")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(GenericResponse))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public async Task<IActionResult> DeleteUser(Guid id)
-        {
-            var response = await this._usersRepository.DeleteUserAsync(id).ConfigureAwait(false);
-            return Ok(response);
-        }
-
-        [HttpGet]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(RoleModel))]
-        public async Task<IActionResult> GetRoles()
-        {
-            var roles = await this._usersRepository.GetRolesAsync().ConfigureAwait(false);
-            return Ok(roles);
-        }
-
-        [HttpPost]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(GenericResponse))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public async Task<IActionResult> AddRole(CreateRoleRequest request)
-        {
-            var response = await this._usersRepository.AddRoleAsync(request).ConfigureAwait(false);
-            return Ok(response);
-        }
-
-        [HttpPost]
+        [HttpPut(Name = "UsersChangePassword")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(GenericResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> ChangePassword(ChangePasswordRequest request)
         {
-            var response = await this._usersRepository.ChangePasswordAsync(request).ConfigureAwait(false);
+            GenericResponse response = await this._usersRepository.ChangePasswordAsync(request).ConfigureAwait(false);
+            return Ok(response);
+        }
+
+        [HttpPut(Name = "UsersUpdateUser")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(GenericResponse))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        public async Task<IActionResult> UpdateUser(UpdateUserModel request)
+        {
+            GenericResponse response = await this._usersRepository.UpdateUserAsync(request).ConfigureAwait(false);
+            return Ok(response);
+        }
+
+        [HttpDelete(Name = "UsersDeleteUser")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(GenericResponse))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        public async Task<IActionResult> DeleteUser(Guid id)
+        {
+            GenericResponse response = await this._usersRepository.DeleteUserAsync(id).ConfigureAwait(false);
             return Ok(response);
         }
     }
