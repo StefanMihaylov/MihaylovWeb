@@ -39,11 +39,6 @@ namespace Mihaylov.Users.Server.Controllers
         {
             var response = await _repository.LoginAsync(request).ConfigureAwait(false);
 
-            if (!response.Succeeded)
-            {
-                return BadRequest();
-            }
-
             return Ok(response);
         }
     }
