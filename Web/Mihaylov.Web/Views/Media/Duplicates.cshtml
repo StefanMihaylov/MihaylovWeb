@@ -1,0 +1,105 @@
+﻿@using Mihaylov.Site.Media.Models;
+@using System.Net;
+@model DuplicatesViewModel
+
+<div id="scan-container">
+    <span class="btn btn-primary start-new-scan">Update</span>
+    <span>Files: @Model.FilesCount, Duplicates: @Model.DuplicatesCount</span>
+
+    <div class="progress" style="margin-top:1rem">
+        <div id="files-progress-bar" class="progress-bar bg-info" role="progressbar" style="" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+    </div>
+    <div class="progress" style="margin-top:1rem">
+        <div id="hash-progress-bar" class="progress-bar bg-info" role="progressbar" style="" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+    </div>
+</div>
+
+<table class="table table-bordered table-striped" style="margin-top:1rem">
+    <tbody>
+        @foreach (var duplicate in Model.Duplicates)
+        {
+            <tr>
+                <td>
+                    <span>@duplicate.Checksum</span>
+                    <table class="table table-bordered table-striped">
+                        <tbody>
+                            <tr>
+                                @foreach (var file in @duplicate.List)
+                                {
+                                    @* // if (file.Exists) *@
+                                    @* // height="@file.Height" width="@file.Width" *@
+                                    {
+                                        var path = WebUtility.UrlEncode(file.FullPath);
+                                        <td>
+                                            <p>
+                                                @file.SubDirectories | @file.Name | @file.DownloadedOn |
+                                                @if (!file.Readonly)
+                                                {
+                                                    <a href="/Media/DeleteFile/@path" class="btn btn-danger">Delete</a>
+                                                }
+                                                else
+                                                {
+                                                    <span class="btn btn-info">Locked</span>
+                                                }
+                                            </p>
+                                            <p>
+                                                <img src="/Media/GetThumbnail/@path" />
+                                            </p>
+                                        </td>
+                                    }
+                                }
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@section Scripts {
+    <script src="~/lib/signalr/dist/browser/signalr.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            var $container = $("#scan-container");
+            $container.off("click");
+
+            var $fileProgressBar = $("#files-progress-bar");
+            var $hashProgressBar = $("#hash-progress-bar");
+
+            var connection = new signalR.HubConnectionBuilder()
+                .withUrl("/ScanProgressHub")
+                .build();
+
+            connection.on("updateLoadingBar",
+                (data) => {
+                    $fileProgressBar.attr("style", `width:${data.files}%; transition:none;`);
+                    $fileProgressBar.attr("aria-valuenow", data.files);
+                    $fileProgressBar.text(`${data.files}% `);
+
+                    $hashProgressBar.attr("style", `width:${data.processes}%; transition:none;`);
+                    $hashProgressBar.attr("aria-valuenow", data.processes);
+                    $hashProgressBar.text(`${data.processes}% `);
+                });
+
+            connection
+                .start()
+                .then(function () {
+                    const connectionId = connection.connectionId;
+                    $container.on("click", ".start-new-scan", function () {
+                        $.ajax({
+                            type: "Get",
+                            url: "/Media/ReadFiles",
+                            data: { connectionId: connectionId },
+                            success: function (viewHTML) {
+                                location.reload();
+                            },
+                            error: function (errorData) {
+                                console.log(errorData);
+                            }
+                        });
+                    });
+                });
+        });
+    </script>
+}

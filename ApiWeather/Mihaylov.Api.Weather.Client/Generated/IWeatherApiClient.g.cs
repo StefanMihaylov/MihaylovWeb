@@ -25,12 +25,12 @@ namespace Mihaylov.Api.Weather.Client
     {
         /// <returns>Success</returns>
         /// <exception cref="SwaggerException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task<ModuleInfo> GetInfoAsync();
+        System.Threading.Tasks.Task<ModuleInfo> ModuleGetInfoAsync();
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>Success</returns>
         /// <exception cref="SwaggerException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task<ModuleInfo> GetInfoAsync(System.Threading.CancellationToken cancellationToken);
+        System.Threading.Tasks.Task<ModuleInfo> ModuleGetInfoAsync(System.Threading.CancellationToken cancellationToken);
 
         /// <returns>Success</returns>
         /// <exception cref="SwaggerException">A server side error occurred.</exception>

@@ -27,7 +27,7 @@ namespace Mihaylov.Web.Service
             var modules = new List<IModuleInfo>()
             {
                 await _usersApiClient.ModuleGetInfoAsync().ConfigureAwait(false),
-                await _weatherApiClient.GetInfoAsync().ConfigureAwait(false),
+                await _weatherApiClient.ModuleGetInfoAsync().ConfigureAwait(false),
             };
 
             var result = new List<ModuleInfoModel>()

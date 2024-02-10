@@ -16,6 +16,7 @@
         "tags": [
           "Module"
         ],
+        "operationId": "ModuleGetInfo",
         "responses": {
           "200": {
             "description": "Success",

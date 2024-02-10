@@ -12,6 +12,7 @@
 		<AppendRuntimeIdentifierToOutputPath>true</AppendRuntimeIdentifierToOutputPath>
 		<EnableDynamicLoading>true</EnableDynamicLoading>
 		<InvariantGlobalization>false</InvariantGlobalization>
+		<IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
 		<ImplicitUsings>disable</ImplicitUsings>
 		<Nullable>disable</Nullable>
 	</PropertyGroup>

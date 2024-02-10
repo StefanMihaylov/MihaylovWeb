@@ -162,4 +162,5 @@ $RECYCLE.BIN/
 .gitignore
 
 Kendo/
-Web/Mihaylov.WebUI/wwwroot/lib/
+**/wwwroot/lib/
+**/Properties/launchSettings.json

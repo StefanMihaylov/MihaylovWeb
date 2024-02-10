@@ -25,6 +25,7 @@ namespace Mihaylov.Users.Data
             }
 
             services.AddScoped<IUsersRepository, UsersRepository>();
+            services.AddScoped<IExternalRepository, ExternalRepository>();
 
             services.AddDbContext<MihaylovUsersDbContext>(options =>
                         options.UseSqlServer(connectionStringSettings.GetConnectionString()));
