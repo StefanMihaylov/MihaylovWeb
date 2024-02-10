@@ -17,17 +17,19 @@ namespace Mihaylov.Users.Data
     {
         private readonly UserManager<User> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly SignInManager<User> _signManager;
         private readonly ITokenHelper _tokenHelper;
         private readonly ILogger _logger;
 
 
         public UsersRepository(UserManager<User> userManager, RoleManager<IdentityRole> roleManager,
-            ITokenHelper tokenHelper, ILoggerFactory factory)
+            SignInManager<User> signManager, ITokenHelper tokenHelper, ILoggerFactory factory)
         {
-            this._userManager = userManager;
-            this._roleManager = roleManager;
-            this._tokenHelper = tokenHelper;
-            this._logger = factory.CreateLogger(this.GetType().Name);
+            _userManager = userManager;
+            _roleManager = roleManager;
+            _signManager = signManager;
+            _tokenHelper = tokenHelper;
+            _logger = factory.CreateLogger(GetType().Name);
         }
 
         public async Task<GenericResponse> RegisterAsync(RegisterRequestModel request)
@@ -35,39 +37,35 @@ namespace Mihaylov.Users.Data
             User user = new User(request.Username, request.Email);
             user.Profile = new UserProfile(request.FirstName, request.LastName);
 
-            IdentityResult result = await this._userManager.CreateAsync(user, request.Password)
-                                                           .ConfigureAwait(false);
+            IdentityResult result = await _userManager.CreateAsync(user, request.Password).ConfigureAwait(false);
 
             return GetGenericResponse(result);
         }
 
         public async Task<LoginResponseModel> LoginAsync(LoginRequestModel request)
         {
-            User user = await this._userManager.FindByNameAsync(request.UserName)
-                                               .ConfigureAwait(false);
+            User user = await _userManager.FindByNameAsync(request.UserName).ConfigureAwait(false);
             if (user == null)
             {
-                return new LoginResponseModel(false, null, null);
+                return new LoginResponseModel(false, false, null, null);
             }
 
-            bool isPasswordValid = await this._userManager.CheckPasswordAsync(user, request.Password)
-                                                          .ConfigureAwait(false);
-            if (!isPasswordValid)
+            var passwordResult = await _signManager.CheckPasswordSignInAsync(user, request.Password, request.LockoutOnFailure).ConfigureAwait(false);
+            if (!passwordResult.Succeeded)
             {
-                return new LoginResponseModel(false, user.UserName, null);
+                return new LoginResponseModel(passwordResult.Succeeded, passwordResult.IsLockedOut, user.UserName, null);
             }
 
-            IList<string> roles = await this._userManager.GetRolesAsync(user)
-                                                         .ConfigureAwait(false);
+            IList<string> roles = await _userManager.GetRolesAsync(user).ConfigureAwait(false);
 
-            string encryptedToken = this._tokenHelper.GetToken(user, roles, request.ClaimTypes);
+            string encryptedToken = _tokenHelper.GetToken(user, roles, request.ClaimTypes);
 
-            return new LoginResponseModel(true, user.UserName, encryptedToken);
+            return new LoginResponseModel(true, false, user.UserName, encryptedToken);
         }
 
         public async Task<IEnumerable<UserModel>> GetUsersAsync()
         {
-            var users = await this._userManager.Users
+            var users = await _userManager.Users
                                     .Select(FromDbUser())
                                     .ToListAsync()
                                     .ConfigureAwait(false);
@@ -118,14 +116,14 @@ namespace Mihaylov.Users.Data
         {
             IdentityResult result = null;
 
-            var user = await this._userManager.FindByIdAsync(request.UserId.ToString()).ConfigureAwait(false);
+            var user = await _userManager.FindByIdAsync(request.UserId.ToString()).ConfigureAwait(false);
             if (user != null)
             {
-                var role = await this._roleManager.FindByIdAsync(request.RoleId.ToString()).ConfigureAwait(false);
+                var role = await _roleManager.FindByIdAsync(request.RoleId.ToString()).ConfigureAwait(false);
 
                 if (role != null)
                 {
-                    result = await this._userManager.AddToRoleAsync(user, role.Name).ConfigureAwait(false);
+                    result = await _userManager.AddToRoleAsync(user, role.Name).ConfigureAwait(false);
                 }
             }
 
@@ -167,12 +165,10 @@ namespace Mihaylov.Users.Data
         {
             IdentityResult result = null;
 
-            var user = await this._userManager.FindByIdAsync(id.ToString())
-                                              .ConfigureAwait(false);
+            var user = await _userManager.FindByIdAsync(id.ToString()).ConfigureAwait(false);
             if (user != null)
             {
-                result = await this._userManager.DeleteAsync(user)
-                                                .ConfigureAwait(false);
+                result = await _userManager.DeleteAsync(user).ConfigureAwait(false);
             }
 
             return GetGenericResponse(result);
@@ -191,7 +187,7 @@ namespace Mihaylov.Users.Data
             }
             catch (Exception ex)
             {
-                this._logger.LogError(ex, "GetRoles failed.");
+                _logger.LogError(ex, "GetRoles failed.");
                 throw;
             }
         }
@@ -210,7 +206,7 @@ namespace Mihaylov.Users.Data
             }
             catch (Exception ex)
             {
-                this._logger.LogError(ex, "GetRole failed.");
+                _logger.LogError(ex, "GetRole failed.");
                 throw;
             }
         }
@@ -219,14 +215,13 @@ namespace Mihaylov.Users.Data
         {
             try
             {
-                var result = await this._roleManager.CreateAsync(new IdentityRole(request.RoleName))
-                                                    .ConfigureAwait(false);
+                var result = await _roleManager.CreateAsync(new IdentityRole(request.RoleName)).ConfigureAwait(false);
 
                 return GetGenericResponse(result);
             }
             catch (Exception ex)
             {
-                this._logger.LogError(ex, "AddRole failed.");
+                _logger.LogError(ex, "AddRole failed.");
                 return new GenericResponse(ex);
             }
         }
@@ -235,14 +230,14 @@ namespace Mihaylov.Users.Data
         {
             try
             {
-                User user = await this._userManager.FindByNameAsync(request.UserName).ConfigureAwait(false);
-                var result = await this._userManager.ChangePasswordAsync(user, request.OldPassword, request.NewPassword).ConfigureAwait(false);
+                User user = await _userManager.FindByNameAsync(request.UserName).ConfigureAwait(false);
+                var result = await _userManager.ChangePasswordAsync(user, request.OldPassword, request.NewPassword).ConfigureAwait(false);
 
                 return GetGenericResponse(result);
             }
             catch (Exception ex)
             {
-                this._logger.LogError(ex, "ChangePassword failed.");
+                _logger.LogError(ex, "ChangePassword failed.");
                 return new GenericResponse(ex);
             }
         }
@@ -250,7 +245,7 @@ namespace Mihaylov.Users.Data
 
         public async Task InitializeDatabaseAsync(string adminRole)
         {
-            var roles = await this.GetRolesAsync().ConfigureAwait(false);
+            var roles = await GetRolesAsync().ConfigureAwait(false);
             if (roles.Any() == false)
             {
                 var newRole = new CreateRoleRequest()
@@ -258,11 +253,11 @@ namespace Mihaylov.Users.Data
                     RoleName = adminRole,
                 };
 
-                var result = await this.AddRoleAsync(newRole).ConfigureAwait(false);
+                var result = await AddRoleAsync(newRole).ConfigureAwait(false);
             }
             else
             {
-                var users = await this.GetUsersAsync().ConfigureAwait(false);
+                var users = await GetUsersAsync().ConfigureAwait(false);
                 if (roles.Count() == 1 && users.Count() == 1)
                 {
                     var role = roles.First();
@@ -276,7 +271,7 @@ namespace Mihaylov.Users.Data
                             RoleId = role.Id,
                         };
 
-                        var result = await this.AddRoleToUserAsync(addRoleRequest).ConfigureAwait(false);
+                        var result = await AddRoleToUserAsync(addRoleRequest).ConfigureAwait(false);
                     }
                 }
             }
@@ -296,7 +291,7 @@ namespace Mihaylov.Users.Data
                 Email = u.Email,
                 FirstName = u.Profile.FirstName,
                 LastName = u.Profile.LastName,
-                Roles = this._userManager.GetRolesAsync(u).Result
+                Roles = _userManager.GetRolesAsync(u).Result
             };
         }
 

@@ -19,7 +19,7 @@
 
 	<PropertyGroup>
 		<Product>Mihaylov.Api.Users</Product>
-		<Version>0.1.11</Version>
+		<Version>0.1.12</Version>
 	</PropertyGroup>
 
   <ItemGroup>

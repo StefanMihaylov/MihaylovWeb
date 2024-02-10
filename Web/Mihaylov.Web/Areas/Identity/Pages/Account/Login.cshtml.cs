@@ -64,6 +64,7 @@ namespace Mihaylov.Web.Areas.Identity.Pages.Account
             ///     directly from your code. This API may change or be removed in future releases.
             /// </summary>
             [Required]
+            [Display(Name = "Username")]
             public string UserName { get; set; }
 
             /// <summary>
@@ -72,6 +73,7 @@ namespace Mihaylov.Web.Areas.Identity.Pages.Account
             /// </summary>
             [Required]
             [DataType(DataType.Password)]
+            [Display(Name = "Password")]
             public string Password { get; set; }
 
             /// <summary>
@@ -114,14 +116,21 @@ namespace Mihaylov.Web.Areas.Identity.Pages.Account
             {
                 var request = new LoginRequestModel()
                 {
-                    UserName = this.Input.UserName,
-                    Password = this.Input.Password,
+                    UserName = Input.UserName,
+                    Password = Input.Password,
                     ClaimTypesEnum = ClaimType.Username,
+                    LockoutOnFailure = true,
                 };
 
                 var response = await _usersApiClient.LoginLoginAsync(request).ConfigureAwait(false);
                 if (response?.Succeeded != true)
                 {
+                    if (response?.IsLockedOut == true)
+                    {
+                        _logger.LogWarning($"User account '{Input.UserName}' locked out.");
+                        return RedirectToPage("./Lockout");
+                    }
+
                     ModelState.AddModelError(string.Empty, "Invalid username or password.");
                     return Page();
                 }
@@ -131,7 +140,7 @@ namespace Mihaylov.Web.Areas.Identity.Pages.Account
                 var cookieOptions = new CookieOptions() { HttpOnly = false, SameSite = SameSiteMode.Strict };
                 Response.Cookies.Append(COOKIE_NAME, response.Token, cookieOptions);
 
-                _logger.LogInformation($"User '{this.Input.UserName}' logged in.");
+                _logger.LogInformation($"User '{Input.UserName}' logged in.");
                 return LocalRedirect(returnUrl);
             }
             catch (Exception ex)
@@ -141,8 +150,8 @@ namespace Mihaylov.Web.Areas.Identity.Pages.Account
                 ModelState.AddModelError(string.Empty, "Invalid login attempt.");
                 return Page();
             }
-			
-			/*
+
+            /*
                 // This doesn't count login failures towards account lockout
                 // To enable password failures to trigger account lockout, set lockoutOnFailure: true
                 var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);

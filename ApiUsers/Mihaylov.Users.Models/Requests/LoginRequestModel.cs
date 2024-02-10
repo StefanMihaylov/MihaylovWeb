@@ -11,5 +11,7 @@ namespace Mihaylov.Users.Models.Requests
         public string Password { get; set; }
 
         public int? ClaimTypes { get; set; }
+
+        public bool LockoutOnFailure { get; set; }
     }
 }

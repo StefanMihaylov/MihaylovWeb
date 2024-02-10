@@ -268,6 +268,9 @@ namespace Mihaylov.Api.Users.Client
         [Newtonsoft.Json.JsonProperty("claimTypes", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public int? ClaimTypes { get; set; }
 
+        [Newtonsoft.Json.JsonProperty("lockoutOnFailure", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public bool LockoutOnFailure { get; set; }
+
         public string ToJson()
         {
 
@@ -288,6 +291,9 @@ namespace Mihaylov.Api.Users.Client
     {
         [Newtonsoft.Json.JsonProperty("succeeded", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public bool Succeeded { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("isLockedOut", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public bool IsLockedOut { get; set; }
 
         [Newtonsoft.Json.JsonProperty("userName", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string UserName { get; set; }

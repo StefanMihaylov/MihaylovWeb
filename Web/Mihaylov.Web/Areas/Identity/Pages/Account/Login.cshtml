@@ -43,18 +43,17 @@
             </form>
         </section>
     </div>
-    <div class="col-md-4 col-md-offset-2">
+    <div class="col-md-6 col-md-offset-0">
         <section>
             <h5>Use another service to log in.</h5>
             <hr />
             @{
                 if ((Model.ExternalLogins?.Count() ?? 0) == 0)
                 {
+                    // https://go.microsoft.com/fwlink/?LinkID=532715
                     <div>
                         <p>
-                            There are no external authentication services configured. See this <a href="https://go.microsoft.com/fwlink/?LinkID=532715">
-                                article about setting up this ASP.NET application to support logging in via external services
-                            </a>.
+                            There are no external authentication services configured. 
                         </p>
                     </div>
                 }

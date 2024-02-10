@@ -32,8 +32,29 @@ namespace Mihaylov.Users.Data
 
             services.AddIdentity<User, IdentityRole>(options =>
                         {
-                            options.User.RequireUniqueEmail = true;
+                            options.User = new UserOptions()
+                            {
+                                RequireUniqueEmail = true,
+                                AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._",
+                            };
                             options.Password = password;
+                            options.Lockout = new LockoutOptions()
+                            {
+                                AllowedForNewUsers = true,
+                                MaxFailedAccessAttempts = 5,
+                                DefaultLockoutTimeSpan = TimeSpan.FromMinutes(30),
+                            };
+                            options.SignIn = new SignInOptions()
+                            {
+                                RequireConfirmedAccount = false,
+                                RequireConfirmedEmail = false,
+                                RequireConfirmedPhoneNumber = false,
+                            };
+                            options.Stores = new StoreOptions()
+                            {
+                                MaxLengthForKeys = 10,
+                                ProtectPersonalData = false,
+                            };
                         })
                     //.AddRoles<IdentityRole>()
                     .AddEntityFrameworkStores<MihaylovUsersDbContext>();

@@ -4,15 +4,18 @@
     {
         public bool Succeeded { get; set; }
 
+        public bool IsLockedOut { get; set; }
+
         public string UserName { get; set; }
 
         public string Token { get; set; }
 
-        public LoginResponseModel(bool succeeded, string userName, string token)
+        public LoginResponseModel(bool succeeded, bool isLockedOut, string userName, string token)
         {
-            this.Succeeded = succeeded;
-            this.UserName = userName;
-            this.Token = token;
+            Succeeded = succeeded;
+            IsLockedOut = isLockedOut;
+            UserName = userName;
+            Token = token;
         }
     }
 }

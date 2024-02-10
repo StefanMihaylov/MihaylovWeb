@@ -1,0 +1,17 @@
+﻿
+1. Login
+	- ./ForgotPassword
+		- ./ForgotPasswordConfirmation
+		- /Account/ResetPassword
+			- ./ResetPasswordConfirmation
+	+ ./Register
+		- /Account/ConfirmEmail
+		- RegisterConfirmation
+	- ./ResendEmailConfirmation
+		- /Account/ConfirmEmail
+	- ./ExternalLogin
+		- ...
+	- ./LoginWith2fa
+		- ./LoginWithRecoveryCode
+	- ./Lockout
+2. Logout
