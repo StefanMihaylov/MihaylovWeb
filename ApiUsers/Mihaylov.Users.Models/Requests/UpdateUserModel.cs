@@ -1,8 +1,10 @@
-﻿namespace Mihaylov.Users.Models.Requests
+﻿using System;
+
+namespace Mihaylov.Users.Models.Requests
 {
     public class UpdateUserModel
     {
-        public string Id { get; set; }
+        public Guid UserId { get; set; }
 
         public string Email { get; set; }
 

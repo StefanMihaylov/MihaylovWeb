@@ -85,7 +85,7 @@ namespace Mihaylov.Users.Data
 
         public async Task<GenericResponse> UpdateUserAsync(UpdateUserModel update)
         {
-            var dbUser = await _userManager.FindByIdAsync(update.Id).ConfigureAwait(false);
+            var dbUser = await _userManager.FindByIdAsync(update.UserId.ToString()).ConfigureAwait(false);
             if (dbUser == null)
             {
                 return null;
@@ -161,11 +161,11 @@ namespace Mihaylov.Users.Data
             return GetGenericResponse(result);
         }
 
-        public async Task<GenericResponse> DeleteUserAsync(Guid id)
+        public async Task<GenericResponse> DeleteUserAsync(Guid userId)
         {
             IdentityResult result = null;
 
-            var user = await _userManager.FindByIdAsync(id.ToString()).ConfigureAwait(false);
+            var user = await _userManager.FindByIdAsync(userId.ToString()).ConfigureAwait(false);
             if (user != null)
             {
                 result = await _userManager.DeleteAsync(user).ConfigureAwait(false);
@@ -230,7 +230,7 @@ namespace Mihaylov.Users.Data
         {
             try
             {
-                User user = await _userManager.FindByNameAsync(request.UserName).ConfigureAwait(false);
+                User user = await _userManager.FindByIdAsync(request.UserId.ToString()).ConfigureAwait(false);
                 var result = await _userManager.ChangePasswordAsync(user, request.OldPassword, request.NewPassword).ConfigureAwait(false);
 
                 return GetGenericResponse(result);

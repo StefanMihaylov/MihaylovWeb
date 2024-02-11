@@ -1,8 +1,10 @@
-﻿namespace Mihaylov.Users.Models.Requests
+﻿using System;
+
+namespace Mihaylov.Users.Models.Requests
 {
     public class ChangePasswordRequest
     {
-        public string UserName { get; set; }
+        public Guid UserId { get; set; }
 
         public string OldPassword { get; set; }
 

@@ -26,7 +26,7 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Weather" asp-action="Index">Време</a>
                         </li>
-                        @if (User.IsInRole(UserConstants.AdminRole))
+                        @if (User.IsAdmin())
                         {
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Media" asp-action="Duplicates">Media</a>

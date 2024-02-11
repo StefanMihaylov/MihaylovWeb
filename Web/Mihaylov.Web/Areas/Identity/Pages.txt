@@ -15,3 +15,16 @@
 		- ./LoginWithRecoveryCode
 	- ./Lockout
 2. Logout
+3. Manage
+	+ Index
+	- Email
+		- /Account/ConfirmEmailChange
+		- /Account/ConfirmEmail
+	+ ChangePassword
+		-./SetPassword
+	- ExternalLogins
+	-- PersonalData
+	- TwoFactorAuthentication
+
+			-- DownloadPersonalData
+			-- DeletePersonalData

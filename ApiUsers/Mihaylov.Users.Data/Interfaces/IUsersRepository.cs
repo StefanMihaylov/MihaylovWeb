@@ -22,7 +22,7 @@ namespace Mihaylov.Users.Data.Interfaces
 
         Task<GenericResponse> ChangePasswordAsync(ChangePasswordRequest request);
 
-        Task<GenericResponse> DeleteUserAsync(Guid id);
+        Task<GenericResponse> DeleteUserAsync(Guid userId);
 
 
         Task<IEnumerable<RoleModel>> GetRolesAsync();
