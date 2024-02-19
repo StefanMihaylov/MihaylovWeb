@@ -11,7 +11,7 @@
       ]
     },
     {
-      "library": "jquery@3.5.1",
+      "library": "jquery@3.6.0",
       "destination": "wwwroot/lib/jquery/",
       "files": [
         "dist/jquery.min.map",
@@ -20,7 +20,7 @@
       ]
     },
     {
-      "library": "bootstrap@4.3.1",
+      "library": "bootstrap@4.6.2",
       "destination": "wwwroot/lib/bootstrap/",
       "files": [
         "dist/css/bootstrap.css",
@@ -46,7 +46,7 @@
       ]
     },
     {
-      "library": "jquery-validation@1.17.0",
+      "library": "jquery-validation@1.19.5",
       "destination": "wwwroot/lib/jquery-validation/",
       "files": [
         "dist/additional-methods.js",
@@ -56,7 +56,7 @@
       ]
     },
     {
-      "library": "jquery-validation-unobtrusive@3.2.12",
+      "library": "jquery-validation-unobtrusive@4.0.0",
       "destination": "wwwroot/lib/jquery-validation-unobtrusive/",
       "files": [
         "dist/jquery.validate.unobtrusive.js",

@@ -1,10 +1,9 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
-using System.Security.Claims;
+﻿using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Mihaylov.Api.Users.Client;
+using Mihaylov.Common.Host.Authorization;
 
 namespace Mihaylov.Web.Areas.Identity.Pages.Account.Manage
 {
@@ -83,13 +82,13 @@ namespace Mihaylov.Web.Areas.Identity.Pages.Account.Manage
 
             var request = new UpdateUserModel()
             {
-                Id = GetUserId(),
+                UserId = User.GetId(),
                 Email = this.Input.Email,
                 FirstName = this.Input.FirstName,
                 LastName = this.Input.LastName,
             };
 
-            _usersApiClient.AddToken(GetToken());
+            _usersApiClient.AddToken(Request.GetToken());
             var response = await _usersApiClient.UsersUpdateUserAsync(request).ConfigureAwait(false);
             if (!response.Succeeded)
             {
@@ -105,10 +104,8 @@ namespace Mihaylov.Web.Areas.Identity.Pages.Account.Manage
 
         private async Task LoadAsync()
         {
-            string userId = GetUserId();
-
-            _usersApiClient.AddToken(GetToken());
-            var userData = await _usersApiClient.UsersGetUserByIdAsync(new Guid(userId)).ConfigureAwait(false);
+            _usersApiClient.AddToken(Request.GetToken());
+            var userData = await _usersApiClient.UsersGetUserByIdAsync(User.GetId()).ConfigureAwait(false);
 
             Username = userData.UserName;
             Input = new InputModel
@@ -117,17 +114,6 @@ namespace Mihaylov.Web.Areas.Identity.Pages.Account.Manage
                 FirstName = userData.FirstName,
                 LastName = userData.LastName,
             };
-        }
-
-
-        private string GetUserId()
-        {
-            return User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-        }
-
-        private string GetToken()
-        {
-            return Request.Cookies[LoginModel.COOKIE_NAME];
         }
     }
 }

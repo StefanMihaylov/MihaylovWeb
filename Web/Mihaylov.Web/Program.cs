@@ -1,9 +1,8 @@
-using System;
+using System.Linq;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
+using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Mihaylov.Api.Users.Client;
@@ -12,8 +11,8 @@ using Mihaylov.Common.Host;
 using Mihaylov.Common.Host.Abstract.Authorization;
 using Mihaylov.Common.Host.Abstract.Configurations;
 using Mihaylov.Site.Media;
+using Mihaylov.Web.Areas;
 using Mihaylov.Web.Areas.Identity.Pages.Account;
-using Mihaylov.Web.Data;
 using Mihaylov.Web.Hubs;
 using Mihaylov.Web.Models;
 using Mihaylov.Web.Service;
@@ -28,18 +27,9 @@ namespace Mihaylov.Web
         {
             var builder = WebApplication.CreateBuilder(args);
             var configuration = builder.Configuration;
-			//  builder.Services.Configure<aaa>(configuration.GetSection("AppSettings")); 150x150
-			
-			AddDependencies(builder.Services);
-			
-            // Add services to the container.
-            var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
-            builder.Services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(connectionString));
-            builder.Services.AddDatabaseDeveloperPageExceptionFilter();
-            builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-                .AddEntityFrameworkStores<ApplicationDbContext>();
-            builder.Services.AddControllersWithViews();
+            //  builder.Services.Configure<aaa>(configuration.GetSection("AppSettings"));
+
+            AddDependencies(builder.Services);
 
             var app = builder.Build();
 
@@ -65,6 +55,7 @@ namespace Mihaylov.Web
             app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");
+
             app.MapRazorPages();
             app.MapHub<ScanProgressHub>("/ScanProgressHub");
 
@@ -73,12 +64,23 @@ namespace Mihaylov.Web
 
         private static void AddDependencies(IServiceCollection services)
         {
-            services.AddControllersWithViews();
+            services.AddControllersWithViews()
+                    .ConfigureApplicationPartManager(apm =>
+                    {
+                        var assembly = typeof(IdentityBuilderUIExtensions).Assembly;
+                        var factory = new ConsolidatedAssemblyApplicationPartFactory();
+                        var parts = factory.GetApplicationParts(assembly).ToList();
+
+                        foreach (var part in parts)
+                        {
+                            apm.ApplicationParts.Add(part);
+                        }
+
+                        apm.FeatureProviders.Add(new ViewVersionFeatureProvider(assembly));
+                    });
+
             services.AddRazorPages();
             services.AddSignalR();
-
-            //services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-            //    .AddCookie("Identity.External");
 
             services.AddClientJwtAuthentication(LoginModel.COOKIE_NAME, ClaimType.Username, opt =>
             {
@@ -90,8 +92,8 @@ namespace Mihaylov.Web
             services.AddModuleInfo();
             services.AddScoped<IModuleService, ModuleService>();
             services.AddUsersApiClient(Config.GetEnvironmentVariable("Users_Api_Client"));
-            services.AddWeatherApiClient(Config.GetEnvironmentVariable("Weather_Api_Client"));
 
+            services.AddWeatherApiClient(Config.GetEnvironmentVariable("Weather_Api_Client"));
             services.AddScoped<IWeatherService, WeatherService>();
             services.Configure<WeatherConfig>(opt =>
             {

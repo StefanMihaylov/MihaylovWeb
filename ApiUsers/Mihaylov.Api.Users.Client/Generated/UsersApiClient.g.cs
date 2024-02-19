@@ -1353,15 +1353,15 @@ namespace Mihaylov.Api.Users.Client
 
         /// <returns>Success</returns>
         /// <exception cref="SwaggerException">A server side error occurred.</exception>
-        public virtual System.Threading.Tasks.Task<GenericResponse> UsersDeleteUserAsync(System.Guid? id)
+        public virtual System.Threading.Tasks.Task<GenericResponse> UsersDeleteUserAsync(System.Guid? userId)
         {
-            return UsersDeleteUserAsync(id, System.Threading.CancellationToken.None);
+            return UsersDeleteUserAsync(userId, System.Threading.CancellationToken.None);
         }
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>Success</returns>
         /// <exception cref="SwaggerException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<GenericResponse> UsersDeleteUserAsync(System.Guid? id, System.Threading.CancellationToken cancellationToken)
+        public virtual async System.Threading.Tasks.Task<GenericResponse> UsersDeleteUserAsync(System.Guid? userId, System.Threading.CancellationToken cancellationToken)
         {
             var client_ = _httpClient;
             var disposeClient_ = false;
@@ -1377,9 +1377,9 @@ namespace Mihaylov.Api.Users.Client
                     // Operation Path: "api/Users/DeleteUser"
                     urlBuilder_.Append("api/Users/DeleteUser");
             urlBuilder_.Append('?');
-            if (id != null)
+            if (userId != null)
             {
-                urlBuilder_.Append(System.Uri.EscapeDataString("id")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
+                urlBuilder_.Append(System.Uri.EscapeDataString("userId")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(userId, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
             }
             urlBuilder_.Length--;
 

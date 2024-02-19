@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using Mihaylov.Api.Users.Client;
+using Mihaylov.Common.Host.Authorization;
 
 namespace Mihaylov.Web.Areas.Identity.Pages.Account.Manage
 {
@@ -19,7 +20,7 @@ namespace Mihaylov.Web.Areas.Identity.Pages.Account.Manage
         public ChangePasswordModel(IUsersApiClient usersApiClient, ILoggerFactory loggerFactory)
         {
             _usersApiClient = usersApiClient;
-            _logger = loggerFactory.CreateLogger(this.GetType().Name);
+            _logger = loggerFactory.CreateLogger(GetType().Name);
         }
 
         /// <summary>
@@ -85,12 +86,12 @@ namespace Mihaylov.Web.Areas.Identity.Pages.Account.Manage
 
             var request = new ChangePasswordRequest()
             {
-                UserName = User.Identity.Name,
+                UserId = User.GetId(),
                 OldPassword = Input.OldPassword,
                 NewPassword = Input.NewPassword,
             };
 
-            _usersApiClient.AddToken(Request.Cookies[LoginModel.COOKIE_NAME]);
+            _usersApiClient.AddToken(Request.GetToken());
             var response = await _usersApiClient.UsersChangePasswordAsync(request).ConfigureAwait(false);
 
             if (!response.Succeeded)

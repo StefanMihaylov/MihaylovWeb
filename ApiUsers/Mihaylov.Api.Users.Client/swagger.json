@@ -666,7 +666,7 @@
         "operationId": "UsersDeleteUser",
         "parameters": [
           {
-            "name": "id",
+            "name": "userId",
             "in": "query",
             "schema": {
               "type": "string",
@@ -728,9 +728,9 @@
       "ChangePasswordRequest": {
         "type": "object",
         "properties": {
-          "userName": {
+          "userId": {
             "type": "string",
-            "nullable": true
+            "format": "uuid"
           },
           "oldPassword": {
             "type": "string",
@@ -952,9 +952,9 @@
       "UpdateUserModel": {
         "type": "object",
         "properties": {
-          "id": {
+          "userId": {
             "type": "string",
-            "nullable": true
+            "format": "uuid"
           },
           "email": {
             "type": "string",

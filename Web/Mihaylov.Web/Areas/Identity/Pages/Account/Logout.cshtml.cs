@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 
@@ -16,10 +17,10 @@ namespace Mihaylov.Web.Areas.Identity.Pages.Account
 
         public IActionResult OnPost(string returnUrl = null)
         {
-			Response.Cookies.Delete(LoginModel.COOKIE_NAME);
+            Logout(Response);
 
-          //  await _signInManager.SignOutAsync();
-           _logger.LogInformation($"User '{User?.Identity?.Name}' logged out.");
+            //  await _signInManager.SignOutAsync();
+            _logger.LogInformation($"User '{User?.Identity?.Name}' logged out.");
             if (returnUrl != null)
             {
                 return LocalRedirect(returnUrl);
@@ -30,6 +31,11 @@ namespace Mihaylov.Web.Areas.Identity.Pages.Account
                 // request and the identity for the user gets updated.
                 return RedirectToPage();
             }
+        }
+
+        public static void Logout(HttpResponse response)
+        {
+            response.Cookies.Delete(LoginModel.COOKIE_NAME);
         }
     }
 }

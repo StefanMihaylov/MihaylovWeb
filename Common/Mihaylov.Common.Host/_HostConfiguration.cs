@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -81,17 +82,10 @@ namespace Mihaylov.Common.Host
                     {
                         context.Response.StatusCode = 401;
                         return Task.CompletedTask;
-                    },
-                    OnTokenValidated = context =>
-                    {
-                       // var claims = context.Principal.Identities.First().Claims.ToList();
-                       // var name = context.Principal.Identities.First().Name;
-                       // var isAdmin = context.Principal.IsInRole("Administrator");
-
-                        return Task.CompletedTask;
                     }
                 };
-            });
+            })
+            .AddIdentityCookies(o => { });
 
             services.AddAuthorization(options =>
             {
