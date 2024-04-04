@@ -79,6 +79,40 @@ namespace Mihaylov.Site.Media.Services
             return files;
         }
 
+        public IEnumerable<DirInfoModel> GetDirectories(string directoryPath)
+        {
+            var directoryInfo = new DirectoryInfo(directoryPath);
+            var directories = directoryInfo.GetDirectories();
+
+            var result = directories
+                .OrderByDescending(f => f.CreationTime)
+                .Select(d => new DirInfoModel()
+                {
+                    Name = d.Name,
+                    FullPath = d.FullName,
+                    FilesCount = d.GetFiles().Length,
+                });
+
+            return result;
+        }
+
+        public string CreateDierctory(string basePath, string name)
+        {
+            var fullPath = Path.Combine(basePath, name);
+            var info = Directory.CreateDirectory(fullPath);
+            return info.FullName;
+        }
+
+        public void MoveFiles(string dir, IEnumerable<string> files)
+        {
+            foreach (var file in files)
+            {
+                var fileName = new FileInfo(file).Name;
+                var destination = Path.Combine(dir, fileName);
+                File.Move(file, destination);
+            }
+        }
+
         public FileInfoModel GetFileInfo(string path)
         {
             var fileInfo = new FileInfo(path);

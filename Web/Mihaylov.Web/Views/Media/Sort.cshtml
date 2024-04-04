@@ -1,0 +1,213 @@
+﻿@using Mihaylov.Site.Media.Models;
+@using System.Net;
+@model SortViewModel
+
+<div id="scan-container" style="margin-bottom:20px">
+    <span class="btn btn-primary start-new-scan">Сортиране</span>
+    <div class="progress" style="margin-top:1rem">
+        <div id="files-progress-bar" class="progress-bar bg-info" role="progressbar" style="" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+    </div>
+    <div class="progress" style="margin-top:1rem">
+        <div id="hash-progress-bar" class="progress-bar bg-info" role="progressbar" style="" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+    </div>
+</div>
+
+<div class="row form-distance">
+    <div class="col-md-10">
+        <form id="move-pics" method="post" action="MovePics" class="form-inline">
+            <div class="form-row align-items-center">
+                <div class="col-auto">
+                    <button id="move-pics-submit" type="submit" class="btn btn-lg btn-primary">Преместеване</button>
+                </div>
+                <div class="col-auto">
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">Директория</span>
+                        </div>
+                        <span id="move-pics-dir-span" class="form-control" style="min-width:100px"></span>
+                        <input id="move-pics-dir" name="dir" class="form-control" hidden />
+                    </div>
+                </div>
+                <div class="col-auto">
+                    <nav aria-label="">
+                        <ul class="pagination ustify-content-end">
+                            <li class="page-item">
+                                <a class="page-link" href="/Media/Sort?page=@(Model.Page-1)">Previous</a>
+                            </li>
+
+                            @for (int i = 0; i < Model.PageCount; i++)
+                            {
+                                if (i == Model.Page)
+                                {
+                                    <li class="page-item active">
+                                        <span class="page-link">
+                                            @(i + 1)
+                                            <span class="sr-only">(current)</span>
+                                        </span>
+                                    </li>
+                                }
+                                else
+                                {
+                                    <li class="page-item">
+                                        <a class="page-link" href="/Media/Sort?page=@i"> @(i + 1)</a>
+                                    </li>
+                                }
+                            }
+
+                            <li class="page-item">
+                                <a class="page-link" href="/Media/Sort?page=@(Model.Page+1)">Next</a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+                <div class="col-auto">
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">Файлове</span>
+                        </div>
+                        <span class="form-control disabled">@Model.FilesCount</span>
+                    </div>
+                </div>
+                <div class="col-auto">
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">Последно</span>
+                        </div>
+                        <span class="form-control disabled">@Model.LastProcessed.ToString("yyyy.MM.dd")</span>
+                    </div>
+                </div>
+            </div>
+
+            <table class="table table-bordered table-striped" style="margin-top:1rem">
+                <tbody>
+                    @foreach (var filesRow in Model.Files)
+                    {
+                        <tr>
+                            @foreach (var file in filesRow)
+                            {
+                                <td>
+                                    @{
+                                        var path = WebUtility.UrlEncode(file.FullPath);
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <div class="form-row align-items-center">
+                                                    <div class="col-auto">
+                                                        @file.Extension
+                                                    </div>
+                                                    <div class="col-auto">
+                                                        @if (!file.Readonly)
+                                                        {
+                                                            <a href="/Media/DeleteFileById?id=@file.FileId&redirectUrl=@Model.RedirectUrl" class="btn btn-danger">Delete</a>
+                                                        }
+                                                        else
+                                                        {
+                                                            <span class="btn btn-info">Locked</span>
+                                                        }
+                                                    </div>
+                                                    <div class="col-auto">
+                                                        @file.DownloadedOn
+                                                    </div>
+                                                    <div class="col-auto">
+                                                        <span class="form-check">
+                                                            <input class="form-check-input position-static checkbox-lg" type="checkbox" name="files" id="@file.FileId" value="@file.FileId">
+                                                        </span>
+                                                    </div>
+                                                    <div class="col-auto">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <img class="card-img-bottom" src="/Media/GetThumbnail/@path" />
+                                        </div>
+                                    }
+                                </td>
+                            }
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+        </form>
+    </div>
+
+    <div id="dir-container" class="col-md-2 align-content-md-end">
+        <form id="new-direcrory" method="post" action="CreateDirectory">
+            <div class="form-floating mb-3">
+                <input name="direcrotyName" class="form-control" placeholder="Име" />
+            </div>
+            <div class="form-distance">
+                <button id="new-direcrory-submit" type="submit" class="btn btn-lg btn-primary">Добавяне</button>
+            </div>
+        </form>
+
+        @foreach (var dir in Model.Dirs)
+        {
+            <div>
+                <span class="btn btn-info dir-name">@dir.Name</span>
+                @if (dir.FilesCount > 0)
+                {
+                    <span>@dir.FilesCount файла</span>
+                }
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/lib/signalr/dist/browser/signalr.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            var $container = $("#scan-container");
+            $container.off("click");
+
+            var $fileProgressBar = $("#files-progress-bar");
+            var $hashProgressBar = $("#hash-progress-bar");
+
+            var connection = new signalR.HubConnectionBuilder()
+                .withUrl("/ScanProgressHub")
+                .build();
+
+            connection.on("updateLoadingBar",
+                (data) => {
+                    $fileProgressBar.attr("style", `width:${data.files}%; transition:none;`);
+                    $fileProgressBar.attr("aria-valuenow", data.files);
+                    $fileProgressBar.text(`${data.files}% `);
+
+                    $hashProgressBar.attr("style", `width:${data.processes}%; transition:none;`);
+                    $hashProgressBar.attr("aria-valuenow", data.processes);
+                    $hashProgressBar.text(`${data.processes}% `);
+                });
+
+            connection
+                .start()
+                .then(function () {
+                    const connectionId = connection.connectionId;
+                    $container.on("click", ".start-new-scan", function () {
+                        $.ajax({
+                            type: "Get",
+                            url: "/Media/ReadFilesSort",
+                            data: { connectionId: connectionId },
+                            success: function (viewHTML) {
+                                location.reload();
+                            },
+                            error: function (errorData) {
+                                console.log(errorData);
+                            }
+                        });
+                    });
+                });
+
+            // Select directory
+            var $dirContainer = $("#dir-container");
+            $dirContainer.off("click");
+
+            var $dirInput = $("#move-pics-dir");
+            var $dirSpan = $("#move-pics-dir-span");
+
+            $dirContainer.on("click", ".dir-name", function () {
+                var value = $(this).text();
+                $dirInput.val(value);
+                $dirSpan.text(value);
+            });
+        });
+    </script>
+}

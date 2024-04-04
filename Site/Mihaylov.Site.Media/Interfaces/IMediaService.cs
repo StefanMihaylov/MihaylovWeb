@@ -6,12 +6,15 @@ namespace Mihaylov.Site.Media.Interfaces
 {
     public interface IMediaService
     {
-        IEnumerable<MediaInfoModel> GetAllFiles(string directoryPath, bool includeSubdirectories, bool readOnly, Action<ScanProgressModel> progress);
+        IEnumerable<MediaInfoModel> GetAllFiles(string directoryPath, bool includeSubdirectories, bool readOnly,
+            bool calculateChecksum, Action<ScanProgressModel> progress);
 
         byte[] GetThumbnail(string filePath, int size);
 
         DuplicateResponse GetDuplicates(IEnumerable<MediaInfoModel> files);
 
-        DuplicateResponse GetDuplicates(string fileName, string basePath);
+        SortResponse GetSorted(IEnumerable<MediaInfoModel> files);
+
+        T GetReportData<T>(string fileName, string basePath) where T : class;
     }
 }

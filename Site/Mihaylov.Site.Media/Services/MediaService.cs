@@ -22,7 +22,8 @@ namespace Mihaylov.Site.Media.Services
             _videoMediaService = videoMediaService;
         }
 
-        public IEnumerable<MediaInfoModel> GetAllFiles(string directoryPath, bool includeSubdirectories, bool readOnly, Action<ScanProgressModel> progress)
+        public IEnumerable<MediaInfoModel> GetAllFiles(string directoryPath, bool includeSubdirectories, bool readOnly,
+            bool calculateChecksum, Action<ScanProgressModel> progress)
         {
             var fileInfos = _file.GetAllFiles(directoryPath, includeSubdirectories);
 
@@ -40,7 +41,7 @@ namespace Mihaylov.Site.Media.Services
                     continue;
                 }
 
-                MediaInfoModel mediaInfo = GetMediaData(fileInfo, readOnly, true, p => progress(new ScanProgressModel(fileProcessed, p)));
+                MediaInfoModel mediaInfo = GetMediaData(fileInfo, readOnly, calculateChecksum, p => progress(new ScanProgressModel(fileProcessed, p)));
 
                 result.Add(mediaInfo);
             }
@@ -61,7 +62,7 @@ namespace Mihaylov.Site.Media.Services
             var mediaInfo = GetMediaData(fileinfo, false, false, a => { });
             IBaseMediaService esrvice = GetService(mediaInfo.IsImage);
 
-            bytes = esrvice.GetThumbnail(filePath, mediaInfo.Height, mediaInfo.Width, size);
+            bytes = esrvice.GetThumbnail(filePath, mediaInfo.Width, mediaInfo.Height, size);
 
             return bytes;
         }
@@ -82,27 +83,44 @@ namespace Mihaylov.Site.Media.Services
             {
                 FileCount = files.Count(),
                 DuplicateCount = duplicates.Count(),
-                Duplicates = duplicates
+                Duplicates = duplicates,
             };
 
             return result;
         }
 
-        public DuplicateResponse GetDuplicates(string fileName, string basePath)
+        public SortResponse GetSorted(IEnumerable<MediaInfoModel> files)
+        {
+            var sorted = files.OrderByDescending(f => f.DownloadedOn)
+                                  .ToList();
+
+            var result = new SortResponse()
+            {
+                FileCount = files.Count(),
+                LastProcessed = new DateTime(2024, 2, 29),
+                Files = sorted
+            };
+
+            return result;
+        }
+
+        public T GetReportData<T>(string fileName, string basePath) where T : class
         {
             basePath = basePath ?? _file.GetBasePath();
             var path = Path.Combine(basePath, fileName);
 
-            var jsonStream = _file.GetStreamFile(path);
+            using var jsonStream = _file.GetStreamFile(path);
             if (jsonStream == null)
             {
-                return new DuplicateResponse();
+                return Activator.CreateInstance(typeof(T)) as T;
             }
 
-            var model = JsonSerializer.Deserialize<DuplicateResponse>(jsonStream, new JsonSerializerOptions()
+            var options = new JsonSerializerOptions()
             {
                 PropertyNameCaseInsensitive = true,
-            });
+            };
+
+            var model = JsonSerializer.Deserialize<T>(jsonStream, options);
 
             return model;
         }
@@ -112,10 +130,11 @@ namespace Mihaylov.Site.Media.Services
             bool isImage = _imageMediaService.IsImageFile(fileInfo.Extension);
 
             IBaseMediaService service = GetService(isImage);
-            var sizeInfo = service.GetSize(fileInfo.FullName, true, progress);
+            var sizeInfo = service.GetSize(fileInfo.FullName, calculateChecksum, progress);
 
             var mediaInfo = new MediaInfoModel()
             {
+                FileId = Guid.NewGuid(),
                 FullPath = fileInfo.FullName,
                 Name = fileInfo.Name,
                 Extension = fileInfo.Extension,

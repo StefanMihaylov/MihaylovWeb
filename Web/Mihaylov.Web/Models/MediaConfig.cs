@@ -5,5 +5,7 @@
         public string DuplicatePathLocked { get; set; }
 
         public string DuplicatePathNotLocked { get; set; }
+
+        public string SoftPath {  get; set; }
     }
 }

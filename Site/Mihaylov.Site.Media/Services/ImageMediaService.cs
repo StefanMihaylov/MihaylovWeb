@@ -50,6 +50,10 @@ namespace Mihaylov.Site.Media.Services
                     var checksum = GetImageChecksum(image, p => progress(p));
                     result.Checksum = checksum;
                 }
+                else
+                {
+                    progress(100);
+                }
 
                 return result;
             }

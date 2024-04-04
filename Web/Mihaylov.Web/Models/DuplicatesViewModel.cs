@@ -10,5 +10,7 @@ namespace Mihaylov.Web.Models
         public int DuplicatesCount { get; set; }
 
         public IEnumerable<DuplicateModel> Duplicates { get; set; }
+
+        public string RedirectUrl { get; set; }
     }
 }

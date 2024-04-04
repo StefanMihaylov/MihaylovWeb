@@ -51,6 +51,10 @@ namespace Mihaylov.Site.Media.Services
                     Console.WriteLine($"File {filePath} checksum failed, Error: {ex.Message}.");
                 }
             }
+            else
+            {
+                progress(100);
+            }
 
             return result;
         }

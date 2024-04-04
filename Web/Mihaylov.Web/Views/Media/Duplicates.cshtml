@@ -35,7 +35,7 @@
                                                 @file.SubDirectories | @file.Name | @file.DownloadedOn |
                                                 @if (!file.Readonly)
                                                 {
-                                                    <a href="/Media/DeleteFile/@path" class="btn btn-danger">Delete</a>
+                                                    <a href="/Media/DeleteFile?id=@path&redirectUrl=@Model.RedirectUrl" class="btn btn-danger">Delete</a>
                                                 }
                                                 else
                                                 {

@@ -4,6 +4,8 @@ namespace Mihaylov.Site.Media.Models
 {
     public class MediaInfoModel : MediaInfoSizeModel
     {
+        public Guid FileId { get; set; }
+
         public string FullPath { get; set; }
 
         public string Name { get; set; }
