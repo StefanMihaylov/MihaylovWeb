@@ -47,6 +47,15 @@ namespace Mihaylov.Site.Media.Services
             File.WriteAllText(path, JsonSerializer.Serialize(content));
         }
 
+        public void SaveStreamFile(Stream stream, string path)
+        {
+            DeleteFile(path);
+            
+            using var fileStream = new FileStream(path, FileMode.Create, FileAccess.Write);
+            stream.CopyTo(fileStream);
+            stream.Seek(0, SeekOrigin.Begin);
+        }
+
         public IEnumerable<FileInfoModel> GetAllFiles(string directoryPath, bool includeSubdirectories, string basePath = null)
         {
             if (basePath == null)

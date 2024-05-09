@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Options;
 using Mihaylov.Common.Host.Authorization;
 using Mihaylov.Site.Media.Interfaces;
@@ -19,17 +20,19 @@ namespace Mihaylov.Web.Controllers
         private readonly IMediaService _mediaService;
         private readonly IFileWrapper _file;
         private readonly IProgressReporterFactory _progressReporter;
+        private readonly IMemoryCache _cache;
         private readonly MediaConfig _config;
 
         private readonly string _reportPath;
         private readonly string _sortReportPath;
 
         public MediaController(IMediaService mediaService, IFileWrapper fileWrapper,
-            IProgressReporterFactory progressReporter, IOptions<MediaConfig> settings)
+            IProgressReporterFactory progressReporter, IMemoryCache cache, IOptions<MediaConfig> settings)
         {
             _mediaService = mediaService;
             _file = fileWrapper;
             _progressReporter = progressReporter;
+            _cache = cache;
 
             _reportPath = $"{_file.GetBasePath()}/response.json";
             _sortReportPath = $"{_file.GetBasePath()}/sortResponse.json";
@@ -103,9 +106,19 @@ namespace Mihaylov.Web.Controllers
         [HttpGet]
         public IActionResult GetThumbnail(string id)
         {
-            var path = WebUtility.UrlDecode(id);
+            if (id == null)
+            {
+                return NotFound();
+            }
 
-            var bytes = _mediaService.GetThumbnail(path, 200);
+            if (!_cache.TryGetValue(id, out byte[] bytes))
+            {
+                var path = WebUtility.UrlDecode(id);
+                bytes = _mediaService.GetThumbnail(path, 200);
+
+                _cache.Set(id, bytes, TimeSpan.FromMinutes(60));
+            }
+
             if (bytes?.Any() != true)
             {
                 return NotFound();

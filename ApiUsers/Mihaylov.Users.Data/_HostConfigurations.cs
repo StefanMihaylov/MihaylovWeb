@@ -18,7 +18,6 @@ namespace Mihaylov.Users.Data
             connectionString(connectionStringSettings);
 
             var password = new PasswordOptions();
-
             if (passwordOptions != null)
             {
                 passwordOptions(password);

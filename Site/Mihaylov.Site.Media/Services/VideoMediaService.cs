@@ -29,8 +29,8 @@ namespace Mihaylov.Site.Media.Services
             {
                 var videoaInfo = FFProbe.Analyse(filePath);
 
-                result.Width = videoaInfo.PrimaryVideoStream?.Width ?? 0;
-                result.Height = videoaInfo.PrimaryVideoStream?.Height ?? 0;
+                result.Width = videoaInfo.PrimaryVideoStream?.Height ?? 0;
+                result.Height = videoaInfo.PrimaryVideoStream?.Width ?? 0;
                 result.Lenght = videoaInfo.Duration;
             }
             catch (Exception ex)

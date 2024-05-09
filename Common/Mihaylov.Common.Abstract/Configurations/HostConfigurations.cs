@@ -39,11 +39,10 @@ namespace Mihaylov.Common.Abstract
 
         public static IServiceCollection MigrateDatabase<T>(this IServiceCollection serviceProvider, Action<DatabaseFacade> migrate) where T : DbContext
         {
-            using (var provider = serviceProvider.BuildServiceProvider())
-            {
-                var dbContect = provider.GetRequiredService<T>();
-                migrate(dbContect.Database);
-            }
+            using var provider = serviceProvider.BuildServiceProvider();
+            using var dbContect = provider.GetRequiredService<T>();
+
+            migrate(dbContect.Database);
 
             return serviceProvider;
         }

@@ -13,6 +13,8 @@ namespace Mihaylov.Site.Media.Interfaces
 
         Stream GetStreamFile(string path);
 
+        void SaveStreamFile(Stream stream, string path);
+
         void SaveFile(string path, object content);
 
         IEnumerable<FileInfoModel> GetAllFiles(string directoryPath, bool includeSubdirectories, string basePath = null);

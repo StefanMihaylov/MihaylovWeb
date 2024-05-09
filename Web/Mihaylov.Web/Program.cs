@@ -81,6 +81,7 @@ namespace Mihaylov.Web
 
             services.AddRazorPages();
             services.AddSignalR();
+            services.AddMemoryCache();
 
             services.AddClientJwtAuthentication(LoginModel.COOKIE_NAME, ClaimType.Username, opt =>
             {

@@ -60,9 +60,9 @@ namespace Mihaylov.Site.Media.Services
             }
 
             var mediaInfo = GetMediaData(fileinfo, false, false, a => { });
-            IBaseMediaService esrvice = GetService(mediaInfo.IsImage);
+            IBaseMediaService service = GetService(mediaInfo.IsImage);
 
-            bytes = esrvice.GetThumbnail(filePath, mediaInfo.Width, mediaInfo.Height, size);
+            bytes = service.GetThumbnail(filePath, mediaInfo.Width, mediaInfo.Height, size);
 
             return bytes;
         }

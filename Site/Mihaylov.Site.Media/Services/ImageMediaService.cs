@@ -7,14 +7,19 @@ using System.Linq;
 using Microsoft.Extensions.Options;
 using Mihaylov.Site.Media.Interfaces;
 using Mihaylov.Site.Media.Models;
+using SixLabors.ImageSharp.Formats.Webp;
+using SixLabors.ImageSharp.Processing;
 
 namespace Mihaylov.Site.Media.Services
 {
     public class ImageMediaService : BaseMediaService, IImageMediaService, IBaseMediaService
     {
+        private const string BMP = "bmp";
+        private const string WEBP = "webp";
+
         private readonly IEnumerable<string> _imageExtensions;
 
-        protected override string ThumbnailExtension => "bmp";
+        protected override string ThumbnailExtension => WEBP;
 
         public ImageMediaService(IFileWrapper fileWrapper, IOptions<FileWrapperConfig> settings)
             : base(fileWrapper, settings)
@@ -67,9 +72,34 @@ namespace Mihaylov.Site.Media.Services
 
         public override void SaveThumbnail(string filePath, Size size, string outputFile)
         {
-            using var image = Image.FromFile(filePath);
-            var thumbImage = image.GetThumbnailImage(size.Width, size.Height, () => false, IntPtr.Zero);
-            thumbImage.Save(outputFile);
+            switch (ThumbnailExtension)
+            {
+                case BMP:
+                    {
+                        using var image = Image.FromFile(filePath);
+
+                        var thumbImage = image.GetThumbnailImage(size.Width, size.Height, () => false, IntPtr.Zero);
+                        thumbImage.Save(outputFile);
+                        break;
+                    }
+
+                case WEBP:
+                    {
+                        using var inStream = _fileWrapper.GetStreamFile(filePath);
+                        using var image = SixLabors.ImageSharp.Image.Load(inStream);
+                        image.Mutate(x => x.Resize(size.Width, size.Height));
+
+                        using var outStream = new MemoryStream();
+                        image.Save(outStream, new WebpEncoder());
+                        outStream.Seek(0, SeekOrigin.Begin);
+
+                        _fileWrapper.SaveStreamFile(outStream, outputFile);
+                        break;
+                    }
+
+                default:
+                    throw new Exception($"The extension {ThumbnailExtension} is not supported");
+            }
         }
 
 
