@@ -1,0 +1,42 @@
+﻿@using Mihaylov.Web.Models.Concerts;
+@model AddConcertVewModel
+
+<form action="/Concert/Add" method="post">
+    <tr>
+        <td>
+            @Html.TextBoxFor(m => m.Date, "{0:yyyy.MM.dd}", new { aria_autocomplete = "none", autocomplete = "off" })
+            @Html.ValidationMessageFor(m => m.Date)
+        </td>
+        <td>
+            @* <input type="text" id="concert-name-input" name="Name" placeholder="Добави нов" role="presentation" aria-autocomplete="none" autocomplete="false" /> *@
+            @Html.TextBoxFor(m => m.Name, new { aria_autocomplete = "none", autocomplete = "off" })
+            @Html.ValidationMessageFor(m => m.Name)
+        </td>
+        <td>
+            @for (int i = 0; i < 6; i++)
+            {
+                @Html.DropDownList($"BandIds[{i}]", Model.Bands.Select(a => new SelectListItem(a.Name, a.Id.ToString())), "---", new { style = "min-width: 200px" })
+                @Html.ValidationMessage($"BandIds[{i}]")
+            }
+        </td>
+        <td>
+            @Html.TextBoxFor(m => m.Price, "{0:n0}", new { aria_autocomplete = "none", autocomplete = "off" })
+            @Html.ValidationMessageFor(m => m.Price)
+        </td>
+        <td>
+            @Html.DropDownListFor(m => m.Currency, Model.Currencies)
+            @Html.ValidationMessageFor(m => m.Currency)
+        </td>
+        <td>
+            @Html.DropDownListFor(m => m.Location, Model.Locations.Select(a => new SelectListItem(a.Name, a.Id.ToString())), "---")
+            @Html.ValidationMessageFor(m => m.Location)
+        </td>
+        <td>
+            @Html.DropDownListFor(m => m.TicketProvider, Model.TicketProviders.Select(a => new SelectListItem(a.Name, a.Id.ToString())), "---")
+            @Html.ValidationMessageFor(m => m.TicketProvider)
+        </td>
+        <td>
+            <input type="submit" class="btn btn-primary" value="Добави" />
+        </td>
+    </tr>
+</form>

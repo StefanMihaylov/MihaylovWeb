@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Mihaylov.Api.Other.Client;
 using Mihaylov.Api.Users.Client;
 using Mihaylov.Api.Weather.Client;
 using Mihaylov.Common.Host;
@@ -104,6 +105,8 @@ namespace Mihaylov.Web
                 opt.MetricUnits = Config.GetEnvironmentVariable<bool>("Weather_Api_MetricUnits", bool.TryParse, true);
                 opt.Language = Config.GetEnvironmentVariable("Weather_Api_Language", "bg");
             });
+
+            services.AddOtherApiClient(Config.GetEnvironmentVariable("Other_Api_Client"));
 
             services.Configure<MediaConfig>(opt =>
             {

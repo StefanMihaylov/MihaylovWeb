@@ -1,0 +1,156 @@
+﻿@using Mihaylov.Web.Models.Concerts;
+@model ConcertMainModel
+
+<div class="row form-distance">
+    <div class="col-md-12">
+        @Html.ValidationSummary()
+        <h5>Концерти - @Model.Concerts.Pager.Count</h5>
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>@Html.LabelFor(m => m.Concerts.Data.First().Date)</th>
+                    <th>@Html.LabelFor(m => m.Concerts.Data.First().Name)</th>
+                    <th>@Html.LabelFor(m => m.Concerts.Data.First().Bands)</th>
+                    <th>@Html.LabelFor(m => m.Concerts.Data.First().Price)</th>
+                    <th>@Html.LabelFor(m => m.Concerts.Data.First().Currency)</th>
+                    <th>@Html.LabelFor(m => m.Concerts.Data.First().Location)</th>
+                    <th>@Html.LabelFor(m => m.Concerts.Data.First().TicketProvider)</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @await Html.PartialAsync("_AddConcert", Model.Input)
+
+                @foreach (var concert in Model.Concerts.Data)
+                {
+                    <tr>
+                        <td><my-value>@concert.Date.ToString("yyyy.MM.dd")</my-value></td>
+                        <td><my-value>@concert.Name</my-value></td>
+                        <td><my-value>@string.Join(", ", concert.Bands?.Select(b => b?.Name))</my-value></td>
+                        <td><my-value>@concert.Price </my-value></td>
+                        <td><my-value>@concert.Currency </my-value></td>
+                        <td><my-value>@concert.Location</my-value></td>
+                        <td><my-value>@concert.TicketProvider</my-value></td>
+                        <td></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        @await Html.PartialAsync("_Pager", Model.Concerts.Pager)
+    
+    </div>
+</div>
+
+<div class="row form-distance">
+    <div class="col-md-4">
+        <h5>Банди - @Model.Bands.Pager.Count</h5>
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>@Html.LabelFor(m => m.Bands.Data.First().Name)</th>
+                    <th>@Html.LabelFor(m => m.Bands.Data.First().Count)</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var band in Model.Bands.Data)
+                {
+                    <tr>
+                        <td><my-value>@band.Name</my-value></td>
+                        <td><my-value>@band.Count</my-value></td>
+                        <td></td>
+                    </tr>
+                }
+
+                <form action="/Concert/Band" method="post">
+                <tr>
+                    <td>
+                        <input type="text" id="new-band-input" name="Name" placeholder="Добави нов" role="presentation" aria-autocomplete="none" autocomplete="false" />
+                            @Html.ValidationMessage("Name")
+                    </td>
+                    <td></td>
+                    <td>
+                        <input type="submit" class="btn btn-primary" value="Добави" />
+                    </td>
+                </tr>
+                </form>
+            </tbody>
+        </table>
+
+        @await Html.PartialAsync("_Pager", Model.Bands.Pager)
+
+    </div>
+    <div class="col-md-4">
+        <h5>Зали - @Model.Locations.Pager.Count</h5>
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>@Html.LabelFor(m => m.Locations.Data.First().Name)</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var location in Model.Locations.Data)
+                {
+                    <tr>
+                        <td><my-value>@location.Name</my-value></td>
+                        <td></td>
+                    </tr>
+                }
+
+                <form action="/Concert/Location" method="post">
+                <tr>
+                    <td>
+                        <input type="text" id="new-location-input" name="Name" placeholder="Добави нов" role="presentation" aria-autocomplete="none" autocomplete="false" />
+                            @Html.ValidationMessage("Name")
+                    </td>
+                    <td>
+                        <input type="submit" class="btn btn-primary" value="Добави" />
+                    </td>
+                </tr>
+                </form>
+            </tbody>
+        </table>
+
+        @await Html.PartialAsync("_Pager", Model.Locations.Pager)
+
+    </div>
+    <div class="col-md-4">
+        <h5>Билети - @Model.TicketProviders.Pager.Count</h5>
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>@Html.LabelFor(m => m.TicketProviders.Data.First().Name)</th>
+                    <th>@Html.LabelFor(m => m.TicketProviders.Data.First().Url)</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var tp in Model.TicketProviders.Data)
+                {
+                    <tr>
+                        <td><my-value>@tp.Name</my-value></td>
+                        <td><my-value>@tp.Url</my-value></td>
+                        <td></td>
+                    </tr>
+                }
+                <form action="/Concert/TicketProvider" method="post">
+                <tr>
+                    <td>
+                        <input type="text" id="new-provider-name-input" name="Name" placeholder="Добави нов" role="presentation" aria-autocomplete="none" autocomplete="false" />
+                            @Html.ValidationMessage("Name")
+                    </td>
+                    <td>
+                        <input type="text" id="new-provider-url-input" name="Url" placeholder="Добави Url" role="presentation" aria-autocomplete="none" autocomplete="false" />
+                            @Html.ValidationMessage("Url")
+                    </td>
+                    <td>
+                        <input type="submit" class="btn btn-primary" value="Добави" />
+                    </td>
+                </tr>
+                </form>
+            </tbody>
+        </table>
+    </div>
+</div>

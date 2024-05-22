@@ -45,8 +45,14 @@ namespace Mihaylov.Web.Controllers
             var model = _mediaService.GetReportData<DuplicateResponse>(_reportPath, null);
 
             var duplicates = model.Duplicates
-                                 //.Where(d => d.List.Any(f => !f.IsImage))
-                                 .Where(d => d.List.Where(f => _file.GetFileInfo(f.FullPath).Exists).Count() > 1)
+                                 //.Where(d => d.List.Any(f => !f.IsImage))                                 
+                                 .Select(d => new DuplicateModel()
+                                 {
+                                     Checksum = d.Checksum,
+                                     List = d.List.Where(f => _file.GetFileInfo(f.FullPath).Exists),
+                                     Count = d.Count
+                                 })
+                                 .Where(d => d.List.Count() > 1)
                                  .ToList();
 
             return View(new DuplicatesViewModel()
@@ -155,18 +161,16 @@ namespace Mihaylov.Web.Controllers
 
             var files = new List<MediaInfoModel>();
 
-            var folderLocked = _config.DuplicatePathLocked;
-            if (!string.IsNullOrEmpty(folderLocked))
+            if (!string.IsNullOrEmpty(_config.DuplicatePathLocked))
             {
-                var lockedFiles = _mediaService.GetAllFiles(folderLocked, true, true, true, progressReporter.Report);
+                var lockedFiles = _mediaService.GetAllFiles(_config.DuplicatePathLocked, true, true, true, progressReporter.Report);
                 files.AddRange(lockedFiles);
             }
 
-            var folderNotLocked = _config.DuplicatePathNotLocked;
-            if (!string.IsNullOrEmpty(folderNotLocked))
+            if (!string.IsNullOrEmpty(_config.DuplicatePathNotLocked))
             {
-                var notlockedFiles = _mediaService.GetAllFiles(folderNotLocked, true, false, true, progressReporter.Report);
-                files.AddRange(notlockedFiles);
+                var nonlockedFiles = _mediaService.GetAllFiles(_config.DuplicatePathNotLocked, true, false, true, progressReporter.Report);
+                files.AddRange(nonlockedFiles);
             }
 
             var result = _mediaService.GetDuplicates(files);
@@ -191,7 +195,7 @@ namespace Mihaylov.Web.Controllers
         [HttpPost]
         public IActionResult CreateDirectory([FromForm] string direcrotyName)
         {
-            _file.CreateDierctory(_config.SoftPath, direcrotyName);
+            _file.CreateDirectory(_config.SoftPath, direcrotyName);
             return Redirect(nameof(Sort));
         }
 

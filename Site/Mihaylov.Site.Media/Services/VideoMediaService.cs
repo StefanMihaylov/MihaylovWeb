@@ -1,9 +1,10 @@
 ﻿using System;
-using System.Drawing;
 using FFMpegCore;
 using Microsoft.Extensions.Options;
 using Mihaylov.Site.Media.Interfaces;
 using Mihaylov.Site.Media.Models;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.PixelFormats;
 
 namespace Mihaylov.Site.Media.Services
 {
@@ -35,7 +36,7 @@ namespace Mihaylov.Site.Media.Services
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"File {filePath} Lenght failed, Error: {ex.Message}.");
+                Console.WriteLine($"File {filePath} Length failed, Error: {ex.Message}.");
             }
 
             if (calculateChecksum)
@@ -59,9 +60,17 @@ namespace Mihaylov.Site.Media.Services
             return result;
         }
 
-        public override void SaveThumbnail(string filePath, Size size, string outputFile)
+        public override void SaveThumbnail(string filePath, System.Drawing.Size size, string outputFile)
         {
-            FFMpeg.Snapshot(filePath, outputFile, size, null);
+            try
+            {
+                FFMpeg.Snapshot(filePath, outputFile, size, null);
+            }
+            catch (Exception)
+            {
+                using var resultImage = new Image<Rgba32>(size.Width, size.Height);
+                resultImage.SaveAsBmp(outputFile);
+            }
         }
     }
 }

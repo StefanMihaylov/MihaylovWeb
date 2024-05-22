@@ -26,27 +26,24 @@
                             <tr>
                                 @foreach (var file in @duplicate.List)
                                 {
-                                    @* // if (file.Exists) *@
                                     @* // height="@file.Height" width="@file.Width" *@
-                                    {
-                                        var path = WebUtility.UrlEncode(file.FullPath);
-                                        <td>
-                                            <p>
-                                                @file.SubDirectories | @file.Name | @file.DownloadedOn |
-                                                @if (!file.Readonly)
-                                                {
-                                                    <a href="/Media/DeleteFile?id=@path&redirectUrl=@Model.RedirectUrl" class="btn btn-danger">Delete</a>
-                                                }
-                                                else
-                                                {
-                                                    <span class="btn btn-info">Locked</span>
-                                                }
-                                            </p>
-                                            <p>
-                                                <img src="/Media/GetThumbnail/@path" />
-                                            </p>
-                                        </td>
-                                    }
+                                    var path = WebUtility.UrlEncode(file.FullPath);
+                                    <td>
+                                        <p>
+                                            @file.SubDirectories | @file.Name | @file.DownloadedOn |
+                                            @if (!file.Readonly)
+                                            {
+                                                <a href="/Media/DeleteFile?id=@path&redirectUrl=@Model.RedirectUrl" class="btn btn-danger">Delete</a>
+                                            }
+                                            else
+                                            {
+                                                <span class="btn btn-info">Locked</span>
+                                            }
+                                        </p>
+                                        <p>
+                                            <img src="/Media/GetThumbnail/@path" />
+                                        </p>
+                                    </td>
                                 }
                             </tr>
                         </tbody>

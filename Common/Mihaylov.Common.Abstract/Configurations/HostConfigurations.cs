@@ -13,7 +13,7 @@ namespace Mihaylov.Common.Abstract
 {
     public static class HostConfigurations
     {
-        public static IServiceCollection AddMapping(this IServiceCollection services, Assembly currentAssembly, params string[] assemblies)
+        public static IServiceCollection AddAutoMapping(this IServiceCollection services, Assembly currentAssembly, params string[] assemblies)
         {
             var autoMapper = new AutoMapperConfigurator(currentAssembly, assemblies);
             autoMapper.Execute();

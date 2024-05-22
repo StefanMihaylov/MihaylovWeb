@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <Nullable>disable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Azure.Identity" Version="1.11.3" />    
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.18" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Common\Mihaylov.Common.Abstract\Mihaylov.Common.Abstract.csproj" />
+    <ProjectReference Include="..\Mihaylov.Api.Other.Contracts\Mihaylov.Api.Other.Contracts.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Mihaylov.Api.Other.Client;
 using Mihaylov.Api.Users.Client;
 using Mihaylov.Api.Weather.Client;
 using Mihaylov.Common.Host.Abstract.AssemblyVersion;
@@ -14,12 +15,15 @@ namespace Mihaylov.Web.Service
         private readonly IModuleAssemblyService _module;
         private readonly IUsersApiClient _usersApiClient;
         private readonly IWeatherApiClient _weatherApiClient;
+        private readonly IOtherApiClient _otherApiClient;
 
-        public ModuleService(IModuleAssemblyService module, IUsersApiClient usersApiClient, IWeatherApiClient weatherApiClient)
+        public ModuleService(IModuleAssemblyService module, IUsersApiClient usersApiClient, IWeatherApiClient weatherApiClient,
+            IOtherApiClient otherApiClient)
         {
             _module = module;
             _usersApiClient = usersApiClient;
             _weatherApiClient = weatherApiClient;
+            _otherApiClient = otherApiClient;
         }
 
         public async Task<IEnumerable<ModuleInfoModel>> GetModuleVersionsAsync()
@@ -28,6 +32,7 @@ namespace Mihaylov.Web.Service
             {
                 await _usersApiClient.ModuleGetInfoAsync().ConfigureAwait(false),
                 await _weatherApiClient.ModuleGetInfoAsync().ConfigureAwait(false),
+                await _otherApiClient.ModuleGetInfoAsync().ConfigureAwait(false),
             };
 
             var result = new List<ModuleInfoModel>()

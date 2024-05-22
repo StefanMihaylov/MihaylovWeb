@@ -1,0 +1,38 @@
+﻿@namespace Mihaylov.Api.Other.Client
+@model Pager
+
+<div class="col-auto">
+    <nav aria-label="">
+        <ul class="pagination ustify-content-end">
+            <li class="page-item">
+                <a class="page-link" href="/Concert/index?page=@(Model.Page - 1)">Previous</a>
+            </li>
+
+            @for (int i = 1; i <= Model.PageMax; i++)
+            {
+                if (i == Model.Page)
+                {
+                    <li class="page-item active">
+                        <span class="page-link">
+                            @(i)
+                            <span class="sr-only">(current)</span>
+                        </span>
+                    </li>
+                }
+                else
+                {
+                    <li class="page-item">
+                        <a class="page-link" href="/Concert/index?page=@i"> @(i)</a>
+                    </li>
+                }
+            }
+
+            <li class="page-item">
+                <a class="page-link" href="/Concert/index?page=@(Model.Page + 1)">Next</a>
+            </li>
+            <li class="page-item disabled">
+                <span class="page-link">x @Model.PageSize</span>
+            </li>
+        </ul>        
+    </nav>
+</div>

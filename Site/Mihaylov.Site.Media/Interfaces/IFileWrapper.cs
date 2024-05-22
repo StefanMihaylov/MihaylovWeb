@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using System.Security.Cryptography;
 using Mihaylov.Site.Media.Models;
 
 namespace Mihaylov.Site.Media.Interfaces
@@ -25,7 +24,7 @@ namespace Mihaylov.Site.Media.Interfaces
 
         IEnumerable<DirInfoModel> GetDirectories(string directoryPath);
 
-        string CreateDierctory(string basePath, string name);
+        string CreateDirectory(string basePath, string name);
 
         void MoveFiles(string dir, IEnumerable<string> files);
     }

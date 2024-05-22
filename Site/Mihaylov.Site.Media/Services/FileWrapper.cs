@@ -105,7 +105,7 @@ namespace Mihaylov.Site.Media.Services
             return result;
         }
 
-        public string CreateDierctory(string basePath, string name)
+        public string CreateDirectory(string basePath, string name)
         {
             var fullPath = Path.Combine(basePath, name);
             var info = Directory.CreateDirectory(fullPath);

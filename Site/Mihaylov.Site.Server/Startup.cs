@@ -33,7 +33,7 @@ namespace Mihaylov.Site.Server
 
             services.AddControllers();
 
-            services.AddMapping(Assembly.GetExecutingAssembly(), "Mihaylov.Site.Data.Contracts")
+            services.AddAutoMapping(Assembly.GetExecutingAssembly(), "Mihaylov.Site.Data.Contracts")
                     .AddCommon(ServiceLifetime.Singleton)
                     .AddSiteCore(opt =>
                     {

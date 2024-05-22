@@ -18,6 +18,7 @@ using Mihaylov.Common.Host.AssemblyVersion.Interfaces;
 using Mihaylov.Common.Host.AssemblyVersion.Models;
 using Mihaylov.Common.Host.Authorization;
 using Swashbuckle.AspNetCore.SwaggerGen;
+using static Mihaylov.Common.Host.SwaggerDocsHelpers;
 
 namespace Mihaylov.Common.Host
 {
@@ -113,6 +114,9 @@ namespace Mihaylov.Common.Host
                 {
                     options.AddSwaggerAuthentication("Bearer");
                 }
+
+                options.SchemaFilter<EnumExtensionSchemaFilter>();
+                options.DocumentFilter<SwaggerEnumDocumentFilter>();
             });
 
             return services;
@@ -124,7 +128,7 @@ namespace Mihaylov.Common.Host
             basePath = $"/{basePath.Trim('/')}";
 
             app.UseSwagger(c =>
-            {                
+            {
                 c.PreSerializeFilters.Add((swaggerDoc, httpReq) =>
                 {
                     var scheme = Config.GetEnvironmentVariable(schemeKey, httpReq.Scheme);
