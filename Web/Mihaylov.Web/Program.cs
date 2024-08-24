@@ -113,6 +113,7 @@ namespace Mihaylov.Web
                 opt.DuplicatePathLocked = Config.GetEnvironmentVariable("Media_Dub_Path_Lock", string.Empty);
                 opt.DuplicatePathNotLocked = Config.GetEnvironmentVariable("Media_Dub_Path_NotLock", string.Empty);
                 opt.SoftPath = Config.GetEnvironmentVariable("Media_Sort", string.Empty);
+                opt.RenamePath = Config.GetEnvironmentVariable("Media_Rename", string.Empty);
             });
 
             services.AddMediaServices();

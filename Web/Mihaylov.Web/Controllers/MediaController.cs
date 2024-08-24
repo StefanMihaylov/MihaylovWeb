@@ -217,6 +217,36 @@ namespace Mihaylov.Web.Controllers
             return Redirect(nameof(Sort));
         }
 
+        [HttpGet]
+        public IActionResult RenamePics()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult RenamePicsRun()
+        {
+            var directory = new DirectoryInfo(_config.RenamePath);
+            if (directory.Exists)
+            {
+                var files = directory.GetFiles();
+                if (files.Any())
+                {
+                    foreach (var file in files)
+                    {
+                        var fileNameParts = file.Name.Split('_', StringSplitOptions.RemoveEmptyEntries);
+                        var filePrefix = fileNameParts[0].Substring(0, 3);
+                        int number = int.Parse(fileNameParts[0].Substring(3));
+
+                        var newFilePath = $"{file.DirectoryName}\\{filePrefix}{number + 1}_{fileNameParts[1]}";
+
+                        System.IO.File.Move(file.FullName, newFilePath);
+                    }
+                }
+            }
+
+            return Redirect(nameof(RenamePics));
+        }
 
         private IEnumerable<IEnumerable<MediaInfoModel>> Convert(IEnumerable<MediaInfoModel> list, int columnCount)
         {

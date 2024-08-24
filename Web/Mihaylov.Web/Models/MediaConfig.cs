@@ -7,5 +7,7 @@
         public string DuplicatePathNotLocked { get; set; }
 
         public string SoftPath {  get; set; }
+
+        public string RenamePath { get; set; }
     }
 }
