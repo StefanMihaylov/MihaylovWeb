@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Mihaylov.Api.Other.Data;
+using Mihaylov.Api.Other.Database.Cluster;
 using Mihaylov.Api.Other.Database.Shows;
 using Mihaylov.Common.Abstract;
 using Mihaylov.Common.Host;
@@ -48,11 +49,12 @@ namespace Mihaylov.Api.Other
             {
                 opt.ServerAddress = Config.GetEnvironmentVariable("DB_Other_Address", "192.168.1.100");
                 opt.DatabaseName = Config.GetEnvironmentVariable("DB_Other_Name", "Mihaylov_OtherDb");
-                opt.UserName = Config.GetEnvironmentVariable("DB_Other_UserName", "sa");
-                opt.Password = Config.GetEnvironmentVariable("DB_Other_Password", "Anubis12_4");
+                opt.UserName = Config.GetEnvironmentVariable("DB_Other_UserName", "");
+                opt.Password = Config.GetEnvironmentVariable("DB_Other_Password", "");
             });
 
             services.MigrateDatabase<MihaylovOtherShowDbContext>(c => c.Migrate());
+            services.MigrateDatabase<MihaylovOtherClusterDbContext>(c => c.Migrate());
 
             services.AddOtherServices();
 

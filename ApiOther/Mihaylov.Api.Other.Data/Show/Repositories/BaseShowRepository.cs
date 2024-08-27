@@ -3,7 +3,7 @@ using Mihaylov.Api.Other.Database.Shows;
 
 namespace Mihaylov.Api.Other.Data.Show.Repositories
 {
-    public class BaseShowRepository
+    public abstract class BaseShowRepository
     {
         protected readonly ILogger _logger;
         protected readonly MihaylovOtherShowDbContext _dbContext;

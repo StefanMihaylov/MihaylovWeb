@@ -2,15 +2,23 @@
 using System.Linq;
 using Mapster;
 using Microsoft.Extensions.DependencyInjection;
+using Mihaylov.Api.Other.Contracts.Cluster.Models;
 using Mihaylov.Api.Other.Contracts.Show.Models;
-using Dbr = Mihaylov.Api.Other.Data.Show.Repositories;
+using DbC = Mihaylov.Api.Other.Database.Cluster.Models;
 using Db = Mihaylov.Api.Other.Database.Shows.Models;
+using Dbr = Mihaylov.Api.Other.Data.Show.Repositories;
 
 namespace Mihaylov.Api.Other.Data.Show
 {
     public static class DbModelMapping
     {
         public static void RegisterDbMapping(this IServiceCollection services)
+        {
+            RegisterShow();
+            RegisterCluster();
+        }
+
+        private static void RegisterShow()
         {
             TypeAdapterConfig<Db.Band, Band>.NewConfig()
                 .Map(dest => dest.Id, src => src.BandId)
@@ -61,6 +69,57 @@ namespace Mihaylov.Api.Other.Data.Show
                 .Ignore(dest => dest.TicketProvider, src => src.TicketProvider)
                 .Ignore(dest => dest.Bands, src => src.Bands)
                 .Ignore(dest => dest.ConcertBands, src => src.ConcertBands);
+        }
+
+        private static void RegisterCluster()
+        {
+            TypeAdapterConfig<DbC.Application, ApplicationExtended>.NewConfig()
+                .Map(dest => dest.Id, src => src.ApplicationId)
+                .Map(dest => dest.Name, src => src.Name)
+                .Map(dest => dest.ReleaseUrl, src => src.ReleaseUrl)
+                .Map(dest => dest.ResourceUrl, src => src.ResourceUrl)
+                .Map(dest => dest.Deployment, src => (DeploymentType)src.DeploymentId)
+                .Map(dest => dest.Files, src => src.Files.AsQueryable()
+                                                .OrderBy(f => f.FileId)
+                                                .Adapt<IEnumerable<DeploymentFile>>())
+                .Map(dest => dest.Pods, src => src.Pods.AsQueryable()
+                                                .OrderBy(f => f.ApplicationPodId)
+                                                .Adapt<IEnumerable<Pod>>())
+                .Map(dest => dest.Version, src => src.Versions.AsQueryable()
+                                                .OrderByDescending(f => f.Version)
+                                                .Adapt<IEnumerable<AppVersion>>()
+                                                .FirstOrDefault())
+                .Map(dest => dest.Notes, src => src.Notes);
+
+            TypeAdapterConfig<Application, DbC.Application>.NewConfig()
+                .Map(dest => dest.ApplicationId, src => src.Id)
+                .Map(dest => dest.Name, src => src.Name)
+                .Map(dest => dest.ReleaseUrl, src => src.ReleaseUrl)
+                .Map(dest => dest.ResourceUrl, src => src.ResourceUrl)
+                .Map(dest => dest.DeploymentId, src => (byte)src.Deployment)
+                .Ignore(dest => dest.Deployment, src => src.Deployment)
+                .Ignore(dest => dest.Files, src => src.Files)
+                .Ignore(dest => dest.Pods, src => src.Pods)
+                .Ignore(dest => dest.Versions, src => src.Versions)
+                .Map(dest => dest.Notes, src => src.Notes);
+
+            TypeAdapterConfig<DbC.ApplicationPod, Pod>.NewConfig()
+                .Map(dest => dest.Id, src => src.ApplicationPodId)
+                .Map(dest => dest.Name, src => src.Name)
+                .TwoWays();
+
+            TypeAdapterConfig<DbC.DeploymentFile, DeploymentFile>.NewConfig()
+                .Map(dest => dest.Id, src => src.FileId)
+                .Map(dest => dest.Name, src => src.Name)
+                .TwoWays();
+
+            TypeAdapterConfig<DbC.ApplicationVersion, AppVersion>.NewConfig()
+                .Map(dest => dest.Id, src => src.VersionId)
+                .Map(dest => dest.Version, src => src.Version)
+                .Map(dest => dest.HelmVersion, src => src.HelmVersion)
+                .Map(dest => dest.HelmAppVersion, src => src.HelmAppVersion)
+                .Map(dest => dest.ReleaseDate, src => src.ReleaseDate)
+                .TwoWays();
         }
     }
 }

@@ -117,6 +117,7 @@ namespace Mihaylov.Common.Host
 
                 options.SchemaFilter<EnumExtensionSchemaFilter>();
                 options.DocumentFilter<SwaggerEnumDocumentFilter>();
+                options.UseAllOfToExtendReferenceSchemas();
             });
 
             return services;

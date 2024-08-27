@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Mihaylov.Api.Other.Contracts.Show;
+using Mihaylov.Api.Other.Contracts.Base;
 using Mihaylov.Api.Other.Database.Shows.Models;
 
 namespace Mihaylov.Api.Other.Database.Shows.DbConfigurations

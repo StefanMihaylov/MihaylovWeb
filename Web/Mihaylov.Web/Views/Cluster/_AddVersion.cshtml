@@ -1,0 +1,35 @@
+﻿@namespace Mihaylov.Web.Models.Cluster
+@model AddVersionModel
+
+<form action="/Cluster/AddVersion" method="post">
+    <tr>
+        <td>
+            @Html.DropDownListFor(m => m.ApplicationId, Model.Applications, "--- select ---")
+            @Html.ValidationMessageFor(m => m.ApplicationId)
+        </td>
+        <td>
+            @Html.TextBoxFor(m => m.ReleaseDate, "{0:yyyy.MM.dd}", new { aria_autocomplete = "none", autocomplete = "off", @class = "short-width" })
+            @Html.ValidationMessageFor(m => m.ReleaseDate)
+        </td>
+        <td>
+            @Html.TextBoxFor(m => m.Version, new { aria_autocomplete = "none", autocomplete = "off", @class = "tiny-width" })
+            @Html.ValidationMessageFor(m => m.Version)
+        </td>
+        <td>
+            @Html.TextBoxFor(m => m.HelmVersion, new { aria_autocomplete = "none", autocomplete = "off", @class = "tiny-width" })
+            @Html.ValidationMessageFor(m => m.HelmVersion)
+        </td>
+        <td>
+            @Html.TextBoxFor(m => m.HelmAppVersion, new { aria_autocomplete = "none", autocomplete = "off", @class = "tiny-width" })
+            @Html.ValidationMessageFor(m => m.HelmAppVersion)
+        </td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td>
+            <input type="submit" class="btn btn-primary" value="Добави" />
+        </td>
+    </tr>
+</form>

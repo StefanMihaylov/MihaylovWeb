@@ -1,0 +1,29 @@
+﻿@namespace Mihaylov.Web.Models.Cluster
+@model AddAdditionalModel
+
+<form action="/Cluster/AddAdditional" method="post">
+    <tr>
+        <td>
+            @Html.DropDownListFor(m => m.ApplicationId, Model.Applications, "--- select ---")
+            @Html.ValidationMessageFor(m => m.ApplicationId)
+        </td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td>
+            @Html.TextBoxFor(m => m.File, new { aria_autocomplete = "none", autocomplete = "off", @class = "short-width" })
+            @Html.ValidationMessageFor(m => m.File)
+        </td>
+        <td>
+            @Html.TextBoxFor(m => m.Pod, new { aria_autocomplete = "none", autocomplete = "off", @class = "short-width" })
+            @Html.ValidationMessageFor(m => m.Pod)
+        </td>
+        <td></td>
+        <td>
+            <input type="submit" class="btn btn-primary" value="Добави" />
+        </td>
+    </tr>
+</form>

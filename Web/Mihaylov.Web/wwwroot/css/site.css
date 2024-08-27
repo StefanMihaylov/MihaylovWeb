@@ -39,3 +39,16 @@ body {
 .validation-summary-errors {
     color: red;
 }
+
+.form-distance input.short-width {
+    max-width: 120px;
+}
+
+.form-distance input.tiny-width {
+    max-width: 60px;
+}
+
+ul.custom-popover {
+    margin-bottom: 0px;
+    padding-left: 20px;
+}

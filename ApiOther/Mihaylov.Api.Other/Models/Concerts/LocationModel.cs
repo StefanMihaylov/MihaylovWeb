@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using Mihaylov.Api.Other.Contracts.Show;
+using Mihaylov.Api.Other.Contracts.Base;
 
 namespace Mihaylov.Api.Other.Models.Concerts
 {

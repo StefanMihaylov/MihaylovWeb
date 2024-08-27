@@ -1,0 +1,34 @@
+﻿@namespace Mihaylov.Web.Models.Cluster
+@model AddApplicationModel
+
+<form action="/Cluster/AddApp" method="post">
+    <tr>
+        <td>
+            @Html.TextBoxFor(m => m.Name, new { aria_autocomplete = "none", autocomplete = "off", @class = "short-width" })
+            @Html.ValidationMessageFor(m => m.Name)
+        </td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td>
+            @Html.TextBoxFor(m => m.ReleaseUrl, new { aria_autocomplete = "none", autocomplete = "off" })
+            @Html.ValidationMessageFor(m => m.ReleaseUrl)
+            @Html.TextBoxFor(m => m.ResourceUrl, new { aria_autocomplete = "none", autocomplete = "off" })
+            @Html.ValidationMessageFor(m => m.ResourceUrl)
+        </td>
+        <td>
+            @Html.DropDownListFor(m => m.Deployment, Model.DeploymentTypes)
+            @Html.ValidationMessageFor(m => m.Deployment)
+        </td>
+        <td></td>
+        <td></td>
+        <td>
+            @Html.TextBoxFor(m => m.Notes, new { aria_autocomplete = "none", autocomplete = "off", @class = "short-width" })
+            @Html.ValidationMessageFor(m => m.Notes)
+        </td>
+        <td>
+            <input type="submit" class="btn btn-primary" value="Добави" />
+        </td>
+    </tr>    
+</form>

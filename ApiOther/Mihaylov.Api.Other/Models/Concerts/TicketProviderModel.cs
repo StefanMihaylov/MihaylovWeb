@@ -1,4 +1,4 @@
-﻿using Mihaylov.Api.Other.Contracts.Show;
+﻿using Mihaylov.Api.Other.Contracts.Base;
 using System.ComponentModel.DataAnnotations;
 
 namespace Mihaylov.Api.Other.Models.Concerts

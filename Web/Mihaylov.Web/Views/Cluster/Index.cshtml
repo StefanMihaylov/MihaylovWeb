@@ -1,0 +1,91 @@
+﻿@using Mihaylov.Web.Models.Cluster
+@model ClusterMainModel
+
+<div class="row form-distance">
+    <div class="col-md-12">
+        @Html.ValidationSummary()
+        <h5>Один клъстър</h5>
+        <table class="table table-bordered table-striped" id="cluster-grid">
+            <thead>
+                <tr>
+                    <th>@Html.LabelFor(m => m.Applications.First().Name)</th>
+                    <th>@Html.LabelFor(m => m.Applications.First().Version.ReleaseDate, "Release")</th>
+                    <th>@Html.LabelFor(m => m.Applications.First().Version.Version)</th>
+                    <th>@Html.LabelFor(m => m.Applications.First().Version.HelmVersion, "Helm")</th>
+                    <th>@Html.LabelFor(m => m.Applications.First().Version.HelmAppVersion, "App")</th>
+                    <th>@Html.LabelFor(m => m.Applications.First().ReleaseUrl)</th>
+                    <th>@Html.LabelFor(m => m.Applications.First().Deployment)</th>
+                    <th>@Html.LabelFor(m => m.Applications.First().Files)</th>
+                    <th>@Html.LabelFor(m => m.Applications.First().Pods)</th>
+                    <th>@Html.LabelFor(m => m.Applications.First().Notes)</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @await Html.PartialAsync("_AddApplication", Model.Input)
+                @await Html.PartialAsync("_AddAdditional", Model.Additional)
+                @await Html.PartialAsync("_AddVersion", Model.Version)
+
+                <tr style="border-bottom: 2pt solid black;"></tr>
+                <tr></tr>
+
+                @foreach (var application in Model.Applications)
+                {
+                    <tr>
+                        <td><my-value>@application.Name</my-value></td>
+                        <td>
+                            <my-value>
+                                @if (application.Version != null)
+                                {
+                                    var days = $"{DateTime.UtcNow.Date.Subtract(application.Version.ReleaseDate).ToString("dd")} дни";
+                                    @days 
+                                }
+                            </my-value>
+                        </td>
+                        <td><my-value>@application.Version?.Version</my-value></td>
+                        <td><my-value>@application.Version?.HelmVersion</my-value></td>
+                        <td><my-value>@application.Version?.HelmAppVersion</my-value></td>
+                        <td>
+                            <my-value>
+                                <a href="@application.ReleaseUrl" target="_blank">Release</a>
+                                @if (!string.IsNullOrEmpty(@application.ResourceUrl))
+                                {
+                                    <a href="@application.ResourceUrl" target="_blank">Resource</a>
+                                }
+                            </my-value>
+                        </td>
+                        <td><my-value>@application.Deployment.ToString()</my-value></td>
+                        <td>
+                            <my-value>
+                                @if (application.Files?.Any() == true)
+                                {
+                                    var content = $"<ul class='custom-popover'><li>{string.Join("</li><li>", application.Files?.Select(b => b?.Name))}</li></ul>";
+                                    <button type="button" class="btn btn-secondary" data-container="body" data-toggle="popover" data-placement="top" data-content="@content" data-html="true">Покажи</button>
+                                }
+                            </my-value>
+                        </td>
+                        <td>
+                            <my-value>
+                                @if (application.Pods?.Any() == true)
+                                {
+                                    var content = $"<ul class='custom-popover'><li>{string.Join("</li><li>", application.Pods?.Select(b => b?.Name))}</li></ul>";
+                                    <button type="button" class="btn btn-secondary" data-container="body" data-toggle="popover" data-placement="top" data-content="@content" data-html="true">Покажи</button>
+                                }
+                            </my-value>
+                        </td>
+                        <td><my-value>@application.Notes</my-value></td>
+                        <td></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('[data-toggle="popover"]').popover();
+        });
+    </script>
+}
