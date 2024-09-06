@@ -97,7 +97,7 @@ namespace Mihaylov.Site.Media.Services
             var result = new SortResponse()
             {
                 FileCount = files.Count(),
-                LastProcessed = new DateTime(2024, 4, 4),
+                LastProcessed = new DateTime(2024, 8, 28),
                 Files = sorted
             };
 

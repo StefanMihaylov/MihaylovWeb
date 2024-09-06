@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Mihaylov.Api.Other.Database.Cluster;
 
@@ -11,9 +12,11 @@ using Mihaylov.Api.Other.Database.Cluster;
 namespace Mihaylov.Api.Other.Database.Migrations.MihaylovOtherClusterDb
 {
     [DbContext(typeof(MihaylovOtherClusterDbContext))]
-    partial class MihaylovOtherClusterDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240903212419_add-parser=settings")]
+    partial class addparsersettings
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

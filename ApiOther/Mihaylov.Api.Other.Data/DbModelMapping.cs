@@ -8,7 +8,7 @@ using DbC = Mihaylov.Api.Other.Database.Cluster.Models;
 using Db = Mihaylov.Api.Other.Database.Shows.Models;
 using Dbr = Mihaylov.Api.Other.Data.Show.Repositories;
 
-namespace Mihaylov.Api.Other.Data.Show
+namespace Mihaylov.Api.Other.Data
 {
     public static class DbModelMapping
     {
@@ -76,7 +76,9 @@ namespace Mihaylov.Api.Other.Data.Show
             TypeAdapterConfig<DbC.Application, ApplicationExtended>.NewConfig()
                 .Map(dest => dest.Id, src => src.ApplicationId)
                 .Map(dest => dest.Name, src => src.Name)
+                .Map(dest => dest.SiteUrl, src => src.SiteUrl)
                 .Map(dest => dest.ReleaseUrl, src => src.ReleaseUrl)
+                .Map(dest => dest.GithubVersionUrl, src => src.GithubVersionUrl)
                 .Map(dest => dest.ResourceUrl, src => src.ResourceUrl)
                 .Map(dest => dest.Deployment, src => (DeploymentType)src.DeploymentId)
                 .Map(dest => dest.Files, src => src.Files.AsQueryable()
@@ -94,7 +96,9 @@ namespace Mihaylov.Api.Other.Data.Show
             TypeAdapterConfig<Application, DbC.Application>.NewConfig()
                 .Map(dest => dest.ApplicationId, src => src.Id)
                 .Map(dest => dest.Name, src => src.Name)
+                .Map(dest => dest.SiteUrl, src => src.SiteUrl)
                 .Map(dest => dest.ReleaseUrl, src => src.ReleaseUrl)
+                .Map(dest => dest.GithubVersionUrl, src => src.GithubVersionUrl)
                 .Map(dest => dest.ResourceUrl, src => src.ResourceUrl)
                 .Map(dest => dest.DeploymentId, src => (byte)src.Deployment)
                 .Ignore(dest => dest.Deployment, src => src.Deployment)
@@ -120,6 +124,30 @@ namespace Mihaylov.Api.Other.Data.Show
                 .Map(dest => dest.HelmAppVersion, src => src.HelmAppVersion)
                 .Map(dest => dest.ReleaseDate, src => src.ReleaseDate)
                 .TwoWays();
+
+            TypeAdapterConfig<ParserSetting, DbC.ParserSetting>.NewConfig()
+                .Map(dest => dest.ParserSettingId, src => src.Id)
+                .Map(dest => dest.ApplicationId, src => src.ApplicationId)
+                .Ignore(dest => dest.Application, src => src.Application)
+                .Map(dest => dest.VersionUrlVersionId, src => (byte)src.VersionUrlType)
+                .Ignore(dest => dest.VersionUrlVersion, src => src.VersionUrlVersion)
+                .Map(dest => dest.SelectorVersion, src => src.VersionSelector)
+                .Map(dest => dest.CommandsVersion, src => src.VersionCommand)
+                .Map(dest => dest.VersionUrlrReleaseId, src => (byte?)src.ReleaseDateUrlType)
+                .Ignore(dest => dest.VersionUrlrRelease, src => src.VersionUrlrRelease)
+                .Map(dest => dest.SelectorRelease, src => src.ReleaseDateSelector)
+                .Map(dest => dest.CommandsRelease, src => src.ReleaseDateCommand);
+
+            TypeAdapterConfig<DbC.ParserSetting, ParserSetting>.NewConfig()
+                .Map(dest => dest.Id, src => src.ParserSettingId)
+                .Map(dest => dest.ApplicationId, src => src.ApplicationId)
+                .Map(dest => dest.ApplicationName, src => src.Application.Name)
+                .Map(dest => dest.VersionUrlType, src => (VersionUrlType)src.VersionUrlVersionId)
+                .Map(dest => dest.VersionSelector, src => src.SelectorVersion)
+                .Map(dest => dest.VersionCommand, src => src.CommandsVersion)
+                .Map(dest => dest.ReleaseDateUrlType, src => (VersionUrlType?)src.VersionUrlrReleaseId)
+                .Map(dest => dest.ReleaseDateSelector, src => src.SelectorRelease)
+                .Map(dest => dest.ReleaseDateCommand, src => src.CommandsRelease);
         }
     }
 }

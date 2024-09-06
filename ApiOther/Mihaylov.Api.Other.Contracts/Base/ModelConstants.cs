@@ -24,5 +24,9 @@
         public const int AppFileNameMaxLength = 200;
 
         public const int AppVersionMaxLength = 20;
+
+        public const int ParserSelectorMaxLength = 4000;
+
+        public const int ParserComandsMaxLength = 100;
     }
 }

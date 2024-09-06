@@ -11,15 +11,21 @@ namespace Mihaylov.Api.Other.Contracts.Cluster.Models
         public string Name { get; set; }
 
         [JsonPropertyOrder(3)]
-        public string ReleaseUrl { get; set; }
+        public string SiteUrl { get; set; }
 
         [JsonPropertyOrder(4)]
-        public string ResourceUrl { get; set; }
+        public string ReleaseUrl { get; set; }
 
         [JsonPropertyOrder(5)]
-        public DeploymentType Deployment { get; set; }
+        public string GithubVersionUrl { get; set; }
 
         [JsonPropertyOrder(6)]
+        public string ResourceUrl { get; set; }
+
+        [JsonPropertyOrder(7)]
+        public DeploymentType Deployment { get; set; }
+
+        [JsonPropertyOrder(8)]
         public string Notes { get; set; }
     }
 }

@@ -4,18 +4,23 @@
 <form action="/Cluster/AddApp" method="post">
     <tr>
         <td>
+            @Html.HiddenFor(m => m.Id)
             @Html.TextBoxFor(m => m.Name, new { aria_autocomplete = "none", autocomplete = "off", @class = "short-width" })
             @Html.ValidationMessageFor(m => m.Name)
         </td>
         <td></td>
         <td></td>
         <td></td>
-        <td></td>
+        <td style="display: none;"></td>
         <td>
-            @Html.TextBoxFor(m => m.ReleaseUrl, new { aria_autocomplete = "none", autocomplete = "off" })
+            @Html.TextBoxFor(m => m.SiteUrl, new { aria_autocomplete = "none", autocomplete = "off", placeholder = "Site Url" })
+            @Html.ValidationMessageFor(m => m.SiteUrl)
+            @Html.TextBoxFor(m => m.ReleaseUrl, new { aria_autocomplete = "none", autocomplete = "off", placeholder = "Release Url" })
             @Html.ValidationMessageFor(m => m.ReleaseUrl)
-            @Html.TextBoxFor(m => m.ResourceUrl, new { aria_autocomplete = "none", autocomplete = "off" })
+            @Html.TextBoxFor(m => m.ResourceUrl, new { aria_autocomplete = "none", autocomplete = "off", placeholder = "Resource Url" })
             @Html.ValidationMessageFor(m => m.ResourceUrl)
+            @Html.TextBoxFor(m => m.GithubVersionUrl, new { aria_autocomplete = "none", autocomplete = "off", placeholder = "Github Version Url" })
+            @Html.ValidationMessageFor(m => m.GithubVersionUrl)
         </td>
         <td>
             @Html.DropDownListFor(m => m.Deployment, Model.DeploymentTypes)
@@ -30,5 +35,5 @@
         <td>
             <input type="submit" class="btn btn-primary" value="Добави" />
         </td>
-    </tr>    
+    </tr>
 </form>

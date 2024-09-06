@@ -328,6 +328,205 @@
         }
       }
     },
+    "/api/Cluster/ParserSettings": {
+      "get": {
+        "tags": [
+          "Cluster"
+        ],
+        "responses": {
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ParserSetting"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Cluster/ParserSetting": {
+      "post": {
+        "tags": [
+          "Cluster"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/ParserSettingModel"
+                  }
+                ]
+              }
+            },
+            "text/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/ParserSettingModel"
+                  }
+                ]
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/ParserSettingModel"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ParserSetting"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Cluster/LastVersion": {
+      "get": {
+        "tags": [
+          "Cluster"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LastVersionResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Cluster/ReloadLastVersion": {
+      "delete": {
+        "tags": [
+          "Cluster"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/Concerts/Concerts": {
       "get": {
         "tags": [
@@ -847,6 +1046,75 @@
           }
         }
       }
+    },
+    "/api/Test/TestLastVersion": {
+      "post": {
+        "tags": [
+          "Test"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/LastVersionSettings"
+                  }
+                ]
+              }
+            },
+            "text/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/LastVersionSettings"
+                  }
+                ]
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/LastVersionSettings"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LastVersionResponse"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -929,7 +1197,15 @@
             "type": "string",
             "nullable": true
           },
+          "siteUrl": {
+            "type": "string",
+            "nullable": true
+          },
           "releaseUrl": {
+            "type": "string",
+            "nullable": true
+          },
+          "githubVersionUrl": {
             "type": "string",
             "nullable": true
           },
@@ -1019,7 +1295,19 @@
             "minLength": 1,
             "type": "string"
           },
+          "siteUrl": {
+            "maxLength": 500,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
           "resourceUrl": {
+            "maxLength": 500,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "githubVersionUrl": {
             "maxLength": 500,
             "minLength": 0,
             "type": "string",
@@ -1356,6 +1644,64 @@
   ]
 }
       },
+      "LastVersionModel": {
+        "type": "object",
+        "properties": {
+          "applicationId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "version": {
+            "type": "string",
+            "nullable": true
+          },
+          "releaseDate": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "additionalProperties": false
+      },
+      "LastVersionResponse": {
+        "type": "object",
+        "properties": {
+          "lastVersion": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/LastVersionModel"
+              }
+            ],
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "LastVersionSettings": {
+        "type": "object",
+        "properties": {
+          "applicationId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "version": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ParseModel"
+              }
+            ],
+            "nullable": true
+          },
+          "releaseDate": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ParseModel"
+              }
+            ],
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "Location": {
         "type": "object",
         "properties": {
@@ -1468,6 +1814,159 @@
         },
         "additionalProperties": false
       },
+      "ParseModel": {
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string",
+            "nullable": true
+          },
+          "selector": {
+            "type": "string",
+            "nullable": true
+          },
+          "command": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ParserSetting": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "applicationId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "applicationName": {
+            "type": "string",
+            "nullable": true
+          },
+          "versionUrlType": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/VersionUrlType"
+              }
+            ],
+            "x-enumNames": [
+  "SiteUrl",
+  "ReleaseUrl",
+  "GithubVersionUrl",
+  "ResourceUrl"
+],
+            "x-ms-enum": {
+  "name": "VersionUrlType",
+  "modelAsString": false,
+  "values": [
+    {
+      "value": 1,
+      "name": "SiteUrl"
+    },
+    {
+      "value": 2,
+      "name": "ReleaseUrl"
+    },
+    {
+      "value": 3,
+      "name": "GithubVersionUrl"
+    },
+    {
+      "value": 4,
+      "name": "ResourceUrl"
+    }
+  ]
+}
+          },
+          "versionSelector": {
+            "type": "string",
+            "nullable": true
+          },
+          "versionCommand": {
+            "type": "string",
+            "nullable": true
+          },
+          "releaseDateUrlType": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/VersionUrlType"
+              }
+            ],
+            "nullable": true
+          },
+          "releaseDateSelector": {
+            "type": "string",
+            "nullable": true
+          },
+          "releaseDateCommand": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ParserSettingModel": {
+        "required": [
+          "applicationId",
+          "versionSelector",
+          "versionUrlType"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "applicationId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "versionUrlType": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/VersionUrlType"
+              }
+            ]
+          },
+          "versionSelector": {
+            "maxLength": 4000,
+            "minLength": 1,
+            "type": "string"
+          },
+          "versionCommand": {
+            "maxLength": 100,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "releaseDateUrlType": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/VersionUrlType"
+              }
+            ],
+            "nullable": true
+          },
+          "releaseDateSelector": {
+            "maxLength": 4000,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "releaseDateCommand": {
+            "maxLength": 100,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "Pod": {
         "type": "object",
         "properties": {
@@ -1568,6 +2067,45 @@
           }
         },
         "additionalProperties": false
+      },
+      "VersionUrlType": {
+        "enum": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "type": "integer",
+        "description": "1 - SiteUrl, 2 - ReleaseUrl, 3 - GithubVersionUrl, 4 - ResourceUrl",
+        "format": "int32",
+        "x-enumNames": [
+  "SiteUrl",
+  "ReleaseUrl",
+  "GithubVersionUrl",
+  "ResourceUrl"
+],
+        "x-ms-enum": {
+  "name": "VersionUrlType",
+  "modelAsString": false,
+  "values": [
+    {
+      "value": 1,
+      "name": "SiteUrl"
+    },
+    {
+      "value": 2,
+      "name": "ReleaseUrl"
+    },
+    {
+      "value": 3,
+      "name": "GithubVersionUrl"
+    },
+    {
+      "value": 4,
+      "name": "ResourceUrl"
+    }
+  ]
+}
       }
     }
   }

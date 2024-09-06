@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Azure.Core;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -25,11 +24,13 @@ namespace Mihaylov.Api.Other.Controllers
     {
         private readonly ILogger _logger;
         private readonly IClusterService _service;
+        private readonly IVersionService _versionService;
 
-        public ClusterController(ILoggerFactory loggerFactory, IClusterService service)
+        public ClusterController(ILoggerFactory loggerFactory, IClusterService service, IVersionService versionService)
         {
             _logger = loggerFactory.CreateLogger(this.GetType());
             _service = service;
+            _versionService = versionService;
         }
 
         [HttpGet]
@@ -37,7 +38,7 @@ namespace Mihaylov.Api.Other.Controllers
         public async Task<IActionResult> Applications()
         {
             IEnumerable<ApplicationExtended> applications = await _service.GetAllApplicationsAsync().ConfigureAwait(false);
-            
+
             return Ok(applications);
         }
 
@@ -49,7 +50,9 @@ namespace Mihaylov.Api.Other.Controllers
             {
                 Id = model?.Id ?? 0,
                 Name = model?.Name,
+                SiteUrl = model?.SiteUrl,
                 ReleaseUrl = model?.ReleaseUrl,
+                GithubVersionUrl = model?.GithubVersionUrl,
                 ResourceUrl = model?.ResourceUrl,
                 Deployment = model?.Deployment ?? DeploymentType.Yaml,
                 Notes = model?.Notes,
@@ -106,6 +109,58 @@ namespace Mihaylov.Api.Other.Controllers
             AppVersion version = await _service.AddOrUpdateVersionAsync(request, model.ApplicationId).ConfigureAwait(false);
 
             return Ok(version);
+        }
+
+        [HttpGet]
+        [ProducesResponseType(typeof(IEnumerable<ParserSetting>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> ParserSettings()
+        {
+            var settings = await _service.GetParserSettingsAsync().ConfigureAwait(false);
+
+            return Ok(settings);
+        }
+
+        [HttpPost]
+        [ProducesResponseType(typeof(ParserSetting), StatusCodes.Status200OK)]
+        public async Task<IActionResult> ParserSetting(ParserSettingModel model)
+        {
+            var request = new ParserSetting()
+            {
+                Id = model?.Id ?? 0,
+                ApplicationId = model?.ApplicationId ?? 0,
+                ApplicationName = null,
+                VersionUrlType = model?.VersionUrlType ?? VersionUrlType.ReleaseUrl,
+                VersionSelector = model?.VersionSelector,
+                VersionCommand = model?.VersionCommand,
+                ReleaseDateUrlType = model?.ReleaseDateUrlType,
+                ReleaseDateSelector = model?.ReleaseDateSelector,
+                ReleaseDateCommand = model?.ReleaseDateCommand,
+            };
+
+            ParserSetting settings = await _service.AddOrUpdateParserSettingAsync(request).ConfigureAwait(false);
+
+            return Ok(settings);
+        }
+
+        [HttpGet]
+        [ProducesResponseType(typeof(LastVersionResponse), StatusCodes.Status200OK)]
+        public async Task<IActionResult> LastVersion(int id)
+        {
+            var result = await _versionService.GetLastVersionAsync(id).ConfigureAwait(false);
+
+            return Ok(new LastVersionResponse()
+            {
+                LastVersion = result,
+            });
+        }
+
+        [HttpDelete]
+        [ProducesResponseType(typeof(void), StatusCodes.Status200OK)]
+        public IActionResult ReloadLastVersion(int id)
+        {
+            _versionService.Reload(id);
+
+            return Ok();
         }
     }
 }

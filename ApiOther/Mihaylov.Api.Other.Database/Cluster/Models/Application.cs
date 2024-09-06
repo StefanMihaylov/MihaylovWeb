@@ -9,7 +9,11 @@ namespace Mihaylov.Api.Other.Database.Cluster.Models
 
         public string Name { get; set; }
 
+        public string SiteUrl { get; set; }        
+
         public string ReleaseUrl { get; set; }
+
+        public string GithubVersionUrl { get; set; }
 
         public string ResourceUrl { get; set; }
 
@@ -25,11 +29,14 @@ namespace Mihaylov.Api.Other.Database.Cluster.Models
 
         public IEnumerable<DeploymentFile> Files { get; set; }
 
+        public IEnumerable<ParserSetting> ParserSettings { get; set; }
+
         public Application()
         {
             Versions = new List<ApplicationVersion>();
             Pods = new List<ApplicationPod>();
             Files = new List<DeploymentFile>();
+            ParserSettings = new List<ParserSetting>();
         }
     }
 }

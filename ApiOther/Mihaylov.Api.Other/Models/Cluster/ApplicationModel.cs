@@ -17,7 +17,13 @@ namespace Mihaylov.Api.Other.Models.Cluster
         public string ReleaseUrl { get; set; }
 
         [StringLength(ModelConstants.AppUrlMaxLength)]
+        public string SiteUrl { get; set; }
+
+        [StringLength(ModelConstants.AppUrlMaxLength)]
         public string ResourceUrl { get; set; }
+
+        [StringLength(ModelConstants.AppUrlMaxLength)]
+        public string GithubVersionUrl { get; set; }
 
         [Required]
         public DeploymentType? Deployment { get; set; }

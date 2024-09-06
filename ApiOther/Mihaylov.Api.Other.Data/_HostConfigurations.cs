@@ -7,7 +7,6 @@ using Mihaylov.Api.Other.Contracts.Cluster.Interfaces;
 using Mihaylov.Api.Other.Contracts.Show.Interfaces;
 using Mihaylov.Api.Other.Data.Cluster.Repositories;
 using Mihaylov.Api.Other.Data.Cluster.Services;
-using Mihaylov.Api.Other.Data.Show;
 using Mihaylov.Api.Other.Data.Show.Repositories;
 using Mihaylov.Api.Other.Data.Show.Services;
 using Mihaylov.Api.Other.Database.Cluster;
@@ -61,7 +60,9 @@ namespace Mihaylov.Api.Other.Data
             services.AddScoped<IFileRepository, FileRepository>();
             services.AddScoped<IPodRepository, PodRepository>();
             services.AddScoped<IVersionRepository, VersionRepository>();
+            services.AddScoped<IParserSettingRepository, ParserSettingRepository>();
             services.AddScoped<IClusterService, ClusterService>();
+            services.AddScoped<IVersionService, VersionService>();
 
             return services;
         }

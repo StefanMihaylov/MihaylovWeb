@@ -15,20 +15,23 @@ namespace Mihaylov.Api.Other.Data.Cluster.Services
         private readonly IPodRepository _podRepository;
         private readonly IFileRepository _fileRepository;
         private readonly IVersionRepository _versionRepository;
+        private readonly IParserSettingRepository _parserRepository;
         private readonly IMemoryCache _memoryCache;
 
         private const string SHOW_ALL_APPLICATIONS = "show_all_applications";
+        private const string SHOW_ALL_SETTINGS = "show_all_parser_settings";
         private const int CACHE_DURATION = 30;
 
         public ClusterService(ILoggerFactory loggerFactory, IApplicationRepository appRepository,
             IPodRepository podRepository, IFileRepository fileRepository, IVersionRepository versionRepository,
-            IMemoryCache memoryCache)
+            IParserSettingRepository parserRepository, IMemoryCache memoryCache)
         {
             _logger = loggerFactory.CreateLogger(this.GetType());
             _appRepository = appRepository;
             _podRepository = podRepository;
             _fileRepository = fileRepository;
             _versionRepository = versionRepository;
+            _parserRepository = parserRepository;
             _memoryCache = memoryCache;
         }
 
@@ -76,9 +79,34 @@ namespace Mihaylov.Api.Other.Data.Cluster.Services
             return version;
         }
 
+        public async Task<IEnumerable<ParserSetting>> GetParserSettingsAsync()
+        {
+            if (!_memoryCache.TryGetValue(SHOW_ALL_SETTINGS, out IEnumerable<ParserSetting> settings))
+            {
+                settings = await _parserRepository.GetAllAsync().ConfigureAwait(false);
+
+                _memoryCache.Set(SHOW_ALL_SETTINGS, settings, TimeSpan.FromMinutes(CACHE_DURATION));
+            }
+
+            return settings;
+        }
+
+        public async Task<ParserSetting> AddOrUpdateParserSettingAsync(ParserSetting model)
+        {
+            var settings = await _parserRepository.AddOrUpdateAsync(model).ConfigureAwait(false);
+            ClearCacheSettings();
+
+            return settings;
+        }
+
         private void ClearCache()
         {
             _memoryCache.Remove(SHOW_ALL_APPLICATIONS);
+        }
+
+        private void ClearCacheSettings()
+        {
+            _memoryCache.Remove(SHOW_ALL_SETTINGS);
         }
     }
 }

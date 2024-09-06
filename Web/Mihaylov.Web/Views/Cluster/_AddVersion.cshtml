@@ -4,11 +4,11 @@
 <form action="/Cluster/AddVersion" method="post">
     <tr>
         <td>
-            @Html.DropDownListFor(m => m.ApplicationId, Model.Applications, "--- select ---")
+            @Html.DropDownListFor(m => m.ApplicationId, Model.Applications, Constants.EmptyDropdown)
             @Html.ValidationMessageFor(m => m.ApplicationId)
         </td>
         <td>
-            @Html.TextBoxFor(m => m.ReleaseDate, "{0:yyyy.MM.dd}", new { aria_autocomplete = "none", autocomplete = "off", @class = "short-width" })
+            @Html.TextBoxFor(m => m.ReleaseDate, "{0:yyyy.MM.dd}", new { aria_autocomplete = "none", autocomplete = "off", @class = "short-width", style="max-width: 150px;" })
             @Html.ValidationMessageFor(m => m.ReleaseDate)
         </td>
         <td>
@@ -19,7 +19,7 @@
             @Html.TextBoxFor(m => m.HelmVersion, new { aria_autocomplete = "none", autocomplete = "off", @class = "tiny-width" })
             @Html.ValidationMessageFor(m => m.HelmVersion)
         </td>
-        <td>
+        <td style="display: none;">
             @Html.TextBoxFor(m => m.HelmAppVersion, new { aria_autocomplete = "none", autocomplete = "off", @class = "tiny-width" })
             @Html.ValidationMessageFor(m => m.HelmAppVersion)
         </td>

@@ -1,0 +1,39 @@
+﻿@namespace Mihaylov.Web.Models.Cluster
+@model AddParserSettingModel
+
+<form action="/Cluster/AddParserSetting" method="post">
+    <tr>
+        <td>
+            @Html.HiddenFor(m => m.Id)
+            @Html.DropDownListFor(m => m.ApplicationId, Model.Applications, Constants.EmptyDropdown)
+            @Html.ValidationMessageFor(m => m.ApplicationId)
+        </td>
+        <td>
+            @Html.DropDownListFor(m => m.VersionUrlType, Model.UrlTypes, Constants.EmptyDropdown)
+            @Html.ValidationMessageFor(m => m.VersionUrlType)
+        </td>
+        <td>
+            @Html.TextBoxFor(m => m.VersionSelector, new { aria_autocomplete = "none", autocomplete = "off", @class = "" })
+            @Html.ValidationMessageFor(m => m.VersionSelector)
+        </td>
+        <td>
+            @Html.TextBoxFor(m => m.VersionCommand, new { aria_autocomplete = "none", autocomplete = "off", @class = "short-width" })
+            @Html.ValidationMessageFor(m => m.VersionCommand)
+        </td>
+        <td>
+            @Html.DropDownListFor(m => m.ReleaseDateUrlType, Model.UrlTypes, Constants.EmptyDropdown)
+            @Html.ValidationMessageFor(m => m.ReleaseDateUrlType)
+        </td>
+        <td>
+            @Html.TextBoxFor(m => m.ReleaseDateSelector, new { aria_autocomplete = "none", autocomplete = "off", @class = "" })
+            @Html.ValidationMessageFor(m => m.ReleaseDateSelector)
+        </td>
+        <td>
+            @Html.TextBoxFor(m => m.ReleaseDateCommand, new { aria_autocomplete = "none", autocomplete = "off", @class = "short-width" })
+            @Html.ValidationMessageFor(m => m.ReleaseDateCommand)
+        </td>
+        <td>
+            <input type="submit" class="btn btn-primary" value="Добави" />
+        </td>
+    </tr>
+</form>

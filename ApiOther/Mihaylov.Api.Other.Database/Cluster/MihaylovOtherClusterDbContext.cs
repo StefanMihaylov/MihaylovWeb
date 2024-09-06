@@ -30,6 +30,10 @@ namespace Mihaylov.Api.Other.Database.Cluster
 
         public DbSet<Deployment> DeploymentTypes { get; set; }
 
+        public DbSet<VersionUrl> VersionUrlTypes { get; set; }
+
+        public DbSet<ParserSetting> ParserSettings { get; set; }
+
 
         public override int SaveChanges(bool acceptAllChangesOnSuccess)
         {
@@ -54,6 +58,8 @@ namespace Mihaylov.Api.Other.Database.Cluster
             builder.ApplyConfiguration(new ApplicationPodConfiguration());
             builder.ApplyConfiguration(new DeploymentFileConfiguration());
             builder.ApplyConfiguration(new DeploymentConfiguration());
+            builder.ApplyConfiguration(new VersionUrlConfiguration());
+            builder.ApplyConfiguration(new ParserSettingConfiguration());
 
             base.OnModelCreating(builder);
         }

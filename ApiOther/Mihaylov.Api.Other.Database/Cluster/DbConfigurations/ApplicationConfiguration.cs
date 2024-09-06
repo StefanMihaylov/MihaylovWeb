@@ -13,7 +13,9 @@ namespace Mihaylov.Api.Other.Database.Cluster.DbConfigurations
 
             builder.Property(c => c.Name).IsRequired().HasMaxLength(ModelConstants.AppNameMaxLength);
             builder.Property(c => c.ReleaseUrl).IsRequired().HasMaxLength(ModelConstants.AppUrlMaxLength);
+            builder.Property(c => c.SiteUrl).IsRequired(false).HasMaxLength(ModelConstants.AppUrlMaxLength);
             builder.Property(c => c.ResourceUrl).IsRequired(false).HasMaxLength(ModelConstants.AppUrlMaxLength);
+            builder.Property(c => c.GithubVersionUrl).IsRequired(false).HasMaxLength(ModelConstants.AppUrlMaxLength);
             builder.Property(c => c.Notes).IsRequired(false).HasMaxLength(ModelConstants.AppNotesMaxLength);
 
             builder.Property(c => c.DeploymentId).IsRequired().HasDefaultValue(1);

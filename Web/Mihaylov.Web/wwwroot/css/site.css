@@ -52,3 +52,7 @@ ul.custom-popover {
     margin-bottom: 0px;
     padding-left: 20px;
 }
+
+#cluster-main-container .container {
+    margin-left: initial
+}

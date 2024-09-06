@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Mihaylov.Api.Other.Contracts.Cluster.Models;
 
@@ -16,5 +15,9 @@ namespace Mihaylov.Api.Other.Contracts.Cluster.Interfaces
         Task<Pod> AddOrUpdatePodAsync(Pod model, int applicationId);
 
         Task<AppVersion> AddOrUpdateVersionAsync(AppVersion model, int applicationId);
+
+        Task<IEnumerable<ParserSetting>> GetParserSettingsAsync();
+
+        Task<ParserSetting> AddOrUpdateParserSettingAsync(ParserSetting model);
     }
 }
