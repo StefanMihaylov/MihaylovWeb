@@ -8,15 +8,7 @@ namespace Mihaylov.Api.Site.Database.Models
     {
         public long PersonId { get; set; }
 
-
-        public string FirstName { get; set; }
-
-        public string MiddleName { get; set; }
-
-        public string LastName { get; set; }
-
-        public string OtherNames { get; set; }
-
+        public PersonDetail Details { get; set; }
 
         public DateTime? DateOfBirth { get; set; }
 
@@ -27,25 +19,18 @@ namespace Mihaylov.Api.Site.Database.Models
 
         public int? CountryId { get; set; }
 
-        public virtual Country Country { get; set; }
+        public Country Country { get; set; }
 
-
-        public int? CountryStateId { get; set; }
-
-        public virtual CountryState CountryState { get; set; }
-
-        public string Region { get; set; }
-
-        public string City { get; set; }
+        public PersonLocation Location { get; set; }
 
 
         public int? EthnicityId { get; set; }
 
-        public virtual Ethnicity Ethnicity { get; set; }
+        public Ethnicity Ethnicity { get; set; }
 
         public int? OrientationId { get; set; }
 
-        public virtual Orientation Orientation { get; set; }
+        public Orientation Orientation { get; set; }
 
 
         public string Comments { get; set; }

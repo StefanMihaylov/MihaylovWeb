@@ -5,13 +5,16 @@ namespace Mihaylov.Api.Site.Contracts.Models
     public class Account
     {
         public const int NameMaxLength = 50;
+        public const int DisplayNameMaxLength = 50;
         public const int DetailsMaxLength = 1000;
 
-        public Guid Id { get; set; }
+        public long Id { get; set; }
 
         public AccountType AccountType { get; set; }
 
         public string Username { get; set; }
+
+        public string DisplayName { get; set; }
 
         public DateTime? CreateDate { get; set; }
 

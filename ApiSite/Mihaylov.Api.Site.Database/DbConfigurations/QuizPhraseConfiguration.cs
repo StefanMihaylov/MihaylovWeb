@@ -9,7 +9,7 @@ namespace Mihaylov.Api.Site.Database.DbConfigurations
     {
         public void Configure(EntityTypeBuilder<QuizPhrase> builder)
         {
-            builder.HasKey(t => t.PhraseId);
+            builder.HasKey(t => t.PhraseId).HasName("PK_QuizPhrases_PhraseId");
 
             builder.Property(t => t.PhraseId).ValueGeneratedOnAdd().IsRequired();
             builder.Property(t => t.Text).IsRequired().HasMaxLength(DTO.QuizPhrase.TextMaxLength);

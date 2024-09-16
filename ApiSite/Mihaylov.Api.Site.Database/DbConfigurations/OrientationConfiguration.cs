@@ -9,7 +9,7 @@ namespace Mihaylov.Api.Site.Database.DbConfigurations
     {
         public void Configure(EntityTypeBuilder<Orientation> builder)
         {
-            builder.HasKey(b => b.OrientationId).HasName("PK_OrientationId");
+            builder.HasKey(b => b.OrientationId).HasName("PK_Orientations_OrientationId");
 
             builder.Property(t => t.OrientationId).ValueGeneratedOnAdd().IsRequired();
             builder.Property(c => c.Name).IsRequired().HasMaxLength(DTO.Orientation.NameMaxLength);

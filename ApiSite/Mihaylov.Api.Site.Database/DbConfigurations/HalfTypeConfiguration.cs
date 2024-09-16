@@ -9,7 +9,7 @@ namespace Mihaylov.Api.Site.Database.DbConfigurations
     {
         public void Configure(EntityTypeBuilder<HalfType> builder)
         {
-            builder.HasKey(b => b.HalfTypeId).HasName("PK_HalfTypeId");
+            builder.HasKey(b => b.HalfTypeId).HasName("PK_HalfTypes_HalfTypeId");
 
             builder.Property(t => t.HalfTypeId).ValueGeneratedOnAdd().IsRequired();
             builder.Property(c => c.Name).IsRequired().HasMaxLength(DTO.HalfType.NameMaxLength);

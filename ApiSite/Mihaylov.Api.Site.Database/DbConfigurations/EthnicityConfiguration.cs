@@ -9,7 +9,7 @@ namespace Mihaylov.Api.Site.Database.DbConfigurations
     {
         public void Configure(EntityTypeBuilder<Ethnicity> builder)
         {
-            builder.HasKey(b => b.EthnicityId).HasName("PK_EthnicityId");
+            builder.HasKey(b => b.EthnicityId).HasName("PK_Ethnicities_EthnicityId");
 
             builder.Property(t => t.EthnicityId).ValueGeneratedOnAdd().IsRequired();
             builder.Property(c => c.Name).IsRequired().HasMaxLength(DTO.Ethnicity.NameMaxLength);

@@ -12,6 +12,8 @@ namespace Mihaylov.Api.Site.Database.Models
 
         public string Username { get; set; }
 
+        public string DisplayName { get; set; }
+
 
         public long PersonId { get; set; }
 

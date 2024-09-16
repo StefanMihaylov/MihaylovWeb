@@ -9,11 +9,11 @@ namespace Mihaylov.Api.Site.Database.DbConfigurations
     {
         public void Configure(EntityTypeBuilder<Unit> builder)
         {
-            builder.HasKey(b => b.UnitId).HasName("PK_UnitId");
+            builder.HasKey(b => b.UnitId).HasName("PK_Units_UnitId");
 
             builder.Property(t => t.UnitId).ValueGeneratedOnAdd().IsRequired();
             builder.Property(c => c.Name).IsRequired().HasMaxLength(DTO.Unit.NameMaxLength);
-            builder.Property(c => c.ConversionRate).IsRequired(false);
+            builder.Property(c => c.ConversionRate).IsRequired(false).HasPrecision(18, 2);
 
             builder.HasIndex(t => t.Name).IsUnique();
 

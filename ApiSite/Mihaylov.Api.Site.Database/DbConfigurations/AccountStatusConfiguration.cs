@@ -9,7 +9,7 @@ namespace Mihaylov.Api.Site.Database.DbConfigurations
     {
         public void Configure(EntityTypeBuilder<AccountStatus> builder)
         {
-            builder.HasKey(b => b.StatusId).HasName("PK_StatusId");
+            builder.HasKey(b => b.StatusId).HasName("PK_AccountStatus_StatusId");
 
             builder.Property(t => t.StatusId).ValueGeneratedOnAdd().IsRequired();
             builder.Property(c => c.Name).IsRequired().HasMaxLength(DTO.AccountStatus.NameMaxLength);

@@ -4,22 +4,11 @@ namespace Mihaylov.Api.Site.Contracts.Models
 {
     public class Person
     {
-        public const int NameMaxLength = 50;
-        public const int OtherNamesMaxLength = 200;
-        public const int RegionMaxLength = 100;
-        public const int CityMaxLength = 50;
         public const int CommentsMaxLength = 4000;
 
         public long Id { get; set; }
 
-
-        public string FirstName { get; set; }
-
-        public string MiddleName { get; set; }
-
-        public string LastName { get; set; }
-
-        public string OtherNames { get; set; }
+        public PersonDetail Detais { get; set; }
 
 
         public DateTime? DateOfBirth { get; set; }
@@ -32,15 +21,7 @@ namespace Mihaylov.Api.Site.Contracts.Models
 
         public string Country { get; set; }
 
-
-        public int? CountryStateId { get; set; }
-
-        public string CountryState { get; set; }
-
-        public string Region { get; set; }
-
-        public string City { get; set; }
-
+        public PersonLocation Location { get; set; }
 
         public int? EthnicityId { get; set; }
 

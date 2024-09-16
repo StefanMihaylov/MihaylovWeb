@@ -9,7 +9,7 @@ namespace Mihaylov.Api.Site.Database.DbConfigurations
     {
         public void Configure(EntityTypeBuilder<AccountType> builder)
         {
-            builder.HasKey(b => b.AccountTypeId).HasName("PK_AccountTypeId");
+            builder.HasKey(b => b.AccountTypeId).HasName("PK_AccountTypes_AccountTypeId");
 
             builder.Property(t => t.AccountTypeId).ValueGeneratedOnAdd().IsRequired();
             builder.Property(c => c.Name).IsRequired().HasMaxLength(DTO.AccountType.NameMaxLength);

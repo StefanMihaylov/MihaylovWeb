@@ -9,16 +9,10 @@ namespace Mihaylov.Api.Site.Database.DbConfigurations
     {
         public void Configure(EntityTypeBuilder<Person> builder)
         {
-            builder.HasKey(t => t.PersonId).HasName("PK_PersonId");
-            builder.Property(t => t.PersonId).ValueGeneratedOnAdd().IsRequired();
+            builder.HasKey(t => t.PersonId).HasName("PK_Persons_PersonId");
+            builder.Property(t => t.PersonId).ValueGeneratedOnAdd().IsRequired().UseIdentityColumn(1000, 1);
 
-            builder.Property(t => t.FirstName).IsRequired(false).HasMaxLength(DTO.Person.NameMaxLength);
-            builder.Property(t => t.MiddleName).IsRequired(false).HasMaxLength(DTO.Person.NameMaxLength);
-            builder.Property(t => t.LastName).IsRequired(false).HasMaxLength(DTO.Person.NameMaxLength);
-            builder.Property(t => t.OtherNames).IsRequired(false).HasMaxLength(DTO.Person.OtherNamesMaxLength);
             builder.Property(t => t.Comments).IsRequired(false).HasMaxLength(DTO.Person.CommentsMaxLength);
-            builder.Property(t => t.Region).IsRequired(false).HasMaxLength(DTO.Person.RegionMaxLength);
-            builder.Property(t => t.City).IsRequired(false).HasMaxLength(DTO.Person.CityMaxLength);
 
             builder.Property(c => c.DateOfBirth).IsRequired(false).HasColumnType("Date");
 
@@ -29,9 +23,10 @@ namespace Mihaylov.Api.Site.Database.DbConfigurations
 
             builder.Property(t => t.CountryId).IsRequired(false);
             builder.HasOne(t => t.Country).WithMany().IsRequired(false).HasForeignKey(t => t.CountryId).OnDelete(DeleteBehavior.NoAction);
-            builder.Property(t => t.CountryStateId).IsRequired(false);
-            builder.HasOne(t => t.CountryState).WithMany().IsRequired(false).HasForeignKey(t => t.CountryStateId).OnDelete(DeleteBehavior.NoAction);
-            
+
+            builder.HasOne(t => t.Location).WithOne(p => p.Person).IsRequired(false).HasForeignKey<PersonLocation>(t => t.PersonId).OnDelete(DeleteBehavior.NoAction);
+            builder.HasOne(t => t.Details).WithOne(p => p.Person).IsRequired(false).HasForeignKey<PersonDetail>(t => t.PersonId).OnDelete(DeleteBehavior.NoAction);
+
             builder.Property(t => t.EthnicityId).IsRequired(false);
             builder.HasOne(t => t.Ethnicity).WithMany().IsRequired(false).HasForeignKey(t => t.EthnicityId).OnDelete(DeleteBehavior.NoAction);
             builder.Property(t => t.OrientationId).IsRequired(false);

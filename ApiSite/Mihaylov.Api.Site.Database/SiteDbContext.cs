@@ -20,6 +20,10 @@ namespace Mihaylov.Api.Site.Database
 
         public DbSet<Person> Persons { get; set; }
 
+        public DbSet<PersonDetail> PersonDetails { get; set; }
+
+        public DbSet<PersonLocation> PersonLocations { get; set; }
+
         public DbSet<Country> Countries { get; set; } //
 
         public DbSet<CountryState> CountryStates { get; set; } //
@@ -73,6 +77,8 @@ namespace Mihaylov.Api.Site.Database
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfiguration(new PersonConfiguration());
+            modelBuilder.ApplyConfiguration(new PersonDetailConfiguration());
+            modelBuilder.ApplyConfiguration(new PersonLocationConfiguration());
             modelBuilder.ApplyConfiguration(new AccountConfiguration());
             modelBuilder.ApplyConfiguration(new CountryConfiguration());
             modelBuilder.ApplyConfiguration(new CountryStateConfiguration());

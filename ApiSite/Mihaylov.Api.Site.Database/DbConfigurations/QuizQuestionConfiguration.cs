@@ -9,7 +9,7 @@ namespace Mihaylov.Api.Site.Database.DbConfigurations
     {
         public void Configure(EntityTypeBuilder<QuizQuestion> builder)
         {
-            builder.HasKey(b => b.QuestionId).HasName("PK_QuestionId");
+            builder.HasKey(b => b.QuestionId).HasName("PK_QuizQuestions_QuestionId");
 
             builder.Property(t => t.QuestionId).ValueGeneratedOnAdd().IsRequired();
             builder.Property(c => c.Value).IsRequired().HasMaxLength(DTO.QuizQuestion.ValueMaxLength);

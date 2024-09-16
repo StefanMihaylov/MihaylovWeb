@@ -9,7 +9,7 @@ namespace Mihaylov.Api.Site.Database.DbConfigurations
     {
         public void Configure(EntityTypeBuilder<MediaFile> builder)
         {
-            builder.HasKey(t => t.MediaFileId);
+            builder.HasKey(t => t.MediaFileId).HasName("PK_MediaFiles_MediaFileId");
             builder.Property(t => t.MediaFileId).ValueGeneratedOnAdd().IsRequired();
 
             builder.Property(t => t.FileName).IsRequired().HasMaxLength(DTO.MediaFile.FileNameMaxLength);

@@ -11,7 +11,7 @@ namespace Mihaylov.Api.Site.Database.DbConfigurations
     {
         public void Configure(EntityTypeBuilder<DateOfBirth> builder)
         {
-            builder.HasKey(b => b.DateOfBirthId).HasName("DateOfBirthId");
+            builder.HasKey(b => b.DateOfBirthId).HasName("PK_DateOfBirths_DateOfBirthId");
 
             builder.Property(c => c.Name).IsRequired().HasMaxLength(30);
 

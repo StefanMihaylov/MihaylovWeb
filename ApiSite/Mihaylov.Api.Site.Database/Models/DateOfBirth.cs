@@ -2,7 +2,7 @@
 {
     public class DateOfBirth
     {
-        public int DateOfBirthId { get; set; }
+        public byte DateOfBirthId { get; set; }
 
         public string Name { get; set; }
     }

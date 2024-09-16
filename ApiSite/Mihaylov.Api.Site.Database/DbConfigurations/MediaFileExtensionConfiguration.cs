@@ -9,7 +9,7 @@ namespace Mihaylov.Api.Site.Database.DbConfigurations
     {
         public void Configure(EntityTypeBuilder<MediaFileExtension> builder)
         {
-            builder.HasKey(b => b.ExtensionId).HasName("PK_ExtensionId");
+            builder.HasKey(b => b.ExtensionId).HasName("PK_MediaFileExtensions_ExtensionId");
 
             builder.Property(t => t.ExtensionId).ValueGeneratedOnAdd().IsRequired();
             builder.Property(c => c.Name).IsRequired().HasMaxLength(DTO.MediaFileExtension.NameMaxLength);

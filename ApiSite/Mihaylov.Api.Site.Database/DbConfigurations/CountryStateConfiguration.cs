@@ -9,7 +9,7 @@ namespace Mihaylov.Api.Site.Database.DbConfigurations
     {
         public void Configure(EntityTypeBuilder<CountryState> builder)
         {
-            builder.HasKey(b => b.StateId).HasName("PK_StateId");
+            builder.HasKey(b => b.StateId).HasName("PK_CountryState_StateId");
 
             builder.Property(t => t.StateId).ValueGeneratedOnAdd().IsRequired();
             builder.Property(c => c.Name).IsRequired().HasMaxLength(DTO.CountryState.NameMaxLength);

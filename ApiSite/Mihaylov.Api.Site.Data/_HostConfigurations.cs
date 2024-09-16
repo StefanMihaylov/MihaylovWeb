@@ -28,17 +28,19 @@ namespace Mihaylov.Api.Site.Data
              {
                  options.UseSqlServer(connectionStringSettings.GetConnectionString(), opt =>
                  {
-                     // opt.MigrationsHistoryTable("__MigrationsHistory", MihaylovOtherClusterDbContext.SCHEMA_NAME);
+                     opt.MigrationsHistoryTable("__MigrationsHistory");
 
                  });
                  options.ConfigureWarnings(w => w.Ignore(RelationalEventId.CommandExecuted));
              });
 
-            connectionStringSettings.DatabaseName = "MihaylovDb_old";
+            var connectionStringSettings2 = new ConnectionStringSettings();
+            connectionString(connectionStringSettings2);
+            connectionStringSettings2.DatabaseName = "MihaylovDb_old";
 
             services.AddDbContext<CamContext>(options =>
             {
-                options.UseSqlServer(connectionStringSettings.GetConnectionString(), opt =>
+                options.UseSqlServer(connectionStringSettings2.GetConnectionString(), opt =>
                 {
                     // opt.MigrationsHistoryTable("__MigrationsHistory", MihaylovOtherShowDbContext.SCHEMA_NAME);
 

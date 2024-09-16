@@ -9,9 +9,11 @@ namespace Mihaylov.Api.Site.Database.DbConfigurations
     {
         public void Configure(EntityTypeBuilder<Account> builder)
         {
-            builder.HasKey(t => t.AccountId);
-            builder.Property(t => t.AccountId).ValueGeneratedOnAdd().IsRequired();
+            builder.HasKey(t => t.AccountId).HasName("PK_Accounts_AccountId");
+            builder.Property(t => t.AccountId).ValueGeneratedOnAdd().IsRequired().UseIdentityColumn(1000, 1);
+
             builder.Property(t => t.Username).IsRequired().HasMaxLength(DTO.Account.NameMaxLength);
+            builder.Property(t => t.DisplayName).IsRequired().HasMaxLength(DTO.Account.DisplayNameMaxLength);
             builder.Property(t => t.CreateDate).IsRequired(false);
             builder.Property(t => t.LastOnlineDate).IsRequired(false);
             builder.Property(t => t.Details).IsRequired(false).HasMaxLength(DTO.Account.DetailsMaxLength);

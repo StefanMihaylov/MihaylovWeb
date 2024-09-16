@@ -9,12 +9,12 @@ namespace Mihaylov.Api.Site.Database.DbConfigurations
     {
         public void Configure(EntityTypeBuilder<QuizAnswer> builder)
         {
-            builder.HasKey(b => b.QuizAnswerId).HasName("PK_QuizAnswerId");
+            builder.HasKey(b => b.QuizAnswerId).HasName("PK_QuizAnswers_QuizAnswerId");
 
             builder.Property(t => t.QuizAnswerId).ValueGeneratedOnAdd().IsRequired();
             builder.Property(c => c.Details).IsRequired().HasMaxLength(DTO.QuizAnswer.DetailsMaxLength);
             builder.Property(t => t.AskDate).IsRequired();
-            builder.Property(t => t.Value).IsRequired(false);
+            builder.Property(t => t.Value).IsRequired(false).HasPrecision(18, 2);
 
             builder.Property(t => t.PersonId).IsRequired();
             builder.HasOne(t => t.Person).WithMany(p => p.Answers).IsRequired().HasForeignKey(t => t.PersonId).OnDelete(DeleteBehavior.NoAction);
