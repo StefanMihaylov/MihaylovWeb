@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <Nullable>disable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Mapster" Version="7.4.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Common\Mihaylov.Common.Abstract\Mihaylov.Common.Abstract.csproj" />
+    <ProjectReference Include="..\Mihaylov.Api.Site.Contracts\Mihaylov.Api.Site.Contracts.csproj" />
+    <ProjectReference Include="..\Mihaylov.Api.Site.DatabaseOld\Mihaylov.Api.Site.DatabaseOld.csproj" />
+    <ProjectReference Include="..\Mihaylov.Api.Site.Database\Mihaylov.Api.Site.Database.csproj" />
+  </ItemGroup>
+
+</Project>

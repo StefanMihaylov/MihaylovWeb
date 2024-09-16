@@ -9,7 +9,7 @@
             <th>@Html.LabelFor(m => m.Applications.First().Main.Version.ReleaseDate, "Release")</th>
             <th>@Html.LabelFor(m => m.Applications.First().Main.Version.Version)</th>
             <th>@Html.LabelFor(m => m.Applications.First().Main.Version.HelmVersion, "Helm")</th>
-            @*             <th>@Html.LabelFor(m => m.Applications.First().Main.Version.HelmAppVersion, "App")</th> *@
+            @* <th>@Html.LabelFor(m => m.Applications.First().Main.Version.HelmAppVersion, "App")</th> *@
             <th>@Html.LabelFor(m => m.Applications.First().Main.ReleaseUrl)</th>
             <th>@Html.LabelFor(m => m.Applications.First().Main.Deployment)</th>
             <th>@Html.LabelFor(m => m.Applications.First().Main.Files)</th>
@@ -19,8 +19,6 @@
         </tr>
     </thead>
     <tbody>
-        @await Html.PartialAsync("_AddApplication", Model.Input)
-        @await Html.PartialAsync("_AddAdditional", Model.Additional)
         @await Html.PartialAsync("_AddVersion", Model.Version)
 
         <tr style="border-bottom: 2pt solid black;"></tr>
@@ -69,16 +67,16 @@
                             var interval = DateTime.UtcNow.Date.Subtract(application.Main.Version.ReleaseDate);
                             var days = $"{interval.TotalDays} дни";
                             @days
-                        }
 
-                        @if (application.LastVersion != null && !application.IsLatestVersion)
-                        {
                             <a href="@Url.Action(nameof(ClusterController.ReloadLastVersion), "Cluster", new { id = application.Main.Id })">
                                 <span style="color:blue">
                                     <i class="bi bi-repeat"></i>
                                 </span>
                             </a>
+                        }
 
+                        @if (application.LastVersion != null && !application.IsLatestVersion)
+                        {
                             <br />
                             var interval = DateTime.UtcNow.Date.Subtract(application.LastVersion.ReleaseDate);
                             var days = $"{interval.TotalDays} дни";
@@ -162,5 +160,11 @@
                 </td>
             </tr>
         }
+
+        <tr style="border-bottom: 2pt solid black;"></tr>
+        <tr></tr>
+
+        @await Html.PartialAsync("_AddApplication", Model.Input)
+        @await Html.PartialAsync("_AddAdditional", Model.Additional)
     </tbody>
 </table>

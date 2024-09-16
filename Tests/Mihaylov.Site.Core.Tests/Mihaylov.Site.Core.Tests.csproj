@@ -13,8 +13,4 @@
     <PackageReference Include="MSTest.TestFramework" Version="3.2.1" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\Site\Mihaylov.Site.Core\Mihaylov.Site.Core.csproj" />
-  </ItemGroup>
-
 </Project>
