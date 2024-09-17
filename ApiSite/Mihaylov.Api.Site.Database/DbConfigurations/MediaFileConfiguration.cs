@@ -14,7 +14,7 @@ namespace Mihaylov.Api.Site.Database.DbConfigurations
 
             builder.Property(t => t.FileName).IsRequired().HasMaxLength(DTO.MediaFile.FileNameMaxLength);
             builder.Property(t => t.SizeInBytes).IsRequired();
-            builder.Property(t => t.CreateDate).IsRequired();
+            builder.Property(t => t.CreateDate).IsRequired().HasPrecision(3);
             builder.Property(t => t.CheckSum).IsRequired(false).HasMaxLength(DTO.MediaFile.ChecksumMaxLength);
             builder.Property(t => t.GroupId).IsRequired(false);
 
@@ -25,8 +25,8 @@ namespace Mihaylov.Api.Site.Database.DbConfigurations
             builder.Property(t => t.AccountId).IsRequired(false);
             builder.HasOne(t => t.Account).WithMany().IsRequired(false).HasForeignKey(t => t.AccountId).OnDelete(DeleteBehavior.NoAction);
 
-            builder.HasIndex(t => t.CheckSum).HasFilter(null).IsUnique();
-            builder.HasIndex(t => t.GroupId).HasFilter(null);
+            builder.HasIndex(t => t.CheckSum).HasFilter("[CheckSum] IS NOT NULL").IsUnique();
+            builder.HasIndex(t => t.GroupId).HasFilter("[GroupId] IS NOT NULL");
         }
     }
 }

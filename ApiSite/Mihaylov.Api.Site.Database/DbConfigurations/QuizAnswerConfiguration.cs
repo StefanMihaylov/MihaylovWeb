@@ -12,8 +12,8 @@ namespace Mihaylov.Api.Site.Database.DbConfigurations
             builder.HasKey(b => b.QuizAnswerId).HasName("PK_QuizAnswers_QuizAnswerId");
 
             builder.Property(t => t.QuizAnswerId).ValueGeneratedOnAdd().IsRequired();
-            builder.Property(c => c.Details).IsRequired().HasMaxLength(DTO.QuizAnswer.DetailsMaxLength);
-            builder.Property(t => t.AskDate).IsRequired();
+            builder.Property(c => c.Details).IsRequired(false).HasMaxLength(DTO.QuizAnswer.DetailsMaxLength);
+            builder.Property(t => t.AskDate).IsRequired().HasPrecision(3);
             builder.Property(t => t.Value).IsRequired(false).HasPrecision(18, 2);
 
             builder.Property(t => t.PersonId).IsRequired();

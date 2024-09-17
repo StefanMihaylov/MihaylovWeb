@@ -40,11 +40,29 @@ namespace Mihaylov.Common.Abstract
         public static IServiceCollection MigrateDatabase<T>(this IServiceCollection serviceProvider, Action<DatabaseFacade> migrate) where T : DbContext
         {
             using var provider = serviceProvider.BuildServiceProvider();
-            using var dbContect = provider.GetRequiredService<T>();
+            using var dbContext = provider.GetRequiredService<T>();
 
-            migrate(dbContect.Database);
+            migrate(dbContext.Database);
 
             return serviceProvider;
         }
+
+        //public static IServiceCollection SeedDatabase<T>(this IServiceCollection serviceProvider, string tableName, Action<T> seed) where T : DbContext
+        //{
+        //    using var provider = serviceProvider.BuildServiceProvider();
+        //    using var dbContext = provider.GetRequiredService<T>();
+
+        //    using (var transaction = dbContext.Database.BeginTransaction())
+        //    {
+        //        dbContext.Database.ExecuteSqlRaw($"SET IDENTITY_INSERT {tableName} ON;");
+
+        //        seed(dbContext);
+
+        //        dbContext.SaveChanges();
+        //        transaction.Commit();
+        //    }
+
+        //    return serviceProvider;
+        //}
     }
 }

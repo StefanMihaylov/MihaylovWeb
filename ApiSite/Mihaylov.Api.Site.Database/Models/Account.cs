@@ -1,8 +1,9 @@
 ﻿using System;
+using Mihaylov.Common.Abstract.Databases.Models;
 
 namespace Mihaylov.Api.Site.Database.Models
 {
-    public class Account
+    public class Account : Entity
     {
         public long AccountId { get; set; }
 
@@ -15,7 +16,7 @@ namespace Mihaylov.Api.Site.Database.Models
         public string DisplayName { get; set; }
 
 
-        public long PersonId { get; set; }
+        public long? PersonId { get; set; }
 
         public Person Person { get; set; }
 
@@ -23,9 +24,11 @@ namespace Mihaylov.Api.Site.Database.Models
 
         public DateTime? LastOnlineDate { get; set; }
 
+        public DateTime? ReconciledDate { get; set; }
+
         public string Details { get; set; }
 
-        public int StatusId {  get; set; }
+        public int? StatusId {  get; set; }
 
         public AccountStatus Status { get; set; }
     }

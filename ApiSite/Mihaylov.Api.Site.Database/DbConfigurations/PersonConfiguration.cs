@@ -19,7 +19,7 @@ namespace Mihaylov.Api.Site.Database.DbConfigurations
             builder.EntityConfiguration();
 
             builder.Property(c => c.DateOfBirthId).IsRequired(false);
-            builder.HasOne(c => c.DateOfBirthModel).WithMany().HasForeignKey(c => c.DateOfBirthId).IsRequired(false).OnDelete(DeleteBehavior.NoAction);
+            builder.HasOne(c => c.DateOfBirthType).WithMany().HasForeignKey(c => c.DateOfBirthId).IsRequired(false).OnDelete(DeleteBehavior.NoAction);
 
             builder.Property(t => t.CountryId).IsRequired(false);
             builder.HasOne(t => t.Country).WithMany().IsRequired(false).HasForeignKey(t => t.CountryId).OnDelete(DeleteBehavior.NoAction);

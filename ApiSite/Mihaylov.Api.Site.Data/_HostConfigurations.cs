@@ -8,11 +8,10 @@ using Mihaylov.Api.Site.Contracts.Repositories;
 using Mihaylov.Api.Site.Contracts.Writers;
 using Mihaylov.Api.Site.Data.Helpers;
 using Mihaylov.Api.Site.Data.Managers;
+using Mihaylov.Api.Site.Data.Models;
 using Mihaylov.Api.Site.Data.Repositories;
 using Mihaylov.Api.Site.Data.Writers;
 using Mihaylov.Api.Site.Database;
-using Mihaylov.Api.Site.DatabaseOld;
-using Mihaylov.Api.Site.DatabaseOld.Database;
 using Mihaylov.Common.Abstract.Databases;
 
 namespace Mihaylov.Api.Site.Data
@@ -34,31 +33,14 @@ namespace Mihaylov.Api.Site.Data
                  options.ConfigureWarnings(w => w.Ignore(RelationalEventId.CommandExecuted));
              });
 
-            var connectionStringSettings2 = new ConnectionStringSettings();
-            connectionString(connectionStringSettings2);
-            connectionStringSettings2.DatabaseName = "MihaylovDb_old";
-
-            services.AddDbContext<CamContext>(options =>
-            {
-                options.UseSqlServer(connectionStringSettings2.GetConnectionString(), opt =>
-                {
-                    // opt.MigrationsHistoryTable("__MigrationsHistory", MihaylovOtherShowDbContext.SCHEMA_NAME);
-
-                });
-                options.ConfigureWarnings(w => w.Ignore(RelationalEventId.CommandExecuted));
-            });
-
             return services;
         }
 
-        public static IServiceCollection AddSiteServices(this IServiceCollection services, Action<SiteCoreOptions> siteOption)
+        public static IServiceCollection AddSiteServices(this IServiceCollection services, Action<SiteOptions> siteOption)
         {
-            services.AddScoped<ICamRepository, CamRepository>();
-            services.AddScoped<IMigrateService, MigrateService>();
-
             services.RegisterDbMapping();
 
-            services.Configure<SiteCoreOptions>(siteOption);
+            services.Configure<SiteOptions>(siteOption);
 
             services.AddScoped<ILocationsRepository, LocationsRepository>();
             services.AddScoped<ILookupTablesRepository, LookupTablesRepository>();

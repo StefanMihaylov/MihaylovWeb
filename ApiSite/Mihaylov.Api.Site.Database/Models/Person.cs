@@ -14,7 +14,7 @@ namespace Mihaylov.Api.Site.Database.Models
 
         public byte? DateOfBirthId { get; set; }
 
-        public DateOfBirth DateOfBirthModel { get; set; }
+        public DateOfBirth DateOfBirthType { get; set; }
 
 
         public int? CountryId { get; set; }

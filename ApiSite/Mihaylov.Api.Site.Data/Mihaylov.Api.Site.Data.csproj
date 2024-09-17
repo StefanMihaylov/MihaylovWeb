@@ -11,9 +11,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Common\Mihaylov.Common.Abstract\Mihaylov.Common.Abstract.csproj" />
-    <ProjectReference Include="..\Mihaylov.Api.Site.Contracts\Mihaylov.Api.Site.Contracts.csproj" />
-    <ProjectReference Include="..\Mihaylov.Api.Site.DatabaseOld\Mihaylov.Api.Site.DatabaseOld.csproj" />
     <ProjectReference Include="..\Mihaylov.Api.Site.Database\Mihaylov.Api.Site.Database.csproj" />
   </ItemGroup>
 

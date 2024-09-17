@@ -18,8 +18,8 @@ namespace Mihaylov.Api.Site.Database.DbConfigurations
             builder.Property(s => s.AlternativeNames).IsRequired(false).HasMaxLength(DTO.Country.NameMaxLength);
 
             builder.HasIndex(b => b.Name).IsUnique();
-            builder.HasIndex(b => b.TwoLetterCode).IsUnique().HasFilter(null);
-            builder.HasIndex(b => b.ThreeLetterCode).IsUnique().HasFilter(null);
+            builder.HasIndex(b => b.TwoLetterCode).IsUnique().HasFilter("[TwoLetterCode] IS NOT NULL");
+            builder.HasIndex(b => b.ThreeLetterCode).IsUnique().HasFilter("[ThreeLetterCode] IS NOT NULL");
         }
     }
 }

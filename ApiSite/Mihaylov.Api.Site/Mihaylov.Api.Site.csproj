@@ -32,10 +32,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Common\Mihaylov.Common.Abstract\Mihaylov.Common.Abstract.csproj" />
-    <ProjectReference Include="..\..\Common\Mihaylov.Common.Host.Abstract\Mihaylov.Common.Host.Abstract.csproj" />
     <ProjectReference Include="..\..\Common\Mihaylov.Common.Host\Mihaylov.Common.Host.csproj" />
-    <ProjectReference Include="..\Mihaylov.Api.Site.DatabaseOld\Mihaylov.Api.Site.DatabaseOld.csproj" />
     <ProjectReference Include="..\Mihaylov.Api.Site.Data\Mihaylov.Api.Site.Data.csproj" />
   </ItemGroup>
 

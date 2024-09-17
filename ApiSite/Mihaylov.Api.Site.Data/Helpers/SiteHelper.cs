@@ -9,6 +9,7 @@ using Mihaylov.Api.Site.Contracts.Managers;
 using Mihaylov.Api.Site.Contracts.Models;
 using Mihaylov.Api.Site.Contracts.Repositories;
 using Mihaylov.Api.Site.Contracts.Writers;
+using Mihaylov.Api.Site.Data.Models;
 
 namespace Mihaylov.Api.Site.Data.Helpers
 {
@@ -24,7 +25,7 @@ namespace Mihaylov.Api.Site.Data.Helpers
         private readonly ICsQueryWrapper csQueryWrapper;
         private readonly ILogger logger;
 
-        public SiteHelper(IOptions<SiteCoreOptions> options, ICountriesWriter countriesWriter,
+        public SiteHelper(IOptions<SiteOptions> options, ICountriesWriter countriesWriter,
             ICollectionsManager personAdditionalManager, ILoggerFactory loggerFactory,
             IPersonsRepository personsRepository, IPersonsManager personsManager,
             IPersonsWriter personsWriter, ICsQueryWrapper csQueryWrapper)

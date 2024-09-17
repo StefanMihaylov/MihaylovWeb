@@ -24,38 +24,38 @@ namespace Mihaylov.Api.Site.Database
 
         public DbSet<PersonLocation> PersonLocations { get; set; }
 
-        public DbSet<Country> Countries { get; set; } //
+        public DbSet<Country> Countries { get; set; }
 
-        public DbSet<CountryState> CountryStates { get; set; } //
+        public DbSet<CountryState> CountryStates { get; set; }
 
-        public DbSet<Ethnicity> Ethnicities { get; set; } //
+        public DbSet<Ethnicity> Ethnicities { get; set; }
 
-        public DbSet<Orientation> Orientations { get; set; } //
+        public DbSet<Orientation> Orientations { get; set; }
 
-        public DbSet<DateOfBirth> DateOfBirthTypes { get; set; } //
+        public DbSet<DateOfBirth> DateOfBirthTypes { get; set; }
 
 
         public DbSet<Account> Accounts { get; set; }
 
-        public DbSet<AccountType> AccountTypes { get; set; } //
+        public DbSet<AccountType> AccountTypes { get; set; }
 
-        public DbSet<AccountStatus> AccountStates { get; set; } //
+        public DbSet<AccountStatus> AccountStates { get; set; }
 
 
         public DbSet<MediaFile> MediaFiles { get; set; }
 
-        public DbSet<MediaFileExtension> MediaFileExtensions { get; set; } //
+        public DbSet<MediaFileExtension> MediaFileExtensions { get; set; }
 
-        public DbSet<MediaFileSource> MediaFileSources { get; set; } //
+        public DbSet<MediaFileSource> MediaFileSources { get; set; }
 
 
-        public DbSet<QuizPhrase> QuizPhrases { get; set; } //
+        public DbSet<QuizPhrase> QuizPhrases { get; set; }
 
-        public DbSet<Unit> Units { get; set; } //
+        public DbSet<Unit> Units { get; set; }
 
-        public DbSet<HalfType> HalfTypes { get; set; } //
+        public DbSet<HalfType> HalfTypes { get; set; }
 
-        public DbSet<QuizQuestion> QuizQuestions { get; set; } //
+        public DbSet<QuizQuestion> QuizQuestions { get; set; }
 
         public DbSet<QuizAnswer> QuizAnswers { get; set; }
 
