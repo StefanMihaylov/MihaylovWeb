@@ -87,6 +87,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mihaylov.Api.Site.Contracts
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mihaylov.Api.Site.Database", "ApiSite\Mihaylov.Api.Site.Database\Mihaylov.Api.Site.Database.csproj", "{7D2D1943-DBF6-4E23-88B0-52B8C708A87A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mihaylov.Api.Site.DAL", "ApiSite\Mihaylov.Api.Site.DAL\Mihaylov.Api.Site.DAL.csproj", "{C1D5647C-EF9C-483A-9C2F-19DCBB0F1008}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -225,6 +227,10 @@ Global
 		{7D2D1943-DBF6-4E23-88B0-52B8C708A87A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7D2D1943-DBF6-4E23-88B0-52B8C708A87A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7D2D1943-DBF6-4E23-88B0-52B8C708A87A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C1D5647C-EF9C-483A-9C2F-19DCBB0F1008}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C1D5647C-EF9C-483A-9C2F-19DCBB0F1008}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C1D5647C-EF9C-483A-9C2F-19DCBB0F1008}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C1D5647C-EF9C-483A-9C2F-19DCBB0F1008}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -265,6 +271,7 @@ Global
 		{A2B4D6BD-CD86-441F-9711-A7A6F41C88A7} = {F1F25A03-710D-4561-98B1-21532B580EAE}
 		{BE754999-01AE-4DFE-A232-7A58F8404D9D} = {F1F25A03-710D-4561-98B1-21532B580EAE}
 		{7D2D1943-DBF6-4E23-88B0-52B8C708A87A} = {F1F25A03-710D-4561-98B1-21532B580EAE}
+		{C1D5647C-EF9C-483A-9C2F-19DCBB0F1008} = {F1F25A03-710D-4561-98B1-21532B580EAE}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {ECF9C65D-96FF-4564-A762-B6C7EE02C0B9}

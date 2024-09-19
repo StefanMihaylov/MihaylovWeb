@@ -3,7 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Mihaylov.Api.Site.Contracts.Models;
 using Db = Mihaylov.Api.Site.Database.Models;
 
-namespace Mihaylov.Api.Site.Data
+namespace Mihaylov.Api.Site.DAL
 {
     public static class _DbModelMapping
     {
@@ -47,6 +47,11 @@ namespace Mihaylov.Api.Site.Data
                 .Map(dest => dest.BaseUnitId, src => src.BaseUnitId)
                 .TwoWays();
 
+            TypeAdapterConfig<Db.Unit, UnitShort>.NewConfig()
+                .Map(dest => dest.Id, src => src.UnitId)
+                .Map(dest => dest.Name, src => src.Name)
+                .TwoWays();
+
             TypeAdapterConfig<Db.AccountStatus, AccountStatus>.NewConfig()
                 .Map(dest => dest.Id, src => src.StatusId)
                 .Map(dest => dest.Name, src => src.Name)
@@ -77,6 +82,32 @@ namespace Mihaylov.Api.Site.Data
                 .Map(dest => dest.Id, src => src.QuestionId)
                 .Map(dest => dest.Value, src => src.Value)
                 .TwoWays();
+
+            TypeAdapterConfig<Db.QuizAnswer, QuizAnswer>.NewConfig()
+                .Map(dest => dest.Id, src => src.QuizAnswerId)
+                .Map(dest => dest.PersonId, src => src.PersonId)
+                .Map(dest => dest.AskDate, src => src.AskDate)
+                .Map(dest => dest.QuestionId, src => src.QuestionId)
+                .Map(dest => dest.Question, src => src.Question.Value)
+                .Map(dest => dest.Value, src => src.Value)
+                .Map(dest => dest.UnitId, src => src.UnitId)
+                .Map(dest => dest.Unit, src => src.Unit.Name)
+                .Map(dest => dest.HalfTypeId, src => src.HalfTypeId)
+                .Map(dest => dest.HalfType, src => src.HalfType.Name)
+                .Map(dest => dest.Details, src => src.Details);
+
+            TypeAdapterConfig<QuizAnswer, Db.QuizAnswer>.NewConfig()
+                .Map(dest => dest.QuizAnswerId, src => src.Id)
+                .Map(dest => dest.PersonId, src => src.PersonId)
+                .Map(dest => dest.AskDate, src => src.AskDate)
+                .Map(dest => dest.QuestionId, src => src.QuestionId)
+                .Ignore(dest => dest.Question)
+                .Map(dest => dest.Value, src => src.Value)
+                .Map(dest => dest.UnitId, src => src.UnitId)
+                .Ignore(dest => dest.Unit)
+                .Map(dest => dest.HalfTypeId, src => src.HalfTypeId)
+                .Ignore(dest => dest.HalfType)
+                .Map(dest => dest.Details, src => src.Details);
         }
     }
 }

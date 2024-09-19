@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
@@ -7,7 +6,6 @@ using Microsoft.Extensions.Options;
 using Mihaylov.Api.Site.Contracts.Helpers;
 using Mihaylov.Api.Site.Contracts.Managers;
 using Mihaylov.Api.Site.Contracts.Models;
-using Mihaylov.Api.Site.Contracts.Repositories;
 using Mihaylov.Api.Site.Contracts.Writers;
 using Mihaylov.Api.Site.Data.Models;
 
@@ -17,25 +15,22 @@ namespace Mihaylov.Api.Site.Data.Helpers
     {
         private readonly string url;
 
-        private readonly ICollectionsManager personAdditionalManager;
-        private readonly ICountriesWriter countriesWriter;
-        private readonly IPersonsRepository personsRepository;
-        private readonly IPersonsManager personsManager;
+        private readonly ILogger _logger;
+        private readonly ICollectionManager _collectionManager;
+        private readonly IPersonsManager _personsManager;
         private readonly IPersonsWriter personsWriter;
         private readonly ICsQueryWrapper csQueryWrapper;
-        private readonly ILogger logger;
 
-        public SiteHelper(IOptions<SiteOptions> options, ICountriesWriter countriesWriter,
-            ICollectionsManager personAdditionalManager, ILoggerFactory loggerFactory,
-            IPersonsRepository personsRepository, IPersonsManager personsManager,
+
+        public SiteHelper(IOptions<SiteOptions> options, 
+            ICollectionManager collectionManager, ILoggerFactory loggerFactory,
+            IPersonsManager personsManager,
             IPersonsWriter personsWriter, ICsQueryWrapper csQueryWrapper)
         {
-            this.url = options.Value.SiteUrl;
-            this.personAdditionalManager = personAdditionalManager;
-            this.countriesWriter = countriesWriter;
-            this.logger = loggerFactory.CreateLogger(this.GetType().Name);
-            this.personsRepository = personsRepository;
-            this.personsManager = personsManager;
+            _logger = loggerFactory.CreateLogger(this.GetType().Name);
+            url = options.Value.SiteUrl;
+            _collectionManager = collectionManager;            
+            _personsManager = personsManager;
             this.personsWriter = personsWriter;
             this.csQueryWrapper = csQueryWrapper;
         }
@@ -86,12 +81,12 @@ namespace Mihaylov.Api.Site.Data.Helpers
         {
             try
             {
-                this.logger.LogDebug($"Helper: Get person by name: {username}");
+                _logger.LogDebug($"Helper: Get person by name: {username}");
 
                 Person person = this.csQueryWrapper.GetInfo(this.url, username);
 
-                Ethnicity ethnicityDTO = GetEthnisityType(person.Ethnicity);
-                Orientation orientationDTO = GetOrientationType(person.Orientation);
+                Ethnicity ethnicityDTO = await GetEthnisityTypeAsync(person.Ethnicity).ConfigureAwait(false);
+                Orientation orientationDTO = await GetOrientationType(person.Orientation).ConfigureAwait(false);
                 Country countryDTO = await GetCountry(person.Country).ConfigureAwait(false);
 
                 person.Ethnicity = ethnicityDTO.Name;
@@ -105,14 +100,14 @@ namespace Mihaylov.Api.Site.Data.Helpers
             }
             catch (Exception ex)
             {
-                this.logger.LogError(ex, $"Error in Site helper, username: {username}, url: {this.url}");
+                _logger.LogError(ex, $"Error in Site helper, username: {username}, url: {this.url}");
                 throw;
             }
         }
 
         public async Task<int> UpdatePersonsAsync()
         {
-            var persons = await this.personsRepository.GetAllForUpdateAsync().ConfigureAwait(false);
+            // var persons = await this.personsRepository.GetAllForUpdateAsync().ConfigureAwait(false);
 
             //foreach (var person in persons)
             //{
@@ -141,60 +136,46 @@ namespace Mihaylov.Api.Site.Data.Helpers
             //    await this.personsWriter.AddOrUpdateAsync(person).ConfigureAwait(false);
             //}
 
-            return persons.Count();
-        }
-
-        public IEnumerable<Unit> GetAllUnits()
-        {
-            return this.personAdditionalManager.GetAllUnits();
-        }
-
-        public IEnumerable<AccountStatus> GetAllAnswerTypes()
-        {
-            return this.personAdditionalManager.GetAllAnswerTypes();
-        }
-
-        public string GetSystemUnit()
-        {
-            return this.personAdditionalManager.GetAllUnits()
-                                               .FirstOrDefault(u => u.ConversionRate == 1m)?.Name;
+            return 0; // persons.Count();
         }
 
         public async Task<PersonExtended> GetPersonByNameAsync(string userName)
         {
-            Person person = this.personsManager.GetByName(userName);
+            Person person = this._personsManager.GetByName(userName);
             if (person == null)
             {
                 person = await this.GetUserInfoAsync(userName).ConfigureAwait(false);
             }
 
+            // var units = await personAdditionalManager.GetAllUnitsAsync().ConfigureAwait(false);    
+            var states = await _collectionManager.GetAllAccountStatesAsync().ConfigureAwait(false);
+
             var personExtended = new PersonExtended(person)
             {
-                AnswerUnits = this.GetAllUnits(),
-                AnswerTypes = this.GetAllAnswerTypes()
+                AnswerUnits = null,
+                AnswerTypes = states,
             };
 
             return personExtended;
         }
 
-        #region Private Methods
-
-        private Orientation GetOrientationType(string orientation)
+        private async Task<Orientation> GetOrientationType(string orientation)
         {
             if (string.IsNullOrWhiteSpace(orientation))
             {
-                orientation = "Unknown";
+                return null;
             }
 
-            Orientation orientationDTO = this.personAdditionalManager.GetOrientationByName(orientation);
+            var orientations = await _collectionManager.GetAllOrientationsAsync().ConfigureAwait(false);
+            Orientation orientationDTO = orientations.FirstOrDefault(o => o.Name.Equals(orientation, StringComparison.OrdinalIgnoreCase));
             return orientationDTO;
         }
 
-        private Ethnicity GetEthnisityType(string ethnicity)
+        private async Task<Ethnicity> GetEthnisityTypeAsync(string ethnicity)
         {
             if (string.IsNullOrWhiteSpace(ethnicity))
             {
-                ethnicity = "Unknown";
+                return null;
             }
 
             ethnicity = ethnicity.Replace(" ", string.Empty);
@@ -204,7 +185,9 @@ namespace Mihaylov.Api.Site.Data.Helpers
                 ethnicity = ethnicity.Substring(0, index).Trim();
             }
 
-            Ethnicity ethnisityDTO = this.personAdditionalManager.GetEthnicityByName(ethnicity);
+            var ethnisities = await _collectionManager.GetAllEthnicitiesAsync().ConfigureAwait(false);
+            Ethnicity ethnisityDTO = ethnisities.FirstOrDefault(o => o.Name.Equals(ethnicity, StringComparison.OrdinalIgnoreCase));
+            
             return ethnisityDTO;
         }
 
@@ -212,7 +195,7 @@ namespace Mihaylov.Api.Site.Data.Helpers
         {
             if (string.IsNullOrWhiteSpace(country))
             {
-                country = "Unknown";
+                country = null;
             }
 
             int index = country.LastIndexOf(",");
@@ -221,15 +204,13 @@ namespace Mihaylov.Api.Site.Data.Helpers
                 country = country.Substring(index + 1);
             }
 
-            Country countryDTO = this.personAdditionalManager.GetCountryByName(country);
+            Country countryDTO = await this._collectionManager.GetCountryByNameAsync(country).ConfigureAwait(false);
             if (countryDTO == null)
             {
-                countryDTO = await this.countriesWriter.AddAsync(country);
+                countryDTO = null; // add validation or add to database
             }
 
             return countryDTO;
         }
-
-        #endregion
     }
 }

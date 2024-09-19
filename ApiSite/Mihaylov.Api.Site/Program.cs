@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Mihaylov.Api.Site.Data;
 using Mihaylov.Api.Site.Database;
+using Mihaylov.Api.Site.DAL;
 using Mihaylov.Common.Abstract;
 using Mihaylov.Common.Host;
 using Mihaylov.Common.Host.Abstract.Configurations;
@@ -43,6 +44,13 @@ namespace Mihaylov.Api.Site
             services.AddHttpContextAccessor();
             services.AddMemoryCache();
 
+            services.AddClientJwtAuthentication(null, null, opt =>
+            {
+                opt.Secret = Config.GetEnvironmentVariable("JWT_AUTHENTICATION_SECRET", "abc");
+                opt.Issuer = Config.GetEnvironmentVariable("JWT_ISSUER", string.Empty);
+                opt.Audience = Config.GetEnvironmentVariable("JWT_AUDIENCE", string.Empty);
+            });
+
             services.AddCommon()
                     .AddSiteDatabase(opt =>
                     {
@@ -50,21 +58,13 @@ namespace Mihaylov.Api.Site
                         opt.DatabaseName = Config.GetEnvironmentVariable("DB_Site_Name", "Mihaylov_SiteDb");
                         opt.UserName = Config.GetEnvironmentVariable("DB_Site_UserName", "");
                         opt.Password = Config.GetEnvironmentVariable("DB_Site_Password", "");
+                    })
+                    .MigrateDatabase<SiteDbContext>(c => c.Migrate(), true)
+                    .AddSiteRepositories()
+                    .AddSiteServices(opt =>
+                    {
+                        opt.SiteUrl = Config.GetEnvironmentVariable("Site_SourceUrl");
                     });
-
-            services.MigrateDatabase<SiteDbContext>(c => c.Migrate());
-
-            services.AddSiteServices(opt =>
-            {
-                opt.SiteUrl = Config.GetEnvironmentVariable("Site_SourceUrl");
-            });
-
-            services.AddClientJwtAuthentication(null, null, opt =>
-            {
-                opt.Secret = Config.GetEnvironmentVariable("JWT_AUTHENTICATION_SECRET", "abc");
-                opt.Issuer = Config.GetEnvironmentVariable("JWT_ISSUER", string.Empty);
-                opt.Audience = Config.GetEnvironmentVariable("JWT_AUDIENCE", string.Empty);
-            });
         }
 
         private static void Configure(WebApplication app)

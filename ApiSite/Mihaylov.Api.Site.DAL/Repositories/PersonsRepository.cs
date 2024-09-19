@@ -7,9 +7,9 @@ using Mihaylov.Api.Site.Contracts.Models;
 using Mihaylov.Api.Site.Contracts.Repositories;
 using Mihaylov.Api.Site.Database;
 using Mihaylov.Common.Mapping;
-using DAL = Mihaylov.Api.Site.Database.Models;
+using DB = Mihaylov.Api.Site.Database.Models;
 
-namespace Mihaylov.Api.Site.Data.Repositories
+namespace Mihaylov.Api.Site.DAL.Repositories
 {
     public class PersonsRepository : IPersonsRepository
     {
@@ -91,10 +91,10 @@ namespace Mihaylov.Api.Site.Data.Repositories
 
         public async Task<Person> AddOrUpdatePersonAsync(Person inputPerson)
         {
-            DAL.Person person;
+            DB.Person person;
             if (inputPerson.Id == 0)
             {
-                person = new DAL.Person();
+                person = new DB.Person();
                 this._context.Persons.Add(person);
             }
             else

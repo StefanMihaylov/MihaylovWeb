@@ -3,8 +3,8 @@ using Mihaylov.Api.Site.Contracts.Models;
 
 namespace Mihaylov.Api.Site.Contracts.Writers
 {
-    public interface IPhrasesWriter
+    public interface ICollectionWriter
     {
-        Task<QuizPhrase> AddOrUpdateAsync(QuizPhrase inputPhrase);
+        Task<AccountType> AddAccountTypeAsync(AccountType imput);
     }
 }

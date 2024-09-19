@@ -12,22 +12,19 @@ namespace Mihaylov.Api.Site.Data.Managers
 {
     public class PersonsManager : IPersonsManager
     {
-        private readonly IPersonsRepository repository;
-        private readonly ILogger logger;
+        private readonly IPersonsRepository _repository;
+        private readonly ILogger _logger;
 
         private readonly ConcurrentDictionary<long, Person> personsById;
         private readonly ConcurrentDictionary<string, Person> personsByName;
 
         public PersonsManager(IPersonsRepository personsRepository, ILoggerFactory loggerFactory)
         {
-            this.repository = personsRepository;
-            this.logger = loggerFactory.CreateLogger(this.GetType().Name);
-            // this.messageBus = messageBus;
+            this._repository = personsRepository;
+            this._logger = loggerFactory.CreateLogger(this.GetType().Name);
 
             this.personsById = new ConcurrentDictionary<long, Person>();
             this.personsByName = new ConcurrentDictionary<string, Person>(StringComparer.OrdinalIgnoreCase);
-
-            //this.messageBus.Attach(typeof(Person), this.HandleMessage);
         }
 
         public async Task<IEnumerable<Person>> GetAllPersonsAsync(bool descOrder = false, int? pageNumber = null, int? pageSize = null)
@@ -40,7 +37,7 @@ namespace Mihaylov.Api.Site.Data.Managers
 
                 if (persons.Count() < pageSize.Value)
                 {
-                    IEnumerable<Person> dbPersons = await this.repository.Search(descOrder, pageNumber, pageSize).ConfigureAwait(false);
+                    IEnumerable<Person> dbPersons = await this._repository.Search(descOrder, pageNumber, pageSize).ConfigureAwait(false);
                     foreach (var dbPerson in dbPersons)
                     {
                       //  this.personsByName.TryAdd(dbPerson.Username, dbPerson);
@@ -57,7 +54,7 @@ namespace Mihaylov.Api.Site.Data.Managers
         {
             Person person = this.personsById.GetOrAdd(id, (newId) =>
             {
-                Person newPerson = this.repository.GetByIdAsync(newId).ConfigureAwait(false).GetAwaiter().GetResult();
+                Person newPerson = this._repository.GetByIdAsync(newId).ConfigureAwait(false).GetAwaiter().GetResult();
                 if (newPerson == null)
                 {
                     throw new ApplicationException($"Person with Id: {newId} was not found");
@@ -81,7 +78,7 @@ namespace Mihaylov.Api.Site.Data.Managers
                 string key = name.Trim();
                 Person person = this.personsByName.GetOrAdd(key, (newName) =>
                 {
-                    Person newPerson = this.repository.GetByAccoutUserNameAsync(newName).ConfigureAwait(false).GetAwaiter().GetResult();
+                    Person newPerson = this._repository.GetByAccoutUserNameAsync(newName).ConfigureAwait(false).GetAwaiter().GetResult();
                     if (newPerson == null)
                     {
                         throw new ApplicationException($"Person with name: {newName} was not found");
@@ -94,19 +91,19 @@ namespace Mihaylov.Api.Site.Data.Managers
             }
             catch (ApplicationException)
             {
-                this.logger.LogError($"Person with name '{name}' not found.");
+                this._logger.LogError($"Person with name '{name}' not found.");
                 return null;
             }
             catch (Exception ex)
             {
-                this.logger.LogError(ex, $"Error in getting the person by name '{name}'");
+                this._logger.LogError(ex, $"Error in getting the person by name '{name}'");
                 return null;
             }
         }
 
         public async Task<PersonStatistics> GetStaticticsAsync()
         {
-            PersonStatistics statistics = await this.repository.GetStaticticsAsync().ConfigureAwait(false);
+            PersonStatistics statistics = await this._repository.GetStaticticsAsync().ConfigureAwait(false);
             return statistics;
         }
 

@@ -12,12 +12,6 @@ namespace Mihaylov.Api.Site.Contracts.Helpers
 
         void AddAdditionalInfo(Person person);
 
-        IEnumerable<Unit> GetAllUnits();
-
-        IEnumerable<AccountStatus> GetAllAnswerTypes();
-
-        string GetSystemUnit();
-
         Task<int> UpdatePersonsAsync();
 
         Task<PersonExtended> GetPersonByNameAsync(string userName);

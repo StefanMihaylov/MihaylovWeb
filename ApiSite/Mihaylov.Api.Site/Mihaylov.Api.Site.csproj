@@ -33,6 +33,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Common\Mihaylov.Common.Host\Mihaylov.Common.Host.csproj" />
+    <ProjectReference Include="..\Mihaylov.Api.Site.DAL\Mihaylov.Api.Site.DAL.csproj" />
     <ProjectReference Include="..\Mihaylov.Api.Site.Data\Mihaylov.Api.Site.Data.csproj" />
   </ItemGroup>
 

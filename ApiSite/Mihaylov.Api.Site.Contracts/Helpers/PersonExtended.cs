@@ -14,7 +14,7 @@ namespace Mihaylov.Api.Site.Contracts.Helpers
         {
         }
 
-        public IEnumerable<Unit> AnswerUnits { get; set; }
+        public IEnumerable<UnitShort> AnswerUnits { get; set; }
 
         public IEnumerable<AccountStatus> AnswerTypes { get; set; }
     }
