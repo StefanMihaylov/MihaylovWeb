@@ -39,5 +39,12 @@ namespace Mihaylov.Api.Site.Database.Models
         public IEnumerable<Account> Accounts { get; set; }
 
         public IEnumerable<QuizAnswer> Answers { get; set; }
+
+
+        public Person()
+        {
+            Accounts = new List<Account>();
+            Answers = new List<QuizAnswer>();
+        }
     }
 }

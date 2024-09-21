@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -7,6 +6,7 @@ using Microsoft.Extensions.Logging;
 using Mihaylov.Api.Site.Contracts.Repositories;
 using Mihaylov.Api.Site.Contracts.Managers;
 using Mihaylov.Api.Site.Contracts.Models;
+using Mihaylov.Api.Site.Contracts.Models.Base;
 
 namespace Mihaylov.Api.Site.Data.Managers
 {
@@ -15,135 +15,73 @@ namespace Mihaylov.Api.Site.Data.Managers
         private readonly IPersonsRepository _repository;
         private readonly ILogger _logger;
 
-        private readonly ConcurrentDictionary<long, Person> personsById;
-        private readonly ConcurrentDictionary<string, Person> personsByName;
-
         public PersonsManager(IPersonsRepository personsRepository, ILoggerFactory loggerFactory)
         {
-            this._repository = personsRepository;
-            this._logger = loggerFactory.CreateLogger(this.GetType().Name);
-
-            this.personsById = new ConcurrentDictionary<long, Person>();
-            this.personsByName = new ConcurrentDictionary<string, Person>(StringComparer.OrdinalIgnoreCase);
+            _logger = loggerFactory.CreateLogger(this.GetType().Name);
+            _repository = personsRepository;
         }
 
-        public async Task<IEnumerable<Person>> GetAllPersonsAsync(bool descOrder = false, int? pageNumber = null, int? pageSize = null)
+        public Task<Grid<Person>> GetAllPersonsAsync(GridRequest request)
         {
-            IEnumerable<Person> persons = this.personsByName.Values;
-
-            if (pageSize.HasValue && pageNumber.HasValue)
-            {
-                persons = this.FilterPage(persons, descOrder, pageNumber, pageSize);
-
-                if (persons.Count() < pageSize.Value)
-                {
-                    IEnumerable<Person> dbPersons = await this._repository.Search(descOrder, pageNumber, pageSize).ConfigureAwait(false);
-                    foreach (var dbPerson in dbPersons)
-                    {
-                      //  this.personsByName.TryAdd(dbPerson.Username, dbPerson);
-                    }
-
-                    persons = this.FilterPage(this.personsByName.Values, descOrder, pageNumber, pageSize);
-                }
-            }
-
+            var persons = _repository.GetAllPersonsAsync(request);
             return persons;
         }
 
-        public Person GetById(long id)
-        {
-            Person person = this.personsById.GetOrAdd(id, (newId) =>
-            {
-                Person newPerson = this._repository.GetByIdAsync(newId).ConfigureAwait(false).GetAwaiter().GetResult();
-                if (newPerson == null)
-                {
-                    throw new ApplicationException($"Person with Id: {newId} was not found");
-                }
-
-                return newPerson;
-            });
-
-            return person;
-        }
-
-        public Person GetByName(string name)
-        {
-            if (string.IsNullOrWhiteSpace(name))
-            {
-                return null;
-            }
-
-            try
-            {
-                string key = name.Trim();
-                Person person = this.personsByName.GetOrAdd(key, (newName) =>
-                {
-                    Person newPerson = this._repository.GetByAccoutUserNameAsync(newName).ConfigureAwait(false).GetAwaiter().GetResult();
-                    if (newPerson == null)
-                    {
-                        throw new ApplicationException($"Person with name: {newName} was not found");
-                    }
-
-                    return newPerson;
-                });
-
-                return person;
-            }
-            catch (ApplicationException)
-            {
-                this._logger.LogError($"Person with name '{name}' not found.");
-                return null;
-            }
-            catch (Exception ex)
-            {
-                this._logger.LogError(ex, $"Error in getting the person by name '{name}'");
-                return null;
-            }
-        }
-
-        public async Task<PersonStatistics> GetStaticticsAsync()
-        {
-            PersonStatistics statistics = await this._repository.GetStaticticsAsync().ConfigureAwait(false);
-            return statistics;
-        }
-
-        private IEnumerable<Person> FilterPage(IEnumerable<Person> persons, bool descOrder, int? pageNumber, int? pageSize)
-        {
-            throw new NotImplementedException();
-
-            //int skipCount = pageNumber.Value * pageSize.Value;
-
-            //if (descOrder)
-            //{
-            //    return persons.OrderByDescending(p => p.AskDate).Skip(skipCount).Take(pageSize.Value);
-            //}
-            //else
-            //{
-            //    return persons.OrderBy(p => p.AskDate).Skip(skipCount).Take(pageSize.Value);
-            //}
-        }
-
-        //private void HandleMessage(Message message)
+        //public Person GetById(long id)
         //{
-        //    if (message == null)
+        //    Person person = this.personsById.GetOrAdd(id, (newId) =>
         //    {
-        //        return;
-        //    }
-
-        //    if (message.Data is Person person)
-        //    {
-        //        if (message.ActionType == MessageActionType.Add ||
-        //           (message.ActionType == MessageActionType.Update && this.personsById.ContainsKey(person.Id)))
+        //        Person newPerson = this._repository.GetByIdAsync(newId).ConfigureAwait(false).GetAwaiter().GetResult();
+        //        if (newPerson == null)
         //        {
-        //            this.personsById.AddOrUpdate(person.Id, (id) => person, (updateId, existingPerson) => person);
+        //            throw new ApplicationException($"Person with Id: {newId} was not found");
         //        }
 
-        //        if (message.ActionType == MessageActionType.Add ||
-        //           (message.ActionType == MessageActionType.Update && this.personsByName.ContainsKey(person.Username)))
-        //        {
-        //            this.personsByName.AddOrUpdate(person.Username, (id) => person, (updateId, existingPerson) => person);
-        //        }
+        //        return newPerson;
+        //    });
+
+        //    return person;
+        //}
+
+        //public Person GetByName(string name)
+        //{
+        //    if (string.IsNullOrWhiteSpace(name))
+        //    {
+        //        return null;
         //    }
+
+        //    try
+        //    {
+        //        string key = name.Trim();
+        //        Person person = this.personsByName.GetOrAdd(key, (newName) =>
+        //        {
+        //            Person newPerson = this._repository.GetByAccoutUserNameAsync(newName).ConfigureAwait(false).GetAwaiter().GetResult();
+        //            if (newPerson == null)
+        //            {
+        //                throw new ApplicationException($"Person with name: {newName} was not found");
+        //            }
+
+        //            return newPerson;
+        //        });
+
+        //        return person;
+        //    }
+        //    catch (ApplicationException)
+        //    {
+        //        this._logger.LogError($"Person with name '{name}' not found.");
+        //        return null;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        this._logger.LogError(ex, $"Error in getting the person by name '{name}'");
+        //        return null;
+        //    }
+        //}
+
+        //public async Task<PersonStatistics> GetStaticticsAsync()
+        //{
+        //    PersonStatistics statistics = await this._repository.GetStaticticsAsync().ConfigureAwait(false);
+        //    return statistics;
         //}
     }
 }

@@ -2,8 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Mapster;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Mihaylov.Api.Site.Contracts.Models;
+using Mihaylov.Api.Site.Contracts.Models.Base;
 using Mihaylov.Api.Site.Contracts.Repositories;
 using Mihaylov.Api.Site.Database;
 using Mihaylov.Common.Mapping;
@@ -13,45 +16,85 @@ namespace Mihaylov.Api.Site.DAL.Repositories
 {
     public class PersonsRepository : IPersonsRepository
     {
+        private readonly ILogger _logger;
         private readonly SiteDbContext _context;
 
-        public PersonsRepository(SiteDbContext context)
+        public PersonsRepository(ILoggerFactory loggerFactory, SiteDbContext context)
         {
+            _logger = loggerFactory.CreateLogger(this.GetType().Name);
             _context = context;
         }
 
-        public async Task<IEnumerable<Person>> GetAllAsync()
+        public async Task<Grid<Person>> GetAllPersonsAsync(GridRequest request)
         {
-            var persons = await this._context.Persons
-                                             .To<Person>()
-                                             .ToListAsync()
-                                             .ConfigureAwait(false);
-            return persons;
-        }
-
-        public async Task<IEnumerable<Person>> Search(bool descOrder = false, int? pageNumber = null, int? pageSize = null)
-        {
-            var query = this._context.Persons.AsQueryable();
-
-            //if (descOrder)
-            //{
-            //    query = query.OrderByDescending(p => p.AskDate);
-            //}
-            //else
-            //{
-            //    query = query.OrderBy(p => p.AskDate);
-            //}
-
-            if (pageNumber.HasValue && pageSize.HasValue)
+            try
             {
-                int skipCount = pageSize.Value * pageNumber.Value;
-                query = query.Skip(skipCount).Take(pageSize.Value);
-            }
+                var query = _context.Persons.AsNoTracking()
+                                        .Include(c => c.Details)
+                                        .Include(c => c.Location)
+                                            .ThenInclude(s => s.CountryState)
+                                        .Include(c => c.Ethnicity)
+                                        .Include(c => c.Orientation)
+                                        .Include(c => c.Country)
+                                        .Include(c => c.Accounts)
+                                            .ThenInclude(a => a.AccountType)
+                                        .Include(c => c.Accounts)
+                                            .ThenInclude(a => a.Status)
+                                        .Select(p => new
+                                        {
+                                            Person = p,
+                                            FullName = p.Details != null ? $"{p.Details.FirstName} {p.Details.MiddleName} {p.Details.LastName}" : null,
+                                        })
+                                        .OrderByDescending(c => c.Person.CreatedOn)
+                                        .AsQueryable();
 
-            IEnumerable<Person> persons = await query.To<Person>()
-                                                     .ToListAsync()
-                                                     .ConfigureAwait(false);
-            return persons;
+                if (request.AccountTypeId.HasValue)
+                {
+                    query = query.Where(p => p.Person.Accounts.Any(a => a.AccountTypeId == request.AccountTypeId));
+                }
+
+                if (request.AccountStatusId.HasValue)
+                {
+                    query = query.Where(p => p.Person.Accounts.Any(a => a.StatusId == request.AccountStatusId));
+                }
+
+                if (!string.IsNullOrWhiteSpace(request.Name))
+                {
+                    query = query.Where(p => p.FullName.Contains(request.Name));
+                }
+
+                if (!string.IsNullOrWhiteSpace(request.AccountName))
+                {
+                    query = query.Where(p => p.Person.Accounts.Any(a => a.Username.Contains(request.Name)));
+                }
+
+                var count = await query.CountAsync().ConfigureAwait(false);
+
+                if (request.Page.HasValue && request.PageSize.HasValue)
+                {
+                    query = query.Skip((request.Page.Value - 1) * request.PageSize.Value)
+                                 .Take(request.PageSize.Value)
+                                 .AsQueryable();
+                }
+
+                var persons = await query.Select(p => p.Person)
+                                         .ProjectToType<Person>()
+                                         .ToListAsync()
+                                         .ConfigureAwait(false);
+
+                var result = new Grid<Person>()
+                {
+                    Data = persons,
+                    Pager = new Pager(request, count),
+                };
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Error in getting all Persons. Error: {Message}", ex.Message);
+                throw;
+            }
         }
 
         public async Task<IEnumerable<Person>> GetAllForUpdateAsync()
@@ -106,7 +149,7 @@ namespace Mihaylov.Api.Site.DAL.Repositories
 
             // inputPerson.Update(person);
 
-           // await this._context.SaveChangesAsync().ConfigureAwait(false);
+            // await this._context.SaveChangesAsync().ConfigureAwait(false);
 
             Person personDTO = await this.GetByIdAsync(person.PersonId);
             return personDTO;

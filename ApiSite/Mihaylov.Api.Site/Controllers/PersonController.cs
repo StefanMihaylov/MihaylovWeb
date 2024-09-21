@@ -3,6 +3,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Mihaylov.Api.Site.Contracts.Managers;
+using Mihaylov.Api.Site.Contracts.Models;
+using Mihaylov.Api.Site.Contracts.Models.Base;
 using Mihaylov.Api.Site.Extensions;
 
 namespace Mihaylov.Api.Site.Controllers
@@ -16,19 +18,20 @@ namespace Mihaylov.Api.Site.Controllers
     [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
     public class PersonController : ControllerBase
     {
-        private readonly ICollectionManager _additionalInfo;
+        private readonly IPersonsManager _managwr;
 
-        public PersonController(ICollectionManager additionalInfo)
+        public PersonController(IPersonsManager manager)
         {
-            _additionalInfo = additionalInfo;
+            _managwr = manager;
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAccountTypes()
+        [ProducesResponseType(typeof(Grid<Person>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> Persons([FromQuery]GridRequest request)
         {
-            var accountTypes = await _additionalInfo.GetAllAccountTypesAsync();
+            Grid<Person> persons = await _managwr.GetAllPersonsAsync(request).ConfigureAwait(false);
 
-            return Ok(accountTypes);
+            return Ok(persons);
         }
     }
 }

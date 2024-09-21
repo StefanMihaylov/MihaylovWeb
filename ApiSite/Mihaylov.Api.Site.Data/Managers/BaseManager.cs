@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
-using Mihaylov.Common.Validations;
 
 namespace Mihaylov.Api.Site.Data.Managers
 {
@@ -18,8 +17,8 @@ namespace Mihaylov.Api.Site.Data.Managers
 
         public BaseManager(ILoggerFactory loggerFactory, IMemoryCache memoryCache)
         {
-            ParameterValidation.IsNotNull(loggerFactory, nameof(loggerFactory));
-            ParameterValidation.IsNotNull(memoryCache, nameof(memoryCache));
+          //  ParameterValidation.IsNotNull(loggerFactory, nameof(loggerFactory));
+          //  ParameterValidation.IsNotNull(memoryCache, nameof(memoryCache));
 
             _managerName = this.GetType().Name;
             _logger = loggerFactory.CreateLogger(_managerName);

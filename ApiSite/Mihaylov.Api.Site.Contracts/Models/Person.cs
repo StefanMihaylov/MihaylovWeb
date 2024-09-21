@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Mihaylov.Api.Site.Contracts.Models
 {
@@ -14,8 +15,6 @@ namespace Mihaylov.Api.Site.Contracts.Models
         public DateTime? DateOfBirth { get; set; }
 
         public DateOfBirthType? DateOfBirthType { get; set; }
-
-        public int? Age { get; set; }
 
         public int? CountryId { get; set; }
 
@@ -33,6 +32,16 @@ namespace Mihaylov.Api.Site.Contracts.Models
 
 
         public string Comments { get; set; }
+
+        public IEnumerable<Account> Accounts { get; set; }
+
+        public int AnswersCount { get; set; }
+
+
+        public Person()
+        {
+            Accounts = new List<Account>();
+        }
 
 
         //public void Update(DAL.Person person)

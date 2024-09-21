@@ -10,7 +10,15 @@ namespace Mihaylov.Api.Site.Contracts.Models
 
         public long Id { get; set; }
 
-        public AccountType AccountType { get; set; }
+        public long? PersonId { get; set; }
+
+        public int AccountTypeId { get; set; }
+
+        public string AccountType { get; set; }
+
+        public int StatusId { get; set; }
+
+        public string Status { get; set; }
 
         public string Username { get; set; }
 
@@ -18,9 +26,11 @@ namespace Mihaylov.Api.Site.Contracts.Models
 
         public DateTime? CreateDate { get; set; }
 
-        public DateTime LastOnlineDate { get; set; }
+        public DateTime? LastOnlineDate { get; set; }
 
-        public bool IsAccountDisabled { get; set; }
+        public DateTime? ReconciledDate { get; set; }
+
+        public string Details { get; set; }
 
 
         //public DateTime? AskDate { get; set; }

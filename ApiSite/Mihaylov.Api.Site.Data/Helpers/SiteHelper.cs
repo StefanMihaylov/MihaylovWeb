@@ -139,25 +139,25 @@ namespace Mihaylov.Api.Site.Data.Helpers
             return 0; // persons.Count();
         }
 
-        public async Task<PersonExtended> GetPersonByNameAsync(string userName)
-        {
-            Person person = this._personsManager.GetByName(userName);
-            if (person == null)
-            {
-                person = await this.GetUserInfoAsync(userName).ConfigureAwait(false);
-            }
+        //public async Task<PersonExtended> GetPersonByNameAsync(string userName)
+        //{
+        //    Person person = this._personsManager.GetByName(userName);
+        //    if (person == null)
+        //    {
+        //        person = await this.GetUserInfoAsync(userName).ConfigureAwait(false);
+        //    }
 
-            // var units = await personAdditionalManager.GetAllUnitsAsync().ConfigureAwait(false);    
-            var states = await _collectionManager.GetAllAccountStatesAsync().ConfigureAwait(false);
+        //    // var units = await personAdditionalManager.GetAllUnitsAsync().ConfigureAwait(false);    
+        //    var states = await _collectionManager.GetAllAccountStatesAsync().ConfigureAwait(false);
 
-            var personExtended = new PersonExtended(person)
-            {
-                AnswerUnits = null,
-                AnswerTypes = states,
-            };
+        //    var personExtended = new PersonExtended(person)
+        //    {
+        //        AnswerUnits = null,
+        //        AnswerTypes = states,
+        //    };
 
-            return personExtended;
-        }
+        //    return personExtended;
+        //}
 
         private async Task<Orientation> GetOrientationType(string orientation)
         {

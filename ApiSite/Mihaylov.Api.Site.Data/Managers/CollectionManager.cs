@@ -5,7 +5,6 @@ using Microsoft.Extensions.Logging;
 using Mihaylov.Api.Site.Contracts.Managers;
 using Mihaylov.Api.Site.Contracts.Models;
 using Mihaylov.Api.Site.Contracts.Repositories;
-using Mihaylov.Common.Validations;
 
 namespace Mihaylov.Api.Site.Data.Managers
 {
@@ -17,7 +16,7 @@ namespace Mihaylov.Api.Site.Data.Managers
             ICollectionRepository repository) 
             : base(loggerFactory, memoryCache)
         {
-            ParameterValidation.IsNotNull(repository, nameof(repository));
+           // ParameterValidation.IsNotNull(repository, nameof(repository));
 
             _repository = repository;
         }

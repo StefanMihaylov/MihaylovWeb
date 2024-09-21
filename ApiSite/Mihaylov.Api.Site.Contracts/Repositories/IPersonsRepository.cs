@@ -2,14 +2,13 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Mihaylov.Api.Site.Contracts.Models;
+using Mihaylov.Api.Site.Contracts.Models.Base;
 
 namespace Mihaylov.Api.Site.Contracts.Repositories
 {
     public interface IPersonsRepository
     {
-        Task<IEnumerable<Person>> Search(bool descOrder = false, int? pageNumber = null, int? pageSize = null);
-
-        Task<IEnumerable<Person>> GetAllAsync();
+        Task<Grid<Person>> GetAllPersonsAsync(GridRequest request);
 
         Task<IEnumerable<Person>> GetAllForUpdateAsync();
 

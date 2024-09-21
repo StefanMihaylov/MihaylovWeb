@@ -33,7 +33,7 @@ namespace Mihaylov.Api.Site.Extensions
             if (exception is ArgumentException || exception is ArgumentNullException)
             {
                 var argException = exception as ArgumentException;
-                modelState.AddModelError(argException.ParamName, argException.Message);
+                modelState.AddModelError(argException.ParamName ?? string.Empty, argException.Message);
             }
             else
             {

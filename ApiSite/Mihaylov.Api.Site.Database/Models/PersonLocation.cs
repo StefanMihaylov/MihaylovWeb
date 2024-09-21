@@ -6,7 +6,7 @@
 
         public int? CountryStateId { get; set; }
 
-        public virtual CountryState CountryState { get; set; }
+        public CountryState CountryState { get; set; }
 
         public string Region { get; set; }
 

@@ -14,6 +14,6 @@ namespace Mihaylov.Api.Site.Contracts.Helpers
 
         Task<int> UpdatePersonsAsync();
 
-        Task<PersonExtended> GetPersonByNameAsync(string userName);
+       // Task<PersonExtended> GetPersonByNameAsync(string userName);
     }
 }

@@ -1,4 +1,6 @@
-﻿using Mapster;
+﻿using System.Collections.Generic;
+using System.Linq;
+using Mapster;
 using Microsoft.Extensions.DependencyInjection;
 using Mihaylov.Api.Site.Contracts.Models;
 using Db = Mihaylov.Api.Site.Database.Models;
@@ -107,6 +109,55 @@ namespace Mihaylov.Api.Site.DAL
                 .Ignore(dest => dest.Unit)
                 .Map(dest => dest.HalfTypeId, src => src.HalfTypeId)
                 .Ignore(dest => dest.HalfType)
+                .Map(dest => dest.Details, src => src.Details);
+
+            TypeAdapterConfig<Db.PersonDetail, PersonDetail>.NewConfig()
+                .Map(dest => dest.Id, src => src.PersonId)
+                .Map(dest => dest.FirstName, src => src.FirstName)
+                .Map(dest => dest.MiddleName, src => src.MiddleName)
+                .Map(dest => dest.LastName, src => src.LastName)
+                .Map(dest => dest.OtherNames, src => src.OtherNames)
+                .TwoWays();
+
+            TypeAdapterConfig<Db.PersonLocation, PersonLocation>.NewConfig()
+                .Map(dest => dest.Id, src => src.PersonId)
+                .Map(dest => dest.CountryStateId, src => src.CountryStateId)
+                .Map(dest => dest.CountryState, src => src.CountryState.Name)
+                .Map(dest => dest.City, src => src.City)
+                .Map(dest => dest.Region, src => src.Region)
+                .Map(dest => dest.Details, src => src.Details)
+                .TwoWays();
+
+            TypeAdapterConfig<Db.Person, Person>.NewConfig()
+                .Map(dest => dest.Id, src => src.PersonId)
+                .Map(dest => dest.EthnicityId, src => src.EthnicityId)
+                .Map(dest => dest.Ethnicity, src => src.Ethnicity.Name)
+                .Map(dest => dest.OrientationId, src => src.OrientationId)
+                .Map(dest => dest.Orientation, src => src.Orientation.Name)
+                .Map(dest => dest.CountryId, src => src.CountryId)
+                .Map(dest => dest.Country, src => src.Country.Name)
+                .Map(dest => dest.Comments, src => src.Comments)
+                .Map(dest => dest.DateOfBirth, src => src.DateOfBirth)
+                .Map(dest => dest.DateOfBirthType, src => (DateOfBirthType)src.DateOfBirthId)
+                .Map(dest => dest.Accounts, src => src.Accounts.AsQueryable()
+                                                               .OrderBy(a => a.CreatedOn)
+                                                               .Adapt<IEnumerable<Account>>())
+                .Map(dest => dest.Detais, src => src.Details.Adapt<PersonDetail>())
+                .Map(dest => dest.Location, src => src.Location.Adapt<PersonLocation>())
+                .Map(dest => dest.AnswersCount, src => src.Answers.AsQueryable().Count());
+
+            TypeAdapterConfig<Db.Account, Account>.NewConfig()
+                .Map(dest => dest.Id, src => src.AccountId)
+                .Map(dest => dest.PersonId, src => src.PersonId)
+                .Map(dest => dest.StatusId, src => src.StatusId)
+                .Map(dest => dest.Status, src => src.Status.Name)
+                .Map(dest => dest.AccountTypeId, src => src.AccountTypeId)
+                .Map(dest => dest.AccountType, src => src.AccountType.Name)
+                .Map(dest => dest.Username, src => src.Username)
+                .Map(dest => dest.DisplayName, src => src.DisplayName)
+                .Map(dest => dest.CreateDate, src => src.CreateDate)
+                .Map(dest => dest.LastOnlineDate, src => src.LastOnlineDate)
+                .Map(dest => dest.ReconciledDate, src => src.ReconciledDate)
                 .Map(dest => dest.Details, src => src.Details);
         }
     }
