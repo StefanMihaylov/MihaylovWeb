@@ -3,7 +3,7 @@ using Mihaylov.Api.Site.Contracts.Models;
 
 namespace Mihaylov.Api.Site.Models
 {
-    public class QuizQuestionModel
+    public class AddQuizQuestionModel
     {
         public int? Id { get; set; }
 

@@ -94,6 +94,8 @@ namespace Mihaylov.Api.Site.DAL
                 .Map(dest => dest.Value, src => src.Value)
                 .Map(dest => dest.UnitId, src => src.UnitId)
                 .Map(dest => dest.Unit, src => src.Unit.Name)
+                .Map(dest => dest.ConvertedValue, src => src.Value * src.Unit.ConversionRate)
+                .Map(dest => dest.ConvertedUnit, src => src.Unit.BaseUnit.Name)
                 .Map(dest => dest.HalfTypeId, src => src.HalfTypeId)
                 .Map(dest => dest.HalfType, src => src.HalfType.Name)
                 .Map(dest => dest.Details, src => src.Details);
@@ -155,6 +157,7 @@ namespace Mihaylov.Api.Site.DAL
                 .Map(dest => dest.AccountType, src => src.AccountType.Name)
                 .Map(dest => dest.Username, src => src.Username)
                 .Map(dest => dest.DisplayName, src => src.DisplayName)
+                .Map(dest => dest.AskDate, src => src.CreatedOn)
                 .Map(dest => dest.CreateDate, src => src.CreateDate)
                 .Map(dest => dest.LastOnlineDate, src => src.LastOnlineDate)
                 .Map(dest => dest.ReconciledDate, src => src.ReconciledDate)

@@ -43,7 +43,6 @@ namespace Mihaylov.Api.Site.Contracts.Models
             Accounts = new List<Account>();
         }
 
-
         //public void Update(DAL.Person person)
         //{
         //    //person.Username = this.Username;
@@ -73,26 +72,6 @@ namespace Mihaylov.Api.Site.Contracts.Models
         //        .ForMember(x => x.Orientation, opt => opt.MapFrom(m => m.OrientationType.Description));
         //    //.ForMember(x => x.AnswerType, opt => opt.MapFrom(m => m.AnswerType.Description))
         //    //.ForMember(x => x.AnswerUnit, opt => opt.MapFrom(m => m.AnswerUnitType.Name));
-        //}
-
-        //public string AnswerDisplay
-        //{
-        //    get
-        //    {
-        //        if (!this.Answer.HasValue || !this.AnswerConverted.HasValue)
-        //        {
-        //            return string.Empty;
-        //        }
-
-        //        if (this.Answer.Value == this.AnswerConverted.Value)
-        //        {
-        //            return $"{this.AnswerConverted.Value} {this.AnswerUnit}";
-        //        }
-        //        else
-        //        {
-        //            return $"{this.Answer.Value} {this.AnswerUnit} ({this.AnswerConverted.Value} {this.AnswerConvertedUnit})";
-        //        }
-        //    }
         //}
     }
 }

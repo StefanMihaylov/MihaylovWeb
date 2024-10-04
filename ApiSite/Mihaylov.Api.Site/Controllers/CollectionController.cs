@@ -7,10 +7,12 @@ using Mihaylov.Api.Site.Contracts.Models;
 using Mihaylov.Api.Site.Contracts.Writers;
 using Mihaylov.Api.Site.Extensions;
 using Mihaylov.Api.Site.Models;
+using Mihaylov.Common.Host.Authorization;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace Mihaylov.Api.Site.Controllers
 {
-    //[JwtAuthorize(Roles = UserConstants.AdminRole)]
+    [JwtAuthorize(Roles = UserConstants.AdminRole)]
     [Route("api/[controller]/[action]")]
     [ApiController]
     [TypeFilter(typeof(ErrorFilter))]
@@ -78,8 +80,9 @@ namespace Mihaylov.Api.Site.Controllers
         }
 
         [HttpPost]
+        [SwaggerOperation(OperationId = "AddAccountType")]
         [ProducesResponseType(typeof(AccountType), StatusCodes.Status200OK)]
-        public async Task<IActionResult> AccountType(AccountTypeModel input)
+        public async Task<IActionResult> AccountType(AddAccountTypeModel input)
         {
             var model = new AccountType()
             {

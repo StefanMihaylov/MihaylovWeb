@@ -1,0 +1,80 @@
+﻿@using Mihaylov.Api.Site.Client;
+@using Mihaylov.Web.Helpers
+@model PersonGrid
+
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>@Html.LabelFor(m => m.Data.First().Detais.FullName)</th>
+            <th>@Html.LabelFor(m => m.Data.First().Age)</th>
+            <th>@Html.LabelFor(m => m.Data.First().Country)</th>
+            <th>@Html.LabelFor(m => m.Data.First().Orientation)</th>
+            <th>@Html.LabelFor(m => m.Data.First().Comments)</th>
+            <th>@Html.LabelFor(m => m.Data.First().Accounts.First().AccountType, "Type")</th>
+            <th>@Html.LabelFor(m => m.Data.First().Accounts.First().Username)</th>
+            <th>@Html.LabelFor(m => m.Data.First().Accounts.First().Status)</th>
+            <th>@Html.LabelFor(m => m.Data.First().Accounts.First().AskDate)</th>
+            <th>@Html.LabelFor(m => m.Data.First().AnswersCount, "Answers")</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var person in Model.Data)
+        {
+            <tr>
+                <td>@person.Detais?.FullName</td>
+                <td>@person.Age</td>
+                <td>@person.Country</td>
+                <td>@person.Orientation</td>
+                <td>
+                    @if (person.Comments?.Length > 12)
+                    {
+                        var message = $"-- {person.Comments.Length} long --";
+                        @message
+                    }
+                    else
+                    {
+                        @person.Comments
+                    }
+                </td>
+                <td>@person.Accounts.First().AccountType</td>
+                <td>@person.Accounts.First().Username</td>
+                <td>@person.Accounts.First().Status</td>
+                <td>@person.Accounts.First().AskDate.ToString(ViewConstants.DateTimeFormatSimple)</td>
+                <td>
+                    @if (person.AnswersCount > 0)
+                    {
+                        @person.AnswersCount
+                    }
+                </td>
+                <td>
+                    <span class="btn btn-secondary edit-info-button" data-id="@person.Id">Edit</span>
+                </td>
+            </tr>
+
+            var accounts = person.Accounts.ToArray();
+            for (int i = 1; i < accounts.Length; i++)
+            {
+                var account = accounts[i];
+
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td>@account.AccountType</td>
+                    <td>@account.Username</td>
+                    <td>@account.Status</td>
+                    <td>@account.AskDate.ToString(ViewConstants.DateTimeFormatSimple) </td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            }
+        }
+    </tbody>
+    <tfoot>
+    </tfoot>
+</table>
+
+@await Html.PartialAsync("_Pager", Model.Pager)

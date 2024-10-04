@@ -1,0 +1,43 @@
+﻿@using Mihaylov.Api.Site.Client
+@model PersonStatistics
+
+<table class="table table-bordered table-striped">
+    <tbody>
+        <tr>
+            @{ int count = 0; int maxColumns = 6; }
+
+            @foreach (var stats in Model.CountDictionary)
+            {
+                if (string.IsNullOrEmpty(stats.Key))
+                {
+                    for (int i = count; i < maxColumns; i++)
+                    {
+                        <td></td>
+                    }
+                    
+                    @:</tr><tr>
+                    count = 0;
+                }
+                else
+                {
+                    <td>
+                        <strong style="padding-left: 5px">@stats.Key:</strong> @stats.Value
+                    </td>
+
+                    count++;
+                }
+
+                if ( count >= maxColumns)
+                {
+                    @:</tr><tr>
+                    count = 0;
+                }
+            }
+
+            @for (int i = count; i < maxColumns; i++)
+            {
+                <td></td>
+            }
+        </tr>
+    </tbody>
+</table>

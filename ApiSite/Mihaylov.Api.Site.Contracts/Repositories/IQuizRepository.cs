@@ -22,6 +22,8 @@ namespace Mihaylov.Api.Site.Contracts.Repositories
 
         Task<IEnumerable<QuizAnswer>> GetQuizAnswersAsync(long personId);
 
+        Task<QuizAnswer> GetQuizAnswerAsync(long id);
+
         Task<QuizAnswer> AddQuizAnswerAsync(QuizAnswer input);
     }
 }

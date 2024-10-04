@@ -1,0 +1,44 @@
+﻿@using Mihaylov.Api.Site.Client
+@using Mihaylov.Web.Helpers
+@model IEnumerable<Account>
+
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>@Html.LabelFor(m => m.First().AccountType, "Type")</th>
+            <th>@Html.LabelFor(m => m.First().Username)</th>
+            <th>@Html.LabelFor(m => m.First().DisplayName)</th>
+            <th>@Html.LabelFor(m => m.First().Status)</th>
+            <th>@Html.LabelFor(m => m.First().AskDate)</th>
+            <th>@Html.LabelFor(m => m.First().CreateDate)</th>
+            <th>@Html.LabelFor(m => m.First().LastOnlineDate, "LastOnline")</th>
+            <th>@Html.LabelFor(m => m.First().ReconciledDate, "Reconciled")</th>
+            <th>@Html.LabelFor(m => m.First().Details)</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var account in Model)
+        {
+            <tr>
+                <td>@account.AccountType</td>
+                <td>@account.Username</td>
+                <td>@account.DisplayName</td>
+                <td>@account.Status</td>
+                <td>@account.AskDate.ToString(ViewConstants.DateFormatSimple)</td>
+                <td>
+                    @{
+                        var age = $"({account.CreateDate?.ToString(ViewConstants.DateFormatSimple)}) {account.AccountAge}";
+                    }
+                    @age
+                </td>
+                <td>@account.LastOnlineDate?.ToString(ViewConstants.DateFormatSimple)</td>
+                <td>@account.ReconciledDate?.ToString(ViewConstants.DateFormatSimple)</td>
+                <td>@account.Details</td>
+                <td>
+                    <span class="btn btn-secondary edit-account-button" data-id="@account.Id">Edit</span>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

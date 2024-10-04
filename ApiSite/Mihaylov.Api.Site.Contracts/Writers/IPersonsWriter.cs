@@ -5,6 +5,6 @@ namespace Mihaylov.Api.Site.Contracts.Writers
 {
     public interface IPersonsWriter
     {
-        Task<Person> AddOrUpdateAsync(Person inputPerson);
+        Task<Person> AddOrUpdateAsync(Person input);
     }
 }

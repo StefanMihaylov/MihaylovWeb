@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using Mihaylov.Api.Site.Contracts.Repositories;
 using Mihaylov.Api.Site.Contracts.Managers;
 using Mihaylov.Api.Site.Contracts.Models;
 using Mihaylov.Api.Site.Contracts.Models.Base;
+using Mihaylov.Api.Site.Contracts.Repositories;
 
 namespace Mihaylov.Api.Site.Data.Managers
 {
@@ -23,25 +20,13 @@ namespace Mihaylov.Api.Site.Data.Managers
 
         public Task<Grid<Person>> GetAllPersonsAsync(GridRequest request)
         {
-            var persons = _repository.GetAllPersonsAsync(request);
-            return persons;
+            return _repository.GetAllPersonsAsync(request);
         }
 
-        //public Person GetById(long id)
-        //{
-        //    Person person = this.personsById.GetOrAdd(id, (newId) =>
-        //    {
-        //        Person newPerson = this._repository.GetByIdAsync(newId).ConfigureAwait(false).GetAwaiter().GetResult();
-        //        if (newPerson == null)
-        //        {
-        //            throw new ApplicationException($"Person with Id: {newId} was not found");
-        //        }
-
-        //        return newPerson;
-        //    });
-
-        //    return person;
-        //}
+        public Task<Person> GetByIdAsync(long id)
+        {
+            return _repository.GetByIdAsync(id);
+        }
 
         //public Person GetByName(string name)
         //{
@@ -78,10 +63,9 @@ namespace Mihaylov.Api.Site.Data.Managers
         //    }
         //}
 
-        //public async Task<PersonStatistics> GetStaticticsAsync()
-        //{
-        //    PersonStatistics statistics = await this._repository.GetStaticticsAsync().ConfigureAwait(false);
-        //    return statistics;
-        //}
+        public Task<PersonStatistics> GetStaticticsAsync()
+        {
+            return _repository.GetStaticticsAsync();
+        }
     }
 }

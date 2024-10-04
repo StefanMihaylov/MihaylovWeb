@@ -22,6 +22,10 @@ namespace Mihaylov.Api.Site.Contracts.Models
 
         public string Unit { get; set; }
 
+        public decimal? ConvertedValue { get; set; }
+
+        public string ConvertedUnit { get; set; }
+
         public int? HalfTypeId { get; set; }
 
         public string HalfType { get; set; }

@@ -56,3 +56,8 @@ ul.custom-popover {
 #cluster-main-container .container {
     margin-left: initial
 }
+
+hr {
+    border: none;
+    border-bottom: 1px solid darkgray;
+}

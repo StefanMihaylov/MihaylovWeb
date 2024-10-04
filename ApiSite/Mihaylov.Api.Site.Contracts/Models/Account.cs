@@ -24,6 +24,8 @@ namespace Mihaylov.Api.Site.Contracts.Models
 
         public string DisplayName { get; set; }
 
+        public DateTime AskDate { get; set; }
+
         public DateTime? CreateDate { get; set; }
 
         public DateTime? LastOnlineDate { get; set; }

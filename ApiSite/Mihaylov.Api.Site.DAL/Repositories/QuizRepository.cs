@@ -145,15 +145,34 @@ namespace Mihaylov.Api.Site.DAL.Repositories
                                             .Include(c => c.Question)
                                             .Include(c => c.HalfType)
                                             .Include(c => c.Unit)
+                                                .ThenInclude(u => u.BaseUnit)
                                             .Where(a => a.PersonId == personId)
                                             .OrderBy(a => a.AskDate)
-                                            .ThenBy(a => a.QuestionId);
+                                            .ThenBy(a => a.QuestionId)
+                                            .AsQueryable();
 
             var answers = await query.ProjectToType<QuizAnswer>()
                                    .ToListAsync()
                                    .ConfigureAwait(false);
 
             return answers;
+        }
+
+        public async Task<QuizAnswer> GetQuizAnswerAsync(long id)
+        {
+            var query = _context.QuizAnswers.AsNoTracking()
+                                            .Include(c => c.Question)
+                                            .Include(c => c.HalfType)
+                                            .Include(c => c.Unit)
+                                                .ThenInclude(u => u.BaseUnit)
+                                            .Where(a => a.QuizAnswerId == id)
+                                            .AsQueryable();
+
+            var answer = await query.ProjectToType<QuizAnswer>()
+                                   .FirstOrDefaultAsync()
+                                   .ConfigureAwait(false);
+
+            return answer;
         }
 
         public async Task<QuizAnswer> AddQuizAnswerAsync(QuizAnswer input)

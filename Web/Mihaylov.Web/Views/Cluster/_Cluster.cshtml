@@ -78,12 +78,10 @@
                         @if (application.LastVersion != null && !application.IsLatestVersion)
                         {
                             <br />
-                            var interval = DateTime.UtcNow.Date.Subtract(application.LastVersion.ReleaseDate);
+                            var interval = DateTime.UtcNow.Date.Subtract(application.LastVersion.ReleaseDate.Date);
                             var days = $"{interval.TotalDays} дни";
                             var fullDate = application.LastVersion.ReleaseDate.ToString("yyyy.MM.dd");
                             var lastVersionFillInfo = $"{days} ({fullDate})";
-
-
 
                             @lastVersionFillInfo
                         }

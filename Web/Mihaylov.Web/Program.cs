@@ -8,6 +8,7 @@ using Microsoft.Extensions.Hosting;
 using Mihaylov.Api.Other.Client;
 using Mihaylov.Api.Users.Client;
 using Mihaylov.Api.Weather.Client;
+using Mihaylov.Api.Site.Client;
 using Mihaylov.Common.Host;
 using Mihaylov.Common.Host.Abstract.Authorization;
 using Mihaylov.Common.Host.Abstract.Configurations;
@@ -107,6 +108,7 @@ namespace Mihaylov.Web
             });
 
             services.AddOtherApiClient(Config.GetEnvironmentVariable("Other_Api_Client"));
+            services.AddSiteApiClient(Config.GetEnvironmentVariable("Site_Api_Client"));
 
             services.Configure<MediaConfig>(opt =>
             {

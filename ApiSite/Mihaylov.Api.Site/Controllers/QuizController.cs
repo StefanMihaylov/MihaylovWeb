@@ -5,12 +5,14 @@ using Mihaylov.Api.Site.Contracts.Models;
 using Mihaylov.Api.Site.Contracts.Writers;
 using Mihaylov.Api.Site.Extensions;
 using Mihaylov.Api.Site.Models;
+using Mihaylov.Common.Host.Authorization;
+using Swashbuckle.AspNetCore.Annotations;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Mihaylov.Api.Site.Controllers
 {
-    //[JwtAuthorize(Roles = UserConstants.AdminRole)]
+    [JwtAuthorize(Roles = UserConstants.AdminRole)]
     [Route("api/[controller]/[action]")]
     [ApiController]
     [TypeFilter(typeof(ErrorFilter))]
@@ -38,8 +40,9 @@ namespace Mihaylov.Api.Site.Controllers
         }
 
         [HttpPost]
+        [SwaggerOperation(OperationId = "AddQuestion")]
         [ProducesResponseType(typeof(QuizQuestion), StatusCodes.Status200OK)]
-        public async Task<IActionResult> Question(QuizQuestionModel input)
+        public async Task<IActionResult> Question(AddQuizQuestionModel input)
         {
             var model = new QuizQuestion()
             {
@@ -62,8 +65,9 @@ namespace Mihaylov.Api.Site.Controllers
         }
 
         [HttpPost]
+        [SwaggerOperation(OperationId = "AddPhrase")]
         [ProducesResponseType(typeof(QuizPhrase), StatusCodes.Status200OK)]
-        public async Task<IActionResult> Phrase(QuizPhraseModel input)
+        public async Task<IActionResult> Phrase(AddQuizPhraseModel input)
         {
             var model = new QuizPhrase()
             {
@@ -97,16 +101,26 @@ namespace Mihaylov.Api.Site.Controllers
 
         [HttpGet]
         [ProducesResponseType(typeof(IEnumerable<QuizAnswer>), StatusCodes.Status200OK)]
-        public async Task<IActionResult> Answers(long id)
+        public async Task<IActionResult> Answers(long personId)
         {
-            IEnumerable<QuizAnswer> answers = await _manager.GetQuizAnswersAsync(id).ConfigureAwait(false);
+            IEnumerable<QuizAnswer> answers = await _manager.GetQuizAnswersAsync(personId).ConfigureAwait(false);
 
             return Ok(answers);
         }
 
-        [HttpPost]
+        [HttpGet]
         [ProducesResponseType(typeof(QuizAnswer), StatusCodes.Status200OK)]
-        public async Task<IActionResult> Answer(QuizAnswerModel input)
+        public async Task<IActionResult> Answer(long id)
+        {
+            QuizAnswer answer = await _manager.GetQuizAnswerAsync(id).ConfigureAwait(false);
+
+            return Ok(answer);
+        }
+
+        [HttpPost]
+        [SwaggerOperation(OperationId = "AddAnswer")]
+        [ProducesResponseType(typeof(QuizAnswer), StatusCodes.Status200OK)]
+        public async Task<IActionResult> Answer(AddQuizAnswerModel input)
         {
             var model = new QuizAnswer()
             {
@@ -118,7 +132,9 @@ namespace Mihaylov.Api.Site.Controllers
                 Value = input.Value,
                 UnitId = input.UnitId,
                 Unit = null,
-                HalfTypeId = input.HalfTypeId.Value,
+                ConvertedValue = null,
+                ConvertedUnit = null,
+                HalfTypeId = input.HalfTypeId,
                 HalfType = null,
                 Details = input.Details,
             };

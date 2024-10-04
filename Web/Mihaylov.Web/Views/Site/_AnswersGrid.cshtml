@@ -1,0 +1,33 @@
+﻿@using Mihaylov.Api.Site.Client
+@using Mihaylov.Web.Helpers
+@model IEnumerable<QuizAnswer>
+
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>@Html.LabelFor(m => m.First().AskDate)</th>
+            <th>@Html.LabelFor(m => m.First().Question)</th>
+            <th>@Html.LabelFor(m => m.First().Value)</th>
+            <th>@Html.LabelFor(m => m.First().Unit)</th>
+            <th>@Html.LabelFor(m => m.First().HalfType)</th>
+            <th>@Html.LabelFor(m => m.First().Details)</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var answer in Model)
+        {
+            <tr>
+                <td>@answer.AskDate.ToString(ViewConstants.DateTimeFormatSimple)</td>
+                <td>@answer.Question</td>
+                <td>@answer.ValueDisplay</td>
+                <td>@answer.Unit</td>
+                <td>@answer.HalfType</td>
+                <td>@answer.Details</td>
+                <td>
+                    <span class="btn btn-secondary edit-answer-button" data-id="@answer.Id" data-personId="@answer.PersonId">Edit</span>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

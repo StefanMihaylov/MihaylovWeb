@@ -8,10 +8,10 @@ namespace Mihaylov.Api.Site.Contracts.Managers
     {
         Task<Grid<Person>> GetAllPersonsAsync(GridRequest request);
 
-        //Person GetById(long id);
+        Task<Person> GetByIdAsync(long id);
 
         //Person GetByName(string name);
 
-        //Task<PersonStatistics> GetStaticticsAsync();
+        Task<PersonStatistics> GetStaticticsAsync();
     }
 }

@@ -1,0 +1,38 @@
+﻿using System.Collections.Generic;
+using Mihaylov.Api.Site.Client;
+
+namespace Mihaylov.Web.Models.Site
+{
+    public class PersonExtended : Person
+    {
+        public PersonExtended(Person person)
+        {
+            Id = person.Id;
+            Detais = person.Detais;
+            Age = person.Age;
+            DateOfBirth = person.DateOfBirth;
+            DateOfBirthType = person.DateOfBirthType;
+            CountryId = person.CountryId;
+            Country = person.Country;
+            Location = person.Location;
+            EthnicityId = person.EthnicityId;
+            Ethnicity = person.Ethnicity;
+            OrientationId = person.OrientationId;
+            Orientation = person.Orientation;
+            Comments = person.Comments;
+            Accounts = person.Accounts;
+            AnswersCount = person.AnswersCount;
+        }
+
+        public IEnumerable<QuizAnswer> Answers { get; set; }
+
+
+        public IEnumerable<Country> Countries { get; set; }
+
+        public IEnumerable<CountryState> CountryStates { get; set; }
+
+        public IEnumerable<Ethnicity> Ethnicities { get; set; }
+
+        public IEnumerable<Orientation> Orientations { get; set; }
+    }
+}

@@ -1,0 +1,60 @@
+﻿@using Mihaylov.Web.Helpers
+@using Mihaylov.Web.Models.Site
+@model AccountExtended
+
+@{
+    var accountTypes = Model.AccountTypes.GetDropdownListItems(u => u.Id, u => u.Name);
+    var accountStates = Model.AccountStates.GetDropdownListItems(u => u.Id, u => u.Name);
+}
+<fieldset>
+    <div class="form-row">
+        @Html.HiddenFor(m => Model.Id)
+        @Html.HiddenFor(m => Model.PersonId)
+    </div>
+    <div class="form-row">
+        <div class="form-group col-auto">
+            @Html.LabelFor(m => Model.AccountTypeId, "Type")
+            @Html.DropDownListFor(m => Model.AccountTypeId, accountTypes, ViewConstants.DefaultValue, new { @class = ViewConstants.EdithorClass, style = ViewConstants.Width100 })
+        </div>
+        <div class="form-group col-auto">
+            @Html.LabelFor(m => Model.Username)
+            @Html.TextBoxFor(m => Model.Username, new { @class = ViewConstants.EdithorClass })
+        </div>
+        <div class="form-group col-auto">
+            @Html.LabelFor(m => Model.DisplayName)
+            @Html.TextBoxFor(m => Model.DisplayName, new { @class = ViewConstants.EdithorClass })
+        </div>
+        <div class="form-group col-auto">
+            @Html.LabelFor(m => Model.StatusId, "Status")
+            @Html.DropDownListFor(m => Model.StatusId, accountStates, ViewConstants.DefaultValue, new { @class = ViewConstants.EdithorClass, style = ViewConstants.Width200 })
+        </div>
+        <div class="form-group col-auto">
+            @Html.LabelFor(m => Model.AskDate)
+            @Html.TextBoxFor(m => Model.AskDate, ViewConstants.DateFormat, new { @class = ViewConstants.EdithorClass, style = ViewConstants.Width100 })
+        </div>
+        <div class="form-group col-auto">
+            @Html.LabelFor(m => Model.CreateDate)
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <div class="input-group-text">@Model.CreateDate?.ToString(ViewConstants.DateFormatSimple)</div>
+                </div>
+                @Html.TextBoxFor(m => Model.AccountAge, new { @class = ViewConstants.EdithorClass, style = ViewConstants.Width100 })
+            </div>
+        </div>
+        <div class="form-group col-auto">
+            @Html.LabelFor(m => Model.LastOnlineDate)
+            @Html.TextBoxFor(m => Model.LastOnlineDate, ViewConstants.DateFormat, new { @class = ViewConstants.EdithorClass, style = ViewConstants.Width100, @disabled = "disabled" })
+        </div>
+        @if (Model.ReconciledDate.HasValue)
+        {
+            <div class="form-group col-auto">
+                @Html.LabelFor(m => Model.ReconciledDate)
+                @Html.TextBoxFor(m => Model.ReconciledDate, ViewConstants.DateFormat, new { @class = ViewConstants.EdithorClass, style = ViewConstants.Width100, @disabled = "disabled" })
+            </div>
+        }
+        <div class="form-group col-auto">
+            @Html.LabelFor(m => Model.Details)
+            @Html.TextBoxFor(m => Model.Details, new { @class = ViewConstants.EdithorClass })
+        </div>
+    </div>
+</fieldset>

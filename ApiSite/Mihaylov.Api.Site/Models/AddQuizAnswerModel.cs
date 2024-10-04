@@ -4,7 +4,7 @@ using Mihaylov.Api.Site.Contracts.Models;
 
 namespace Mihaylov.Api.Site.Models
 {
-    public class QuizAnswerModel
+    public class AddQuizAnswerModel
     {
         public long? Id { get; set; }
 

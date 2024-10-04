@@ -29,17 +29,7 @@ namespace Mihaylov.Api.Site.DAL.Repositories
         {
             try
             {
-                var query = _context.Persons.AsNoTracking()
-                                        .Include(c => c.Details)
-                                        .Include(c => c.Location)
-                                            .ThenInclude(s => s.CountryState)
-                                        .Include(c => c.Ethnicity)
-                                        .Include(c => c.Orientation)
-                                        .Include(c => c.Country)
-                                        .Include(c => c.Accounts)
-                                            .ThenInclude(a => a.AccountType)
-                                        .Include(c => c.Accounts)
-                                            .ThenInclude(a => a.Status)
+                var query = GetPersonBaseQuery()
                                         .Select(p => new
                                         {
                                             Person = p,
@@ -67,6 +57,7 @@ namespace Mihaylov.Api.Site.DAL.Repositories
                 {
                     query = query.Where(p => p.Person.Accounts.Any(a => a.Username.Contains(request.Name)));
                 }
+
 
                 var count = await query.CountAsync().ConfigureAwait(false);
 
@@ -111,75 +102,148 @@ namespace Mihaylov.Api.Site.DAL.Repositories
 
         public async Task<Person> GetByIdAsync(long id)
         {
-            Person person = await this._context.Persons
-                                               .Where(p => p.PersonId == id)
-                                               .To<Person>()
-                                               .FirstOrDefaultAsync()
-                                               .ConfigureAwait(false);
+            var query = GetPersonBaseQuery().Where(p => p.PersonId == id).AsQueryable();
+
+            Person person = await query.ProjectToType<Person>()
+                                       .FirstOrDefaultAsync()
+                                       .ConfigureAwait(false);
 
             return person;
         }
 
-        public async Task<Person> GetByAccoutUserNameAsync(string username)
+        public Task<Person> GetByAccoutUserNameAsync(string username)
         {
-            Person person = await this._context.Accounts
-                                               .Where(a => a.Username == username)
-                                               .Select(a => a.Person)
-                                               .To<Person>()
-                                               .FirstOrDefaultAsync()
-                                               .ConfigureAwait(false);
+            //Person person = await this._context.Accounts
+            //                                   .Where(a => a.Username == username)
+            //                                   .Select(a => a.Person)
+            //                                   .To<Person>()
+            //                                   .FirstOrDefaultAsync()
+            //                                   .ConfigureAwait(false);
 
-            return person;
+            //return person;
+
+            throw new NotImplementedException();
         }
 
-        public async Task<Person> AddOrUpdatePersonAsync(Person inputPerson)
+        public async Task<Person> AddOrUpdatePersonAsync(Person input)
         {
-            DB.Person person;
-            if (inputPerson.Id == 0)
+            if (input.Detais != null)
             {
-                person = new DB.Person();
-                this._context.Persons.Add(person);
-            }
-            else
-            {
-                person = await this._context.Persons.Where(p => p.PersonId == inputPerson.Id)
-                                                    .FirstOrDefaultAsync()
-                                                    .ConfigureAwait(false);
+                input.Detais.FirstName = input.Detais.FirstName?.Trim();
+                input.Detais.MiddleName = input.Detais.MiddleName?.Trim();
+                input.Detais.LastName = input.Detais.LastName?.Trim();
+                input.Detais.OtherNames = input.Detais.OtherNames?.Trim();
             }
 
-            // inputPerson.Update(person);
+            input.Comments = input.Comments?.Trim();
 
-            // await this._context.SaveChangesAsync().ConfigureAwait(false);
+            try
+            {
+                var dbModel = await _context.Persons
+                                .Where(p => p.PersonId == input.Id)
+                                .FirstOrDefaultAsync()
+                                .ConfigureAwait(false);
 
-            Person personDTO = await this.GetByIdAsync(person.PersonId);
-            return personDTO;
+                if (dbModel == null)
+                {
+                    dbModel = new DB.Person();
+                    _context.Persons.Add(dbModel);
+                }
+
+                dbModel = input.Adapt(dbModel);
+
+               // await _context.SaveChangesAsync().ConfigureAwait(false);
+
+                return dbModel.Adapt<Person>();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Error in add/update Person. Error: {Message}", ex.Message);
+                throw;
+            }
         }
 
         public async Task<PersonStatistics> GetStaticticsAsync()
         {
-            //IQueryable<DAL.Person> persons = this.All().Where(p => p.AnswerType.IsAsked);
+            var mainQuestionId = 2;
+            var activeStates = new List<int> { 1, 2 };
 
-            //var countDictionary = persons.GroupBy(p => new { Description = p.AnswerType.Description, Id = p.AnswerTypeId })
-            //                             .Select(g => new { Key = g.Key.Description, Value = g.Count() })
-            //                             .OrderBy(g => g.Key)
-            //                             .ToDictionary(r => r.Key, r => r.Value);
+            var totalPersonCount = await _context.Persons.Include(p => p.Accounts)
+                                               .CountAsync()
+                                               .ConfigureAwait(false);
 
-            //IQueryable<decimal> answers = persons.Where(p => p.AnswerConverted.HasValue)
-            //                                     .Select(p => p.AnswerConverted.Value);
+            var queryAnswers = _context.QuizAnswers.Include(a => a.Unit)
+                                            .Where(a => a.QuestionId == mainQuestionId &&
+                                                        a.UnitId.HasValue &&
+                                                        a.Value.HasValue)
+                                            .Select(a => a.Value.Value * (a.Unit.ConversionRate ?? 1))
+                                            .AsQueryable();
 
-            //var statistics = new PersonStatistics()
-            //{
-            //    CountDictionary = countDictionary,
-            //    Average = answers.Average(),
-            //    Min = answers.Min(),
-            //    Max = answers.Max(),
-            //    TotalCount = this.All().Count(),
-            //    Disabled = persons.Count(p => p.IsAccountDisabled),
-            //};
+            var average = await queryAnswers.AverageAsync().ConfigureAwait(false);
+            var min = await queryAnswers.MinAsync().ConfigureAwait(false);
+            var max = await queryAnswers.MaxAsync().ConfigureAwait(false);
 
-            //return statistics;
+            var answers = await _context.QuizAnswers.Include(a => a.Unit)
+                                                    .Where(a => a.QuestionId == mainQuestionId)
+                                                    .GroupBy(a => a.UnitId.HasValue)
+                                                    .Select(g => new PersonStatisticsPair<bool> { Key = g.Key, Value = g.Count() })
+                                                    .OrderByDescending(a => a.Key)
+                                                    .ToListAsync()
+                                                    .ConfigureAwait(false);
 
-            return new PersonStatistics();
+            var accountTypes = await _context.Accounts.Include(a => a.AccountType)
+                                                 .Where(a => a.PersonId.HasValue)
+                                                 .GroupBy(a => a.AccountType.Name)
+                                                 .Select(g => new PersonStatisticsPair<string> { Key = g.Key, Value = g.Count() })
+                                                 .OrderBy(a => a.Key)
+                                                 .ToListAsync()
+                                                 .ConfigureAwait(false);
+
+            var accountStates = await _context.Accounts.Include(a => a.Status)
+                                     .Where(a => a.PersonId.HasValue && a.StatusId.HasValue)
+                                     .GroupBy(a => new { a.Status.Name, a.StatusId })
+                                     .OrderBy(a => a.Key.StatusId)
+                                     .Select(g => new PersonStatisticsPair<string> { Key = g.Key.Name, Value = g.Count() })
+                                     .ToListAsync()
+                                     .ConfigureAwait(false);
+
+            var activeAccounts = await _context.Accounts.Include(a => a.Status)
+                                     .Where(a => a.PersonId.HasValue && a.StatusId.HasValue)
+                                     .Where(a => activeStates.Contains(a.StatusId.Value))
+                                     .CountAsync()
+                                     .ConfigureAwait(false);
+
+            var statistics = new PersonStatistics()
+            {
+                Answers = answers,
+                AccountTypes = accountTypes,
+                States = accountStates,
+                Average = average,
+                Min = min,
+                Max = max,
+                TotalPersonCount = totalPersonCount,
+                ActiveAccountCount = activeAccounts,
+            };
+
+            return statistics;
+        }
+
+        private IQueryable<DB.Person> GetPersonBaseQuery()
+        {
+            var query = _context.Persons.AsNoTracking()
+                                        .Include(c => c.Details)
+                                        .Include(c => c.Location)
+                                            .ThenInclude(s => s.CountryState)
+                                        .Include(c => c.Ethnicity)
+                                        .Include(c => c.Orientation)
+                                        .Include(c => c.Country)
+                                        .Include(c => c.Accounts)
+                                            .ThenInclude(a => a.AccountType)
+                                        .Include(c => c.Accounts)
+                                            .ThenInclude(a => a.Status)
+                                        .AsQueryable();
+
+            return query;
         }
     }
 }

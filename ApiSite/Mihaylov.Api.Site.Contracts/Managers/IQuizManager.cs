@@ -15,5 +15,7 @@ namespace Mihaylov.Api.Site.Contracts.Managers
         Task<IEnumerable<UnitShort>> GetAllUnitsAsync();
 
         Task<IEnumerable<QuizAnswer>> GetQuizAnswersAsync(long personId);
+
+        Task<QuizAnswer> GetQuizAnswerAsync(long id);
     }
 }

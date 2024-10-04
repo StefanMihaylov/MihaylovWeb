@@ -32,6 +32,8 @@
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle text-dark" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Снимки</a>
                                 <div class="dropdown-menu">
+                                    <a class="dropdown-item text-dark" asp-area="" asp-controller="Site" asp-action="Index">Сайт</a>
+                                    <div class="dropdown-divider"></div>
                                     <a class="dropdown-item text-dark" asp-area="" asp-controller="Media" asp-action="Duplicates">Дубликати</a>
                                     <a class="dropdown-item text-dark" asp-area="" asp-controller="Media" asp-action="Sort">Сортиране</a>
                                     <a class="dropdown-item text-dark" asp-area="" asp-controller="Media" asp-action="RenamePics">Преименуване</a>
@@ -55,7 +57,7 @@
             </div>
         </nav>
     </header>
-    <div class="container-fluid">
+    <div class="container-fluid body-content">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
@@ -66,9 +68,13 @@
             &copy; @DateTime.UtcNow.Year - mihaylov-s.eu - <a asp-area="" asp-controller="Home" asp-action="ModuleInfo">Modules</a>
         </div>
     </footer>
+
+    <span class="serverUrl" data-url="@Context.Request.PathBase"></span>
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/popperjs/core/dist/umd/popper.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/main-layout.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>

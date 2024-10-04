@@ -1,0 +1,49 @@
+﻿@using Mihaylov.Web.Helpers
+@using Mihaylov.Web.Models.Site
+@model AnswerExtended
+
+@{
+    var questions = Model.Questions.GetDropdownListItems(u => u.Id, u => u.Value);
+    var units = Model.Units.GetDropdownListItems(u => u.Id, u => u.Name);
+    var halfTypes = Model.HalfTypes.GetDropdownListItems(u => u.Id, u => u.Name);
+}
+
+@using (Html.BeginForm("SaveAnswer", "Site", FormMethod.Post, new { @class = "form" }))
+{
+
+    <fieldset>
+        <div class="form-row">
+            @Html.HiddenFor(m => Model.Id)
+            @Html.HiddenFor(m => Model.PersonId)
+        </div>
+        <div class="form-row">
+            <div class="form-group col-auto">
+                @Html.LabelFor(m => Model.AskDate)
+                @Html.TextBoxFor(m => Model.AskDate, ViewConstants.DateTimeFormat, new { @class = ViewConstants.EdithorClass })
+            </div>
+            <div class="form-group col-auto">
+                @Html.LabelFor(m => Model.QuestionId, "Question")
+                @Html.DropDownListFor(m => Model.QuestionId, questions, ViewConstants.DefaultValue, new { @class = ViewConstants.EdithorClass, style = ViewConstants.Width200 })
+            </div>
+            <div class="form-group col-auto">
+                @Html.LabelFor(m => Model.Value)
+                @Html.TextBoxFor(m => Model.Value, new { @class = ViewConstants.EdithorClass })
+            </div>
+            <div class="form-group col-auto">
+                @Html.LabelFor(m => Model.UnitId, "Unit")
+                @Html.DropDownListFor(m => Model.UnitId, units, ViewConstants.DefaultValue, new { @class = ViewConstants.EdithorClass, style = ViewConstants.Width200 })
+            </div>
+            <div class="form-group col-auto">
+                @Html.LabelFor(m => Model.HalfTypeId, "Half")
+                @Html.DropDownListFor(m => Model.HalfTypeId, halfTypes, ViewConstants.DefaultValue, new { @class = ViewConstants.EdithorClass, style = ViewConstants.Width200 })
+            </div>
+            <div class="form-group col-auto">
+                @Html.LabelFor(m => Model.Details)
+                @Html.TextBoxFor(m => Model.Details, new { @class = ViewConstants.EdithorClass })
+            </div>
+            <div class="form-group col-auto">
+                <button type="submit" class="submit-btn btn btn-primary">Save</button>
+            </div>
+        </div>
+    </fieldset>
+}

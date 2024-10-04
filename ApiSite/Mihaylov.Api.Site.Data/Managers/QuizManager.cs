@@ -42,10 +42,14 @@ namespace Mihaylov.Api.Site.Data.Managers
             return units;
         }
 
-        public async Task<IEnumerable<QuizAnswer>> GetQuizAnswersAsync(long personId)
+        public Task<IEnumerable<QuizAnswer>> GetQuizAnswersAsync(long personId)
         {
-            var answers = await _repository.GetQuizAnswersAsync(personId).ConfigureAwait(false);
-            return answers;
+            return _repository.GetQuizAnswersAsync(personId);
+        }
+
+        public Task<QuizAnswer> GetQuizAnswerAsync(long id)
+        {
+            return _repository.GetQuizAnswerAsync(id);
         }
     }
 }
