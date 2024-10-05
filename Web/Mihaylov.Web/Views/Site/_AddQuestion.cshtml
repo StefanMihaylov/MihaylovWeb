@@ -1,0 +1,19 @@
+﻿@using Mihaylov.Api.Site.Client
+@using Mihaylov.Web.Controllers
+@using Mihaylov.Web.Helpers
+@model QuizQuestion
+
+@using (Html.BeginForm(nameof(SiteController.SaveQuestion), SiteController.NAME, FormMethod.Post, new { }))
+{
+    <div class="form-row">
+        <div class="form-group col-auto">
+            @Html.TextBoxFor(m => m.Value, new { @class = ViewConstants.EdithorClass, style = ViewConstants.Width500 })
+        </div>
+
+        <div class="form-group col-auto">
+            @Html.HiddenFor(m => Model.Id)
+            <button type="submit" class="submit-btn btn btn-primary">Save</button>
+            <span class="btn btn-danger close-question-button">Close</span>
+        </div>
+    </div>
+}

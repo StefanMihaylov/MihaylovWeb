@@ -3,9 +3,8 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Mihaylov.Web.Models.Site
 {
-    public class AnswerModel
+    public class QuizAnswerModel
     {
-        [Required]
         public long? Id { get; set; }
 
         [Required]

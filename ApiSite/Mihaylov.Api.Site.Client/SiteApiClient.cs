@@ -48,14 +48,8 @@ namespace Mihaylov.Api.Site.Client
                     return string.Empty;
                 }
 
-                var dateNow = DateTime.UtcNow;
                 var birthDate = DateOfBirth.Value;
-
-                int age = dateNow.Year - birthDate.Year;
-                if (birthDate > dateNow.AddYears(-age))
-                {
-                    age--;
-                }
+                var age = birthDate.GetAge();
 
                 return DateOfBirthType switch
                 {
@@ -65,15 +59,6 @@ namespace Mihaylov.Api.Site.Client
                     Client.DateOfBirthType.YearCalculated => $"{age}",
                     _ => string.Empty,
                 };
-            }
-
-            set
-            {
-                if (value != null && int.TryParse(value, out int age))
-                {
-                    DateOfBirthType = Client.DateOfBirthType.YearCalculated;
-                    DateOfBirth = DateTime.UtcNow.Date.AddYears(-age).AddMonths(-6);
-                }
             }
         }
     }
@@ -107,12 +92,16 @@ namespace Mihaylov.Api.Site.Client
         {
             get
             {
-                if (!Value.HasValue || !ConvertedValue.HasValue)
+                if (!Value.HasValue && !ConvertedValue.HasValue)
                 {
                     return string.Empty;
                 }
 
-                if (Value.Value == ConvertedValue.Value)
+                if (!ConvertedValue.HasValue)
+                {
+                    return $"{Value.Value:0.##}";
+                }
+                else if (Value.Value == ConvertedValue.Value)
                 {
                     return $"{Value.Value:0.##}";
                 }

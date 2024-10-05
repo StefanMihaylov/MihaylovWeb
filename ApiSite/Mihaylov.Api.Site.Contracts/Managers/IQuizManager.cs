@@ -8,6 +8,8 @@ namespace Mihaylov.Api.Site.Contracts.Managers
     {
         Task<IEnumerable<QuizQuestion>> GetAllQuestionsAsync();
 
+        Task<QuizQuestion> GetQuestionAsync(int questionId);
+
         Task<IEnumerable<QuizPhrase>> GetAllPhrasesAsync();
 
         Task<IEnumerable<HalfType>> GetAllHalfTypesAsync();

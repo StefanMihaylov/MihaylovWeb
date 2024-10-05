@@ -5,7 +5,7 @@
 <table class="table table-bordered table-striped">
     <thead>
         <tr>
-            <th>@Html.LabelFor(m => m.Data.First().Detais.FullName)</th>
+            <th>@Html.LabelFor(m => m.Data.First().Details.FullName)</th>
             <th>@Html.LabelFor(m => m.Data.First().Age)</th>
             <th>@Html.LabelFor(m => m.Data.First().Country)</th>
             <th>@Html.LabelFor(m => m.Data.First().Orientation)</th>
@@ -22,7 +22,7 @@
         @foreach (var person in Model.Data)
         {
             <tr>
-                <td>@person.Detais?.FullName</td>
+                <td>@person.Details?.FullName</td>
                 <td>@person.Age</td>
                 <td>@person.Country</td>
                 <td>@person.Orientation</td>
@@ -48,7 +48,7 @@
                     }
                 </td>
                 <td>
-                    <span class="btn btn-secondary edit-info-button" data-id="@person.Id">Edit</span>
+                    <span class="btn btn-secondary edit-person-button" data-id="@person.Id">Edit</span>
                 </td>
             </tr>
 

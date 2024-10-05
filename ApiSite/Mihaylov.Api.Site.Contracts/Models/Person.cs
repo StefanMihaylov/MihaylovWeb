@@ -9,7 +9,7 @@ namespace Mihaylov.Api.Site.Contracts.Models
 
         public long Id { get; set; }
 
-        public PersonDetail Detais { get; set; }
+        public PersonDetail Details { get; set; }
 
 
         public DateTime? DateOfBirth { get; set; }

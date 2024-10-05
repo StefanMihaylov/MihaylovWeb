@@ -1,12 +1,23 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
-using System;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Mihaylov.Web.Helpers
 {
     public static class EnumerableExtensions
     {
+        public static IEnumerable<SelectListItem> GetEnumDropdownListItems<TEnum>(this TEnum type) where TEnum : struct, Enum
+        {
+            var result = Enum.GetValues(typeof(TEnum))
+                .Cast<TEnum>()
+                .Select(v => new SelectListItem(v.ToString(), ((int)(object)v).ToString()))
+                .ToList();
+
+            return result;
+        }
+
         public static IEnumerable<SelectListItem> GetDropdownListItems<T>(this IEnumerable<T> collection, Expression<Func<T, object>> valueExpression, Expression<Func<T, object>> textExpression)
         {
             return collection.GetDropdownListItems<T>(valueExpression, "{0}", textExpression);

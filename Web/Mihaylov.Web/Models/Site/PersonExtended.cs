@@ -8,8 +8,7 @@ namespace Mihaylov.Web.Models.Site
         public PersonExtended(Person person)
         {
             Id = person.Id;
-            Detais = person.Detais;
-            Age = person.Age;
+            Details = person.Details;
             DateOfBirth = person.DateOfBirth;
             DateOfBirthType = person.DateOfBirthType;
             CountryId = person.CountryId;
@@ -24,7 +23,7 @@ namespace Mihaylov.Web.Models.Site
             AnswersCount = person.AnswersCount;
         }
 
-        public IEnumerable<QuizAnswer> Answers { get; set; }
+        public AnswersExtended AnswersExtended { get; set; }
 
 
         public IEnumerable<Country> Countries { get; set; }

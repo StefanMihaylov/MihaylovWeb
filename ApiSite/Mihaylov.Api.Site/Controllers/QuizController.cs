@@ -39,6 +39,15 @@ namespace Mihaylov.Api.Site.Controllers
             return Ok(questions);
         }
 
+        [HttpGet]
+        [ProducesResponseType(typeof(QuizQuestion), StatusCodes.Status200OK)]
+        public async Task<IActionResult> Question(int id)
+        {
+            QuizQuestion question = await _manager.GetQuestionAsync(id).ConfigureAwait(false);
+
+            return Ok(question);
+        }
+
         [HttpPost]
         [SwaggerOperation(OperationId = "AddQuestion")]
         [ProducesResponseType(typeof(QuizQuestion), StatusCodes.Status200OK)]

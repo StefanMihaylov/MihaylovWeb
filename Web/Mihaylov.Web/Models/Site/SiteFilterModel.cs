@@ -7,6 +7,8 @@ namespace Mihaylov.Web.Models.Site
     {
         public int? Page { get; set; }
 
+        public long? PersonId { get; set; }
+
 
         public string ToQueryString()
         {
@@ -17,7 +19,10 @@ namespace Mihaylov.Web.Models.Site
                 dic.Add(nameof(Page), Page.Value.ToString());
             }
 
-
+            if (PersonId.HasValue)
+            {
+                dic.Add(nameof(PersonId), PersonId.Value.ToString());
+            }
 
             var result = string.Join("&", dic.Select(kv => $"{kv.Key.ToLower()}={kv.Value}"));
 

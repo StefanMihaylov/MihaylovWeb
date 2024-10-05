@@ -7,7 +7,12 @@
         <span class="btn btn-secondary find-info-button">Find</span>
     </div>
 
-    <div id="person-info"></div>
+    <div id="person-info">
+        @if (Model.Person != null)
+        {
+            @await Html.PartialAsync("_AddPerson", Model.Person)
+        }
+    </div>
 
     <ul class="nav nav-tabs">
         <li class="nav-item">
@@ -15,6 +20,9 @@
         </li>
         <li class="nav-item">
             <a class="nav-link" data-toggle="tab" href="#statistics">Statistics</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" data-toggle="tab" href="#questions">Въпроси</a>
         </li>
         <li class="nav-item">
             <a class="nav-link" data-toggle="tab" href="#phrases">Phrases</a>
@@ -31,8 +39,11 @@
         <div id="statistics" class="tab-pane fade">
             @await Html.PartialAsync("_Statistics", Model.Statistics)
         </div>
+        <div id="questions" class="tab-pane fade">
+            @await Html.PartialAsync("_QuizQuestionsGrid", Model.AdminData.Questions)
+        </div>
         <div id="phrases" class="tab-pane fade">
-            @await Html.PartialAsync("_Phrases", Model.QuizPhrases)
+            @await Html.PartialAsync("_QuizPhrasesGrid", Model.AdminData.QuizPhrases)
         </div>
         <div id="other" class="tab-pane fade">
             @Html.ActionLink("Update", "Update", "Site", new { @class = "btn btn-default" })
@@ -41,76 +52,5 @@
 </div>
 
 @section Scripts {
-    <script>
-        $(document).ready(function () {
-            $('[data-toggle="popover"]').popover();
-        });
-
-        $(document).ready(function () {
-            var $container = $('.body-content');
-            var $detailsContainer = $('#person-info');
-
-            $container.off('click').on('click', '.person-details-container .find-info-button', function () {
-                $detailsContainer.empty();
-
-                var siteUrl = $('#url').val();
-                var url = main.getUrl('Site/Find');
-                var data = { url: siteUrl };
-
-                $.post(url, data, function (res) {
-                    $detailsContainer.empty().append(res);
-                    $('#url').val('');
-                    //if (res.Success === true) {
-                    //    toastr.success('Job ticket created');
-                    //}
-                    //else {
-                    //    toastr.error(res.ErrorMessage, undefined, { timeOut: 0 });
-                    //}
-                }).fail(function (res) {
-                    $detailsContainer.empty().append(res);
-                    // toastr.error(res.ErrorMessage); //???
-                }).always(function () {
-                });
-            })
-            .on('click', '.person-details-container .edit-info-button', function () {
-                        $detailsContainer.empty();
-
-                        var personId = $(this).data('id');
-                        var url = main.getUrl('Site/edit');
-                        var data = { id: personId };
-
-                        $.post(url, data, function (res) {
-                            $detailsContainer.empty().append(res);
-                        }).fail(function (res) {
-                            $detailsContainer.empty().append(res);
-                        }).always(function () {
-                        });
-                    })
-              .on('click', '.person-details-container .edit-answer-button', function () {
-                        var $answersContainer = $('#answers-info');
-                        $answersContainer.empty();
-
-                        var $this = $(this);
-                        var id = $this.data('id');
-                        var personId = $this.data('personId');
-                        var url = main.getUrl('Site/AnswerView');
-                        var data = { id: id, personId: personId };
-
-                 $.post(url, data, function (res) {
-                      $answersContainer.empty().append(res);
-                 }).fail(function (res) {
-                      $answersContainer.empty().append(res);
-                 }).always(function () {
-                 });
-             });
-
-            $detailsContainer.on('change', '.AnswerTypeId-dropdown', changeButtonColour);
-            $detailsContainer.on('input', '.Comments-input', changeButtonColour);
-
-            function changeButtonColour() {
-                var button = $detailsContainer.find('.submit-btn');
-                button.addClass('btn-success');
-            };
-        });
-    </script>
+    <script src="~/js/person.js"></script>
 }

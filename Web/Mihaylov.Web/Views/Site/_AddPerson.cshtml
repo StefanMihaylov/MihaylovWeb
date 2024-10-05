@@ -1,4 +1,6 @@
-﻿@using Mihaylov.Web.Helpers
+﻿@using Mihaylov.Api.Site.Client
+@using Mihaylov.Web.Controllers
+@using Mihaylov.Web.Helpers
 @using Mihaylov.Web.Models.Site
 @model PersonExtended
 
@@ -7,28 +9,28 @@
     var orientations = Model.Orientations.GetDropdownListItems(u => u.Id, u => u.Name);
     var countries = Model.Countries.GetDropdownListItems(u => u.Id, u => u.Name);
     var states = Model.CountryStates.GetDropdownListItems(u => u.Id, u => u.Name);
+    var dateOfBirthTypes = DateOfBirthType.Full.GetEnumDropdownListItems();
 }
 
-@using (Html.BeginForm("Save", "Site", FormMethod.Post, new { @class = "form" }))
+@using (Html.BeginForm(nameof(SiteController.SavePerson), SiteController.NAME, FormMethod.Post, new { @class = "form" }))
 {
     <fieldset>
-        @Html.HiddenFor(m => m.Id)
         <div class="form-row">
             <div class="form-group col-auto">
-                @Html.LabelFor(m => m.Detais.FirstName)
-                @Html.TextBoxFor(m => m.Detais.FirstName, new { @class = ViewConstants.EdithorClass })
+                @Html.LabelFor(m => m.Details.FirstName)
+                @Html.TextBoxFor(m => m.Details.FirstName, new { @class = ViewConstants.EdithorClass })
             </div>
             <div class="form-group col-auto">
-                @Html.LabelFor(m => m.Detais.MiddleName)
-                @Html.TextBoxFor(m => m.Detais.MiddleName, new { @class = ViewConstants.EdithorClass })
+                @Html.LabelFor(m => m.Details.MiddleName)
+                @Html.TextBoxFor(m => m.Details.MiddleName, new { @class = ViewConstants.EdithorClass, style = ViewConstants.Width100 })
             </div>
             <div class="form-group col-auto">
-                @Html.LabelFor(m => m.Detais.LastName)
-                @Html.TextBoxFor(m => m.Detais.LastName, new { @class = ViewConstants.EdithorClass })
+                @Html.LabelFor(m => m.Details.LastName)
+                @Html.TextBoxFor(m => m.Details.LastName, new { @class = ViewConstants.EdithorClass })
             </div>
             <div class="form-group col-auto">
-                @Html.LabelFor(m => m.Detais.OtherNames)
-                @Html.TextBoxFor(m => m.Detais.OtherNames, new { @class = ViewConstants.EdithorClass })
+                @Html.LabelFor(m => m.Details.OtherNames)
+                @Html.TextBoxFor(m => m.Details.OtherNames, new { @class = ViewConstants.EdithorClass })
             </div>
             <div class="form-group col-auto">
                 @Html.LabelFor(m => m.EthnicityId, "Ethnicity")
@@ -38,11 +40,23 @@
                 @Html.LabelFor(m => m.OrientationId, "Orientation")
                 @Html.DropDownListFor(m => m.OrientationId, orientations, ViewConstants.DefaultValue, new { @class = ViewConstants.EdithorClass, style = ViewConstants.Width200 })
             </div>
+            <div class="form-group col-auto">
+                @Html.LabelFor(m => m.Comments)
+                @Html.TextBoxFor(m => m.Comments, new { @class = ViewConstants.EdithorClass })
+            </div>
         </div>
         <div class="form-row">
             <div class="form-group col-auto">
                 @Html.LabelFor(m => m.Age)
-                @Html.TextBoxFor(m => m.Age, new { @class = ViewConstants.EdithorClass })
+                @Html.TextBoxFor(m => m.Age, new { @class = ViewConstants.EdithorClass, style = ViewConstants.Width100 })
+            </div>
+            <div class="form-group col-auto">
+                @Html.LabelFor(m => m.DateOfBirth)
+                @Html.TextBoxFor(m => m.DateOfBirth, ViewConstants.DateFormat, new { @class = ViewConstants.EdithorClass, style = ViewConstants.Width100 })
+            </div>
+            <div class="form-group col-auto">
+                @Html.LabelFor(m => m.DateOfBirthType)
+                @Html.DropDownListFor(m => m.DateOfBirthType, dateOfBirthTypes, ViewConstants.DefaultValue, new { @class = ViewConstants.EdithorClass, style = ViewConstants.Width200 })
             </div>
             <div class="form-group col-auto">
                 @Html.LabelFor(m => m.CountryId, "Country")
@@ -54,26 +68,20 @@
             </div>
             <div class="form-group col-auto">
                 @Html.LabelFor(m => m.Location.Region)
-                @Html.TextBoxFor(m => m.Location.Region, new { @class = ViewConstants.EdithorClass })
+                @Html.TextBoxFor(m => m.Location.Region, new { @class = ViewConstants.EdithorClass, style = ViewConstants.Width100 })
             </div>
             <div class="form-group col-auto">
                 @Html.LabelFor(m => m.Location.City)
-                @Html.TextBoxFor(m => m.Location.City, new { @class = ViewConstants.EdithorClass })
+                @Html.TextBoxFor(m => m.Location.City, new { @class = ViewConstants.EdithorClass, style = ViewConstants.Width100 })
             </div>
             <div class="form-group col-auto">
                 @Html.LabelFor(m => m.Location.Details)
                 @Html.TextBoxFor(m => m.Location.Details, new { @class = ViewConstants.EdithorClass })
             </div>
-        </div>
-        <div class="form-row">
-            <div class="form-group col-md-6">
-                @Html.LabelFor(m => m.Comments)
-                @Html.TextBoxFor(m => m.Comments, new { @class = ViewConstants.EdithorClass })
-            </div>
-            <div class="form-group col-md-3">
-            </div>
-            <div class="form-group col-md-3">
+            <div class="form-group col-auto">
+                @Html.HiddenFor(m => m.Id)
                 <button type="submit" class="submit-btn btn btn-primary">Save</button>
+                <span class="btn btn-danger close-person-button">Close</span>
             </div>
         </div>
     </fieldset>
@@ -82,7 +90,7 @@
 <hr />
 @await Html.PartialAsync("_AccountsGrid", Model.Accounts)
 <hr />
-@await Html.PartialAsync("_AnswersGrid", Model.Answers)
+@await Html.PartialAsync("_AnswersGrid", Model.AnswersExtended)
 <hr />
 <div id="answers-info"></div>
 <hr />

@@ -58,6 +58,7 @@ namespace Mihaylov.Api.Site.DAL.Repositories
                     query = query.Where(p => p.Person.Accounts.Any(a => a.Username.Contains(request.Name)));
                 }
 
+                query = query.Where(p => !string.IsNullOrEmpty(p.Person.Comments));
 
                 var count = await query.CountAsync().ConfigureAwait(false);
 
@@ -127,19 +128,28 @@ namespace Mihaylov.Api.Site.DAL.Repositories
 
         public async Task<Person> AddOrUpdatePersonAsync(Person input)
         {
-            if (input.Detais != null)
+            input.Comments = input.Comments?.Trim();
+
+            if (input.Details != null)
             {
-                input.Detais.FirstName = input.Detais.FirstName?.Trim();
-                input.Detais.MiddleName = input.Detais.MiddleName?.Trim();
-                input.Detais.LastName = input.Detais.LastName?.Trim();
-                input.Detais.OtherNames = input.Detais.OtherNames?.Trim();
+                input.Details.FirstName = input.Details.FirstName?.Trim();
+                input.Details.MiddleName = input.Details.MiddleName?.Trim();
+                input.Details.LastName = input.Details.LastName?.Trim();
+                input.Details.OtherNames = input.Details.OtherNames?.Trim();
             }
 
-            input.Comments = input.Comments?.Trim();
+            if (input.Location != null)
+            {
+                input.Location.Region = input.Location.Region?.Trim();
+                input.Location.City = input.Location.City?.Trim();
+                input.Location.Details = input.Location.Details?.Trim();
+            }
 
             try
             {
                 var dbModel = await _context.Persons
+                                .Include(p => p.Details)
+                                .Include(p => p.Location)
                                 .Where(p => p.PersonId == input.Id)
                                 .FirstOrDefaultAsync()
                                 .ConfigureAwait(false);
@@ -152,9 +162,29 @@ namespace Mihaylov.Api.Site.DAL.Repositories
 
                 dbModel = input.Adapt(dbModel);
 
-               // await _context.SaveChangesAsync().ConfigureAwait(false);
+                if (input.Details != null)
+                {
+                    if (dbModel.Details == null)
+                    {
+                        dbModel.Details = new DB.PersonDetail();
+                    }
 
-                return dbModel.Adapt<Person>();
+                    dbModel.Details = input.Details.Adapt(dbModel.Details);
+                }
+
+                if (input.Location != null)
+                {
+                    if (dbModel.Location == null)
+                    {
+                        dbModel.Location = new DB.PersonLocation();
+                    }
+
+                    dbModel.Location = input.Location.Adapt(dbModel.Location);
+                }
+
+                await _context.SaveChangesAsync().ConfigureAwait(false);
+
+                return await GetByIdAsync(dbModel.PersonId);
             }
             catch (Exception ex)
             {

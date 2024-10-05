@@ -151,6 +151,15 @@ namespace Mihaylov.Api.Site.Client
 
         /// <returns>OK</returns>
         /// <exception cref="SwaggerException">A server side error occurred.</exception>
+        System.Threading.Tasks.Task<QuizQuestion> QuestionAsync(int? id);
+
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+        /// <returns>OK</returns>
+        /// <exception cref="SwaggerException">A server side error occurred.</exception>
+        System.Threading.Tasks.Task<QuizQuestion> QuestionAsync(int? id, System.Threading.CancellationToken cancellationToken);
+
+        /// <returns>OK</returns>
+        /// <exception cref="SwaggerException">A server side error occurred.</exception>
         System.Threading.Tasks.Task<QuizQuestion> AddQuestionAsync(AddQuizQuestionModel body);
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
@@ -418,8 +427,8 @@ namespace Mihaylov.Api.Site.Client
         [Newtonsoft.Json.JsonProperty("id", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public long? Id { get; set; }
 
-        [Newtonsoft.Json.JsonProperty("detais", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public AddPersonDetailModel Detais { get; set; }
+        [Newtonsoft.Json.JsonProperty("details", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public AddPersonDetailModel Details { get; set; }
 
         [Newtonsoft.Json.JsonProperty("dateOfBirth", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.DateTime? DateOfBirth { get; set; }
@@ -798,8 +807,8 @@ namespace Mihaylov.Api.Site.Client
         [Newtonsoft.Json.JsonProperty("id", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public long Id { get; set; }
 
-        [Newtonsoft.Json.JsonProperty("detais", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public PersonDetail Detais { get; set; }
+        [Newtonsoft.Json.JsonProperty("details", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public PersonDetail Details { get; set; }
 
         [Newtonsoft.Json.JsonProperty("dateOfBirth", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.DateTime? DateOfBirth { get; set; }

@@ -24,6 +24,11 @@ namespace Mihaylov.Api.Site.Data.Managers
             return questions;
         }
 
+        public Task<QuizQuestion> GetQuestionAsync(int questionId)
+        {
+            return _repository.GetQuestionAsync(questionId);
+        }
+
         public async Task<IEnumerable<QuizPhrase>> GetAllPhrasesAsync()
         {
             var phrases = await GetDataListAsync(_repository.GetAllPhrasesAsync).ConfigureAwait(false);

@@ -1,0 +1,47 @@
+﻿@using Mihaylov.Api.Site.Client
+@model IEnumerable<QuizQuestion>
+
+@{ int count = 0; int maxColumns = 4; }
+
+<table class="table table-bordered table-striped">
+    <caption style="caption-side: top;">Въпроси</caption>
+    <thead>
+        <tr>
+            @for(int i = 0; i<maxColumns-1; i++)
+            {
+                <th></th>
+            }
+
+            <th>
+                <span class="edit-question-button btn btn-success" data-id="">Нов</span> 
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>           
+            @foreach (var question in Model)
+            {
+                <td>
+                    <span>@question.Value</span>
+                    <span class="edit-question-button" data-id="@question.Id">
+                        <i class="bi bi-shift-fill"></i>
+                     </span>                                                
+                </td>
+
+                count++;
+                if (count >= maxColumns)
+                {
+                    @:</tr><tr>
+                    count = 0;
+                }
+            }
+
+            @for (int i = count; i < maxColumns; i++)
+            {
+                <td></td>
+            }
+        </tr>
+    </tbody>
+</table>
+
+<div id="question-info"></div>

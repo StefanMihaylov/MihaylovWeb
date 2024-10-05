@@ -7,8 +7,10 @@ namespace Mihaylov.Web.Models.Site
     {
         public PersonGrid Grid { get; set; }
 
+        public PersonExtended Person { get; set; }
+
         public PersonStatistics Statistics { get; set; }
 
-        public IEnumerable<QuizPhrase> QuizPhrases { get; set; }
+        public SiteAdminModel AdminData { get; set; }
     }
 }

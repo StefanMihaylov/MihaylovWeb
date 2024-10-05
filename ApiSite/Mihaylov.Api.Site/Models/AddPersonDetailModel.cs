@@ -9,5 +9,12 @@
         public string LastName { get; set; }
 
         public string OtherNames { get; set; }
+
+        
+        public bool IsEmpty()
+        {
+            return string.IsNullOrEmpty(FirstName) && string.IsNullOrEmpty(MiddleName) &&
+                   string.IsNullOrEmpty(LastName) && string.IsNullOrEmpty(OtherNames);
+        }
     }
 }

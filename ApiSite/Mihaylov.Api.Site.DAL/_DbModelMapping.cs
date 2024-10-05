@@ -144,9 +144,26 @@ namespace Mihaylov.Api.Site.DAL
                 .Map(dest => dest.Accounts, src => src.Accounts.AsQueryable()
                                                                .OrderBy(a => a.CreatedOn)
                                                                .Adapt<IEnumerable<Account>>())
-                .Map(dest => dest.Detais, src => src.Details.Adapt<PersonDetail>())
+                .Map(dest => dest.Details, src => src.Details.Adapt<PersonDetail>())
                 .Map(dest => dest.Location, src => src.Location.Adapt<PersonLocation>())
                 .Map(dest => dest.AnswersCount, src => src.Answers.AsQueryable().Count());
+
+            TypeAdapterConfig<Person, Db.Person>.NewConfig()
+                .Map(dest => dest.PersonId, src => src.Id)
+                .Map(dest => dest.EthnicityId, src => src.EthnicityId)
+                .Ignore(dest => dest.Ethnicity)
+                .Map(dest => dest.OrientationId, src => src.OrientationId)
+                .Ignore(dest => dest.Orientation)
+                .Map(dest => dest.CountryId, src => src.CountryId)
+                .Ignore(dest => dest.Country)
+                .Map(dest => dest.Comments, src => src.Comments)
+                .Map(dest => dest.DateOfBirth, src => src.DateOfBirth)
+                .Map(dest => dest.DateOfBirthId, src => (byte?)src.DateOfBirthType)
+                .Ignore(dest => dest.DateOfBirthType)
+                .Ignore(dest => dest.Details)
+                .Ignore(dest => dest.Location)
+                .Ignore(dest => dest.Accounts)
+                .Ignore(dest => dest.Answers);
 
             TypeAdapterConfig<Db.Account, Account>.NewConfig()
                 .Map(dest => dest.Id, src => src.AccountId)

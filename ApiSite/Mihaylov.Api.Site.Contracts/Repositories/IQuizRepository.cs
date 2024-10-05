@@ -8,6 +8,8 @@ namespace Mihaylov.Api.Site.Contracts.Repositories
     {
         Task<IEnumerable<QuizQuestion>> GetAllQuestionsAsync();
 
+        Task<QuizQuestion> GetQuestionAsync(int questionId);
+
         Task<QuizQuestion> AddQuizQuestionAsync(QuizQuestion input);
 
         Task<IEnumerable<QuizPhrase>> GetAllPhrasesAsync();

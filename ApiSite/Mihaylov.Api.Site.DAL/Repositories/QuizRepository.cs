@@ -25,13 +25,27 @@ namespace Mihaylov.Api.Site.DAL.Repositories
 
         public async Task<IEnumerable<QuizQuestion>> GetAllQuestionsAsync()
         {
-            var query = _context.QuizQuestions.AsNoTracking();
+            var query = _context.QuizQuestions.AsNoTracking()
+                                              .OrderBy(q => q.QuestionId)
+                                              .AsQueryable();
 
             var questions = await query.ProjectToType<QuizQuestion>()
                                      .ToListAsync()
                                      .ConfigureAwait(false);
 
             return questions;
+        }
+
+        public async Task<QuizQuestion> GetQuestionAsync(int questionId)
+        {
+            var query = _context.QuizQuestions.AsNoTracking()
+                                        .Where(q => q.QuestionId == questionId)
+                                        .AsQueryable();
+
+            var question = await query.ProjectToType<QuizQuestion>()
+                                     .FirstOrDefaultAsync()
+                                     .ConfigureAwait(false);
+            return question;
         }
 
         public async Task<QuizQuestion> AddQuizQuestionAsync(QuizQuestion input)
@@ -67,7 +81,8 @@ namespace Mihaylov.Api.Site.DAL.Repositories
         public async Task<IEnumerable<QuizPhrase>> GetAllPhrasesAsync()
         {
             var query = _context.QuizPhrases.AsNoTracking()
-                                            .OrderBy(p => p.OrderId);
+                                            .OrderBy(p => p.OrderId)
+                                            .AsQueryable();
 
             var phrases = await query.ProjectToType<QuizPhrase>()
                                      .ToListAsync()
@@ -119,37 +134,38 @@ namespace Mihaylov.Api.Site.DAL.Repositories
 
         public async Task<IEnumerable<HalfType>> GetAllHalfTypesAsync()
         {
-            var query = _context.HalfTypes.AsNoTracking();
+            var query = _context.HalfTypes.AsNoTracking()
+                                          .OrderBy(p => p.HalfTypeId)
+                                          .AsQueryable();
 
             var halfTypes = await query.ProjectToType<HalfType>()
-                                     .ToListAsync()
-                                     .ConfigureAwait(false);
+                                       .ToListAsync()
+                                       .ConfigureAwait(false);
 
             return halfTypes;
         }
 
         public async Task<IEnumerable<UnitShort>> GetAllUnitsAsync()
         {
-            var query = _context.Units.AsNoTracking();
+            var query = _context.Units.AsNoTracking()
+                                      .OrderBy(p => p.UnitId)
+                                      .AsQueryable();
 
             var units = await query.ProjectToType<UnitShort>()
+
                                    .ToListAsync()
                                    .ConfigureAwait(false);
 
             return units;
         }
 
+
         public async Task<IEnumerable<QuizAnswer>> GetQuizAnswersAsync(long personId)
         {
-            var query = _context.QuizAnswers.AsNoTracking()
-                                            .Include(c => c.Question)
-                                            .Include(c => c.HalfType)
-                                            .Include(c => c.Unit)
-                                                .ThenInclude(u => u.BaseUnit)
-                                            .Where(a => a.PersonId == personId)
-                                            .OrderBy(a => a.AskDate)
-                                            .ThenBy(a => a.QuestionId)
-                                            .AsQueryable();
+            var query = GetQuizAnswerQuery(true)
+                              .Where(a => a.PersonId == personId)
+                              .OrderBy(a => a.AskDate)
+                                .ThenBy(a => a.QuestionId);
 
             var answers = await query.ProjectToType<QuizAnswer>()
                                    .ToListAsync()
@@ -160,13 +176,8 @@ namespace Mihaylov.Api.Site.DAL.Repositories
 
         public async Task<QuizAnswer> GetQuizAnswerAsync(long id)
         {
-            var query = _context.QuizAnswers.AsNoTracking()
-                                            .Include(c => c.Question)
-                                            .Include(c => c.HalfType)
-                                            .Include(c => c.Unit)
-                                                .ThenInclude(u => u.BaseUnit)
-                                            .Where(a => a.QuizAnswerId == id)
-                                            .AsQueryable();
+            IQueryable<DB.QuizAnswer> query = GetQuizAnswerQuery(true)
+                                                .Where(a => a.QuizAnswerId == id);
 
             var answer = await query.ProjectToType<QuizAnswer>()
                                    .FirstOrDefaultAsync()
@@ -181,10 +192,10 @@ namespace Mihaylov.Api.Site.DAL.Repositories
 
             try
             {
-                var dbModel = await _context.QuizAnswers
-                                .Where(t => t.QuizAnswerId == input.Id && t.PersonId == input.PersonId)
-                                .FirstOrDefaultAsync()
-                                .ConfigureAwait(false);
+                var dbModel = await GetQuizAnswerQuery(false)
+                                        .Where(t => t.QuizAnswerId == input.Id && t.PersonId == input.PersonId)
+                                        .FirstOrDefaultAsync()
+                                        .ConfigureAwait(false);
 
                 if (dbModel == null)
                 {
@@ -196,13 +207,37 @@ namespace Mihaylov.Api.Site.DAL.Repositories
 
                 await _context.SaveChangesAsync().ConfigureAwait(false);
 
-                return dbModel.Adapt<QuizAnswer>();
+                if (dbModel.Question != null)
+                {
+                    return dbModel.Adapt<QuizAnswer>();
+                }
+                else
+                {
+                    return await GetQuizAnswerAsync(dbModel.QuizAnswerId).ConfigureAwait(false);
+                }
             }
             catch (Exception ex)
             {
                 _logger.LogError("Error in add/update QuizAnswer. Error: {Message}", ex.Message);
                 throw;
             }
+        }
+
+        private IQueryable<DB.QuizAnswer> GetQuizAnswerQuery(bool withoutTracking)
+        {
+            var query = _context.QuizAnswers.AsQueryable();
+
+            if (withoutTracking)
+            {
+                query = query.AsNoTracking();
+            }
+
+            query = query.Include(c => c.Question)
+                         .Include(c => c.HalfType)
+                         .Include(c => c.Unit)
+                             .ThenInclude(u => u.BaseUnit);
+
+            return query;
         }
     }
 }

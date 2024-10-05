@@ -686,6 +686,52 @@
       }
     },
     "/api/Quiz/Question": {
+      "get": {
+        "tags": [
+          "Quiz"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QuizQuestion"
+                }
+              }
+            }
+          }
+        }
+      },
       "post": {
         "tags": [
           "Quiz"
@@ -1280,7 +1326,7 @@
             "format": "int64",
             "nullable": true
           },
-          "detais": {
+          "details": {
             "allOf": [
               {
                 "$ref": "#/components/schemas/AddPersonDetailModel"
@@ -1630,7 +1676,7 @@
             "type": "integer",
             "format": "int64"
           },
-          "detais": {
+          "details": {
             "allOf": [
               {
                 "$ref": "#/components/schemas/PersonDetail"

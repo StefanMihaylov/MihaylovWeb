@@ -57,19 +57,19 @@ namespace Mihaylov.Api.Site.Controllers
             var request = new Person()
             {
                 Id = input.Id ?? 0,
-                Detais = input.Detais == null ? null : new PersonDetail()
+                Details = input.Details == null || input.Details.IsEmpty() ? null : new PersonDetail()
                 {
                     Id = input.Id ?? 0,
-                    FirstName = input.Detais.FirstName,
-                    MiddleName = input.Detais.MiddleName,
-                    LastName = input.Detais.LastName,
-                    OtherNames = input.Detais.OtherNames,
+                    FirstName = input.Details.FirstName,
+                    MiddleName = input.Details.MiddleName,
+                    LastName = input.Details.LastName,
+                    OtherNames = input.Details.OtherNames,
                 },
                 DateOfBirth = input.DateOfBirth,
                 DateOfBirthType = input.DateOfBirthType,
                 CountryId = input.CountryId,
                 Country = null,
-                Location = input.Location == null ? null : new PersonLocation()
+                Location = input.Location == null || input.Location.IsEmpty() ? null : new PersonLocation()
                 {
                     Id = input.Id ?? 0,
                     CountryStateId = input.Location.CountryStateId,

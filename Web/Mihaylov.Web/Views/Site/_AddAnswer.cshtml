@@ -1,4 +1,5 @@
-﻿@using Mihaylov.Web.Helpers
+﻿@using Mihaylov.Web.Controllers
+@using Mihaylov.Web.Helpers
 @using Mihaylov.Web.Models.Site
 @model AnswerExtended
 
@@ -8,14 +9,9 @@
     var halfTypes = Model.HalfTypes.GetDropdownListItems(u => u.Id, u => u.Name);
 }
 
-@using (Html.BeginForm("SaveAnswer", "Site", FormMethod.Post, new { @class = "form" }))
+@using (Html.BeginForm(nameof(SiteController.SaveAnswer), SiteController.NAME, FormMethod.Post, new { @class = "form" }))
 {
-
     <fieldset>
-        <div class="form-row">
-            @Html.HiddenFor(m => Model.Id)
-            @Html.HiddenFor(m => Model.PersonId)
-        </div>
         <div class="form-row">
             <div class="form-group col-auto">
                 @Html.LabelFor(m => Model.AskDate)
@@ -42,7 +38,10 @@
                 @Html.TextBoxFor(m => Model.Details, new { @class = ViewConstants.EdithorClass })
             </div>
             <div class="form-group col-auto">
+                @Html.HiddenFor(m => Model.Id)
+                @Html.HiddenFor(m => Model.PersonId)
                 <button type="submit" class="submit-btn btn btn-primary">Save</button>
+                <span class="btn btn-danger close-answer-button">Close</span>
             </div>
         </div>
     </fieldset>
