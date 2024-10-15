@@ -1,37 +1,30 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
+using Mihaylov.Api.Site.Client;
 
 namespace Mihaylov.Web.Models.Site
 {
-    public class SiteFilterModel
+    public class SiteFilterModel : IGridRequest
     {
-        public int? Page { get; set; }
+        public int? Page { get; set; }        
+
+        public string Name { get; set; }
+
+        public string AccountName { get; set; }
+
+        public int? AccountTypeId { get; set; }
+
+        public int? StatusId { get; set; }
+
 
         public long? PersonId { get; set; }
 
+        public bool? IsNewPerson { get; set; }
 
-        public string ToQueryString()
-        {
-            var dic = new Dictionary<string, string>();
 
-            if (Page.HasValue)
-            {
-                dic.Add(nameof(Page), Page.Value.ToString());
-            }
+        public IEnumerable<AccountStatus> AccountStates { get; set; }
 
-            if (PersonId.HasValue)
-            {
-                dic.Add(nameof(PersonId), PersonId.Value.ToString());
-            }
+        public IEnumerable<AccountType> AccountTypes { get; set; }
 
-            var result = string.Join("&", dic.Select(kv => $"{kv.Key.ToLower()}={kv.Value}"));
-
-            if (dic.Count > 0)
-            {
-                result = $"?{result}";
-            }
-
-            return result;
-        }
+        public string AccountNameExact { get; set; }
     }
 }

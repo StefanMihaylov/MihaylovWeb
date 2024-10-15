@@ -10,14 +10,18 @@ namespace Mihaylov.Api.Site.Contracts.Repositories
     {
         Task<Grid<Person>> GetAllPersonsAsync(GridRequest request);
 
-        Task<IEnumerable<Person>> GetAllForUpdateAsync();
+       // Task<IEnumerable<Person>> GetAllForUpdateAsync();
 
-        Task<Person> GetByIdAsync(long id);
+        Task<Person> GetPersonAsync(long id);
 
-        Task<Person> GetByAccoutUserNameAsync(string username);
+        Task<Person> AddOrUpdatePersonAsync(Person input);
 
-        Task<Person> AddOrUpdatePersonAsync(Person inputPerson);
+        Task DeletePersonAsync(long id);
 
         Task<PersonStatistics> GetStaticticsAsync();
+
+        Task<Account> GetAccountAsync(long id);
+
+        Task<Account> AddOrUpdateAccountAsync(Account input);
     }
 }

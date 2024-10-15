@@ -40,9 +40,13 @@ namespace Mihaylov.Common.Abstract.Databases.Services
                     {
                         if (entry.State == EntityState.Added)
                         {
-                            if(entity.CreatedOn == DateTime.MinValue)
+                            if (entity.CreatedOn == DateTime.MinValue)
                             {
                                 entity.CreatedOn = DateTime.UtcNow;
+                            }
+
+                            if (string.IsNullOrEmpty(entity.CreatedBy))
+                            {
                                 entity.CreatedBy = userName;
                             }
                         }

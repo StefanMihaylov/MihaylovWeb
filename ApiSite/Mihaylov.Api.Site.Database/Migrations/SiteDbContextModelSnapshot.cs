@@ -88,6 +88,9 @@ namespace Mihaylov.Api.Site.Database.Migrations
 
                     b.HasIndex("StatusId");
 
+                    b.HasIndex("AccountTypeId", "Username")
+                        .IsUnique();
+
                     b.ToTable("Accounts");
                 });
 
@@ -253,6 +256,10 @@ namespace Mihaylov.Api.Site.Database.Migrations
                         .IsRequired()
                         .HasMaxLength(30)
                         .HasColumnType("nvarchar(30)");
+
+                    b.Property<string>("OtherNames")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.HasKey("EthnicityId")
                         .HasName("PK_Ethnicities_EthnicityId");
@@ -455,10 +462,7 @@ namespace Mihaylov.Api.Site.Database.Migrations
             modelBuilder.Entity("Mihaylov.Api.Site.Database.Models.PersonDetail", b =>
                 {
                     b.Property<long>("PersonId")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("bigint");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("PersonId"), 1000L);
 
                     b.Property<string>("FirstName")
                         .HasMaxLength(50)
@@ -485,10 +489,7 @@ namespace Mihaylov.Api.Site.Database.Migrations
             modelBuilder.Entity("Mihaylov.Api.Site.Database.Models.PersonLocation", b =>
                 {
                     b.Property<long>("PersonId")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("bigint");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("PersonId"), 1000L);
 
                     b.Property<string>("City")
                         .HasMaxLength(50)

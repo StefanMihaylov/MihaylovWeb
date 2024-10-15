@@ -159,10 +159,9 @@ namespace Mihaylov.Api.Site.DAL.Repositories
             return units;
         }
 
-
         public async Task<IEnumerable<QuizAnswer>> GetQuizAnswersAsync(long personId)
         {
-            var query = GetQuizAnswerQuery(true)
+            var query = GetQuizAnswerQuery()
                               .Where(a => a.PersonId == personId)
                               .OrderBy(a => a.AskDate)
                                 .ThenBy(a => a.QuestionId);
@@ -176,7 +175,7 @@ namespace Mihaylov.Api.Site.DAL.Repositories
 
         public async Task<QuizAnswer> GetQuizAnswerAsync(long id)
         {
-            IQueryable<DB.QuizAnswer> query = GetQuizAnswerQuery(true)
+            IQueryable<DB.QuizAnswer> query = GetQuizAnswerQuery()
                                                 .Where(a => a.QuizAnswerId == id);
 
             var answer = await query.ProjectToType<QuizAnswer>()
@@ -192,8 +191,8 @@ namespace Mihaylov.Api.Site.DAL.Repositories
 
             try
             {
-                var dbModel = await GetQuizAnswerQuery(false)
-                                        .Where(t => t.QuizAnswerId == input.Id && t.PersonId == input.PersonId)
+                var dbModel = await _context.QuizAnswers
+                                        .Where(t => t.QuizAnswerId == input.Id)
                                         .FirstOrDefaultAsync()
                                         .ConfigureAwait(false);
 
@@ -207,14 +206,7 @@ namespace Mihaylov.Api.Site.DAL.Repositories
 
                 await _context.SaveChangesAsync().ConfigureAwait(false);
 
-                if (dbModel.Question != null)
-                {
-                    return dbModel.Adapt<QuizAnswer>();
-                }
-                else
-                {
-                    return await GetQuizAnswerAsync(dbModel.QuizAnswerId).ConfigureAwait(false);
-                }
+                return await GetQuizAnswerAsync(dbModel.QuizAnswerId).ConfigureAwait(false);
             }
             catch (Exception ex)
             {
@@ -223,20 +215,14 @@ namespace Mihaylov.Api.Site.DAL.Repositories
             }
         }
 
-        private IQueryable<DB.QuizAnswer> GetQuizAnswerQuery(bool withoutTracking)
+
+        private IQueryable<DB.QuizAnswer> GetQuizAnswerQuery()
         {
-            var query = _context.QuizAnswers.AsQueryable();
-
-            if (withoutTracking)
-            {
-                query = query.AsNoTracking();
-            }
-
-            query = query.Include(c => c.Question)
-                         .Include(c => c.HalfType)
-                         .Include(c => c.Unit)
-                             .ThenInclude(u => u.BaseUnit);
-
+            var query = _context.QuizAnswers.AsNoTracking()
+                                            .Include(c => c.Question)
+                                            .Include(c => c.HalfType)
+                                            .Include(c => c.Unit)
+                                                .ThenInclude(u => u.BaseUnit);
             return query;
         }
     }

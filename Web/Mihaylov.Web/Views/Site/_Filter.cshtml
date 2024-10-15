@@ -1,0 +1,44 @@
+﻿@using Mihaylov.Web.Controllers
+@using Mihaylov.Web.Helpers
+@using Mihaylov.Web.Models.Site
+@model SiteFilterModel
+
+@{
+    var accountTypes = Model.AccountTypes.GetDropdownListItems(u => u.Id, u => u.Name);
+    var accountStates = Model.AccountStates.GetDropdownListItems(u => u.Id, u => u.Name);
+}
+
+@using (Html.BeginForm(nameof(SiteController.Search), SiteController.NAME, FormMethod.Post, new { @class = "form" }))
+{
+    <fieldset>
+        <div class="form-row">
+            <div class="form-group col-auto">
+                @Html.LabelFor(m => Model.AccountTypeId, "Type")
+                @Html.DropDownListFor(m => Model.AccountTypeId, accountTypes, ViewConstants.DefaultValueShort, new { @class = ViewConstants.EdithorClass, style = ViewConstants.Width100 })
+            </div>
+            <div class="form-group col-auto">
+                @Html.LabelFor(m => Model.AccountName)
+                @Html.TextBoxFor(m => Model.AccountName, new { @class = ViewConstants.EdithorClass, aria_autocomplete = "none", autocomplete = "off" })
+            </div>
+            <div class="form-group col-auto">
+                @Html.LabelFor(m => Model.Name)
+                @Html.TextBoxFor(m => Model.Name, new { @class = ViewConstants.EdithorClass, style = ViewConstants.Width100, aria_autocomplete = "none", autocomplete = "off" })
+            </div>
+            <div class="form-group col-auto">
+                @Html.LabelFor(m => Model.StatusId, "Status")
+                @Html.DropDownListFor(m => Model.StatusId, accountStates, ViewConstants.DefaultValue, new { @class = ViewConstants.EdithorClass, style = ViewConstants.Width200 })
+            </div>
+            <div class="form-group col-auto">
+                @Html.HiddenFor(m => Model.Page)
+                <button type="submit" class="submit-btn btn btn-primary">Search</button>
+            </div>
+            <div class="form-group col-auto">
+                <span class="btn btn-success merge-action-button">Merge</span>
+                <span class="btn btn-secondary clear-merge-person-button">Clear</span>
+            </div>
+            <div class="form-group col-auto">
+                <span class="btn btn-success add-new-person-search-button">New</span>
+            </div>
+        </div>
+    </fieldset>
+}

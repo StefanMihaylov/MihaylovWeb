@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Threading.Tasks;
 using Mihaylov.Common.Host.Abstract.AssemblyVersion;
 
 namespace Mihaylov.Api.Site.Client
@@ -10,6 +11,8 @@ namespace Mihaylov.Api.Site.Client
     public partial interface ISiteApiClient
     {
         public void AddToken(string token);
+
+        Task<PersonGrid> PersonsAsync(IGridRequest request, int? pageSize);
     }
 
     public partial class SiteApiClient : ISiteApiClient
@@ -26,20 +29,61 @@ namespace Mihaylov.Api.Site.Client
         {
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
         }
+
+        public Task<PersonGrid> PersonsAsync(IGridRequest request, int? pageSize)
+        {
+            return PersonsAsync(request.AccountTypeId, request.StatusId, request.Name,
+                request.AccountName, request.AccountNameExact, request.Page, pageSize);
+        }
     }
 
     public partial class ModuleInfo : IModuleInfo
     {
     }
 
+    public partial class GridRequest : IGridRequest
+    {
+        public long? PersonId => null;
+
+        public bool? IsNewPerson => null;
+    }
+
+
     public partial class PersonDetail
     {
-        public string FullName => $"{FirstName} {LastName} ({this.OtherNames})";
+        public string FullName
+        {
+            get
+            {
+                var otherName = string.Empty;
+                if (!string.IsNullOrEmpty(OtherNames))
+                {
+                    otherName = $"({this.OtherNames})";
+                }
+
+                return $"{FirstName} {LastName} {otherName}";
+            }
+        }
     }
 
     public partial class Person
     {
-        public string Age
+        public int? Age
+        {
+            get
+            {
+                if (!DateOfBirth.HasValue || !DateOfBirthType.HasValue)
+                {
+                    return null;
+                }
+
+                var age = DateOfBirth.Value.GetAge();
+
+                return age;
+            }
+        }
+
+        public string AgeGrid
         {
             get
             {
@@ -49,7 +93,7 @@ namespace Mihaylov.Api.Site.Client
                 }
 
                 var birthDate = DateOfBirth.Value;
-                var age = birthDate.GetAge();
+                var age = Age;
 
                 return DateOfBirthType switch
                 {
@@ -168,5 +212,24 @@ namespace Mihaylov.Api.Site.Client
             Key = key;
             Value = value;
         }
+    }
+
+    public interface IGridRequest
+    {
+        public int? AccountTypeId { get; }
+
+        public int? StatusId { get; }
+
+        public string Name { get; }
+
+        public string AccountName { get; }
+
+        public string AccountNameExact { get; }
+
+        public int? Page { get; set; }
+
+        public long? PersonId { get; }
+
+        public bool? IsNewPerson { get; }
     }
 }

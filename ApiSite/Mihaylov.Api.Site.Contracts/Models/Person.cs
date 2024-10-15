@@ -42,36 +42,5 @@ namespace Mihaylov.Api.Site.Contracts.Models
         {
             Accounts = new List<Account>();
         }
-
-        //public void Update(DAL.Person person)
-        //{
-        //    //person.Username = this.Username;
-        //    person.CreatedOn = this.CreatedOn;
-        //    //person.LastBroadcastDate = this.LastBroadcastDate;
-        //    //person.AskDate = this.AskDate;
-        //    person.Age = this.Age;
-        //    person.CountryId = this.CountryId;
-        //    person.EthnicityTypeId = this.EthnicityTypeId;
-        //    person.OrientationTypeId = this.OrientationTypeId;
-        //    //person.AnswerTypeId = this.AnswerTypeId;
-        //    //person.Answer = this.Answer;
-        //    //person.AnswerConverted = this.AnswerConverted;
-        //    //person.AnswerUnitTypeId = this.AnswerUnitTypeId;
-        //    //person.Comments = this.Comments;
-        //    //person.RecordsPath = this.RecordsPath;
-        //    //person.IsAccountDisabled = this.IsAccountDisabled;
-        //    person.ModifiedOn = this.ModifiedOn;
-        //}
-
-        //public void CreateMappings(IMapperConfigurationExpression configuration)
-        //{
-        //    configuration.CreateMap<DAL.Person, Person>()
-        //        .ForMember(x => x.Id, opt => opt.MapFrom(m => m.Id))
-        //        .ForMember(x => x.Country, opt => opt.MapFrom(m => m.Country.Name))
-        //        .ForMember(x => x.Ethnicity, opt => opt.MapFrom(m => m.EthnicityType.Description))
-        //        .ForMember(x => x.Orientation, opt => opt.MapFrom(m => m.OrientationType.Description));
-        //    //.ForMember(x => x.AnswerType, opt => opt.MapFrom(m => m.AnswerType.Description))
-        //    //.ForMember(x => x.AnswerUnit, opt => opt.MapFrom(m => m.AnswerUnitType.Name));
-        //}
     }
 }

@@ -6,6 +6,8 @@ namespace Mihaylov.Api.Site.Contracts.Helpers
 {
     public interface ISiteHelper
     {
+        Task FillNewPersonAsync(Person person, string username);
+
         string GetUserName(string url);
 
         Task<Person> GetUserInfoAsync(string username);

@@ -23,9 +23,9 @@ namespace Mihaylov.Api.Site.Data.Managers
             return _repository.GetAllPersonsAsync(request);
         }
 
-        public Task<Person> GetByIdAsync(long id)
+        public Task<Person> GetPersonAsync(long id)
         {
-            return _repository.GetByIdAsync(id);
+            return _repository.GetPersonAsync(id);
         }
 
         //public Person GetByName(string name)
@@ -62,6 +62,11 @@ namespace Mihaylov.Api.Site.Data.Managers
         //        return null;
         //    }
         //}
+
+        public Task<Account> GetAccountAsync(long id)
+        {
+            return _repository.GetAccountAsync(id);
+        }
 
         public Task<PersonStatistics> GetStaticticsAsync()
         {

@@ -8,9 +8,7 @@ namespace Mihaylov.Api.Site.Data.Helpers
     {
         public Person GetInfo(string url, string username)
         {
-            return null;
-
-            //string path = $"{url}/{username}";
+            return null;           
 
             //var httpRequest = (HttpWebRequest)WebRequest.Create(new Uri(path));
             //httpRequest.AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate;

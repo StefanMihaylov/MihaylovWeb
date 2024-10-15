@@ -10,7 +10,7 @@ namespace Mihaylov.Api.Site.Database.DbConfigurations
         public void Configure(EntityTypeBuilder<PersonDetail> builder)
         {
             builder.HasKey(t => t.PersonId).HasName("PK_PersonDetails_PersonId");
-            builder.Property(t => t.PersonId).ValueGeneratedOnAdd().IsRequired().UseIdentityColumn(1000, 1);
+            builder.Property(t => t.PersonId).ValueGeneratedNever().IsRequired();
 
             builder.Property(t => t.FirstName).IsRequired(false).HasMaxLength(DTO.PersonDetail.NameMaxLength);
             builder.Property(t => t.MiddleName).IsRequired(false).HasMaxLength(DTO.PersonDetail.NameMaxLength);

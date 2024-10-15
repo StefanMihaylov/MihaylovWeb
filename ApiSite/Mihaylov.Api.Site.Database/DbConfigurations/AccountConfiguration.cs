@@ -29,6 +29,9 @@ namespace Mihaylov.Api.Site.Database.DbConfigurations
 
             builder.Property(t => t.StatusId).IsRequired(false);
             builder.HasOne(t => t.Status).WithMany().IsRequired(false).HasForeignKey(t => t.StatusId).OnDelete(DeleteBehavior.NoAction);
+
+            builder.HasIndex(t => t.AccountTypeId).IsUnique(false);
+            builder.HasIndex(t => new { t.AccountTypeId, t.Username }).IsUnique();
         }
     }
 }

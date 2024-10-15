@@ -4,7 +4,11 @@
 
 $(function () {
 
+    var keyFrom = 'MergeFrom';
+    var keyTo = 'MergeTo';
+
     var $detailsContainer = $('#person-info');
+    var $newPersonSearchContainer = $('#add-new-person-search');
 
     $('.body-content').off('click')
         //.on('click', '.person-details-container .find-info-button', function () {
@@ -44,6 +48,27 @@ $(function () {
         })
         .on('click', '.person-details-container .close-person-button', function () {
             $detailsContainer.empty();
+        })
+        .on('click', '.person-details-container .edit-account-button', function () {
+            var $accountContainer = $('#account-info');
+            $accountContainer.empty();
+
+            var $this = $(this);
+            var id = $this.data('id');
+            var personId = $this.data('personid');
+            var url = main.getUrl('Site/AccountView');
+            var data = { id: id, personId: personId };
+
+            $.post(url, data, function (res) {
+                $accountContainer.empty().append(res);
+            }).fail(function (res) {
+                $accountContainer.empty().append(res);
+            }).always(function () {
+            });
+        })
+        .on('click', '.person-details-container .close-account-button', function () {
+            var $accountContainer = $('#account-info');
+            $accountContainer.empty();
         })
         .on('click', '.person-details-container .edit-answer-button', function () {
             var $answersContainer = $('#answers-info');
@@ -85,8 +110,75 @@ $(function () {
             var $questionContainer = $('#question-info');
             $questionContainer.empty();
         })
+        .on('click', '.person-details-container .merge-person-button', function () {
+            var fromValue = localStorage.getItem(keyFrom);
+            var toValue = localStorage.getItem(keyTo);
+
+            var $this = $(this);
+            var personId = $this.data('id');
+
+            if (fromValue === null && toValue === null) {
+                localStorage.setItem(keyFrom, personId);
+            }
+            else if (fromValue == personId) {
+                localStorage.removeItem(keyFrom);
+            }
+            else if (toValue == personId) {
+                localStorage.removeItem(keyTo);
+            }
+            else if (toValue === null) {
+                localStorage.setItem(keyTo, personId);
+            }
+
+            setMergeButtonColour();
+        })
+        .on('click', '.person-details-container .clear-merge-person-button', function () {
+            var fromValue = localStorage.getItem(keyFrom);
+            var toValue = localStorage.getItem(keyTo);
+
+            if (fromValue !== null) {
+                localStorage.removeItem(keyFrom);
+            }
+
+            if (toValue !== null) {
+                localStorage.removeItem(keyTo);
+            }
+
+            setMergeButtonColour();
+        })
+        .on('click', '.person-details-container .merge-action-button', function () {
+            var fromValue = localStorage.getItem(keyFrom);
+            var toValue = localStorage.getItem(keyTo);
+
+            if (fromValue !== null && toValue !== null) {
+                localStorage.removeItem(keyFrom);
+                localStorage.removeItem(keyTo);
+
+                var url = main.getUrl('Site/MergeView');
+                var fullUrl = url + '?from=' + fromValue + '&to=' + toValue;
+                window.location = fullUrl;
+            }
+
+            setMergeButtonColour();
+        })
+        .on('click', '.person-details-container .add-new-person-search-button', function () {            
+            $newPersonSearchContainer.empty();
+
+            var url = main.getUrl('Site/NewPersonView');
+
+            $.post(url, {}, function (res) {
+                $newPersonSearchContainer.empty().append(res);
+            }).fail(function (res) {
+                $newPersonSearchContainer.empty().append(res);
+            }).always(function () {
+            });
+        })
+        .on('click', '.person-details-container .close-new-person-button', function () {
+            $newPersonSearchContainer.empty();
+        })
         ;
 
+    setMergeButtonColour();
 
     $detailsContainer.on('change', '.AnswerTypeId-dropdown', changeButtonColour);
     $detailsContainer.on('input', '.Comments-input', changeButtonColour);
@@ -94,5 +186,31 @@ $(function () {
     function changeButtonColour() {
         var button = $detailsContainer.find('.submit-btn');
         button.addClass('btn-success');
+    };
+
+    function setMergeButtonColour() {
+        var fromValue = localStorage.getItem(keyFrom);
+        var toValue = localStorage.getItem(keyTo);
+
+        var $clearButton = $('.clear-merge-person-button');
+        if (fromValue !== null || toValue !== null) {
+            $clearButton.removeClass('btn-secondary').addClass('btn-info');
+        }
+        else {
+            $clearButton.addClass('btn-secondary').removeClass('btn-info');
+        }
+
+        var allButtons = $('.merge-person-button');
+        allButtons.addClass('btn-secondary').removeClass('btn-success').removeClass('btn-info');
+
+        if (fromValue !== null) {
+            var $thisFrom = $('.merge-person-button[data-id="' + fromValue + '"]');
+            $thisFrom.removeClass('btn-secondary').addClass('btn-success');
+        }
+
+        if (toValue !== null) {
+            var $thisTo = $('.merge-person-button[data-id="' + toValue + '"]');
+            $thisTo.removeClass('btn-secondary').addClass('btn-info');
+        }
     };
 });

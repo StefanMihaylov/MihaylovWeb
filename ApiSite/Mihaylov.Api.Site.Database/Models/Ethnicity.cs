@@ -5,5 +5,7 @@
         public int EthnicityId { get; set; }
 
         public string Name { get; set; }
+
+        public string OtherNames { get; set; }
     }
 }

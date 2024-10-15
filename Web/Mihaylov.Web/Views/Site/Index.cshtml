@@ -1,10 +1,20 @@
-﻿@using Mihaylov.Web.Models.Site
+﻿@using Mihaylov.Web.Controllers
+@using Mihaylov.Web.Models.Site
 @model SiteMainModel
 
 <div class="person-details-container">
-    <div class="search">
-        @Html.TextBox("url", null, new { style = "width:350px" })
-        <span class="btn btn-secondary find-info-button">Find</span>
+    @*     <div class="search">
+    @Html.TextBox("url", null, new { style = "width:350px" })
+    <span class="btn btn-secondary find-info-button">Find</span>
+    </div> *@
+
+    @await Html.PartialAsync("_Filter", Model.Filter)
+
+    <div id="add-new-person-search">
+        @if (Model.NewPersonFilter != null)
+        {
+            @await Html.PartialAsync("_AddNewPerson", Model.NewPersonFilter)
+        }
     </div>
 
     <div id="person-info">
@@ -46,11 +56,13 @@
             @await Html.PartialAsync("_QuizPhrasesGrid", Model.AdminData.QuizPhrases)
         </div>
         <div id="other" class="tab-pane fade">
-            @Html.ActionLink("Update", "Update", "Site", new { @class = "btn btn-default" })
+            @Html.ActionLink("Update", "Update", SiteController.NAME, new { @class = "btn btn-default" })
         </div>
     </div>
 </div>
 
 @section Scripts {
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+@*     <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script> *@
     <script src="~/js/person.js"></script>
 }

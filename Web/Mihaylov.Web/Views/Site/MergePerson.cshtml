@@ -1,0 +1,251 @@
+﻿@using Mihaylov.Web.Controllers
+@using Mihaylov.Web.Models.Site
+@model MergeViewModel
+
+<div class="person-merge-container">
+
+    @using (Html.BeginForm(nameof(SiteController.SaveMerge), SiteController.NAME, FormMethod.Post, new { @class = "form" }))
+    {
+
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>From</th>
+                    <th>To</th>
+                    <th>
+                        @Html.HiddenFor(m => Model.From)
+                        @Html.HiddenFor(m => Model.To)
+                        <button type="submit" class="submit-btn btn btn-primary">Merge</button>
+                        <a href="@Url.Action(nameof(SiteController.MergeView),SiteController.NAME, new MergeRequestModel() { From = Model.PersonTo.Id, To = Model.PersonFrom.Id })" class="btn btn-primary">Swap</a>
+                        <a href="@Url.Action(nameof(SiteController.Index),SiteController.NAME, new SiteFilterModel() { Page = 1 })" class="btn btn-danger">Close</a>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (!string.IsNullOrWhiteSpace(Model.PersonFrom.Details?.FirstName) ||
+               !string.IsNullOrWhiteSpace(Model.PersonTo.Details?.FirstName))
+                {
+                    <tr>
+                        <td>@Model.PersonFrom.Details?.FirstName</td>
+                        <td>@Model.PersonTo.Details?.FirstName</td>
+                        <td>
+                            <span class="form-check">
+                                <input class="form-check-input position-static checkbox-lg" type="checkbox" name="checks" id="FirstName" value="1">
+                            </span>
+                        </td>
+                    </tr>
+                }
+
+                @if (!string.IsNullOrWhiteSpace(Model.PersonFrom.Details?.MiddleName) ||
+               !string.IsNullOrWhiteSpace(Model.PersonTo.Details?.MiddleName))
+                {
+                    <tr>
+                        <td>@Model.PersonFrom.Details?.MiddleName</td>
+                        <td>@Model.PersonTo.Details?.MiddleName</td>
+                        <td>
+                            <span class="form-check">
+                                <input class="form-check-input position-static checkbox-lg" type="checkbox" name="checks" id="MiddleName" value="2">
+                            </span>
+                        </td>
+                    </tr>
+                }
+
+                @if (!string.IsNullOrWhiteSpace(Model.PersonFrom.Details?.LastName) ||
+               !string.IsNullOrWhiteSpace(Model.PersonTo.Details?.LastName))
+                {
+                    <tr>
+                        <td>@Model.PersonFrom.Details?.LastName</td>
+                        <td>@Model.PersonTo.Details?.LastName</td>
+                        <td>
+                            <span class="form-check">
+                                <input class="form-check-input position-static checkbox-lg" type="checkbox" name="checks" id="LastName" value="3">
+                            </span>
+                        </td>
+                    </tr>
+                }
+
+                @if (!string.IsNullOrWhiteSpace(Model.PersonFrom.Details?.OtherNames) ||
+               !string.IsNullOrWhiteSpace(Model.PersonTo.Details?.OtherNames))
+                {
+                    <tr>
+                        <td>@Model.PersonFrom.Details?.OtherNames</td>
+                        <td>@Model.PersonTo.Details?.OtherNames</td>
+                        <td>
+                            <span class="form-check">
+                                <input class="form-check-input position-static checkbox-lg" type="checkbox" name="checks" id="OtherNames" value="4">
+                            </span>
+                        </td>
+                    </tr>
+                }
+
+                <tr>
+                    <td>@Model.PersonFrom.Ethnicity</td>
+                    <td>@Model.PersonTo.Ethnicity</td>
+                    <td>
+                        <span class="form-check">
+                            <input class="form-check-input position-static checkbox-lg" type="checkbox" name="checks" id="EthnicityId" value="5">
+                        </span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>@Model.PersonFrom.Orientation</td>
+                    <td>@Model.PersonTo.Orientation</td>
+                    <td>
+                        <span class="form-check">
+                            <input class="form-check-input position-static checkbox-lg" type="checkbox" name="checks" id="OrientationId" value="6">
+                        </span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>@Model.PersonFrom.Comments</td>
+                    <td>@Model.PersonTo.Comments</td>
+                    <td>
+                        <span class="form-check">
+                            <input class="form-check-input position-static checkbox-lg" type="checkbox" name="checks" id="Comments" value="7">
+                        </span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>@Model.PersonFrom.Age</td>
+                    <td>@Model.PersonTo.Age</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>@Model.PersonFrom.DateOfBirth</td>
+                    <td>@Model.PersonTo.DateOfBirth</td>
+                    <td>
+                        <span class="form-check">
+                            <input class="form-check-input position-static checkbox-lg" type="checkbox" name="checks" id="DateOfBirth" value="8">
+                        </span>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>@Model.PersonFrom.DateOfBirthType?.ToString()</td>
+                    <td>@Model.PersonTo.DateOfBirthType?.ToString()</td>
+                    <td>
+                        <span class="form-check">
+                            <input class="form-check-input position-static checkbox-lg" type="checkbox" name="checks" id="DateOfBirthType" value="9">
+                        </span>
+                    </td>
+                </tr>
+
+                @if (!string.IsNullOrWhiteSpace(Model.PersonFrom.Country) ||
+               !string.IsNullOrWhiteSpace(Model.PersonTo.Country))
+                {
+                    <tr>
+                        <td>@Model.PersonFrom.Country</td>
+                        <td>@Model.PersonTo.Country</td>
+                        <td>
+                            <span class="form-check">
+                                <input class="form-check-input position-static checkbox-lg" type="checkbox" name="checks" id="Country" value="10">
+                            </span>
+                        </td>
+                    </tr>
+                }
+
+                @if (!string.IsNullOrWhiteSpace(Model.PersonFrom.Location?.CountryState) ||
+               !string.IsNullOrWhiteSpace(Model.PersonTo.Location?.CountryState))
+                {
+                    <tr>
+                        <td>@Model.PersonFrom.Location?.CountryState</td>
+                        <td>@Model.PersonTo.Location?.CountryState</td>
+                        <td>
+                            <span class="form-check">
+                                <input class="form-check-input position-static checkbox-lg" type="checkbox" name="checks" id="CountryState" value="11">
+                            </span>
+                        </td>
+                    </tr>
+                }
+
+                @if (!string.IsNullOrWhiteSpace(Model.PersonFrom.Location?.Region) ||
+               !string.IsNullOrWhiteSpace(Model.PersonTo.Location?.Region))
+                {
+                    <tr>
+                        <td>@Model.PersonFrom.Location?.Region</td>
+                        <td>@Model.PersonTo.Location?.Region</td>
+                        <td>
+                            <span class="form-check">
+                                <input class="form-check-input position-static checkbox-lg" type="checkbox" name="checks" id="Region" value="12">
+                            </span>
+                        </td>
+                    </tr>
+                }
+
+                @if (!string.IsNullOrWhiteSpace(Model.PersonFrom.Location?.City) ||
+               !string.IsNullOrWhiteSpace(Model.PersonTo.Location?.City))
+                {
+                    <tr>
+                        <td>@Model.PersonFrom.Location?.City</td>
+                        <td>@Model.PersonTo.Location?.City</td>
+                        <td>
+                            <span class="form-check">
+                                <input class="form-check-input position-static checkbox-lg" type="checkbox" name="checks" id="City" value="13">
+                            </span>
+                        </td>
+                    </tr>
+                }
+
+                @if (!string.IsNullOrWhiteSpace(Model.PersonFrom.Location?.Details) ||
+               !string.IsNullOrWhiteSpace(Model.PersonTo.Location?.Details))
+                {
+                    <tr>
+                        <td>@Model.PersonFrom.Location?.Details</td>
+                        <td>@Model.PersonTo.Location?.Details</td>
+                        <td>
+                            <span class="form-check">
+                                <input class="form-check-input position-static checkbox-lg" type="checkbox" name="checks" id="Details" value="14">
+                            </span>
+                        </td>
+                    </tr>
+                }
+
+                @foreach (var account in Model.PersonTo.Accounts)
+                {
+                    <tr>
+                        <td></td>
+                        <td>
+                            @{
+                                var accountView = $"{account.AccountType} {account.Username}";
+                            }
+                            @accountView
+                        </td>
+                        <td></td>
+                    </tr>
+                }
+
+                @foreach (var account in Model.PersonFrom.Accounts)
+                {
+                    <tr>
+                        <td>
+                            @{
+                                var accountView = $"{account.AccountType} {account.Username}";
+                            }
+                            @accountView
+                        </td>
+                        <td></td>
+                        <td>
+                            <span class="form-check">
+                                <input class="form-check-input position-static checkbox-lg" type="checkbox" name="checks" id="Accounts" value="15">
+                            </span>
+                        </td>
+                    </tr>
+                }
+
+                <tr>
+                    <td>@Model.PersonFrom.AnswersCount</td>
+                    <td>@Model.PersonTo.AnswersCount</td>
+                    <td>
+                        <span class="form-check">
+                            <input class="form-check-input position-static checkbox-lg" type="checkbox" name="checks" id="Answers" value="16">
+                        </span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    }
+</div>
+
+@section Scripts {
+    <script src="~/js/person.js"></script>
+}

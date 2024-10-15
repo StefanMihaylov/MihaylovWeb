@@ -16,7 +16,7 @@ namespace Mihaylov.Api.Site.Contracts.Models
 
         public string AccountType { get; set; }
 
-        public int StatusId { get; set; }
+        public int? StatusId { get; set; }
 
         public string Status { get; set; }
 
@@ -33,16 +33,5 @@ namespace Mihaylov.Api.Site.Contracts.Models
         public DateTime? ReconciledDate { get; set; }
 
         public string Details { get; set; }
-
-
-        //public DateTime? AskDate { get; set; }
-        //public int AnswerTypeId { get; set; }
-        //public string AnswerType { get; set; }
-        //public decimal? Answer { get; set; }
-        //public int? AnswerUnitTypeId { get; set; }
-        //public string AnswerUnit { get; set; }
-        //public decimal? AnswerConverted { get; set; }
-        //public string AnswerConvertedUnit { get; set; } // TODO
-        //public DateTime? ModifiedOn { get; set; }
     }
 }

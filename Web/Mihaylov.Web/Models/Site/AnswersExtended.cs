@@ -5,8 +5,14 @@ namespace Mihaylov.Web.Models.Site
 {
     public class AnswersExtended
     {
-        public long PersonId { get; set; }
+        public long PersonId { get; }
 
-        public IEnumerable<QuizAnswer> Answers { get; set; }
+        public IEnumerable<QuizAnswer> Answers { get; }
+
+        public AnswersExtended(long personId, IEnumerable<QuizAnswer> answers)
+        {
+            PersonId = personId;
+            Answers = answers;
+        }
     }
 }

@@ -61,3 +61,7 @@ hr {
     border: none;
     border-bottom: 1px solid darkgray;
 }
+
+.table td, .table th {
+    padding: .2rem;
+    padding-left: .5rem;

@@ -1,7 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using Azure.Core;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Mihaylov.Api.Site.Contracts.Helpers;
 using Mihaylov.Api.Site.Contracts.Managers;
 using Mihaylov.Api.Site.Contracts.Models;
 using Mihaylov.Api.Site.Contracts.Models.Base;
@@ -24,11 +28,16 @@ namespace Mihaylov.Api.Site.Controllers
     {
         private readonly IPersonsManager _manager;
         private readonly IPersonsWriter _writer;
+        private readonly ICollectionManager _collectionManager;
+        private readonly ISiteHelper _siteHelper;
 
-        public PersonController(IPersonsManager manager, IPersonsWriter writer)
+        public PersonController(IPersonsManager manager, IPersonsWriter writer, ICollectionManager collectionManager,
+            ISiteHelper siteHelper)
         {
             _manager = manager;
             _writer = writer;
+            _collectionManager = collectionManager;
+            _siteHelper = siteHelper;
         }
 
         [HttpGet]
@@ -44,7 +53,7 @@ namespace Mihaylov.Api.Site.Controllers
         [ProducesResponseType(typeof(Person), StatusCodes.Status200OK)]
         public async Task<IActionResult> Person(long id)
         {
-            Person person = await _manager.GetByIdAsync(id).ConfigureAwait(false);
+            Person person = await _manager.GetPersonAsync(id).ConfigureAwait(false);
 
             return Ok(person);
         }
@@ -82,12 +91,103 @@ namespace Mihaylov.Api.Site.Controllers
                 Ethnicity = null,
                 OrientationId = input.OrientationId,
                 Orientation = null,
-                Comments = input.Comments,                
+                Comments = input.Comments,
             };
 
-            Person person = await _writer.AddOrUpdateAsync(request).ConfigureAwait(false);
+            Person person = await _writer.AddOrUpdatePersonAsync(request).ConfigureAwait(false);
 
             return Ok(person);
+        }
+
+        [HttpGet]
+        [ProducesResponseType(typeof(Person), StatusCodes.Status200OK)]
+        public async Task<IActionResult> NewPerson(NewPersonModel input)
+        {
+            input.AccountTypeId ??= 1;
+            input.IsPreview ??= true;
+
+            var accountTypes = await _collectionManager.GetAllAccountTypesAsync().ConfigureAwait(false);
+
+            var person = new Person()
+            {
+                DateOfBirthType = DateOfBirthType.YearCalculated,
+                Accounts = new List<Account>()
+                {
+                    new Account()
+                    {
+                        AccountType = accountTypes.First(a => a.Id == input.AccountTypeId).Name,
+                        AccountTypeId = input.AccountTypeId.Value,
+                        Username = input.Username,
+                        AskDate = DateTime.UtcNow,
+                    }
+                }
+            };
+
+            if (input.AccountTypeId == 3)
+            {
+                await _siteHelper.FillNewPersonAsync(person, input.Username).ConfigureAwait(false);
+            }
+
+            var account = person.Accounts.First();
+            if (account.StatusId.HasValue)
+            {
+                var accountStates = await _collectionManager.GetAllAccountStatesAsync().ConfigureAwait(false);
+                account.Status = accountStates.First(s => s.Id == account.StatusId.Value).Name;
+            }
+
+            if (!input.IsPreview.Value)
+            {
+                var newPerson = await _writer.AddNewPersonAsync(person).ConfigureAwait(false);
+
+                return Ok(newPerson);
+            }
+
+            return Ok(person);
+        }
+
+        [HttpPost]
+        [ProducesResponseType(typeof(Person), StatusCodes.Status200OK)]
+        public async Task<IActionResult> MergePerson(PersonMerge input)
+        {
+            Person person = await _writer.MergePersonsAsync(input).ConfigureAwait(false);
+
+            return Ok(person);
+        }
+
+        [HttpGet]
+        [ProducesResponseType(typeof(Account), StatusCodes.Status200OK)]
+        public async Task<IActionResult> Account(long id)
+        {
+            Account account = await _manager.GetAccountAsync(id).ConfigureAwait(false);
+
+            return Ok(account);
+        }
+
+        [HttpPost]
+        [SwaggerOperation(OperationId = "AddAccount")]
+        [ProducesResponseType(typeof(Account), StatusCodes.Status200OK)]
+        public async Task<IActionResult> Account(AddAccountModel input)
+        {
+            var request = new Account()
+            {
+                Id = input.Id ?? 0,
+                PersonId = input.PersonId,
+                AccountTypeId = input.AccountTypeId.Value,
+                AccountType = null,
+                StatusId = input.StatusId,
+                Status = null,
+                Username = input.Username,
+                DisplayName = input.DisplayName,
+                Details = input.Details,
+                AskDate = input.AskDate,
+                CreateDate = input.CreateDate,
+                LastOnlineDate = input.LastOnlineDate,
+                ReconciledDate = input.ReconciledDate,
+            };
+
+            Account account = await _writer.AddOrUpdateAccountAsync(request).ConfigureAwait(false);
+
+            return Ok(account);
         }
 
         [HttpGet]

@@ -1,24 +1,29 @@
-﻿@using Mihaylov.Api.Site.Client
-@using Mihaylov.Web.Helpers
-@model IEnumerable<Account>
+﻿@using Mihaylov.Web.Helpers
+@using Mihaylov.Web.Models.Site
+@model AccountsExtended
 
 <table class="table table-bordered table-striped">
     <thead>
         <tr>
-            <th>@Html.LabelFor(m => m.First().AccountType, "Type")</th>
-            <th>@Html.LabelFor(m => m.First().Username)</th>
-            <th>@Html.LabelFor(m => m.First().DisplayName)</th>
-            <th>@Html.LabelFor(m => m.First().Status)</th>
-            <th>@Html.LabelFor(m => m.First().AskDate)</th>
-            <th>@Html.LabelFor(m => m.First().CreateDate)</th>
-            <th>@Html.LabelFor(m => m.First().LastOnlineDate, "LastOnline")</th>
-            <th>@Html.LabelFor(m => m.First().ReconciledDate, "Reconciled")</th>
-            <th>@Html.LabelFor(m => m.First().Details)</th>
-            <th>Actions</th>
+            <th>@Html.LabelFor(m => m.Accounts.First().AccountType, "Type")</th>
+            <th>@Html.LabelFor(m => m.Accounts.First().Username)</th>
+            <th>@Html.LabelFor(m => m.Accounts.First().DisplayName)</th>
+            <th>@Html.LabelFor(m => m.Accounts.First().Status)</th>
+            <th>@Html.LabelFor(m => m.Accounts.First().AskDate)</th>
+            <th>@Html.LabelFor(m => m.Accounts.First().CreateDate)</th>
+            <th>@Html.LabelFor(m => m.Accounts.First().LastOnlineDate, "LastOnline")</th>
+            <th>@Html.LabelFor(m => m.Accounts.First().ReconciledDate, "Reconciled")</th>
+            <th>@Html.LabelFor(m => m.Accounts.First().Details)</th>
+            <th>
+                @if (Model.PersonId > 0)
+                {
+                    <span class="btn btn-success edit-account-button" data-id="" data-personid="@Model.PersonId">Нов</span>
+                }
+            </th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var account in Model)
+        @foreach (var account in Model.Accounts)
         {
             <tr>
                 <td>@account.AccountType</td>
@@ -28,7 +33,11 @@
                 <td>@account.AskDate.ToString(ViewConstants.DateFormatSimple)</td>
                 <td>
                     @{
-                        var age = $"({account.CreateDate?.ToString(ViewConstants.DateFormatSimple)}) {account.AccountAge}";
+                        string age = string.Empty;
+                        if (account.CreateDate.HasValue)
+                        {
+                            age = $"({account.CreateDate.Value.ToString(ViewConstants.DateFormatSimple)}) {account.AccountAge}";
+                        }                       
                     }
                     @age
                 </td>
@@ -36,7 +45,10 @@
                 <td>@account.ReconciledDate?.ToString(ViewConstants.DateFormatSimple)</td>
                 <td>@account.Details</td>
                 <td>
-                    <span class="btn btn-secondary edit-account-button" data-id="@account.Id">Edit</span>
+                    @if (account.Id > 0)
+                    {
+                        <span class="btn btn-secondary edit-account-button" data-id="@account.Id" data-personid="@account.PersonId">Edit</span>
+                    }
                 </td>
             </tr>
         }

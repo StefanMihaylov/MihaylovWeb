@@ -1,38 +1,42 @@
 ﻿using System;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Mihaylov.Api.Site.Contracts.Helpers;
 using Mihaylov.Api.Site.Contracts.Managers;
 using Mihaylov.Api.Site.Contracts.Models;
-using Mihaylov.Api.Site.Contracts.Writers;
 using Mihaylov.Api.Site.Data.Models;
 
 namespace Mihaylov.Api.Site.Data.Helpers
 {
     public class SiteHelper : ISiteHelper
     {
-        private readonly string url;
-
         private readonly ILogger _logger;
+
         private readonly ICollectionManager _collectionManager;
         private readonly IPersonsManager _personsManager;
-        private readonly IPersonsWriter personsWriter;
-        private readonly ICsQueryWrapper csQueryWrapper;
 
+        private readonly HttpClient _client;
+        private readonly string _url;
+        private readonly DateTime _baseDate;
 
-        public SiteHelper(IOptions<SiteOptions> options, 
+        public SiteHelper(IOptions<SiteOptions> options,
             ICollectionManager collectionManager, ILoggerFactory loggerFactory,
-            IPersonsManager personsManager,
-            IPersonsWriter personsWriter, ICsQueryWrapper csQueryWrapper)
+            IPersonsManager personsManager, ICsQueryWrapper csQueryWrapper, IHttpClientFactory factory)
         {
             _logger = loggerFactory.CreateLogger(this.GetType().Name);
-            url = options.Value.SiteUrl;
-            _collectionManager = collectionManager;            
+
+            _url = options.Value.SiteUrl;
+            _baseDate = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+
+            _client = factory.CreateClient("SiteHelper");
+
+            _collectionManager = collectionManager;
             _personsManager = personsManager;
-            this.personsWriter = personsWriter;
-            this.csQueryWrapper = csQueryWrapper;
         }
 
         public string GetUserName(string url)
@@ -83,7 +87,7 @@ namespace Mihaylov.Api.Site.Data.Helpers
             {
                 _logger.LogDebug($"Helper: Get person by name: {username}");
 
-                Person person = this.csQueryWrapper.GetInfo(this.url, username);
+                Person person = null; // _csQueryWrapper.GetInfo(_url, username);
 
                 Ethnicity ethnicityDTO = await GetEthnisityTypeAsync(person.Ethnicity).ConfigureAwait(false);
                 Orientation orientationDTO = await GetOrientationType(person.Orientation).ConfigureAwait(false);
@@ -100,9 +104,96 @@ namespace Mihaylov.Api.Site.Data.Helpers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, $"Error in Site helper, username: {username}, url: {this.url}");
+                _logger.LogError(ex, $"Error in Site helper, username: {username}, url: {this._url}");
                 throw;
             }
+        }
+
+        public async Task FillNewPersonAsync(Person person, string username)
+        {
+            var account = person.Accounts.First();
+
+            var url = $"{_url}/rest/v1.0/profile/{username}/info";
+            var request = new HttpRequestMessage(HttpMethod.Get, url);
+            var responseMessage = await _client.SendAsync(request).ConfigureAwait(false);
+            var responseString = await responseMessage.Content.ReadAsStringAsync().ConfigureAwait(false);
+
+            if (responseMessage.StatusCode == HttpStatusCode.Unauthorized)
+            {
+                account.StatusId = 3;
+            }
+            else if (responseMessage.IsSuccessStatusCode)
+            {
+                var options = new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true,
+                };
+
+                var personInfo = JsonSerializer.Deserialize<PersonInfoModel>(responseString, options);
+
+                person.DateOfBirth = GetBirthDate(personInfo.Age);
+
+                if (!string.IsNullOrEmpty(personInfo.City))
+                {
+                    person.Location ??= new PersonLocation();
+                    person.Location.City = personInfo.City;
+                }
+
+                if (!string.IsNullOrEmpty(personInfo.CountryId))
+                {
+                    var countries = await _collectionManager.GetAllCountriesAsync().ConfigureAwait(false);
+                    var country = countries.Where(c => c.TwoLetterCode.Equals(personInfo.CountryId, StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
+
+                    if (country != null)
+                    {
+                        person.CountryId = country.Id;
+                    }
+                    else
+                    {
+                        person.Comments += $" Country: {personInfo.CountryId},";
+                    }
+                }
+
+                if (!string.IsNullOrEmpty(personInfo.Ethnicity))
+                {
+                    var ethnicities = await _collectionManager.GetAllEthnicitiesAsync().ConfigureAwait(false);
+                    var ethnicity = ethnicities.Where(c => c.Name.Equals(personInfo.Ethnicity, StringComparison.OrdinalIgnoreCase) ||
+                                                           c.OtherNames?.Contains(personInfo.Ethnicity, StringComparison.OrdinalIgnoreCase) == true)
+                                               .FirstOrDefault();
+
+                    if (ethnicity != null)
+                    {
+                        person.EthnicityId = ethnicity.Id;
+                    }
+                    else
+                    {
+                        person.Comments += $" Ethnicity: {personInfo.Ethnicity},";
+                    }
+                }
+
+                if (!string.IsNullOrEmpty(personInfo.SexPreference))
+                {
+                    var orientations = await _collectionManager.GetAllOrientationsAsync().ConfigureAwait(false);
+                    var orientation = orientations.Where(c => c.Name.Equals(personInfo.SexPreference, StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
+
+                    if (orientation != null)
+                    {
+                        person.OrientationId = orientation.Id;
+                    }
+                    else
+                    {
+                        person.Comments += $" Orientation: {personInfo.SexPreference},";
+                    }
+                }
+
+                account.CreateDate = _baseDate.AddMilliseconds(personInfo.CreationDate).Date;
+                account.LastOnlineDate = _baseDate.AddMilliseconds(personInfo.LastBroadcast);
+            }
+        }
+
+        private DateTime GetBirthDate(int age)
+        {
+            return DateTime.UtcNow.Date.AddYears(-age).AddMonths(-6);
         }
 
         public async Task<int> UpdatePersonsAsync()
@@ -187,7 +278,7 @@ namespace Mihaylov.Api.Site.Data.Helpers
 
             var ethnisities = await _collectionManager.GetAllEthnicitiesAsync().ConfigureAwait(false);
             Ethnicity ethnisityDTO = ethnisities.FirstOrDefault(o => o.Name.Equals(ethnicity, StringComparison.OrdinalIgnoreCase));
-            
+
             return ethnisityDTO;
         }
 

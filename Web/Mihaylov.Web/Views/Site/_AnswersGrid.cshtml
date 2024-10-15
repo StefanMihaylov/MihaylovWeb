@@ -12,7 +12,10 @@
             <th>@Html.LabelFor(m => m.Answers.First().HalfType)</th>
             <th>@Html.LabelFor(m => m.Answers.First().Details)</th>
             <th>
-                <span class="btn btn-success edit-answer-button" data-id="" data-personid="@Model.PersonId">Нов</span>
+                @if (Model.PersonId > 0)
+                {
+                    <span class="btn btn-success edit-answer-button" data-id="" data-personid="@Model.PersonId">Нов</span>
+                }                
             </th>
         </tr>
     </thead>

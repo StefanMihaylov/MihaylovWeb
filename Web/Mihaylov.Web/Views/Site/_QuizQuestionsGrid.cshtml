@@ -7,7 +7,7 @@
     <caption style="caption-side: top;">Въпроси</caption>
     <thead>
         <tr>
-            @for(int i = 0; i<maxColumns-1; i++)
+            @for(int i = 0; i < maxColumns - 1; i++)
             {
                 <th></th>
             }
@@ -36,10 +36,13 @@
                 }
             }
 
-            @for (int i = count; i < maxColumns; i++)
+            @if (count > 0)
             {
-                <td></td>
-            }
+                for (int i = count; i < maxColumns; i++)
+                {
+                    <td></td>
+                }            
+            }            
         </tr>
     </tbody>
 </table>

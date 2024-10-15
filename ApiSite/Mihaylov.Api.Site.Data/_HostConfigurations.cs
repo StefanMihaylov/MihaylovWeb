@@ -27,6 +27,8 @@ namespace Mihaylov.Api.Site.Data
             services.AddScoped<ICsQueryWrapper, CsQueryWrapper>();
             services.AddScoped<ISiteHelper, SiteHelper>();
 
+            services.AddHttpClient("SiteHelper");
+
             return services;
         }
     }

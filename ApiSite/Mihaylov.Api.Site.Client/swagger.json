@@ -419,7 +419,7 @@
             }
           },
           {
-            "name": "AccountStatusId",
+            "name": "StatusId",
             "in": "query",
             "schema": {
               "type": "integer",
@@ -435,6 +435,13 @@
           },
           {
             "name": "AccountName",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "AccountNameExact",
             "in": "query",
             "schema": {
               "type": "string"
@@ -599,6 +606,260 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Person"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Person/NewPerson": {
+      "get": {
+        "tags": [
+          "Person"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/NewPersonModel"
+                  }
+                ]
+              }
+            },
+            "text/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/NewPersonModel"
+                  }
+                ]
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/NewPersonModel"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Person"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Person/MergePerson": {
+      "post": {
+        "tags": [
+          "Person"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/PersonMerge"
+                  }
+                ]
+              }
+            },
+            "text/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/PersonMerge"
+                  }
+                ]
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/PersonMerge"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Person"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Person/Account": {
+      "get": {
+        "tags": [
+          "Person"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Account"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Person"
+        ],
+        "operationId": "AddAccount",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/AddAccountModel"
+                  }
+                ]
+              }
+            },
+            "text/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/AddAccountModel"
+                  }
+                ]
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/AddAccountModel"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Account"
                 }
               }
             }
@@ -1186,7 +1447,8 @@
           },
           "statusId": {
             "type": "integer",
-            "format": "int32"
+            "format": "int32",
+            "nullable": true
           },
           "status": {
             "type": "string",
@@ -1248,6 +1510,66 @@
             "format": "int32"
           },
           "name": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "AddAccountModel": {
+        "required": [
+          "accountTypeId",
+          "username"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          },
+          "personId": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          },
+          "accountTypeId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "statusId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "username": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "displayName": {
+            "type": "string",
+            "nullable": true
+          },
+          "askDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "createDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "lastOnlineDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "reconciledDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "details": {
             "type": "string",
             "nullable": true
           }
@@ -1579,6 +1901,48 @@
           "name": {
             "type": "string",
             "nullable": true
+          },
+          "otherNames": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "GridRequest": {
+        "type": "object",
+        "properties": {
+          "accountTypeId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "statusId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "accountName": {
+            "type": "string",
+            "nullable": true
+          },
+          "accountNameExact": {
+            "type": "string",
+            "nullable": true
+          },
+          "page": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -1627,6 +1991,28 @@
         },
         "additionalProperties": false
       },
+      "NewPersonModel": {
+        "required": [
+          "isPreview",
+          "username"
+        ],
+        "type": "object",
+        "properties": {
+          "accountTypeId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "username": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "isPreview": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
       "Orientation": {
         "type": "object",
         "properties": {
@@ -1647,14 +2033,12 @@
           "page": {
             "type": "integer",
             "format": "int32",
-            "nullable": true,
-            "readOnly": true
+            "nullable": true
           },
           "pageSize": {
             "type": "integer",
             "format": "int32",
-            "nullable": true,
-            "readOnly": true
+            "nullable": true
           },
           "count": {
             "type": "integer",
@@ -1779,6 +2163,14 @@
       "PersonGrid": {
         "type": "object",
         "properties": {
+          "request": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/GridRequest"
+              }
+            ],
+            "nullable": true
+          },
           "data": {
             "type": "array",
             "items": {
@@ -1823,6 +2215,84 @@
           },
           "details": {
             "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "PersonMerge": {
+        "type": "object",
+        "properties": {
+          "from": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "to": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "firstName": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "middleName": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "lastName": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "otherNames": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "dateOfBirth": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "dateOfBirthType": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "countryId": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "countryStateId": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "region": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "city": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "details": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "ethnicityId": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "orientationId": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "comments": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "accounts": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "answers": {
+            "type": "boolean",
             "nullable": true
           }
         },

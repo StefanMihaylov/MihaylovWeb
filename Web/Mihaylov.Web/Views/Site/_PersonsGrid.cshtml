@@ -1,5 +1,7 @@
-﻿@using Mihaylov.Api.Site.Client;
+﻿@using Mihaylov.Api.Site.Client
+@using Mihaylov.Web.Controllers
 @using Mihaylov.Web.Helpers
+@using Mihaylov.Web.Models.Site
 @model PersonGrid
 
 <table class="table table-bordered table-striped">
@@ -23,7 +25,7 @@
         {
             <tr>
                 <td>@person.Details?.FullName</td>
-                <td>@person.Age</td>
+                <td>@person.AgeGrid</td>
                 <td>@person.Country</td>
                 <td>@person.Orientation</td>
                 <td>
@@ -37,10 +39,10 @@
                         @person.Comments
                     }
                 </td>
-                <td>@person.Accounts.First().AccountType</td>
-                <td>@person.Accounts.First().Username</td>
-                <td>@person.Accounts.First().Status</td>
-                <td>@person.Accounts.First().AskDate.ToString(ViewConstants.DateTimeFormatSimple)</td>
+                <td>@person.Accounts.FirstOrDefault()?.AccountType</td>
+                <td>@person.Accounts.FirstOrDefault()?.Username</td>
+                <td>@person.Accounts.FirstOrDefault()?.Status</td>
+                <td>@person.Accounts.FirstOrDefault()?.AskDate.ToString(ViewConstants.DateTimeFormatSimple)</td>
                 <td>
                     @if (person.AnswersCount > 0)
                     {
@@ -49,6 +51,7 @@
                 </td>
                 <td>
                     <span class="btn btn-secondary edit-person-button" data-id="@person.Id">Edit</span>
+                    <span class="btn btn-secondary merge-person-button" data-id="@person.Id">Merge</span>
                 </td>
             </tr>
 
@@ -77,4 +80,9 @@
     </tfoot>
 </table>
 
-@await Html.PartialAsync("_Pager", Model.Pager)
+@await Html.PartialAsync("_Pager", new PagerExtended(Model.Pager)
+{
+    Request = Model.Request,
+    Path = $"/{SiteController.NAME}/{nameof(SiteController.Index)}",
+})
+

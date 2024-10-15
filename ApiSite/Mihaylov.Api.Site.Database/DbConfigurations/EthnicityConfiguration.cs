@@ -13,6 +13,7 @@ namespace Mihaylov.Api.Site.Database.DbConfigurations
 
             builder.Property(t => t.EthnicityId).ValueGeneratedOnAdd().IsRequired();
             builder.Property(c => c.Name).IsRequired().HasMaxLength(DTO.Ethnicity.NameMaxLength);
+            builder.Property(c => c.OtherNames).IsRequired(false).HasMaxLength(DTO.Ethnicity.OtherNameMaxLength);
         }
     }
 }

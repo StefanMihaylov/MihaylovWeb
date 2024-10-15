@@ -1,19 +1,17 @@
-﻿@namespace Mihaylov.Api.Site.Client
-@model Pager
+﻿@using Mihaylov.Web.Models.Site
+@model PagerExtended
 
 @{
     int pageLimit = 25;
     bool biggerPager = Model.PageMax > pageLimit;
     int maxPage = biggerPager ? pageLimit : Model.PageMax.Value;
-
-    string controller = "Site";
 }
 
 <div class="col-auto">
     <nav aria-label="">
         <ul class="pagination ustify-content-end">
             <li class="page-item">
-                <a class="page-link" href="/@controller/index?page=@(Model.Page - 1)"><<</a>
+                <a class="page-link" href="@Model.FullPath(Model.Page - 1)"><<</a>
             </li>
 
             @for (int i = 1; i <= maxPage; i++)
@@ -30,19 +28,22 @@
                 else
                 {
                     <li class="page-item">
-                        <a class="page-link" href="/@controller/index?page=@i"> @(i)</a>
+                        <a class="page-link" href="@Model.FullPath(@i)"> @(i)</a>
                     </li>
                 }
             }
 
             <li class="page-item">
-                <a class="page-link" href="/@controller/index?page=@(Model.Page + 1)">>></a>
+                <a class="page-link" href="@Model.FullPath(Model.Page + 1)">>></a>
             </li>
             <li class="page-item disabled">
                 <span class="page-link">x @Model.PageSize</span>
             </li>
             <li class="page-item disabled">
                 <span class="page-link">@Model.PageMax</span>
+            </li>
+            <li class="page-item disabled">
+                <span class="page-link">@Model.Count</span>
             </li>
         </ul>
     </nav>

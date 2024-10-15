@@ -19,6 +19,7 @@ namespace Mihaylov.Api.Site.DAL
             TypeAdapterConfig<Db.Ethnicity, Ethnicity>.NewConfig()
                 .Map(dest => dest.Id, src => src.EthnicityId)
                 .Map(dest => dest.Name, src => src.Name)
+                .Map(dest => dest.OtherNames, src => src.OtherNames)
                 .TwoWays();
 
             TypeAdapterConfig<Db.Country, Country>.NewConfig()
@@ -175,6 +176,21 @@ namespace Mihaylov.Api.Site.DAL
                 .Map(dest => dest.Username, src => src.Username)
                 .Map(dest => dest.DisplayName, src => src.DisplayName)
                 .Map(dest => dest.AskDate, src => src.CreatedOn)
+                .Map(dest => dest.CreateDate, src => src.CreateDate)
+                .Map(dest => dest.LastOnlineDate, src => src.LastOnlineDate)
+                .Map(dest => dest.ReconciledDate, src => src.ReconciledDate)
+                .Map(dest => dest.Details, src => src.Details);
+
+            TypeAdapterConfig<Account, Db.Account>.NewConfig()
+                .Map(dest => dest.AccountId, src => src.Id)
+                .Map(dest => dest.PersonId, src => src.PersonId)
+                .Map(dest => dest.StatusId, src => src.StatusId)
+                .Ignore(dest => dest.Status)
+                .Map(dest => dest.AccountTypeId, src => src.AccountTypeId)
+                .Ignore(dest => dest.AccountType)
+                .Map(dest => dest.Username, src => src.Username)
+                .Map(dest => dest.DisplayName, src => src.DisplayName)
+                .Map(dest => dest.CreatedOn, src => src.AskDate)
                 .Map(dest => dest.CreateDate, src => src.CreateDate)
                 .Map(dest => dest.LastOnlineDate, src => src.LastOnlineDate)
                 .Map(dest => dest.ReconciledDate, src => src.ReconciledDate)

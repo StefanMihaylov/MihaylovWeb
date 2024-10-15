@@ -12,30 +12,30 @@ namespace Mihaylov.Api.Site.Contracts.Models.Base
 
         public int Count { get; private set; }
 
-        public int? PageMax
+        public int? PageMax => GetMaxPage(PageSize, Count);
+
+
+        public Pager(int? page, int? pageSize, int count)
         {
-            get
-            {
-                if (!Page.HasValue || !PageSize.HasValue)
-                {
-                    return null;
-                }
-
-                var maxPageCount = Count / PageSize.Value;
-                if (Count % PageSize.Value > 0)
-                {
-                    maxPageCount++;
-                }
-
-                return maxPageCount;
-            }
+            Page = page;
+            PageSize = pageSize;
+            Count = count;
         }
 
-        public Pager(GridRequest request, int count)
+        public static int? GetMaxPage(int? pageSize, int count)
         {
-            Page = request.Page;
-            PageSize = request.PageSize;
-            Count = count;
+            if (!pageSize.HasValue)
+            {
+                return null;
+            }
+
+            int maxPageCount = count / pageSize.Value;
+            if (count % pageSize.Value > 0)
+            {
+                maxPageCount++;
+            }
+
+            return maxPageCount;
         }
     }
 }

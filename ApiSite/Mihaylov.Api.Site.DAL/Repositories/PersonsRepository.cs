@@ -9,7 +9,6 @@ using Mihaylov.Api.Site.Contracts.Models;
 using Mihaylov.Api.Site.Contracts.Models.Base;
 using Mihaylov.Api.Site.Contracts.Repositories;
 using Mihaylov.Api.Site.Database;
-using Mihaylov.Common.Mapping;
 using DB = Mihaylov.Api.Site.Database.Models;
 
 namespace Mihaylov.Api.Site.DAL.Repositories
@@ -33,9 +32,9 @@ namespace Mihaylov.Api.Site.DAL.Repositories
                                         .Select(p => new
                                         {
                                             Person = p,
-                                            FullName = p.Details != null ? $"{p.Details.FirstName} {p.Details.MiddleName} {p.Details.LastName}" : null,
+                                            FullName = p.Details != null ? p.Details.FirstName + " " + p.Details.MiddleName + " " + p.Details.LastName : null,
                                         })
-                                        .OrderByDescending(c => c.Person.CreatedOn)
+                                        .OrderBy(c => c.Person.CreatedOn)
                                         .AsQueryable();
 
                 if (request.AccountTypeId.HasValue)
@@ -43,9 +42,9 @@ namespace Mihaylov.Api.Site.DAL.Repositories
                     query = query.Where(p => p.Person.Accounts.Any(a => a.AccountTypeId == request.AccountTypeId));
                 }
 
-                if (request.AccountStatusId.HasValue)
+                if (request.StatusId.HasValue)
                 {
-                    query = query.Where(p => p.Person.Accounts.Any(a => a.StatusId == request.AccountStatusId));
+                    query = query.Where(p => p.Person.Accounts.Any(a => a.StatusId == request.StatusId));
                 }
 
                 if (!string.IsNullOrWhiteSpace(request.Name))
@@ -55,18 +54,48 @@ namespace Mihaylov.Api.Site.DAL.Repositories
 
                 if (!string.IsNullOrWhiteSpace(request.AccountName))
                 {
-                    query = query.Where(p => p.Person.Accounts.Any(a => a.Username.Contains(request.Name)));
+                    query = query.Where(p => p.Person.Accounts.Any(a => a.Username.Contains(request.AccountName)));
                 }
 
-                query = query.Where(p => !string.IsNullOrEmpty(p.Person.Comments));
+                if (!string.IsNullOrWhiteSpace(request.AccountNameExact))
+                {
+                    query = query.Where(p => p.Person.Accounts.Any(a => a.Username == request.AccountNameExact));
+                }
+
+                // temp filters
+                var hasAnyFilter = request.StatusId.HasValue || request.AccountTypeId.HasValue ||
+                        !string.IsNullOrWhiteSpace(request.Name) || !string.IsNullOrWhiteSpace(request.AccountName) ||
+                        !string.IsNullOrWhiteSpace(request.AccountNameExact);
+
+                if (!hasAnyFilter)
+                {
+                    query = query.Where(p => !string.IsNullOrEmpty(p.Person.Comments));
+                    // query = query.Where(p => p.Person.PersonId == 5511 || p.Person.PersonId == 5486 || p.Person.PersonId == 5475);
+                    // query = query.Where(p => !p.Person.Accounts.Any(a => a.StatusId == 3 && a.ModifiedOn > DateTime.Now.AddMonths(-1)));
+                    // query = query.Where(p => p.Person.Accounts.Any(a => a.CreatedOn > new DateTime(2018, 1, 7)));
+                    // query = query.Where(p => p.Person.Answers.Any(a => a.QuestionId == 1));
+                    // query = query.Where(p => p.Person.Answers.Any(a => a.AskDate > new DateTime(2024, 1, 7)));
+                }
 
                 var count = await query.CountAsync().ConfigureAwait(false);
 
-                if (request.Page.HasValue && request.PageSize.HasValue)
+                if (request.PageSize.HasValue)
                 {
+                    if (!request.Page.HasValue || request.Page <= 0)
+                    {
+                        request.Page = 1;
+                    }
+
+                    var pageMax = Pager.GetMaxPage(request.PageSize, count);
+
+                    if (pageMax > 0 && request.Page > pageMax)
+                    {
+                        request.Page = pageMax;
+                    }
+
                     query = query.Skip((request.Page.Value - 1) * request.PageSize.Value)
-                                 .Take(request.PageSize.Value)
-                                 .AsQueryable();
+                             .Take(request.PageSize.Value)
+                             .AsQueryable();
                 }
 
                 var persons = await query.Select(p => p.Person)
@@ -76,8 +105,9 @@ namespace Mihaylov.Api.Site.DAL.Repositories
 
                 var result = new Grid<Person>()
                 {
+                    Request = request,
                     Data = persons,
-                    Pager = new Pager(request, count),
+                    Pager = new Pager(request.Page, request.PageSize, count),
                 };
 
                 return result;
@@ -89,19 +119,19 @@ namespace Mihaylov.Api.Site.DAL.Repositories
             }
         }
 
-        public async Task<IEnumerable<Person>> GetAllForUpdateAsync()
-        {
-            var persons = await this._context.Persons
-                                             //.Where(p => p.IsAccountDisabled == false)
-                                             .Where(p => p.ModifiedOn < DateTime.UtcNow.AddDays(-1))
-                                             .To<Person>()
-                                             .ToListAsync()
-                                             .ConfigureAwait(false);
+        //public async Task<IEnumerable<Person>> GetAllForUpdateAsync()
+        //{
+        //    var persons = await this._context.Persons
+        //                                     //.Where(p => p.IsAccountDisabled == false)
+        //                                     .Where(p => p.ModifiedOn < DateTime.UtcNow.AddDays(-1))
+        //                                     .To<Person>()
+        //                                     .ToListAsync()
+        //                                     .ConfigureAwait(false);
 
-            return persons;
-        }
+        //    return persons;
+        //}
 
-        public async Task<Person> GetByIdAsync(long id)
+        public async Task<Person> GetPersonAsync(long id)
         {
             var query = GetPersonBaseQuery().Where(p => p.PersonId == id).AsQueryable();
 
@@ -110,20 +140,6 @@ namespace Mihaylov.Api.Site.DAL.Repositories
                                        .ConfigureAwait(false);
 
             return person;
-        }
-
-        public Task<Person> GetByAccoutUserNameAsync(string username)
-        {
-            //Person person = await this._context.Accounts
-            //                                   .Where(a => a.Username == username)
-            //                                   .Select(a => a.Person)
-            //                                   .To<Person>()
-            //                                   .FirstOrDefaultAsync()
-            //                                   .ConfigureAwait(false);
-
-            //return person;
-
-            throw new NotImplementedException();
         }
 
         public async Task<Person> AddOrUpdatePersonAsync(Person input)
@@ -184,11 +200,93 @@ namespace Mihaylov.Api.Site.DAL.Repositories
 
                 await _context.SaveChangesAsync().ConfigureAwait(false);
 
-                return await GetByIdAsync(dbModel.PersonId);
+                return await GetPersonAsync(dbModel.PersonId);
             }
             catch (Exception ex)
             {
                 _logger.LogError("Error in add/update Person. Error: {Message}", ex.Message);
+                throw;
+            }
+        }
+
+        public async Task DeletePersonAsync(long id)
+        {
+            var hasAnswers = await _context.QuizAnswers.Where(a => a.PersonId == id)
+                                                       .AnyAsync()
+                                                       .ConfigureAwait(false);
+
+            var hasAccounts = await _context.Accounts.Where(a => a.PersonId == id)
+                                                     .AnyAsync()
+                                                     .ConfigureAwait(false);
+            if (!hasAnswers && !hasAccounts)
+            {
+                var person = await _context.Persons.Include(p => p.Details)
+                                                   .Include(p => p.Location)
+                                                   .Where(p => p.PersonId == id)
+                                                   .SingleOrDefaultAsync();
+                if (person == null)
+                {
+                    return;
+                }
+
+                if (person.Details != null)
+                {
+                    _context.PersonDetails.Remove(person.Details);
+                }
+
+                if (person.Location != null)
+                {
+                    _context.PersonLocations.Remove(person.Location);
+                }
+
+                _context.Persons.Remove(person);
+
+                await _context.SaveChangesAsync().ConfigureAwait(false);
+            }
+        }
+
+        public async Task<Account> GetAccountAsync(long id)
+        {
+            var query = _context.Accounts.AsNoTracking()
+                                         .Include(a => a.AccountType)
+                                         .Include(a => a.Status)
+                                         .Where(a => a.AccountId == id)
+                                         .AsQueryable();
+
+            var account = await query.ProjectToType<Account>()
+                                     .FirstOrDefaultAsync()
+                                     .ConfigureAwait(false);
+            return account;
+        }
+
+        public async Task<Account> AddOrUpdateAccountAsync(Account input)
+        {
+            input.Username = input.Username?.Trim();
+            input.DisplayName = input.DisplayName?.Trim();
+            input.Details = input.Details?.Trim();
+
+            try
+            {
+                var dbModel = await _context.Accounts
+                                            .Where(p => p.AccountId == input.Id)
+                                            .FirstOrDefaultAsync()
+                                            .ConfigureAwait(false);
+
+                if (dbModel == null)
+                {
+                    dbModel = new DB.Account();
+                    _context.Accounts.Add(dbModel);
+                }
+
+                dbModel = input.Adapt(dbModel);
+
+                await _context.SaveChangesAsync().ConfigureAwait(false);
+
+                return await GetAccountAsync(dbModel.AccountId);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Error in add/update Account. Error: {Message}", ex.Message);
                 throw;
             }
         }
@@ -257,6 +355,8 @@ namespace Mihaylov.Api.Site.DAL.Repositories
 
             return statistics;
         }
+
+
 
         private IQueryable<DB.Person> GetPersonBaseQuery()
         {
