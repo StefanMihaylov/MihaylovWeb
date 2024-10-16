@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using Mihaylov.Api.Site.Client;
+using Mihaylov.Common.Generic.Extensions;
 
 namespace Mihaylov.Web.Helpers
 {
@@ -23,22 +23,13 @@ namespace Mihaylov.Web.Helpers
 
         public static string ToQueryString(this IGridRequest request)
         {
-            var dic = new Dictionary<string, string>();
-
-            AddParameters(request, dic);
-
-            var result = string.Join("&", dic.Select(kv => $"{kv.Key.ToLower()}={kv.Value}"));
-
-            if (dic.Count > 0)
-            {
-                result = $"?{result}";
-            }
-
-            return result;
+            return AddParameters(request).ToQueryString();
         }
 
-        private static void AddParameters(IGridRequest request, IDictionary<string, string> dic)
+        private static IDictionary<string, string> AddParameters(IGridRequest request)
         {
+            var dic = new Dictionary<string, string>();
+
             if (request.Page.HasValue)
             {
                 dic.Add(nameof(request.Page), request.Page.Value.ToString());
@@ -73,6 +64,8 @@ namespace Mihaylov.Web.Helpers
             {
                 dic.Add(nameof(request.IsNewPerson), request.IsNewPerson.Value.ToString());
             }
+
+            return dic;
         }
     }
 }

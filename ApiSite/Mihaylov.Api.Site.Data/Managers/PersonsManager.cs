@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Mihaylov.Api.Site.Contracts.Managers;
 using Mihaylov.Api.Site.Contracts.Models;
@@ -28,44 +29,14 @@ namespace Mihaylov.Api.Site.Data.Managers
             return _repository.GetPersonAsync(id);
         }
 
-        //public Person GetByName(string name)
-        //{
-        //    if (string.IsNullOrWhiteSpace(name))
-        //    {
-        //        return null;
-        //    }
-
-        //    try
-        //    {
-        //        string key = name.Trim();
-        //        Person person = this.personsByName.GetOrAdd(key, (newName) =>
-        //        {
-        //            Person newPerson = this._repository.GetByAccoutUserNameAsync(newName).ConfigureAwait(false).GetAwaiter().GetResult();
-        //            if (newPerson == null)
-        //            {
-        //                throw new ApplicationException($"Person with name: {newName} was not found");
-        //            }
-
-        //            return newPerson;
-        //        });
-
-        //        return person;
-        //    }
-        //    catch (ApplicationException)
-        //    {
-        //        this._logger.LogError($"Person with name '{name}' not found.");
-        //        return null;
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        this._logger.LogError(ex, $"Error in getting the person by name '{name}'");
-        //        return null;
-        //    }
-        //}
-
         public Task<Account> GetAccountAsync(long id)
         {
             return _repository.GetAccountAsync(id);
+        }
+
+        public Task<UpdateAccounts> GetAllAccountsForUpdateAsync(int? batchSize)
+        {
+            return _repository.GetAllAccountsForUpdateAsync(batchSize);
         }
 
         public Task<PersonStatistics> GetStaticticsAsync()

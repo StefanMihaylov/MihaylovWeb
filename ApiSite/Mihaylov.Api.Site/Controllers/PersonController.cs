@@ -190,6 +190,18 @@ namespace Mihaylov.Api.Site.Controllers
             return Ok(account);
         }
 
+        [HttpPut]
+        [SwaggerOperation(OperationId = "UpdateAccounts")]
+        [ProducesResponseType(typeof(void), StatusCodes.Status200OK)]
+        public IActionResult Accounts()
+        {
+            // _ = Task.Run(() => _siteHelper.UpdateAccountsAsync(batchSize, delay));
+
+             _siteHelper.UpdateAccountsAsync(20, 500).GetAwaiter().GetResult();
+
+            return Ok();
+        }
+
         [HttpGet]
         [ProducesResponseType(typeof(PersonStatistics), StatusCodes.Status200OK)]
         public async Task<IActionResult> Statistics()

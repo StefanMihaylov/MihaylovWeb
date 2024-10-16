@@ -8,9 +8,7 @@ namespace Mihaylov.Api.Site.Contracts.Repositories
 {
     public interface IPersonsRepository
     {
-        Task<Grid<Person>> GetAllPersonsAsync(GridRequest request);
-
-       // Task<IEnumerable<Person>> GetAllForUpdateAsync();
+        Task<Grid<Person>> GetAllPersonsAsync(GridRequest request);        
 
         Task<Person> GetPersonAsync(long id);
 
@@ -21,6 +19,8 @@ namespace Mihaylov.Api.Site.Contracts.Repositories
         Task<PersonStatistics> GetStaticticsAsync();
 
         Task<Account> GetAccountAsync(long id);
+
+        Task<UpdateAccounts> GetAllAccountsForUpdateAsync(int? batchSize);
 
         Task<Account> AddOrUpdateAccountAsync(Account input);
     }

@@ -867,6 +867,38 @@
         }
       }
     },
+    "/api/Person/Accounts": {
+      "put": {
+        "tags": [
+          "Person"
+        ],
+        "operationId": "UpdateAccounts",
+        "responses": {
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/Person/Statistics": {
       "get": {
         "tags": [

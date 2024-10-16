@@ -3,10 +3,6 @@
 @model SiteMainModel
 
 <div class="person-details-container">
-    @*     <div class="search">
-    @Html.TextBox("url", null, new { style = "width:350px" })
-    <span class="btn btn-secondary find-info-button">Find</span>
-    </div> *@
 
     @await Html.PartialAsync("_Filter", Model.Filter)
 
@@ -56,7 +52,7 @@
             @await Html.PartialAsync("_QuizPhrasesGrid", Model.AdminData.QuizPhrases)
         </div>
         <div id="other" class="tab-pane fade">
-            @Html.ActionLink("Update", "Update", SiteController.NAME, new { @class = "btn btn-default" })
+            <a class="btn btn-primary" href="/@SiteController.NAME/@nameof(SiteController.UpdateAccounts)">Update</a>
         </div>
     </div>
 </div>

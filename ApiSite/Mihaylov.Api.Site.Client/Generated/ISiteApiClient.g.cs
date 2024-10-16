@@ -169,6 +169,15 @@ namespace Mihaylov.Api.Site.Client
 
         /// <returns>OK</returns>
         /// <exception cref="SwaggerException">A server side error occurred.</exception>
+        System.Threading.Tasks.Task UpdateAccountsAsync();
+
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+        /// <returns>OK</returns>
+        /// <exception cref="SwaggerException">A server side error occurred.</exception>
+        System.Threading.Tasks.Task UpdateAccountsAsync(System.Threading.CancellationToken cancellationToken);
+
+        /// <returns>OK</returns>
+        /// <exception cref="SwaggerException">A server side error occurred.</exception>
         System.Threading.Tasks.Task<PersonStatistics> StatisticsAsync();
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>

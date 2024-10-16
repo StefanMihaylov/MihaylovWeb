@@ -1,8 +1,6 @@
 ﻿namespace Mihaylov.Common.Extensions
 {
     using System;
-    using System.Linq.Expressions;
-    using System.Reflection;
 
     public static class ObjectExtensions
     {
@@ -23,11 +21,6 @@
             }
 
             return (T)result;
-        }
-
-        public static T CastTo<T>(this T collection, object obj)
-        {
-            return (T)obj;
         }
     }
 }

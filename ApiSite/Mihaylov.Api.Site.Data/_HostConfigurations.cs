@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Mihaylov.Api.Site.Contracts.Helpers;
 using Mihaylov.Api.Site.Contracts.Managers;
@@ -24,10 +25,16 @@ namespace Mihaylov.Api.Site.Data
             services.AddScoped<IPersonsWriter, PersonsWriter>();
             services.AddScoped<IQuizWriter, QuizWriter>();
 
-            services.AddScoped<ICsQueryWrapper, CsQueryWrapper>();
             services.AddScoped<ISiteHelper, SiteHelper>();
 
-            services.AddHttpClient("SiteHelper");
+            services.AddHttpClient("SiteHelper")
+                    .ConfigurePrimaryHttpMessageHandler(() =>
+                    {
+                        return new HttpClientHandler()
+                        {
+                            AllowAutoRedirect = false
+                        };
+                    });
 
             return services;
         }

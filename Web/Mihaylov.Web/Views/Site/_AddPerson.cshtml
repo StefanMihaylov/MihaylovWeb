@@ -2,14 +2,15 @@
 @using Mihaylov.Web.Controllers
 @using Mihaylov.Web.Helpers
 @using Mihaylov.Web.Models.Site
+@using Mihaylov.Common.Generic.Extensions
 @model PersonExtended
 
 @{
-    var ethnicities = Model.Ethnicities.GetDropdownListItems(u => u.Id, u => u.Name);
-    var orientations = Model.Orientations.GetDropdownListItems(u => u.Id, u => u.Name);
-    var countries = Model.Countries.GetDropdownListItems(u => u.Id, u => u.Name);
-    var states = Model.CountryStates.GetDropdownListItems(u => u.Id, u => u.Name);
-    var dateOfBirthTypes = DateOfBirthType.Full.GetEnumDropdownListItems();
+    var ethnicities = Model.Ethnicities.GetListItems((t, v) => new SelectListItem(t, v), u => u.Id, u => u.Name);
+    var orientations = Model.Orientations.GetListItems((t, v) => new SelectListItem(t, v), u => u.Id, u => u.Name);
+    var countries = Model.Countries.GetListItems((t, v) => new SelectListItem(t, v), u => u.Id, u => u.Name);
+    var states = Model.CountryStates.GetListItems((t, v) => new SelectListItem(t, v), u => u.Id, u => u.Name);
+    var dateOfBirthTypes = DateOfBirthType.Full.GetEnumListItems((t, v) => new SelectListItem(t, v));
 }
 
 @using (Html.BeginForm(nameof(SiteController.SavePerson), SiteController.NAME, FormMethod.Post, new { @class = "form" }))

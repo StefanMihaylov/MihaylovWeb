@@ -1,12 +1,13 @@
 ﻿@using Mihaylov.Web.Controllers
 @using Mihaylov.Web.Helpers
 @using Mihaylov.Web.Models.Site
+@using Mihaylov.Common.Generic.Extensions
 @model AnswerExtended
 
 @{
-    var questions = Model.Questions.GetDropdownListItems(u => u.Id, u => u.Value);
-    var units = Model.Units.GetDropdownListItems(u => u.Id, u => u.Name);
-    var halfTypes = Model.HalfTypes.GetDropdownListItems(u => u.Id, u => u.Name);
+    var questions = Model.Questions.GetListItems((t, v) => new SelectListItem(t, v), u => u.Id, u => u.Value);
+    var units = Model.Units.GetListItems((t, v) => new SelectListItem(t, v), u => u.Id, u => u.Name);
+    var halfTypes = Model.HalfTypes.GetListItems((t, v) => new SelectListItem(t, v), u => u.Id, u => u.Name);
 }
 
 @using (Html.BeginForm(nameof(SiteController.SaveAnswer), SiteController.NAME, FormMethod.Post, new { @class = "form" }))

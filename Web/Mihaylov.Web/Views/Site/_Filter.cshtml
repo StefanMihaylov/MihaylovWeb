@@ -1,11 +1,12 @@
 ﻿@using Mihaylov.Web.Controllers
 @using Mihaylov.Web.Helpers
 @using Mihaylov.Web.Models.Site
+@using Mihaylov.Common.Generic.Extensions
 @model SiteFilterModel
 
 @{
-    var accountTypes = Model.AccountTypes.GetDropdownListItems(u => u.Id, u => u.Name);
-    var accountStates = Model.AccountStates.GetDropdownListItems(u => u.Id, u => u.Name);
+    var accountTypes = Model.AccountTypes.GetListItems((t, v) => new SelectListItem(t, v), u => u.Id, u => u.Name);
+    var accountStates = Model.AccountStates.GetListItems((t, v) => new SelectListItem(t, v), u => u.Id, u => u.Name);
 }
 
 @using (Html.BeginForm(nameof(SiteController.Search), SiteController.NAME, FormMethod.Post, new { @class = "form" }))

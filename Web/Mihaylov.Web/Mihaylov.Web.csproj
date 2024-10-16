@@ -28,6 +28,7 @@
 	</ItemGroup>
 	
 	<ItemGroup>
+	  <ProjectReference Include="..\..\Common\Mihaylov.Common.Generic\Mihaylov.Common.Generic.csproj" />
 	  <ProjectReference Include="..\..\Common\Mihaylov.Common.Host\Mihaylov.Common.Host.csproj" />
 	  <ProjectReference Include="..\..\Site\Mihaylov.Site.Media\Mihaylov.Site.Media.csproj" />
 	  <ProjectReference Include="..\Mihaylov.Web.Service\Mihaylov.Web.Service.csproj" />

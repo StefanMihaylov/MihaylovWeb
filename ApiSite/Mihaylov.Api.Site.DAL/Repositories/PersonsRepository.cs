@@ -34,7 +34,7 @@ namespace Mihaylov.Api.Site.DAL.Repositories
                                             Person = p,
                                             FullName = p.Details != null ? p.Details.FirstName + " " + p.Details.MiddleName + " " + p.Details.LastName : null,
                                         })
-                                        .OrderBy(c => c.Person.CreatedOn)
+                                        .OrderByDescending(c => c.Person.CreatedOn)
                                         .AsQueryable();
 
                 if (request.AccountTypeId.HasValue)
@@ -69,7 +69,7 @@ namespace Mihaylov.Api.Site.DAL.Repositories
 
                 if (!hasAnyFilter)
                 {
-                    query = query.Where(p => !string.IsNullOrEmpty(p.Person.Comments));
+                    // query = query.Where(p => !string.IsNullOrEmpty(p.Person.Comments));
                     // query = query.Where(p => p.Person.PersonId == 5511 || p.Person.PersonId == 5486 || p.Person.PersonId == 5475);
                     // query = query.Where(p => !p.Person.Accounts.Any(a => a.StatusId == 3 && a.ModifiedOn > DateTime.Now.AddMonths(-1)));
                     // query = query.Where(p => p.Person.Accounts.Any(a => a.CreatedOn > new DateTime(2018, 1, 7)));
@@ -79,24 +79,7 @@ namespace Mihaylov.Api.Site.DAL.Repositories
 
                 var count = await query.CountAsync().ConfigureAwait(false);
 
-                if (request.PageSize.HasValue)
-                {
-                    if (!request.Page.HasValue || request.Page <= 0)
-                    {
-                        request.Page = 1;
-                    }
-
-                    var pageMax = Pager.GetMaxPage(request.PageSize, count);
-
-                    if (pageMax > 0 && request.Page > pageMax)
-                    {
-                        request.Page = pageMax;
-                    }
-
-                    query = query.Skip((request.Page.Value - 1) * request.PageSize.Value)
-                             .Take(request.PageSize.Value)
-                             .AsQueryable();
-                }
+                (query, request.Page) = GetPage(query, request.PageSize, request.Page, count);
 
                 var persons = await query.Select(p => p.Person)
                                          .ProjectToType<Person>()
@@ -118,18 +101,6 @@ namespace Mihaylov.Api.Site.DAL.Repositories
                 throw;
             }
         }
-
-        //public async Task<IEnumerable<Person>> GetAllForUpdateAsync()
-        //{
-        //    var persons = await this._context.Persons
-        //                                     //.Where(p => p.IsAccountDisabled == false)
-        //                                     .Where(p => p.ModifiedOn < DateTime.UtcNow.AddDays(-1))
-        //                                     .To<Person>()
-        //                                     .ToListAsync()
-        //                                     .ConfigureAwait(false);
-
-        //    return persons;
-        //}
 
         public async Task<Person> GetPersonAsync(long id)
         {
@@ -259,6 +230,37 @@ namespace Mihaylov.Api.Site.DAL.Repositories
             return account;
         }
 
+        public async Task<UpdateAccounts> GetAllAccountsForUpdateAsync(int? batchSize)
+        {
+            var query = _context.Accounts.AsNoTracking()
+                                             .Include(a => a.AccountType)
+                                             .Include(a => a.Status)
+                                             .Where(a => a.StatusId != 3 && a.StatusId != 7 &&
+                                                         a.AccountTypeId == 3 &&
+                                                        (a.ModifiedOn == null ||
+                                                         a.ModifiedOn < DateTime.UtcNow.AddDays(-7)))
+                                             .OrderBy(a => a.AccountId)
+                                             .AsQueryable();
+
+            var count = await query.CountAsync().ConfigureAwait(false);
+
+            if (batchSize.HasValue && batchSize > 0)
+            {
+                query = query.Take(batchSize.Value);
+            }
+
+            var accounts = await query.ProjectToType<Account>()
+                                      .ToListAsync()
+                                      .ConfigureAwait(false);
+
+            return new UpdateAccounts()
+            {
+                Accounts = accounts,
+                BatchSize = batchSize,
+                TotalCount = count,
+            };
+        }
+
         public async Task<Account> AddOrUpdateAccountAsync(Account input)
         {
             input.Username = input.Username?.Trim();
@@ -374,6 +376,32 @@ namespace Mihaylov.Api.Site.DAL.Repositories
                                         .AsQueryable();
 
             return query;
+        }
+
+        private static (IQueryable<T>, int?) GetPage<T>(IQueryable<T> query, int? pageSize, int? page, int count)
+        {
+            if (!pageSize.HasValue)
+            {
+                return (query, page);
+            }
+
+            if (!page.HasValue || page <= 0)
+            {
+                page = 1;
+            }
+
+            var pageMax = Pager.GetMaxPage(pageSize, count);
+
+            if (pageMax > 0 && page > pageMax)
+            {
+                page = pageMax;
+            }
+
+            query = query.Skip((page.Value - 1) * pageSize.Value)
+                     .Take(pageSize.Value)
+                     .AsQueryable();
+
+            return (query, page);
         }
     }
 }

@@ -148,27 +148,6 @@ namespace Mihaylov.Web.Controllers
             return Redirect($"/{NAME}/{nameof(Index)}{query.ToQueryString()}");
         }
 
-        //public ActionResult Find(string url)
-        //{
-        //    try
-        //    {
-        //        this.Logger.Debug($"Controller: hit find: {url}");
-
-        //        string userName = this.siteHelper.GetUserName(url);
-        //        if (string.IsNullOrWhiteSpace(userName))
-        //        {
-        //            return this.Json($"{url}: Error: Missing username", JsonRequestBehavior.AllowGet);
-        //        }
-
-        //        PersonExtended personExtended = this.siteHelper.GetPersonByName(userName);
-        //        return this.PartialView("_Find", personExtended);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return this.Json($"{url}: Error: {ex.Message}", JsonRequestBehavior.AllowGet);
-        //    }
-        //}
-
         public async Task<IActionResult> PersonView(long id)
         {
             _client.AddToken(Request.GetToken());
@@ -382,6 +361,14 @@ namespace Mihaylov.Web.Controllers
 
             _client.AddToken(Request.GetToken());
             Person person = await _client.MergePersonAsync(request).ConfigureAwait(false);
+
+            return Redirect($"/{NAME}/{nameof(Index)}");
+        }
+
+        public async Task<IActionResult> UpdateAccounts()
+        {
+            _client.AddToken(Request.GetToken());
+            await _client.UpdateAccountsAsync().ConfigureAwait(false);
 
             return Redirect($"/{NAME}/{nameof(Index)}");
         }

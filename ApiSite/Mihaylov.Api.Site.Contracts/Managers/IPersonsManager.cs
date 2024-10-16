@@ -10,10 +10,10 @@ namespace Mihaylov.Api.Site.Contracts.Managers
 
         Task<Person> GetPersonAsync(long id);
 
-        //Person GetByName(string name);
-
         Task<Account> GetAccountAsync(long id);
 
         Task<PersonStatistics> GetStaticticsAsync();
+
+        Task<UpdateAccounts> GetAllAccountsForUpdateAsync(int? batchSize);
     }
 }

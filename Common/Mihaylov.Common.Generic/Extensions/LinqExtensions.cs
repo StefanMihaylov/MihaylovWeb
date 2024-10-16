@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 
-namespace Mihaylov.Common.Abstract.Databases
+namespace Mihaylov.Common.Generic.Extensions
 {
     public static class LinqExtensions
     {
