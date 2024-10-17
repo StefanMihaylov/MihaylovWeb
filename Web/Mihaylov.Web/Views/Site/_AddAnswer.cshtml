@@ -1,5 +1,5 @@
 ﻿@using Mihaylov.Web.Controllers
-@using Mihaylov.Web.Helpers
+@using Mihaylov.Web.Models.Configs
 @using Mihaylov.Web.Models.Site
 @using Mihaylov.Common.Generic.Extensions
 @model AnswerExtended
@@ -21,7 +21,7 @@
             </div>
             <div class="form-group col-auto">
                 @Html.LabelFor(m => Model.QuestionId, "Question")
-                @Html.DropDownListFor(m => Model.QuestionId, questions, ViewConstants.DefaultValue, new { @class = ViewConstants.EdithorClass, style = ViewConstants.Width200 })
+                @Html.DropDownListFor(m => Model.QuestionId, questions, ViewConstants.DefaultDropDownValue, new { @class = ViewConstants.EdithorClass, style = ViewConstants.Width200 })
                 @Html.ValidationMessageFor(m => Model.QuestionId)
             </div>
             <div class="form-group col-auto">
@@ -30,11 +30,11 @@
             </div>
             <div class="form-group col-auto">
                 @Html.LabelFor(m => Model.UnitId, "Unit")
-                @Html.DropDownListFor(m => Model.UnitId, units, ViewConstants.DefaultValue, new { @class = ViewConstants.EdithorClass, style = ViewConstants.Width200 })
+                @Html.DropDownListFor(m => Model.UnitId, units, ViewConstants.DefaultDropDownValue, new { @class = ViewConstants.EdithorClass, style = ViewConstants.Width200 })
             </div>
             <div class="form-group col-auto">
                 @Html.LabelFor(m => Model.HalfTypeId, "Half")
-                @Html.DropDownListFor(m => Model.HalfTypeId, halfTypes, ViewConstants.DefaultValue, new { @class = ViewConstants.EdithorClass, style = ViewConstants.Width200 })
+                @Html.DropDownListFor(m => Model.HalfTypeId, halfTypes, ViewConstants.DefaultDropDownValue, new { @class = ViewConstants.EdithorClass, style = ViewConstants.Width200 })
             </div>
             <div class="form-group col-auto">
                 @Html.LabelFor(m => Model.Details)

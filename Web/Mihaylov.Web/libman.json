@@ -69,6 +69,13 @@
       "files": [
         "dist/umd/popper.min.js"
       ]
+    },
+    {
+      "library": "jquery.cookie@1.4.1",
+      "destination": "wwwroot/lib/jquery.cookie/",
+      "files": [
+        "jquery.cookie.js"
+      ]
     }
   ]
 }

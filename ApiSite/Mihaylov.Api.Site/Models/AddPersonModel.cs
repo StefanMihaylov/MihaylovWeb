@@ -22,5 +22,7 @@ namespace Mihaylov.Api.Site.Models
         public int? OrientationId { get; set; }
 
         public string Comments { get; set; }
+
+        public DateTime CreatedOn { get; set; }
     }
 }

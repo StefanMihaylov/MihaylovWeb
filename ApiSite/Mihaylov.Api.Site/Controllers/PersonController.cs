@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Azure.Core;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Mihaylov.Api.Site.Contracts.Helpers;
@@ -11,6 +10,7 @@ using Mihaylov.Api.Site.Contracts.Models;
 using Mihaylov.Api.Site.Contracts.Models.Base;
 using Mihaylov.Api.Site.Contracts.Writers;
 using Mihaylov.Api.Site.Extensions;
+using Mihaylov.Api.Site.Hubs;
 using Mihaylov.Api.Site.Models;
 using Mihaylov.Common.Host.Authorization;
 using Swashbuckle.AspNetCore.Annotations;
@@ -30,14 +30,16 @@ namespace Mihaylov.Api.Site.Controllers
         private readonly IPersonsWriter _writer;
         private readonly ICollectionManager _collectionManager;
         private readonly ISiteHelper _siteHelper;
+        private readonly IProgressReporterFactory _progressReporter;
 
         public PersonController(IPersonsManager manager, IPersonsWriter writer, ICollectionManager collectionManager,
-            ISiteHelper siteHelper)
+            ISiteHelper siteHelper, IProgressReporterFactory progressReporter)
         {
             _manager = manager;
             _writer = writer;
             _collectionManager = collectionManager;
             _siteHelper = siteHelper;
+            _progressReporter = progressReporter;
         }
 
         [HttpGet]
@@ -92,6 +94,7 @@ namespace Mihaylov.Api.Site.Controllers
                 OrientationId = input.OrientationId,
                 Orientation = null,
                 Comments = input.Comments,
+                CreatedOn = input.CreatedOn,
             };
 
             Person person = await _writer.AddOrUpdatePersonAsync(request).ConfigureAwait(false);
@@ -190,14 +193,14 @@ namespace Mihaylov.Api.Site.Controllers
             return Ok(account);
         }
 
-        [HttpPut]
+        [HttpPost]
         [SwaggerOperation(OperationId = "UpdateAccounts")]
         [ProducesResponseType(typeof(void), StatusCodes.Status200OK)]
-        public IActionResult Accounts()
+        public IActionResult Accounts([FromForm]string connectionId)
         {
-            // _ = Task.Run(() => _siteHelper.UpdateAccountsAsync(batchSize, delay));
+            var progressReporter = _progressReporter.GetLoadingBarReporter(connectionId, "updateAccountsLoadingBar");
 
-             _siteHelper.UpdateAccountsAsync(20, 500).GetAwaiter().GetResult();
+            _siteHelper.UpdateAccountsAsync(null, 500, progressReporter.Report).GetAwaiter().GetResult();
 
             return Ok();
         }

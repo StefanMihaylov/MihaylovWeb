@@ -15,5 +15,7 @@ namespace Mihaylov.Web.Models.Site
         public PersonStatistics Statistics { get; set; }
 
         public SiteAdminModel AdminData { get; set; }
+
+        public OtherTabModel OtherTabModel { get; set; }
     }
 }

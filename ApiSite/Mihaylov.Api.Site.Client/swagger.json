@@ -868,11 +868,30 @@
       }
     },
     "/api/Person/Accounts": {
-      "put": {
+      "post": {
         "tags": [
           "Person"
         ],
         "operationId": "UpdateAccounts",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "connectionId": {
+                    "type": "string"
+                  }
+                }
+              },
+              "encoding": {
+                "connectionId": {
+                  "style": "form"
+                }
+              }
+            }
+          }
+        },
         "responses": {
           "400": {
             "description": "Bad Request",
@@ -1727,6 +1746,10 @@
           "comments": {
             "type": "string",
             "nullable": true
+          },
+          "createdOn": {
+            "type": "string",
+            "format": "date-time"
           }
         },
         "additionalProperties": false
@@ -2151,6 +2174,10 @@
           "comments": {
             "type": "string",
             "nullable": true
+          },
+          "createdOn": {
+            "type": "string",
+            "format": "date-time"
           },
           "accounts": {
             "type": "array",

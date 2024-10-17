@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using Mihaylov.Api.Site.Client;
 using Mihaylov.Web.Areas;
-using Mihaylov.Web.Helpers;
+using Mihaylov.Web.Areas.Identity.Pages.Account;
+using Mihaylov.Web.Models.Configs;
 using Mihaylov.Web.Models.Site;
 
 namespace Mihaylov.Web.Controllers
@@ -13,11 +15,14 @@ namespace Mihaylov.Web.Controllers
     public class SiteController : Controller
     {
         public const string NAME = "Site";
+        
         private readonly ISiteApiClient _client;
+        private readonly SiteConfig _settings;
 
-        public SiteController(ISiteApiClient siteApiClient)
+        public SiteController(ISiteApiClient siteApiClient, IOptions<SiteConfig> siteSettings)
         {
             _client = siteApiClient;
+            _settings = siteSettings.Value;
         }
 
         public async Task<IActionResult> Index([FromQuery] SiteFilterModel model)
@@ -65,12 +70,17 @@ namespace Mihaylov.Web.Controllers
                 Filter = model,
                 NewPersonFilter = newPersonFilter,
                 Person = personExtended,
-                Grid = grid,                
+                Grid = grid,
                 Statistics = statistics,
                 AdminData = new SiteAdminModel()
                 {
                     Questions = quizQuestions,
                     QuizPhrases = quizPhrases,
+                },
+                OtherTabModel = new OtherTabModel()
+                {
+                    ApiUrl = _settings.SiteApiBaseUrl.TrimEnd('/'),
+                    TokenName = LoginModel.COOKIE_NAME,
                 }
             };
 
@@ -183,6 +193,7 @@ namespace Mihaylov.Web.Controllers
                 EthnicityId = model.EthnicityId,
                 OrientationId = model.OrientationId,
                 Comments = model.Comments,
+                CreatedOn = model.CreatedOn,
             };
 
             _client.AddToken(Request.GetToken());
@@ -361,14 +372,6 @@ namespace Mihaylov.Web.Controllers
 
             _client.AddToken(Request.GetToken());
             Person person = await _client.MergePersonAsync(request).ConfigureAwait(false);
-
-            return Redirect($"/{NAME}/{nameof(Index)}");
-        }
-
-        public async Task<IActionResult> UpdateAccounts()
-        {
-            _client.AddToken(Request.GetToken());
-            await _client.UpdateAccountsAsync().ConfigureAwait(false);
 
             return Redirect($"/{NAME}/{nameof(Index)}");
         }

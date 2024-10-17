@@ -1,4 +1,4 @@
-﻿namespace Mihaylov.Web.Models
+﻿namespace Mihaylov.Web.Models.Configs
 {
     public class MediaConfig
     {
@@ -6,7 +6,7 @@
 
         public string DuplicatePathNotLocked { get; set; }
 
-        public string SoftPath {  get; set; }
+        public string SoftPath { get; set; }
 
         public string RenamePath { get; set; }
     }

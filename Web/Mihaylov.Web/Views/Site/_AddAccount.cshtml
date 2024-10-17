@@ -1,5 +1,5 @@
 ﻿@using Mihaylov.Web.Controllers
-@using Mihaylov.Web.Helpers
+@using Mihaylov.Web.Models.Configs
 @using Mihaylov.Web.Models.Site
 @using Mihaylov.Common.Generic.Extensions
 @model AccountExtended
@@ -15,7 +15,7 @@
         <div class="form-row">
             <div class="form-group col-auto">
                 @Html.LabelFor(m => Model.AccountTypeId, "Type")
-                @Html.DropDownListFor(m => Model.AccountTypeId, accountTypes, ViewConstants.DefaultValue, new { @class = ViewConstants.EdithorClass, style = ViewConstants.Width100 })
+                @Html.DropDownListFor(m => Model.AccountTypeId, accountTypes, ViewConstants.DefaultDropDownValue, new { @class = ViewConstants.EdithorClass, style = ViewConstants.Width100 })
                 @Html.ValidationMessageFor(m => Model.AccountTypeId)
             </div>
             <div class="form-group col-auto">
@@ -29,7 +29,7 @@
             </div>
             <div class="form-group col-auto">
                 @Html.LabelFor(m => Model.StatusId, "Status")
-                @Html.DropDownListFor(m => Model.StatusId, accountStates, ViewConstants.DefaultValue, new { @class = ViewConstants.EdithorClass, style = ViewConstants.Width200 })
+                @Html.DropDownListFor(m => Model.StatusId, accountStates, ViewConstants.DefaultDropDownValue, new { @class = ViewConstants.EdithorClass, style = ViewConstants.Width200 })
             </div>
             <div class="form-group col-auto">
                 @Html.LabelFor(m => Model.AskDate)

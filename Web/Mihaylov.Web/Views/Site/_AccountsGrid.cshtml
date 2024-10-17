@@ -1,4 +1,4 @@
-﻿@using Mihaylov.Web.Helpers
+﻿@using Mihaylov.Web.Models.Configs
 @using Mihaylov.Web.Models.Site
 @model AccountsExtended
 
@@ -37,7 +37,7 @@
                         if (account.CreateDate.HasValue)
                         {
                             age = $"({account.CreateDate.Value.ToString(ViewConstants.DateFormatSimple)}) {account.AccountAge}";
-                        }                       
+                        }
                     }
                     @age
                 </td>

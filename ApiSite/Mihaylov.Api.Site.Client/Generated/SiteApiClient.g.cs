@@ -1627,15 +1627,15 @@ namespace Mihaylov.Api.Site.Client
 
         /// <returns>OK</returns>
         /// <exception cref="SwaggerException">A server side error occurred.</exception>
-        public virtual System.Threading.Tasks.Task UpdateAccountsAsync()
+        public virtual System.Threading.Tasks.Task UpdateAccountsAsync(string connectionId)
         {
-            return UpdateAccountsAsync(System.Threading.CancellationToken.None);
+            return UpdateAccountsAsync(connectionId, System.Threading.CancellationToken.None);
         }
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>OK</returns>
         /// <exception cref="SwaggerException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task UpdateAccountsAsync(System.Threading.CancellationToken cancellationToken)
+        public virtual async System.Threading.Tasks.Task UpdateAccountsAsync(string connectionId, System.Threading.CancellationToken cancellationToken)
         {
             var client_ = _httpClient;
             var disposeClient_ = false;
@@ -1643,8 +1643,19 @@ namespace Mihaylov.Api.Site.Client
             {
                 using (var request_ = new System.Net.Http.HttpRequestMessage())
                 {
-                    request_.Content = new System.Net.Http.StringContent(string.Empty, System.Text.Encoding.UTF8, "application/json");
-                    request_.Method = new System.Net.Http.HttpMethod("PUT");
+                    var boundary_ = System.Guid.NewGuid().ToString();
+                    var content_ = new System.Net.Http.MultipartFormDataContent(boundary_);
+                    content_.Headers.Remove("Content-Type");
+                    content_.Headers.TryAddWithoutValidation("Content-Type", "multipart/form-data; boundary=" + boundary_);
+
+                    if (connectionId == null)
+                        throw new System.ArgumentNullException("connectionId");
+                    else
+                    {
+                        content_.Add(new System.Net.Http.StringContent(ConvertToString(connectionId, System.Globalization.CultureInfo.InvariantCulture)), "connectionId");
+                    }
+                    request_.Content = content_;
+                    request_.Method = new System.Net.Http.HttpMethod("POST");
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                     if (!string.IsNullOrEmpty(BaseUrl)) urlBuilder_.Append(BaseUrl);

@@ -52,13 +52,16 @@
             @await Html.PartialAsync("_QuizPhrasesGrid", Model.AdminData.QuizPhrases)
         </div>
         <div id="other" class="tab-pane fade">
-            <a class="btn btn-primary" href="/@SiteController.NAME/@nameof(SiteController.UpdateAccounts)">Update</a>
+            @await Html.PartialAsync("_OtherTab", Model.OtherTabModel)
         </div>
     </div>
 </div>
 
 @section Scripts {
+    <script src="~/lib/jquery.cookie/jquery.cookie.js"></script>
     <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
-@*     <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script> *@
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    <script src="~/lib/signalr/dist/browser/signalr.min.js"></script>
     <script src="~/js/person.js"></script>
+    <script src="~/js/peson-signalr.js"></script>
 }

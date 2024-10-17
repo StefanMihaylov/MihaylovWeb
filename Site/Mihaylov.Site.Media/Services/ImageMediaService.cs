@@ -52,7 +52,7 @@ namespace Mihaylov.Site.Media.Services
 
                 if (calculateChecksum)
                 {
-                    var checksum = GetImageChecksum(image, p => progress(p));
+                    var checksum = GetImageChecksum(image, progress);
                     result.Checksum = checksum;
                 }
                 else

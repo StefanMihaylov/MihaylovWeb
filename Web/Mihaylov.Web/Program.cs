@@ -16,10 +16,10 @@ using Mihaylov.Site.Media;
 using Mihaylov.Web.Areas;
 using Mihaylov.Web.Areas.Identity.Pages.Account;
 using Mihaylov.Web.Hubs;
-using Mihaylov.Web.Models;
 using Mihaylov.Web.Service;
 using Mihaylov.Web.Service.Interfaces;
 using Mihaylov.Web.Service.Models;
+using Mihaylov.Web.Models.Configs;
 
 namespace Mihaylov.Web
 {
@@ -95,6 +95,11 @@ namespace Mihaylov.Web
             services.AddModuleInfo();
             services.AddScoped<IModuleService, ModuleService>();
             services.AddUsersApiClient(Config.GetEnvironmentVariable("Users_Api_Client"));
+
+            services.Configure<SiteConfig>(opt =>
+            {
+                opt.SiteApiBaseUrl = Config.GetEnvironmentVariable("Site_Api_Client");
+            });
 
             services.AddWeatherApiClient(Config.GetEnvironmentVariable("Weather_Api_Client"));
             services.AddScoped<IWeatherService, WeatherService>();

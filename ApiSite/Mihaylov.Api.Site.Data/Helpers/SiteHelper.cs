@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Mihaylov.Api.Site.Contracts.Helpers;
+using Mihaylov.Api.Site.Contracts.Hubs;
 using Mihaylov.Api.Site.Contracts.Managers;
 using Mihaylov.Api.Site.Contracts.Models;
 using Mihaylov.Api.Site.Contracts.Writers;
@@ -67,7 +68,7 @@ namespace Mihaylov.Api.Site.Data.Helpers
         {
             var account = person.Accounts.First(a => a.Username == username);
 
-            var personInfo = await GetPersonInfoAsync(username).ConfigureAwait(false);
+            var personInfo = await GetPersonInfoAsync(username, (a) => { }).ConfigureAwait(false);
             if (personInfo.IsDeleted)
             {
                 account.StatusId = 3;
@@ -111,13 +112,21 @@ namespace Mihaylov.Api.Site.Data.Helpers
             }
         }
 
-        public async Task UpdateAccountsAsync(int? batchSize, int delay)
+        public async Task UpdateAccountsAsync(int? batchSize, int delay, Action<UpdateProgressBarModel> progress)
         {
             var accounts = await _personsManager.GetAllAccountsForUpdateAsync(batchSize).ConfigureAwait(false);
 
+            const int SUB_STEPS = 3;
+            const int TOTAL_STEPS = SUB_STEPS + 2;
+            var totalCount = accounts.Accounts.Count();
+
+            long count = 0;
             foreach (var account in accounts.Accounts)
             {
-                var personInfo = await GetPersonInfoAsync(account.Username).ConfigureAwait(false);
+                count++;
+                var countPers = count.GetPersentage(totalCount);
+
+                var personInfo = await GetPersonInfoAsync(account.Username, (p) => progress(new UpdateProgressBarModel(p.GetPersentage(TOTAL_STEPS), countPers, totalCount))).ConfigureAwait(false);
 
                 if (personInfo.IsDeleted)
                 {
@@ -136,20 +145,24 @@ namespace Mihaylov.Api.Site.Data.Helpers
                     }
                 }
 
+                var single = SUB_STEPS;
+
                 await _personsWriter.AddOrUpdateAccountAsync(account).ConfigureAwait(false);
+                progress(new UpdateProgressBarModel((++single).GetPersentage(TOTAL_STEPS), countPers, totalCount));
 
                 if (delay > 0)
                 {
                     Thread.Sleep(delay);
                 }
+
+                progress(new UpdateProgressBarModel((++single).GetPersentage(TOTAL_STEPS), countPers, totalCount));
             }
         }
 
-        private async Task<PersonInfo> GetPersonInfoAsync(string username)
+        private async Task<PersonInfo> GetPersonInfoAsync(string username, Action<int> progress)
         {
-            const int TOTAL_STEPS = 7;
             int stepNumber = 0;
-
+            progress(stepNumber);
 
             _logger.LogDebug($"Helper: Get person by name: {username}");
 
@@ -168,14 +181,14 @@ namespace Mihaylov.Api.Site.Data.Helpers
                 return result;
             }
 
-            stepNumber++;
+            progress(++stepNumber);
 
             var url = $"{_url}/rest/v1.0/profile/{username}/info";
             var request = new HttpRequestMessage(HttpMethod.Get, url);
             var responseMessage = await _client.SendAsync(request).ConfigureAwait(false);
             var responseString = await responseMessage.Content.ReadAsStringAsync().ConfigureAwait(false);
 
-            stepNumber++;
+            progress(++stepNumber);
 
             if (!responseMessage.IsSuccessStatusCode)
             {
@@ -191,14 +204,10 @@ namespace Mihaylov.Api.Site.Data.Helpers
 
             var personSiteInfo = JsonSerializer.Deserialize<PersonInfoModel>(responseString, options);
 
-            stepNumber++;
-
             result.Age = personSiteInfo.Age;
             result.City = personSiteInfo.City;
             result.CreateDate = _baseDate.AddMilliseconds(personSiteInfo.CreationDate).Date;
             result.LastOnlineDate = _baseDate.AddMilliseconds(personSiteInfo.LastBroadcast);
-
-            stepNumber++;
 
             if (!string.IsNullOrEmpty(personSiteInfo.CountryId))
             {
@@ -217,8 +226,6 @@ namespace Mihaylov.Api.Site.Data.Helpers
                 }
             }
 
-            stepNumber++;
-
             if (!string.IsNullOrEmpty(personSiteInfo.Ethnicity))
             {
                 var ethnicities = await _collectionManager.GetAllEthnicitiesAsync().ConfigureAwait(false);
@@ -236,8 +243,6 @@ namespace Mihaylov.Api.Site.Data.Helpers
                 }
             }
 
-            stepNumber++;
-
             if (!string.IsNullOrEmpty(personSiteInfo.SexPreference) &&
                 !personSiteInfo.SexPreference.Equals("Unknown", StringComparison.OrdinalIgnoreCase))
             {
@@ -254,7 +259,7 @@ namespace Mihaylov.Api.Site.Data.Helpers
                 }
             }
 
-            stepNumber++;
+            progress(++stepNumber);
 
             return result;
         }

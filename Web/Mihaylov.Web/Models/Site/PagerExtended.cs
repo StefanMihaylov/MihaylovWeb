@@ -1,5 +1,5 @@
 ﻿using Mihaylov.Api.Site.Client;
-using Mihaylov.Web.Helpers;
+using Mihaylov.Web.Models.Configs;
 
 namespace Mihaylov.Web.Models.Site
 {

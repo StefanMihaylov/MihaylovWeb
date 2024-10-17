@@ -19,6 +19,7 @@ namespace Mihaylov.Web.Models.Site
             OrientationId = person.OrientationId;
             Orientation = person.Orientation;
             Comments = person.Comments;
+            CreatedOn = person.CreatedOn;
             Accounts = person.Accounts;
             AnswersCount = person.AnswersCount;
         }

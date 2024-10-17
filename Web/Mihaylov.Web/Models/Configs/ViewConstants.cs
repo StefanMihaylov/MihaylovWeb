@@ -1,18 +1,20 @@
 ﻿using System.Collections.Generic;
 using Mihaylov.Api.Site.Client;
 using Mihaylov.Common.Generic.Extensions;
+using Mihaylov.Web.Models.Configs;
 
-namespace Mihaylov.Web.Helpers
+namespace Mihaylov.Web.Models.Configs
 {
     public static class ViewConstants
     {
         public static string Width100 = "width:100px";
         public static string Width120 = "width:120px";
+        public static string Width150 = "width:150px";
         public static string Width200 = "width:200px";
         public static string Width500 = "width:500px";
 
-        public static string DefaultValue = "-- Not Selected --";
-        public static string DefaultValueShort = "-----";
+        public static string DefaultDropDownValue = "--- Select ---";
+        public static string DefaultDropDownValueShort = "-----";
         public static string EdithorClass = "form-control";
 
         public static string DateFormat = "{0:yyyy.MM.dd}";

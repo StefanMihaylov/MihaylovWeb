@@ -11,6 +11,7 @@ using Mihaylov.Site.Media.Interfaces;
 using Mihaylov.Site.Media.Models;
 using Mihaylov.Web.Hubs;
 using Mihaylov.Web.Models;
+using Mihaylov.Web.Models.Configs;
 
 namespace Mihaylov.Web.Controllers
 {

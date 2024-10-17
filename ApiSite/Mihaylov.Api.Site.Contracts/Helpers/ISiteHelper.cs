@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
+using Mihaylov.Api.Site.Contracts.Hubs;
 using Mihaylov.Api.Site.Contracts.Models;
 
 namespace Mihaylov.Api.Site.Contracts.Helpers
@@ -9,6 +11,6 @@ namespace Mihaylov.Api.Site.Contracts.Helpers
 
         string GetUserName(string url);
 
-        Task UpdateAccountsAsync(int? batchSize, int delay);
+        Task UpdateAccountsAsync(int? batchSize, int delay, Action<UpdateProgressBarModel> progress);
     }
 }

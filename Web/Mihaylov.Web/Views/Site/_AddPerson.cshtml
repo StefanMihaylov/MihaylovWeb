@@ -1,6 +1,6 @@
 ﻿@using Mihaylov.Api.Site.Client
 @using Mihaylov.Web.Controllers
-@using Mihaylov.Web.Helpers
+@using Mihaylov.Web.Models.Configs
 @using Mihaylov.Web.Models.Site
 @using Mihaylov.Common.Generic.Extensions
 @model PersonExtended
@@ -31,19 +31,23 @@
             </div>
             <div class="form-group col-auto">
                 @Html.LabelFor(m => m.Details.OtherNames)
-                @Html.TextBoxFor(m => m.Details.OtherNames, new { @class = ViewConstants.EdithorClass, aria_autocomplete = "none", autocomplete = "off" })
+                @Html.TextBoxFor(m => m.Details.OtherNames, new { @class = ViewConstants.EdithorClass, style = ViewConstants.Width100, aria_autocomplete = "none", autocomplete = "off" })
             </div>
             <div class="form-group col-auto">
                 @Html.LabelFor(m => m.EthnicityId, "Ethnicity")
-                @Html.DropDownListFor(m => m.EthnicityId, ethnicities, ViewConstants.DefaultValue, new { @class = ViewConstants.EdithorClass, style = ViewConstants.Width200 })
+                @Html.DropDownListFor(m => m.EthnicityId, ethnicities, ViewConstants.DefaultDropDownValue, new { @class = ViewConstants.EdithorClass, style = ViewConstants.Width200 })
             </div>
             <div class="form-group col-auto">
                 @Html.LabelFor(m => m.OrientationId, "Orientation")
-                @Html.DropDownListFor(m => m.OrientationId, orientations, ViewConstants.DefaultValue, new { @class = ViewConstants.EdithorClass, style = ViewConstants.Width200 })
+                @Html.DropDownListFor(m => m.OrientationId, orientations, ViewConstants.DefaultDropDownValue, new { @class = ViewConstants.EdithorClass, style = ViewConstants.Width200 })
             </div>
             <div class="form-group col-auto">
                 @Html.LabelFor(m => m.Comments)
                 @Html.TextBoxFor(m => m.Comments, new { @class = ViewConstants.EdithorClass, aria_autocomplete = "none", autocomplete = "off" })
+            </div>
+            <div class="form-group col-auto">
+                @Html.LabelFor(m => m.CreatedOn)
+                @Html.TextBoxFor(m => m.CreatedOn, ViewConstants.DateTimeFormat, new { @class = ViewConstants.EdithorClass, style = ViewConstants.Width200, aria_autocomplete = "none", autocomplete = "off" })
             </div>
         </div>
         <div class="form-row">
@@ -57,15 +61,15 @@
             </div>
             <div class="form-group col-auto">
                 @Html.LabelFor(m => m.DateOfBirthType)
-                @Html.DropDownListFor(m => m.DateOfBirthType, dateOfBirthTypes, ViewConstants.DefaultValue, new { @class = ViewConstants.EdithorClass, style = ViewConstants.Width200 })
+                @Html.DropDownListFor(m => m.DateOfBirthType, dateOfBirthTypes, ViewConstants.DefaultDropDownValue, new { @class = ViewConstants.EdithorClass, style = ViewConstants.Width200 })
             </div>
             <div class="form-group col-auto">
                 @Html.LabelFor(m => m.CountryId, "Country")
-                @Html.DropDownListFor(m => m.CountryId, countries, ViewConstants.DefaultValue, new { @class = ViewConstants.EdithorClass, style = ViewConstants.Width200 })
+                @Html.DropDownListFor(m => m.CountryId, countries, ViewConstants.DefaultDropDownValue, new { @class = ViewConstants.EdithorClass, style = ViewConstants.Width200 })
             </div>
             <div class="form-group col-auto">
                 @Html.LabelFor(m => m.Location.CountryStateId, "State")
-                @Html.DropDownListFor(m => m.Location.CountryStateId, states, ViewConstants.DefaultValue, new { @class = ViewConstants.EdithorClass, style = ViewConstants.Width200 })
+                @Html.DropDownListFor(m => m.Location.CountryStateId, states, ViewConstants.DefaultDropDownValue, new { @class = ViewConstants.EdithorClass, style = ViewConstants.Width200 })
             </div>
             <div class="form-group col-auto">
                 @Html.LabelFor(m => m.Location.Region)

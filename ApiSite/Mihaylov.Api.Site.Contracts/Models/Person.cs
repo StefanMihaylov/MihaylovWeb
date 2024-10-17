@@ -33,6 +33,8 @@ namespace Mihaylov.Api.Site.Contracts.Models
 
         public string Comments { get; set; }
 
+        public DateTime CreatedOn { get; set; }
+
         public IEnumerable<Account> Accounts { get; set; }
 
         public int AnswersCount { get; set; }

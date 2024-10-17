@@ -331,9 +331,10 @@ namespace Mihaylov.Api.Site.DAL.Repositories
 
             var accountStates = await _context.Accounts.Include(a => a.Status)
                                      .Where(a => a.PersonId.HasValue && a.StatusId.HasValue)
-                                     .GroupBy(a => new { a.Status.Name, a.StatusId })
-                                     .OrderBy(a => a.Key.StatusId)
-                                     .Select(g => new PersonStatisticsPair<string> { Key = g.Key.Name, Value = g.Count() })
+                                     .GroupBy(a => new { Status = a.Status.Name, a.StatusId, a.AccountTypeId, Type = a.AccountType.Name })
+                                     .OrderBy(a => a.Key.AccountTypeId)
+                                        .ThenBy(a => a.Key.StatusId)
+                                     .Select(g => new PersonStatisticsPair<string> { Key = $"{g.Key.Type} {g.Key.Status}", Value = g.Count() })
                                      .ToListAsync()
                                      .ConfigureAwait(false);
 

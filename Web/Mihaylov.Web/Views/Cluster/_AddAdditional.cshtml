@@ -1,10 +1,11 @@
 ﻿@namespace Mihaylov.Web.Models.Cluster
+@using Mihaylov.Web.Models.Configs
 @model AddAdditionalModel
 
 <form action="/Cluster/AddAdditional" method="post">
     <tr>
         <td>
-            @Html.DropDownListFor(m => m.ApplicationId, Model.Applications, Constants.EmptyDropdown)
+            @Html.DropDownListFor(m => m.ApplicationId, Model.Applications, ViewConstants.DefaultDropDownValue)
             @Html.ValidationMessageFor(m => m.ApplicationId)
         </td>
         <td></td>

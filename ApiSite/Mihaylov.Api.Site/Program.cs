@@ -8,6 +8,7 @@ using Mihaylov.Api.Site.DAL;
 using Mihaylov.Common.Abstract;
 using Mihaylov.Common.Host;
 using Mihaylov.Common.Host.Abstract.Configurations;
+using Mihaylov.Api.Site.Hubs;
 
 namespace Mihaylov.Api.Site
 {
@@ -65,6 +66,21 @@ namespace Mihaylov.Api.Site
                     {
                         opt.SiteUrl = Config.GetEnvironmentVariable("Site_SourceUrl");
                     });
+
+            services.AddSignalR();
+            services.AddScoped<IProgressReporterFactory, ProgressReporterFactory>();
+            services.AddCors(options =>
+            {
+                options.AddPolicy("_SignalR_AllowSpecificOrigins",
+                    builder =>
+                    {
+                        builder.WithOrigins("http://localhost:5281")
+                               .AllowAnyHeader()
+                               .AllowAnyMethod()
+                               .SetIsOriginAllowed((x) => true)
+                               .AllowCredentials();
+                    });
+            });
         }
 
         private static void Configure(WebApplication app)
@@ -72,9 +88,7 @@ namespace Mihaylov.Api.Site
             app.UseSwaggerCustom("APP_Scheme", "APP_PathPrefix", "v1", "Site API V1");
 
             app.UseRouting();
-            app.UseCors(x => x.AllowAnyOrigin()
-                  .AllowAnyMethod()
-                  .AllowAnyHeader());
+            app.UseCors("_SignalR_AllowSpecificOrigins");
 
             app.UseAuthentication();
             app.UseAuthorization();
@@ -83,6 +97,8 @@ namespace Mihaylov.Api.Site
             {
                 endpoints.MapControllers();
             });
+
+            app.MapHub<UpdateProgressHub>("/UpdateProgressHub");            
         }
     }
 }
