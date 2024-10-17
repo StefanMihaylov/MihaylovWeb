@@ -32,6 +32,10 @@
 	  <ProjectReference Include="..\..\Common\Mihaylov.Common.Host\Mihaylov.Common.Host.csproj" />
 	  <ProjectReference Include="..\..\Site\Mihaylov.Site.Media\Mihaylov.Site.Media.csproj" />
 	  <ProjectReference Include="..\Mihaylov.Web.Service\Mihaylov.Web.Service.csproj" />
+	  <ProjectReference Include="..\..\ApiOther\Mihaylov.Api.Other.Client\Mihaylov.Api.Other.Client.csproj" />
+	  <ProjectReference Include="..\..\ApiSite\Mihaylov.Api.Site.Client\Mihaylov.Api.Site.Client.csproj" />
+	  <ProjectReference Include="..\..\ApiUsers\Mihaylov.Api.Users.Client\Mihaylov.Api.Users.Client.csproj" />
+	  <ProjectReference Include="..\..\ApiWeather\Mihaylov.Api.Weather.Client\Mihaylov.Api.Weather.Client.csproj" />
 	</ItemGroup>
 
 </Project>

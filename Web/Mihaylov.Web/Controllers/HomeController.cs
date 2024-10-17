@@ -2,8 +2,8 @@ using System.Diagnostics;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Mihaylov.Web.Service.Interfaces;
 using Mihaylov.Web.Models;
+using Mihaylov.Web.Services;
 
 namespace Mihaylov.Web.Controllers
 {

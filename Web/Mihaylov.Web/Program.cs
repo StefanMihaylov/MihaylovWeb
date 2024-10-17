@@ -20,6 +20,7 @@ using Mihaylov.Web.Service;
 using Mihaylov.Web.Service.Interfaces;
 using Mihaylov.Web.Service.Models;
 using Mihaylov.Web.Models.Configs;
+using Mihaylov.Web.Services;
 
 namespace Mihaylov.Web
 {

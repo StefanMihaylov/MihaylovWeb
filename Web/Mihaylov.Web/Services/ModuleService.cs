@@ -6,10 +6,8 @@ using Mihaylov.Api.Site.Client;
 using Mihaylov.Api.Users.Client;
 using Mihaylov.Api.Weather.Client;
 using Mihaylov.Common.Host.Abstract.AssemblyVersion;
-using Mihaylov.Web.Service.Interfaces;
-using Mihaylov.Web.Service.Models;
 
-namespace Mihaylov.Web.Service
+namespace Mihaylov.Web.Services
 {
     public class ModuleService : IModuleService
     {

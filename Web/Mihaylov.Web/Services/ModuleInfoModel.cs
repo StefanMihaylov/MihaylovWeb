@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Mihaylov.Common.Host.Abstract.AssemblyVersion;
 
-namespace Mihaylov.Web.Service.Models
+namespace Mihaylov.Web.Services
 {
     public class ModuleInfoModel
     {
