@@ -8,13 +8,13 @@
         <table class="table table-bordered table-striped">
             <thead>
                 <tr>
-                    <th>@Html.LabelFor(m => m.Concerts.Data.First().Date)</th>
-                    <th>@Html.LabelFor(m => m.Concerts.Data.First().Name)</th>
-                    <th>@Html.LabelFor(m => m.Concerts.Data.First().Bands)</th>
-                    <th>@Html.LabelFor(m => m.Concerts.Data.First().Price)</th>
-                    <th>@Html.LabelFor(m => m.Concerts.Data.First().Currency)</th>
-                    <th>@Html.LabelFor(m => m.Concerts.Data.First().Location)</th>
-                    <th>@Html.LabelFor(m => m.Concerts.Data.First().TicketProvider)</th>
+                    <th>@Html.NameFor(m => m.Concerts.Data.First().Date)</th>
+                    <th>@Html.NameFor(m => m.Concerts.Data.First().Name)</th>
+                    <th>@Html.NameFor(m => m.Concerts.Data.First().Bands)</th>
+                    <th>@Html.NameFor(m => m.Concerts.Data.First().Price)</th>
+                    <th>@Html.NameFor(m => m.Concerts.Data.First().Currency)</th>
+                    <th>@Html.NameFor(m => m.Concerts.Data.First().Location)</th>
+                    <th>@Html.NameFor(m => m.Concerts.Data.First().TicketProvider)</th>
                     <th>Action</th>
                 </tr>
             </thead>

@@ -5,12 +5,12 @@
 <table class="table table-bordered table-striped">
     <thead>
         <tr>
-            <th>@Html.LabelFor(m => m.Answers.First().AskDate)</th>
-            <th>@Html.LabelFor(m => m.Answers.First().Question)</th>
-            <th>@Html.LabelFor(m => m.Answers.First().Value)</th>
-            <th>@Html.LabelFor(m => m.Answers.First().Unit)</th>
-            <th>@Html.LabelFor(m => m.Answers.First().HalfType)</th>
-            <th>@Html.LabelFor(m => m.Answers.First().Details)</th>
+            <th>@Html.NameFor(m => m.Answers.First().AskDate)</th>
+            <th>@Html.NameFor(m => m.Answers.First().Question)</th>
+            <th>@Html.NameFor(m => m.Answers.First().Value)</th>
+            <th>@Html.NameFor(m => m.Answers.First().Unit)</th>
+            <th>@Html.NameFor(m => m.Answers.First().HalfType)</th>
+            <th>@Html.NameFor(m => m.Answers.First().Details)</th>
             <th>
                 @if (Model.PersonId > 0)
                 {

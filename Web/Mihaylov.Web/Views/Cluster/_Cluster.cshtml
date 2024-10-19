@@ -5,16 +5,16 @@
 <table class="table table-bordered table-striped" id="cluster-grid">
     <thead>
         <tr>
-            <th>@Html.LabelFor(m => m.Applications.First().Main.Name)</th>
-            <th>@Html.LabelFor(m => m.Applications.First().Main.Version.ReleaseDate, "Release")</th>
-            <th>@Html.LabelFor(m => m.Applications.First().Main.Version.Version)</th>
-            <th>@Html.LabelFor(m => m.Applications.First().Main.Version.HelmVersion, "Helm")</th>
+            <th>@Html.NameFor(m => m.Applications.First().Main.Name)</th>
+            <th>Release)</th>
+            <th>@Html.NameFor(m => m.Applications.First().Main.Version.Version)</th>
+            <th>Helm)</th>
             @* <th>@Html.LabelFor(m => m.Applications.First().Main.Version.HelmAppVersion, "App")</th> *@
-            <th>@Html.LabelFor(m => m.Applications.First().Main.ReleaseUrl)</th>
-            <th>@Html.LabelFor(m => m.Applications.First().Main.Deployment)</th>
-            <th>@Html.LabelFor(m => m.Applications.First().Main.Files)</th>
-            <th>@Html.LabelFor(m => m.Applications.First().Main.Pods)</th>
-            <th>@Html.LabelFor(m => m.Applications.First().Main.Notes)</th>
+            <th>@Html.NameFor(m => m.Applications.First().Main.ReleaseUrl)</th>
+            <th>@Html.NameFor(m => m.Applications.First().Main.Deployment)</th>
+            <th>@Html.NameFor(m => m.Applications.First().Main.Files)</th>
+            <th>@Html.NameFor(m => m.Applications.First().Main.Pods)</th>
+            <th>@Html.NameFor(m => m.Applications.First().Main.Notes)</th>
             <th>Action</th>
         </tr>
     </thead>

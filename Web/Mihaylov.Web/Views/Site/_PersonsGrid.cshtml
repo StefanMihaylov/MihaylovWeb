@@ -7,16 +7,16 @@
 <table class="table table-bordered table-striped">
     <thead>
         <tr>
-            <th>@Html.LabelFor(m => m.Data.First().Details.FirstName, "Full Name")</th>
-            <th>@Html.LabelFor(m => m.Data.First().Age)</th>
-            <th>@Html.LabelFor(m => m.Data.First().Country)</th>
-            <th>@Html.LabelFor(m => m.Data.First().Orientation)</th>
-            <th>@Html.LabelFor(m => m.Data.First().Comments)</th>
-            <th>@Html.LabelFor(m => m.Data.First().Accounts.First().AccountType, "Type")</th>
-            <th>@Html.LabelFor(m => m.Data.First().Accounts.First().Username)</th>
-            <th>@Html.LabelFor(m => m.Data.First().Accounts.First().Status)</th>
-            <th>@Html.LabelFor(m => m.Data.First().Accounts.First().AskDate)</th>
-            <th>@Html.LabelFor(m => m.Data.First().AnswersCount, "Answers")</th>
+            <th>Full Name)</th>
+            <th>@Html.NameFor(m => m.Data.First().Age)</th>
+            <th>@Html.NameFor(m => m.Data.First().Country)</th>
+            <th>@Html.NameFor(m => m.Data.First().Orientation)</th>
+            <th>@Html.NameFor(m => m.Data.First().Comments)</th>
+            <th>Type)</th>
+            <th>@Html.NameFor(m => m.Data.First().Accounts.First().Username)</th>
+            <th>@Html.NameFor(m => m.Data.First().Accounts.First().Status)</th>
+            <th>@Html.NameFor(m => m.Data.First().Accounts.First().AskDate)</th>
+            <th>Answers)</th>
             <th>Actions</th>
         </tr>
     </thead>

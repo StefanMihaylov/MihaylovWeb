@@ -137,7 +137,13 @@ namespace Mihaylov.Web.Areas.Identity.Pages.Account
 
                 var token = response.Token;
 
-                var cookieOptions = new CookieOptions() { HttpOnly = false, SameSite = SameSiteMode.Strict };
+                var cookieOptions = new CookieOptions()
+                {
+                    Secure = true,
+                    HttpOnly = false,
+                    SameSite = SameSiteMode.Lax
+                };
+
                 Response.Cookies.Append(COOKIE_NAME, response.Token, cookieOptions);
 
                 _logger.LogInformation($"User '{Input.UserName}' logged in.");

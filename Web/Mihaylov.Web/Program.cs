@@ -82,8 +82,7 @@ namespace Mihaylov.Web
                         apm.FeatureProviders.Add(new ViewVersionFeatureProvider(assembly));
                     });
 
-            services.AddRazorPages();
-            services.AddSignalR();
+            services.AddRazorPages();            
             services.AddMemoryCache();
 
             services.AddClientJwtAuthentication(LoginModel.COOKIE_NAME, ClaimType.Username, opt =>
@@ -126,6 +125,7 @@ namespace Mihaylov.Web
 
             services.AddMediaServices();
 
+            services.AddSignalR();
             services.AddScoped<IProgressReporterFactory, ProgressReporterFactory>();
         }
     }
