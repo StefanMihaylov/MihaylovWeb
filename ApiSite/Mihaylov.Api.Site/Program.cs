@@ -74,7 +74,7 @@ namespace Mihaylov.Api.Site
                 options.AddPolicy("_SignalR_AllowSpecificOrigins",
                     builder =>
                     {
-                        builder.WithOrigins("http://localhost:5281")
+                        builder.WithOrigins("http://localhost:5281", "https://mihaylov-s.eu")
                                .AllowAnyHeader()
                                .AllowAnyMethod()
                                .SetIsOriginAllowed((x) => true)

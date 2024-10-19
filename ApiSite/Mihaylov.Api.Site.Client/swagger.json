@@ -956,6 +956,44 @@
         }
       }
     },
+    "/api/Person/FormatedStatistics": {
+      "get": {
+        "tags": [
+          "Person"
+        ],
+        "responses": {
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PersonFormatedStatistics"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/Quiz/Questions": {
       "get": {
         "tags": [
@@ -1522,6 +1560,12 @@
             "format": "date-time",
             "nullable": true
           },
+          "age": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true,
+            "readOnly": true
+          },
           "lastOnlineDate": {
             "type": "string",
             "format": "date-time",
@@ -1608,6 +1652,11 @@
           "createDate": {
             "type": "string",
             "format": "date-time",
+            "nullable": true
+          },
+          "age": {
+            "type": "integer",
+            "format": "int32",
             "nullable": true
           },
           "lastOnlineDate": {
@@ -1718,6 +1767,11 @@
                 "$ref": "#/components/schemas/DateOfBirthType"
               }
             ],
+            "nullable": true
+          },
+          "age": {
+            "type": "integer",
+            "format": "int32",
             "nullable": true
           },
           "countryId": {
@@ -1846,7 +1900,7 @@
         },
         "additionalProperties": false
       },
-      "BooleanPersonStatisticsPair": {
+      "BooleanPersonStatisticsPairGeneric": {
         "type": "object",
         "properties": {
           "key": {
@@ -2136,6 +2190,17 @@
             ],
             "nullable": true
           },
+          "age": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true,
+            "readOnly": true
+          },
+          "ageDisplay": {
+            "type": "string",
+            "nullable": true,
+            "readOnly": true
+          },
           "countryId": {
             "type": "integer",
             "format": "int32",
@@ -2214,6 +2279,19 @@
           },
           "otherNames": {
             "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "PersonFormatedStatistics": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PersonStatisticsPair"
+            },
             "nullable": true
           }
         },
@@ -2363,21 +2441,21 @@
           "answers": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/BooleanPersonStatisticsPair"
+              "$ref": "#/components/schemas/BooleanPersonStatisticsPairGeneric"
             },
             "nullable": true
           },
           "accountTypes": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/StringPersonStatisticsPair"
+              "$ref": "#/components/schemas/StringPersonStatisticsPairGeneric"
             },
             "nullable": true
           },
           "states": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/StringPersonStatisticsPair"
+              "$ref": "#/components/schemas/StringPersonStatisticsPairGeneric"
             },
             "nullable": true
           },
@@ -2400,6 +2478,20 @@
           "activeAccountCount": {
             "type": "integer",
             "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "PersonStatisticsPair": {
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string",
+            "nullable": true
+          },
+          "value": {
+            "type": "string",
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -2462,6 +2554,11 @@
           "details": {
             "type": "string",
             "nullable": true
+          },
+          "valueDisplay": {
+            "type": "string",
+            "nullable": true,
+            "readOnly": true
           }
         },
         "additionalProperties": false
@@ -2499,7 +2596,7 @@
         },
         "additionalProperties": false
       },
-      "StringPersonStatisticsPair": {
+      "StringPersonStatisticsPairGeneric": {
         "type": "object",
         "properties": {
           "key": {

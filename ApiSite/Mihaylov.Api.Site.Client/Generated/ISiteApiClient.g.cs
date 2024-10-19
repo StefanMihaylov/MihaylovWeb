@@ -187,6 +187,15 @@ namespace Mihaylov.Api.Site.Client
 
         /// <returns>OK</returns>
         /// <exception cref="SwaggerException">A server side error occurred.</exception>
+        System.Threading.Tasks.Task<PersonFormatedStatistics> FormatedStatisticsAsync();
+
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+        /// <returns>OK</returns>
+        /// <exception cref="SwaggerException">A server side error occurred.</exception>
+        System.Threading.Tasks.Task<PersonFormatedStatistics> FormatedStatisticsAsync(System.Threading.CancellationToken cancellationToken);
+
+        /// <returns>OK</returns>
+        /// <exception cref="SwaggerException">A server side error occurred.</exception>
         System.Threading.Tasks.Task<System.Collections.Generic.IEnumerable<QuizQuestion>> QuestionsAsync();
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
@@ -310,6 +319,9 @@ namespace Mihaylov.Api.Site.Client
         [Newtonsoft.Json.JsonProperty("createDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.DateTime? CreateDate { get; set; }
 
+        [Newtonsoft.Json.JsonProperty("age", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public int? Age { get; set; }
+
         [Newtonsoft.Json.JsonProperty("lastOnlineDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.DateTime? LastOnlineDate { get; set; }
 
@@ -408,6 +420,9 @@ namespace Mihaylov.Api.Site.Client
 
         [Newtonsoft.Json.JsonProperty("createDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.DateTime? CreateDate { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("age", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public int? Age { get; set; }
 
         [Newtonsoft.Json.JsonProperty("lastOnlineDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.DateTime? LastOnlineDate { get; set; }
@@ -531,6 +546,9 @@ namespace Mihaylov.Api.Site.Client
 
         [Newtonsoft.Json.JsonProperty("dateOfBirthType", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public DateOfBirthType? DateOfBirthType { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("age", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public int? Age { get; set; }
 
         [Newtonsoft.Json.JsonProperty("countryId", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public int? CountryId { get; set; }
@@ -659,7 +677,7 @@ namespace Mihaylov.Api.Site.Client
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.0.2.0 (NJsonSchema v11.0.0.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class BooleanPersonStatisticsPair
+    public partial class BooleanPersonStatisticsPairGeneric
     {
         [Newtonsoft.Json.JsonProperty("key", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public bool Key { get; set; }
@@ -673,10 +691,10 @@ namespace Mihaylov.Api.Site.Client
             return Newtonsoft.Json.JsonConvert.SerializeObject(this, new Newtonsoft.Json.JsonSerializerSettings());
 
         }
-        public static BooleanPersonStatisticsPair FromJson(string data)
+        public static BooleanPersonStatisticsPairGeneric FromJson(string data)
         {
 
-            return Newtonsoft.Json.JsonConvert.DeserializeObject<BooleanPersonStatisticsPair>(data, new Newtonsoft.Json.JsonSerializerSettings());
+            return Newtonsoft.Json.JsonConvert.DeserializeObject<BooleanPersonStatisticsPairGeneric>(data, new Newtonsoft.Json.JsonSerializerSettings());
 
         }
 
@@ -984,6 +1002,12 @@ namespace Mihaylov.Api.Site.Client
         [Newtonsoft.Json.JsonProperty("dateOfBirthType", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public DateOfBirthType? DateOfBirthType { get; set; }
 
+        [Newtonsoft.Json.JsonProperty("age", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public int? Age { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("ageDisplay", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string AgeDisplay { get; set; }
+
         [Newtonsoft.Json.JsonProperty("countryId", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public int? CountryId { get; set; }
 
@@ -1060,6 +1084,27 @@ namespace Mihaylov.Api.Site.Client
         {
 
             return Newtonsoft.Json.JsonConvert.DeserializeObject<PersonDetail>(data, new Newtonsoft.Json.JsonSerializerSettings());
+
+        }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.0.2.0 (NJsonSchema v11.0.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class PersonFormatedStatistics
+    {
+        [Newtonsoft.Json.JsonProperty("data", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.Collections.Generic.IEnumerable<PersonStatisticsPair> Data { get; set; }
+
+        public string ToJson()
+        {
+
+            return Newtonsoft.Json.JsonConvert.SerializeObject(this, new Newtonsoft.Json.JsonSerializerSettings());
+
+        }
+        public static PersonFormatedStatistics FromJson(string data)
+        {
+
+            return Newtonsoft.Json.JsonConvert.DeserializeObject<PersonFormatedStatistics>(data, new Newtonsoft.Json.JsonSerializerSettings());
 
         }
 
@@ -1204,13 +1249,13 @@ namespace Mihaylov.Api.Site.Client
     public partial class PersonStatistics
     {
         [Newtonsoft.Json.JsonProperty("answers", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.Collections.Generic.IEnumerable<BooleanPersonStatisticsPair> Answers { get; set; }
+        public System.Collections.Generic.IEnumerable<BooleanPersonStatisticsPairGeneric> Answers { get; set; }
 
         [Newtonsoft.Json.JsonProperty("accountTypes", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.Collections.Generic.IEnumerable<StringPersonStatisticsPair> AccountTypes { get; set; }
+        public System.Collections.Generic.IEnumerable<StringPersonStatisticsPairGeneric> AccountTypes { get; set; }
 
         [Newtonsoft.Json.JsonProperty("states", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.Collections.Generic.IEnumerable<StringPersonStatisticsPair> States { get; set; }
+        public System.Collections.Generic.IEnumerable<StringPersonStatisticsPairGeneric> States { get; set; }
 
         [Newtonsoft.Json.JsonProperty("average", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public double Average { get; set; }
@@ -1237,6 +1282,30 @@ namespace Mihaylov.Api.Site.Client
         {
 
             return Newtonsoft.Json.JsonConvert.DeserializeObject<PersonStatistics>(data, new Newtonsoft.Json.JsonSerializerSettings());
+
+        }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.0.2.0 (NJsonSchema v11.0.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class PersonStatisticsPair
+    {
+        [Newtonsoft.Json.JsonProperty("key", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string Key { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("value", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string Value { get; set; }
+
+        public string ToJson()
+        {
+
+            return Newtonsoft.Json.JsonConvert.SerializeObject(this, new Newtonsoft.Json.JsonSerializerSettings());
+
+        }
+        public static PersonStatisticsPair FromJson(string data)
+        {
+
+            return Newtonsoft.Json.JsonConvert.DeserializeObject<PersonStatisticsPair>(data, new Newtonsoft.Json.JsonSerializerSettings());
 
         }
 
@@ -1283,6 +1352,9 @@ namespace Mihaylov.Api.Site.Client
 
         [Newtonsoft.Json.JsonProperty("details", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string Details { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("valueDisplay", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string ValueDisplay { get; set; }
 
         public string ToJson()
         {
@@ -1351,7 +1423,7 @@ namespace Mihaylov.Api.Site.Client
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.0.2.0 (NJsonSchema v11.0.0.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class StringPersonStatisticsPair
+    public partial class StringPersonStatisticsPairGeneric
     {
         [Newtonsoft.Json.JsonProperty("key", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string Key { get; set; }
@@ -1365,10 +1437,10 @@ namespace Mihaylov.Api.Site.Client
             return Newtonsoft.Json.JsonConvert.SerializeObject(this, new Newtonsoft.Json.JsonSerializerSettings());
 
         }
-        public static StringPersonStatisticsPair FromJson(string data)
+        public static StringPersonStatisticsPairGeneric FromJson(string data)
         {
 
-            return Newtonsoft.Json.JsonConvert.DeserializeObject<StringPersonStatisticsPair>(data, new Newtonsoft.Json.JsonSerializerSettings());
+            return Newtonsoft.Json.JsonConvert.DeserializeObject<StringPersonStatisticsPairGeneric>(data, new Newtonsoft.Json.JsonSerializerSettings());
 
         }
 

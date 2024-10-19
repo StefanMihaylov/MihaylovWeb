@@ -316,7 +316,7 @@ namespace Mihaylov.Api.Site.DAL.Repositories
             var answers = await _context.QuizAnswers.Include(a => a.Unit)
                                                     .Where(a => a.QuestionId == mainQuestionId)
                                                     .GroupBy(a => a.UnitId.HasValue)
-                                                    .Select(g => new PersonStatisticsPair<bool> { Key = g.Key, Value = g.Count() })
+                                                    .Select(g => new PersonStatisticsPairGeneric<bool> { Key = g.Key, Value = g.Count() })
                                                     .OrderByDescending(a => a.Key)
                                                     .ToListAsync()
                                                     .ConfigureAwait(false);
@@ -324,7 +324,7 @@ namespace Mihaylov.Api.Site.DAL.Repositories
             var accountTypes = await _context.Accounts.Include(a => a.AccountType)
                                                  .Where(a => a.PersonId.HasValue)
                                                  .GroupBy(a => a.AccountType.Name)
-                                                 .Select(g => new PersonStatisticsPair<string> { Key = g.Key, Value = g.Count() })
+                                                 .Select(g => new PersonStatisticsPairGeneric<string> { Key = g.Key, Value = g.Count() })
                                                  .OrderBy(a => a.Key)
                                                  .ToListAsync()
                                                  .ConfigureAwait(false);
@@ -334,7 +334,7 @@ namespace Mihaylov.Api.Site.DAL.Repositories
                                      .GroupBy(a => new { Status = a.Status.Name, a.StatusId, a.AccountTypeId, Type = a.AccountType.Name })
                                      .OrderBy(a => a.Key.AccountTypeId)
                                         .ThenBy(a => a.Key.StatusId)
-                                     .Select(g => new PersonStatisticsPair<string> { Key = $"{g.Key.Type} {g.Key.Status}", Value = g.Count() })
+                                     .Select(g => new PersonStatisticsPairGeneric<string> { Key = $"{g.Key.Type} {g.Key.Status}", Value = g.Count() })
                                      .ToListAsync()
                                      .ConfigureAwait(false);
 

@@ -12,8 +12,10 @@ namespace Mihaylov.Api.Site.Contracts.Managers
 
         Task<Account> GetAccountAsync(long id);
 
+        Task<UpdateAccounts> GetAllAccountsForUpdateAsync(int? batchSize);
+
         Task<PersonStatistics> GetStaticticsAsync();
 
-        Task<UpdateAccounts> GetAllAccountsForUpdateAsync(int? batchSize);
+        Task<PersonFormatedStatistics> GetFormatedStatisticsAsync();
     }
 }

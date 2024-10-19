@@ -1,12 +1,12 @@
 ﻿@using Mihaylov.Api.Site.Client
-@model PersonStatistics
+@model PersonFormatedStatistics
 
 <table class="table table-bordered table-striped">
     <tbody>
         <tr>
             @{ int count = 0; int maxColumns = 6; }
 
-            @foreach (var stats in Model.CountDictionary)
+            @foreach (var stats in Model.Data)
             {
                 if (string.IsNullOrEmpty(stats.Key))
                 {

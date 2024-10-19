@@ -89,6 +89,26 @@ $(function () {
             var $questionContainer = $('#question-info');
             $questionContainer.empty();
         })
+        .on('click', '.person-details-container .edit-account-type-button', function () {
+            var $accountTypeContainer = $('#account-type-info');
+            $accountTypeContainer.empty();
+
+            var $this = $(this);
+            var id = $this.data('id');
+            var url = main.getUrl('Site/AccountTypeView');
+            var data = { id: id };
+
+            $.post(url, data, function (res) {
+                $accountTypeContainer.empty().append(res);
+            }).fail(function (res) {
+                $accountTypeContainer.empty().append(res);
+            }).always(function () {
+            });
+        })
+        .on('click', '.person-details-container .close-account-type-button', function () {
+            var $accountTypeContainer = $('#account-type-info');
+            $accountTypeContainer.empty();
+        })
         .on('click', '.person-details-container .merge-person-button', function () {
             var fromValue = localStorage.getItem(keyFrom);
             var toValue = localStorage.getItem(keyTo);
@@ -171,12 +191,12 @@ $(function () {
         var fromValue = localStorage.getItem(keyFrom);
         var toValue = localStorage.getItem(keyTo);
 
-        var $clearButton = $('.clear-merge-person-button');
+        var $baseButtons = $('.merge-base-button');
         if (fromValue !== null || toValue !== null) {
-            $clearButton.removeClass('btn-secondary').addClass('btn-info');
+            $baseButtons.removeClass('btn-secondary').addClass('btn-info');
         }
         else {
-            $clearButton.addClass('btn-secondary').removeClass('btn-info');
+            $baseButtons.addClass('btn-secondary').removeClass('btn-info');
         }
 
         var allButtons = $('.merge-person-button');

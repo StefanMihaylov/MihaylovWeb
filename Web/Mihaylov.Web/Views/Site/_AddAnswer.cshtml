@@ -44,8 +44,12 @@
                 @Html.HiddenFor(m => Model.Id)
                 @Html.HiddenFor(m => Model.PersonId)
                 @Html.ValidationMessageFor(m => Model.PersonId)
-                <button type="submit" class="submit-btn btn btn-primary">Save</button>
-                <span class="btn btn-danger close-answer-button">Close</span>
+                <button type="submit" class="submit-btn btn btn-primary">
+                    <i class="bi @ViewConstants.SaveButton"></i>
+                </button>
+                <span class="btn btn-danger close-answer-button">
+                    <i class="bi @ViewConstants.CloseButton"></i>
+                </span>
             </div>
         </div>
     </fieldset>

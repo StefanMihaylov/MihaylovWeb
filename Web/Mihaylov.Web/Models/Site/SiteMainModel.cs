@@ -12,7 +12,7 @@ namespace Mihaylov.Web.Models.Site
 
         public PersonExtended Person { get; set; }
 
-        public PersonStatistics Statistics { get; set; }
+        public PersonFormatedStatistics Statistics { get; set; }
 
         public SiteAdminModel AdminData { get; set; }
 

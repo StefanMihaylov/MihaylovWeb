@@ -13,6 +13,8 @@ namespace Mihaylov.Api.Site.Models
 
         public DateOfBirthType? DateOfBirthType { get; set; }
 
+        public int? Age { get; set; }
+
         public int? CountryId { get; set; }
 
         public AddPersonLocationModel Location { get; set; }

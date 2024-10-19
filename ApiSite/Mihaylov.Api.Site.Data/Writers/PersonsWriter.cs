@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Mihaylov.Api.Site.Contracts.Models;
 using Mihaylov.Api.Site.Contracts.Repositories;
 using Mihaylov.Api.Site.Contracts.Writers;
+using Mihaylov.Common.Generic.Extensions;
 
 namespace Mihaylov.Api.Site.Data.Writers
 {
@@ -17,19 +19,30 @@ namespace Mihaylov.Api.Site.Data.Writers
             _quizRepository = quizRepository;
         }
 
-        public Task<Person> AddOrUpdatePersonAsync(Person input)
+        public Task<Person> AddOrUpdatePersonAsync(Person input, int? age)
         {
+            var type = input.DateOfBirthType;
+            var isCalculating = type == DateOfBirthType.YearCalculated;
+
+            input.DateOfBirthType = input.DateOfBirth.IsBirthDateTypeValid(age, isCalculating) ? type : null;
+            input.DateOfBirth = input.DateOfBirth.GetBirthDate(age, type.HasValue, isCalculating);
+
             return _repository.AddOrUpdatePersonAsync(input);
         }
 
-        public Task<Account> AddOrUpdateAccountAsync(Account input)
+        public Task<Account> AddOrUpdateAccountAsync(Account input, int? age)
         {
+            if (!input.CreateDate.HasValue)
+            {
+                input.CreateDate = age.GetCreateDate();
+            }
+
             return _repository.AddOrUpdateAccountAsync(input);
         }
 
-        public async Task<Person> AddNewPersonAsync(Person input)
+        public async Task<Person> AddNewPersonAsync(Person input, int? age)
         {
-            var newPerson = await _repository.AddOrUpdatePersonAsync(input).ConfigureAwait(false);
+            var newPerson = await AddOrUpdatePersonAsync(input, age).ConfigureAwait(false);
 
             var newAccounts = new List<Account>();
             newPerson.Accounts = newAccounts;
@@ -37,9 +50,9 @@ namespace Mihaylov.Api.Site.Data.Writers
             foreach (var account in input.Accounts)
             {
                 account.PersonId = newPerson.Id;
-                var newAccount = await _repository.AddOrUpdateAccountAsync(account).ConfigureAwait(false);
+                var newAccount = await AddOrUpdateAccountAsync(account, null).ConfigureAwait(false);
                 newAccounts.Add(newAccount);
-            }            
+            }
 
             return newPerson;
         }
@@ -80,6 +93,7 @@ namespace Mihaylov.Api.Site.Data.Writers
 
             return toUpdated;
         }
+
 
         private void MergePerson(PersonMerge input, Person from, Person to)
         {

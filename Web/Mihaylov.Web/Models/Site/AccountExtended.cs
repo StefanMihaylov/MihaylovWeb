@@ -17,6 +17,7 @@ namespace Mihaylov.Web.Models.Site
             Status = account.Status;
             AskDate = account.AskDate;
             CreateDate = account.CreateDate;
+            Age = account.Age;
             LastOnlineDate = account.LastOnlineDate;
             ReconciledDate = account.ReconciledDate;          
             Details = account.Details;

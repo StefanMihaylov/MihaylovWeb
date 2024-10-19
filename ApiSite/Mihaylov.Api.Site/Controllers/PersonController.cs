@@ -97,7 +97,7 @@ namespace Mihaylov.Api.Site.Controllers
                 CreatedOn = input.CreatedOn,
             };
 
-            Person person = await _writer.AddOrUpdatePersonAsync(request).ConfigureAwait(false);
+            Person person = await _writer.AddOrUpdatePersonAsync(request, input.Age).ConfigureAwait(false);
 
             return Ok(person);
         }
@@ -140,7 +140,7 @@ namespace Mihaylov.Api.Site.Controllers
 
             if (!input.IsPreview.Value)
             {
-                var newPerson = await _writer.AddNewPersonAsync(person).ConfigureAwait(false);
+                var newPerson = await _writer.AddNewPersonAsync(person, person.Age).ConfigureAwait(false);
 
                 return Ok(newPerson);
             }
@@ -188,7 +188,7 @@ namespace Mihaylov.Api.Site.Controllers
                 ReconciledDate = input.ReconciledDate,
             };
 
-            Account account = await _writer.AddOrUpdateAccountAsync(request).ConfigureAwait(false);
+            Account account = await _writer.AddOrUpdateAccountAsync(request, input.Age).ConfigureAwait(false);
 
             return Ok(account);
         }
@@ -196,7 +196,7 @@ namespace Mihaylov.Api.Site.Controllers
         [HttpPost]
         [SwaggerOperation(OperationId = "UpdateAccounts")]
         [ProducesResponseType(typeof(void), StatusCodes.Status200OK)]
-        public IActionResult Accounts([FromForm]string connectionId)
+        public IActionResult Accounts([FromForm] string connectionId)
         {
             var progressReporter = _progressReporter.GetLoadingBarReporter(connectionId, "updateAccountsLoadingBar");
 
@@ -210,6 +210,15 @@ namespace Mihaylov.Api.Site.Controllers
         public async Task<IActionResult> Statistics()
         {
             PersonStatistics statistics = await _manager.GetStaticticsAsync().ConfigureAwait(false);
+
+            return Ok(statistics);
+        }
+
+        [HttpGet]
+        [ProducesResponseType(typeof(PersonFormatedStatistics), StatusCodes.Status200OK)]
+        public async Task<IActionResult> FormatedStatistics()
+        {
+            PersonFormatedStatistics statistics = await _manager.GetFormatedStatisticsAsync().ConfigureAwait(false);
 
             return Ok(statistics);
         }

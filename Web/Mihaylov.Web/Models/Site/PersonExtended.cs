@@ -11,6 +11,8 @@ namespace Mihaylov.Web.Models.Site
             Details = person.Details;
             DateOfBirth = person.DateOfBirth;
             DateOfBirthType = person.DateOfBirthType;
+            Age = person.Age;
+            AgeDisplay = person.AgeDisplay;
             CountryId = person.CountryId;
             Country = person.Country;
             Location = person.Location;

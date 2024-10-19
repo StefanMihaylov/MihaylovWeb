@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Mihaylov.Common.Generic.Extensions;
 
 namespace Mihaylov.Api.Site.Contracts.Models
 {
@@ -15,6 +16,28 @@ namespace Mihaylov.Api.Site.Contracts.Models
         public DateTime? DateOfBirth { get; set; }
 
         public DateOfBirthType? DateOfBirthType { get; set; }
+
+        public int? Age => DateOfBirth.GetAge();
+
+        public string AgeDisplay
+        {
+            get
+            {
+                if (!DateOfBirth.HasValue || !DateOfBirthType.HasValue)
+                {
+                    return string.Empty;
+                }
+
+                return DateOfBirthType switch
+                {
+                    Models.DateOfBirthType.Full => $"{Age} ({DateOfBirth.Value:dd.MM.yyyy})",
+                    Models.DateOfBirthType.YearAndMonth => $"{Age} (**.{DateOfBirth.Value:MM.yyyy})",
+                    Models.DateOfBirthType.YearOnly => $"{Age} (**.**.{DateOfBirth.Value:yyyy})",
+                    Models.DateOfBirthType.YearCalculated => $"{Age}",
+                    _ => string.Empty,
+                };
+            }
+        }
 
         public int? CountryId { get; set; }
 

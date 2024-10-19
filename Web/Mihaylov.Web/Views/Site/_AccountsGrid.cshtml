@@ -17,7 +17,9 @@
             <th>
                 @if (Model.PersonId > 0)
                 {
-                    <span class="btn btn-success edit-account-button" data-id="" data-personid="@Model.PersonId">Нов</span>
+                    <span class="btn btn-success edit-account-button" data-id="" data-personid="@Model.PersonId">
+                        <i class="bi @ViewConstants.NewButton"></i>
+                    </span>
                 }
             </th>
         </tr>
@@ -36,7 +38,15 @@
                         string age = string.Empty;
                         if (account.CreateDate.HasValue)
                         {
-                            age = $"({account.CreateDate.Value.ToString(ViewConstants.DateFormatSimple)}) {account.AccountAge}";
+                            var date = account.CreateDate.Value.ToString(ViewConstants.DateFormatSimple);
+                            if(account.StatusId != 3)
+                            {
+                                age = $"({date}) {account.Age}";
+                            }
+                            else
+                            {
+                                age = date;   
+                            }
                         }
                     }
                     @age
@@ -47,7 +57,9 @@
                 <td>
                     @if (account.Id > 0)
                     {
-                        <span class="btn btn-secondary edit-account-button" data-id="@account.Id" data-personid="@account.PersonId">Edit</span>
+                        <span class="btn btn-secondary edit-account-button" data-id="@account.Id" data-personid="@account.PersonId">
+                            <i class="bi @ViewConstants.EditButton"></i>
+                        </span>
                     }
                 </td>
             </tr>

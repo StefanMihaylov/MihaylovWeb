@@ -37,6 +37,10 @@
                 @Html.ValidationMessageFor(m => Model.AskDate)
             </div>
             <div class="form-group col-auto">
+                @Html.LabelFor(m => Model.Age)
+                @Html.TextBoxFor(m => Model.Age, new { @class = ViewConstants.EdithorClass, style = ViewConstants.Width100 })
+            </div>
+            <div class="form-group col-auto">
                 @Html.LabelFor(m => Model.CreateDate)
                 @Html.TextBoxFor(m => Model.CreateDate, ViewConstants.DateFormat, new { @class = ViewConstants.EdithorClass, style = ViewConstants.Width100 })
             </div>
@@ -50,13 +54,17 @@
             </div>
             <div class="form-group col-auto">
                 @Html.LabelFor(m => Model.Details)
-                @Html.TextBoxFor(m => Model.Details, new { @class = ViewConstants.EdithorClass, aria_autocomplete = "none", autocomplete = "off" })
+                @Html.TextBoxFor(m => Model.Details, new { @class = ViewConstants.EdithorClass, style = ViewConstants.Width150, aria_autocomplete = "none", autocomplete = "off" })
             </div>
             <div class="form-group col-auto">
                 @Html.HiddenFor(m => Model.Id)
                 @Html.HiddenFor(m => Model.PersonId)
-                <button type="submit" class="submit-btn btn btn-primary">Save</button>
-                <span class="btn btn-danger close-account-button">Close</span>
+                <button type="submit" class="submit-btn btn btn-primary">
+                    <i class="bi @ViewConstants.SaveButton"></i>
+                </button>
+                <span class="btn btn-danger close-account-button">
+                    <i class="bi @ViewConstants.CloseButton"></i>
+                </span>
             </div>
         </div>
     </fieldset>

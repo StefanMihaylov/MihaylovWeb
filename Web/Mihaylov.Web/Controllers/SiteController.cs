@@ -29,10 +29,11 @@ namespace Mihaylov.Web.Controllers
         {
             _client.AddToken(Request.GetToken());
             PersonGrid grid = await _client.PersonsAsync(model, 10).ConfigureAwait(false);
-            PersonStatistics statistics = await _client.StatisticsAsync().ConfigureAwait(false);
+            PersonFormatedStatistics statistics = await _client.FormatedStatisticsAsync().ConfigureAwait(false);
 
             IEnumerable<QuizPhrase> quizPhrases = await _client.PhrasesAsync().ConfigureAwait(false);
             IEnumerable<QuizQuestion> quizQuestions = await _client.QuestionsAsync().ConfigureAwait(false);
+            IEnumerable<AccountType> accountTypes = await _client.AccountTypesAsync().ConfigureAwait(false);
 
             PersonExtended personExtended = null;
             NewPersonViewModel newPersonFilter = null;
@@ -50,9 +51,7 @@ namespace Mihaylov.Web.Controllers
                 };
 
                 Person newPerson = await _client.NewPersonAsync(request).ConfigureAwait(false);
-                personExtended = await GetPersonExtended(newPerson).ConfigureAwait(false);
-
-                var accountTypes = await _client.AccountTypesAsync().ConfigureAwait(false);
+                personExtended = await GetPersonExtended(newPerson).ConfigureAwait(false);                
 
                 newPersonFilter = new NewPersonViewModel()
                 {
@@ -75,6 +74,7 @@ namespace Mihaylov.Web.Controllers
                 AdminData = new SiteAdminModel()
                 {
                     Questions = quizQuestions,
+                    AccountTypes = accountTypes,
                     QuizPhrases = quizPhrases,
                 },
                 OtherTabModel = new OtherTabModel()
@@ -87,6 +87,7 @@ namespace Mihaylov.Web.Controllers
             return View(main);
         }
 
+        [HttpPost]
         public IActionResult Search(SiteFilterModel query)
         {
             return Redirect($"/{NAME}/{nameof(Index)}{query.ToQueryString()}");
@@ -99,7 +100,7 @@ namespace Mihaylov.Web.Controllers
 
             var model = new NewPersonViewModel()
             {
-                AccountTypeId = 3,
+                AccountTypeId = null,
                 AccountName = null,
                 IsPreview = true,
                 AccountTypes = accountTypes,
@@ -166,10 +167,9 @@ namespace Mihaylov.Web.Controllers
             return PartialView("_AddPerson", result);
         }
 
+        [HttpPost]
         public async Task<IActionResult> SavePerson(PersonModel model)
         {
-            var dateOfBirthTuple = GetDateOfBirth(model.Age, model.DateOfBirth, model.DateOfBirthType);
-
             var request = new AddPersonModel()
             {
                 Id = model.Id,
@@ -180,8 +180,9 @@ namespace Mihaylov.Web.Controllers
                     LastName = model.Details.LastName,
                     OtherNames = model.Details.OtherNames,
                 },
-                DateOfBirth = dateOfBirthTuple.Item1,
-                DateOfBirthType = dateOfBirthTuple.Item2,
+                DateOfBirth = model.DateOfBirth,
+                DateOfBirthType = model.DateOfBirthType,
+                Age = model.Age,
                 CountryId = model.CountryId,
                 Location = model.Location == null ? null : new AddPersonLocationModel()
                 {
@@ -210,6 +211,7 @@ namespace Mihaylov.Web.Controllers
             return PartialView("_AddAccount", model);
         }
 
+        [HttpPost]
         public async Task<IActionResult> SaveAccount(AccountModel model)
         {
             if (!ModelState.IsValid)
@@ -233,6 +235,7 @@ namespace Mihaylov.Web.Controllers
                 DisplayName = model.DisplayName,
                 AskDate = model.AskDate.Value,
                 CreateDate = model.CreateDate,
+                Age = model.Age,
                 LastOnlineDate = model.LastOnlineDate,
                 ReconciledDate = model.ReconciledDate,
                 Details = model.Details,
@@ -258,6 +261,7 @@ namespace Mihaylov.Web.Controllers
             return PartialView("_AddAnswer", model);
         }
 
+        [HttpPost]
         public async Task<IActionResult> SaveAnswer(QuizAnswerModel model)
         {
             if (!ModelState.IsValid)
@@ -308,6 +312,7 @@ namespace Mihaylov.Web.Controllers
             return PartialView("_AddQuestion", model);
         }
 
+        [HttpPost]
         public async Task<IActionResult> SaveQuestion(QuizQuestionModel model)
         {
             var request = new AddQuizQuestionModel()
@@ -337,6 +342,7 @@ namespace Mihaylov.Web.Controllers
             return View("MergePerson", result);
         }
 
+        [HttpPost]
         public async Task<IActionResult> SaveMerge([FromForm] MergeModel input)
         {
             var request = new PersonMerge()
@@ -376,6 +382,49 @@ namespace Mihaylov.Web.Controllers
             return Redirect($"/{NAME}/{nameof(Index)}");
         }
 
+        [HttpPost]
+        public async Task<IActionResult> SaveQuizPhrase(QuizPhraseModel model)
+        {
+            var request = new AddQuizPhraseModel()
+            {
+                Id = model.Id,
+                Text = model.Text,
+            };
+
+            _client.AddToken(Request.GetToken());
+            QuizPhrase question = await _client.AddPhraseAsync(request).ConfigureAwait(false);
+
+            return Redirect($"/{NAME}/{nameof(Index)}");
+        }
+
+        public async Task<IActionResult> AccountTypeView(int? id)
+        {
+            var model = new AccountType();
+
+            if (id.HasValue)
+            {
+                _client.AddToken(Request.GetToken());
+                var accountTypes = await _client.AccountTypesAsync().ConfigureAwait(false);
+                model = accountTypes.FirstOrDefault(a => a.Id == id);
+            }
+
+            return PartialView("_AddAccountType", model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SaveAccountType(AccountTypeModel model)
+        {
+            var request = new AddAccountTypeModel()
+            {
+                Id = model.Id,
+                Name = model.Name,
+            };
+
+            _client.AddToken(Request.GetToken());
+            AccountType question = await _client.AddAccountTypeAsync(request).ConfigureAwait(false);
+
+            return Redirect($"/{NAME}/{nameof(Index)}");
+        }
 
         private async Task FilterExtend(SiteFilterModel model)
         {
@@ -479,41 +528,6 @@ namespace Mihaylov.Web.Controllers
             return model;
         }
 
-        private (DateTime?, DateOfBirthType?) GetDateOfBirth(int? age, DateTime? date, DateOfBirthType? type)
-        {
-            if (type == null)
-            {
-                return (null, null);
-            }
-            else if (type == DateOfBirthType.YearCalculated)
-            {
-                if (date.HasValue)
-                {
-                    return (date, type);
-                }
-                else
-                {
-                    if (age.HasValue)
-                    {
-                        return (age.Value.GetBirthDate(), type);
-                    }
-                    else
-                    {
-                        return (null, null);
-                    }
-                }
-            }
-            else
-            {
-                if (date.HasValue)
-                {
-                    return (date, type);
-                }
-                else
-                {
-                    return (null, null);
-                }
-            }
-        }
+
     }
 }

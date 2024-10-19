@@ -20,7 +20,8 @@ namespace Mihaylov.Web.Models.Site
             HalfTypeId = answer.HalfTypeId;
             HalfType = answer.HalfType;
             Details = answer.Details;
-        }        
+            ValueDisplay = answer.ValueDisplay;
+        }
 
         public IEnumerable<QuizQuestion> Questions { get; set; }
 

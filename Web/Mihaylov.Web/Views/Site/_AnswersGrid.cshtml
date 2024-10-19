@@ -14,7 +14,9 @@
             <th>
                 @if (Model.PersonId > 0)
                 {
-                    <span class="btn btn-success edit-answer-button" data-id="" data-personid="@Model.PersonId">Нов</span>
+                    <span class="btn btn-success edit-answer-button" data-id="" data-personid="@Model.PersonId">
+                        <i class="bi @ViewConstants.NewButton"></i>
+                    </span>
                 }                
             </th>
         </tr>
@@ -30,7 +32,9 @@
                 <td>@answer.HalfType</td>
                 <td>@answer.Details</td>
                 <td>
-                    <span class="btn btn-secondary edit-answer-button" data-id="@answer.Id" data-personid="@answer.PersonId">Edit</span>
+                    <span class="btn btn-secondary edit-answer-button" data-id="@answer.Id" data-personid="@answer.PersonId">
+                        <i class="bi @ViewConstants.EditButton"></i>
+                    </span>
                 </td>
             </tr>
         }

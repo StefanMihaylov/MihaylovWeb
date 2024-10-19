@@ -1,5 +1,7 @@
 ﻿@using Mihaylov.Api.Site.Client
 @using Mihaylov.Web.Controllers
+@using Mihaylov.Web.Models.Configs
+@using Mihaylov.Web.Models.Site
 @model IEnumerable<QuizPhrase>
 
 <table class="table table-bordered table-striped">
@@ -18,14 +20,16 @@
     </tbody>
 </table>
 
-@using (Html.BeginForm("AddPhrase",  SiteController.NAME, FormMethod.Post, new { }))
+@using (Html.BeginForm(nameof(SiteController.SaveQuizPhrase),  SiteController.NAME, FormMethod.Post, new { }))
 {
     <div class="row">
         <div class="panel">
-            @Html.Label("phrase")
-            @Html.TextBox("phrase", string.Empty, new { style = "width:470px" })
+            @Html.Label(nameof(QuizPhraseModel.Text))
+            @Html.TextBox(nameof(QuizPhraseModel.Text), string.Empty, new { style = "width:470px" })
         </div>
 
-        <button type="submit" class="submit-btn btn btn-primary">Save</button>
+        <button type="submit" class="submit-btn btn btn-primary">
+            <i class="bi @ViewConstants.SaveButton"></i>
+        </button>
     </div>
 }

@@ -7,7 +7,7 @@
 <table class="table table-bordered table-striped">
     <thead>
         <tr>
-            <th>@Html.LabelFor(m => m.Data.First().Details.FullName)</th>
+            <th>@Html.LabelFor(m => m.Data.First().Details.FirstName, "Full Name")</th>
             <th>@Html.LabelFor(m => m.Data.First().Age)</th>
             <th>@Html.LabelFor(m => m.Data.First().Country)</th>
             <th>@Html.LabelFor(m => m.Data.First().Orientation)</th>
@@ -24,8 +24,24 @@
         @foreach (var person in Model.Data)
         {
             <tr>
-                <td>@person.Details?.FullName</td>
-                <td>@person.AgeGrid</td>
+                <td>
+                    @{
+                        var fullName = string.Empty;
+                        if (person.Details != null)
+                        {
+                            var otherName = person.Details.OtherNames;
+                            if (!string.IsNullOrEmpty(otherName))
+                            {
+                                otherName = $"({otherName})";
+                            }
+
+                            fullName = $"{person.Details.FirstName} {person.Details.LastName} {otherName}";
+                        }
+                    }
+
+                    @fullName
+                </td>
+                <td>@person.AgeDisplay</td>
                 <td>@person.Country</td>
                 <td>@person.Orientation</td>
                 <td>
@@ -50,8 +66,12 @@
                     }
                 </td>
                 <td>
-                    <span class="btn btn-secondary edit-person-button" data-id="@person.Id">Edit</span>
-                    <span class="btn btn-secondary merge-person-button" data-id="@person.Id">Merge</span>
+                    <span class="btn btn-secondary edit-person-button" data-id="@person.Id">
+                        <i class="bi @ViewConstants.EditButton"></i>
+                    </span>
+                    <span class="btn btn-secondary merge-person-button" data-id="@person.Id">
+                        <i class="bi @ViewConstants.MergeButton"></i>
+                    </span>
                 </td>
             </tr>
 

@@ -47,7 +47,7 @@
             </div>
             <div class="form-group col-auto">
                 @Html.LabelFor(m => m.CreatedOn)
-                @Html.TextBoxFor(m => m.CreatedOn, ViewConstants.DateTimeFormat, new { @class = ViewConstants.EdithorClass, style = ViewConstants.Width200, aria_autocomplete = "none", autocomplete = "off" })
+                @Html.TextBoxFor(m => m.CreatedOn, ViewConstants.DateTimeFormat, new { @class = ViewConstants.EdithorClass, style = ViewConstants.Width100, aria_autocomplete = "none", autocomplete = "off" })
             </div>
         </div>
         <div class="form-row">
@@ -87,9 +87,13 @@
                 @if (Model.Id > 0)
                 {
                     @Html.HiddenFor(m => m.Id)
-                    <button type="submit" class="submit-btn btn btn-primary">Save</button>
+                    <button type="submit" class="submit-btn btn btn-primary">
+                        <i class="bi @ViewConstants.SaveButton"></i>
+                    </button>
                 }
-                <span class="btn btn-danger close-person-button">Close</span>
+                <span class="btn btn-danger close-person-button">
+                    <i class="bi @ViewConstants.CloseButton"></i>
+                </span>
             </div>
         </div>
     </fieldset>

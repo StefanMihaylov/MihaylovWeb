@@ -5,12 +5,12 @@ namespace Mihaylov.Api.Site.Contracts.Writers
 {
     public interface IPersonsWriter
     {
-        Task<Person> AddOrUpdatePersonAsync(Person input);
+        Task<Person> AddOrUpdatePersonAsync(Person input, int? age);
 
         Task<Person> MergePersonsAsync(PersonMerge input);
 
-        Task<Account> AddOrUpdateAccountAsync(Account input);
+        Task<Account> AddOrUpdateAccountAsync(Account input, int? age);
 
-        Task<Person> AddNewPersonAsync(Person input);
+        Task<Person> AddNewPersonAsync(Person input, int? age);
     }
 }

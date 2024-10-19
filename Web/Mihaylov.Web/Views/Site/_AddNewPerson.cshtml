@@ -6,7 +6,6 @@
 
 @{
     var accountTypes = Model.AccountTypes.GetListItems((t, v) => new SelectListItem(t, v), u => u.Id, u => u.Name);
-    var buttonName = Model.IsPreview ? "Preview" : "Save";
 }
 
 @using (Html.BeginForm(nameof(SiteController.NewPerson), SiteController.NAME, FormMethod.Post, new { @class = "form" }))
@@ -23,8 +22,19 @@
             </div>
             <div class="form-group col-auto">
                 @Html.HiddenFor(m => Model.IsPreview)
-                <button type="submit" class="submit-btn btn btn-primary">@buttonName</button>
-                <span class="btn btn-danger close-new-person-button">Close</span>
+                <button type="submit" class="submit-btn btn btn-primary">
+                    @if (Model.IsPreview)
+                    {
+                        <i class="bi @ViewConstants.ViewButton"></i>
+                    }
+                    else
+                    {
+                        <i class="bi @ViewConstants.SaveButton"></i>
+                    }
+                  </button>
+                <span class="btn btn-danger close-new-person-button">
+                    <i class="bi @ViewConstants.CloseButton"></i>
+                </span>
             </div>
         </div>
     </fieldset>

@@ -80,9 +80,8 @@ namespace Mihaylov.Api.Site.Data.Helpers
 
             if (personInfo.Age.HasValue)
             {
-                // Age
-                person.DateOfBirth = personInfo.Age.Value.GetBirthDate();
                 person.DateOfBirthType = DateOfBirthType.YearCalculated;
+                person.DateOfBirth = person.DateOfBirth.GetBirthDate(personInfo.Age, true, true);
             }
 
             if (!string.IsNullOrEmpty(personInfo.City))
@@ -120,7 +119,7 @@ namespace Mihaylov.Api.Site.Data.Helpers
             const int TOTAL_STEPS = SUB_STEPS + 2;
             var totalCount = accounts.Accounts.Count();
 
-            long count = 0;
+            int count = 0;
             foreach (var account in accounts.Accounts)
             {
                 count++;
@@ -147,7 +146,7 @@ namespace Mihaylov.Api.Site.Data.Helpers
 
                 var single = SUB_STEPS;
 
-                await _personsWriter.AddOrUpdateAccountAsync(account).ConfigureAwait(false);
+                await _personsWriter.AddOrUpdateAccountAsync(account, null).ConfigureAwait(false);
                 progress(new UpdateProgressBarModel((++single).GetPersentage(TOTAL_STEPS), countPers, totalCount));
 
                 if (delay > 0)

@@ -7,6 +7,26 @@ namespace Mihaylov.Common.Generic.Extensions
 {
     public static class ValueExtensions
     {
+        public static int? GetDays(this DateTime? date)
+        {
+            if (!date.HasValue)
+            {
+                return null;
+            }
+
+            var age = date.Value.GetDays();
+
+            return age;
+        }
+
+        public static int GetDays(this DateTime date)
+        {
+            var age = (int)DateTime.UtcNow.Subtract(date).TotalDays;
+
+            return age;
+        }
+
+
         public static int? GetAge(this DateTime? dateOfBirth)
         {
             if (!dateOfBirth.HasValue)
@@ -32,6 +52,32 @@ namespace Mihaylov.Common.Generic.Extensions
             return age;
         }
 
+        public static DateTime? GetBirthDate(this DateTime? date, int? age, bool typeHasValue, bool isCalculated)
+        {
+            if (!typeHasValue)
+            {
+                return null;
+            }
+
+            if (date.HasValue)
+            {
+                return date;
+            }
+
+            if (isCalculated)
+            {
+                return age.GetBirthDate();
+            }
+
+            return null;
+        }
+
+        public static bool IsBirthDateTypeValid(this DateTime? date, int? age, bool isCalculated)
+        {
+            var result = !date.HasValue && (!age.HasValue || !isCalculated);
+
+            return !result;
+        }
 
         public static DateTime? GetBirthDate(this int? age)
         {
@@ -47,6 +93,21 @@ namespace Mihaylov.Common.Generic.Extensions
         public static DateTime GetBirthDate(this int age)
         {
             return DateTime.UtcNow.Date.AddYears(-age).AddMonths(-6);
+        }
+
+        public static DateTime? GetCreateDate(this int? age)
+        {
+            if(!age.HasValue || age < 0)
+            {
+                return null;
+            }
+
+            return age.Value.GetCreateDate();
+        }
+
+        public static DateTime GetCreateDate(this int age)
+        {
+            return DateTime.UtcNow.Date.AddDays(age);
         }
 
 

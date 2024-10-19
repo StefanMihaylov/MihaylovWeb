@@ -1,4 +1,5 @@
 ﻿using System;
+using Mihaylov.Common.Generic.Extensions;
 
 namespace Mihaylov.Api.Site.Contracts.Models
 {
@@ -27,6 +28,8 @@ namespace Mihaylov.Api.Site.Contracts.Models
         public DateTime AskDate { get; set; }
 
         public DateTime? CreateDate { get; set; }
+
+        public int? Age => CreateDate.GetDays();
 
         public DateTime? LastOnlineDate { get; set; }
 

@@ -31,14 +31,22 @@
             </div>
             <div class="form-group col-auto">
                 @Html.HiddenFor(m => Model.Page)
-                <button type="submit" class="submit-btn btn btn-primary">Search</button>
+                <button type="submit" class="submit-btn btn btn-primary">
+                    <i class="bi @ViewConstants.SearchButton"></i>
+                </button>
             </div>
             <div class="form-group col-auto">
-                <span class="btn btn-success merge-action-button">Merge</span>
-                <span class="btn btn-secondary clear-merge-person-button">Clear</span>
+                <span class="btn btn-success add-new-person-search-button">
+                    <i class="bi @ViewConstants.NewButton"></i>
+                </span>
             </div>
             <div class="form-group col-auto">
-                <span class="btn btn-success add-new-person-search-button">New</span>
+                <span class="btn btn-secondary merge-action-button merge-base-button">
+                    <i class="bi @ViewConstants.MergeButton"></i>
+                </span>
+                <span class="btn btn-secondary clear-merge-person-button merge-base-button">
+                    <i class="bi @ViewConstants.MergeClearButton"></i>
+                </span>
             </div>
         </div>
     </fieldset>

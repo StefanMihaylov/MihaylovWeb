@@ -24,6 +24,8 @@ namespace Mihaylov.Web.Models.Site
 
         public DateTime? CreateDate { get; set; }
 
+        public int? Age { get; set; }
+
         public DateTime? LastOnlineDate { get; set; }
 
         public DateTime? ReconciledDate { get; set; }

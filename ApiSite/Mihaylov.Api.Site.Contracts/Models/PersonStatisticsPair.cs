@@ -1,9 +1,19 @@
 ﻿namespace Mihaylov.Api.Site.Contracts.Models
 {
-    public class PersonStatisticsPair<T>
+    public class PersonStatisticsPair
     {
-        public T Key { get; set; }
+        public string Key { get; set; }
 
-        public int Value { get; set; }
+        public string Value { get; set; }
+
+        public PersonStatisticsPair()
+        {                
+        }
+
+        public PersonStatisticsPair(string key, string value)
+        {
+            Key = key;
+            Value = value;
+        }
     }
 }

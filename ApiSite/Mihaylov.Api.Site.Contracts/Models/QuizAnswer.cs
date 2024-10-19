@@ -31,5 +31,30 @@ namespace Mihaylov.Api.Site.Contracts.Models
         public string HalfType { get; set; }
 
         public string Details { get; set; }
+
+
+        public string ValueDisplay
+        {
+            get
+            {
+                if (!Value.HasValue && !ConvertedValue.HasValue)
+                {
+                    return string.Empty;
+                }
+
+                if (!ConvertedValue.HasValue)
+                {
+                    return $"{Value.Value:0.##}";
+                }
+                else if (Value.Value == ConvertedValue.Value)
+                {
+                    return $"{Value.Value:0.##}";
+                }
+                else
+                {
+                    return $"{Value.Value} ({ConvertedValue.Value:0.##} {ConvertedUnit})";
+                }
+            }
+        }
     }
 }

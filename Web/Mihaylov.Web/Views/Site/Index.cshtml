@@ -31,6 +31,9 @@
             <a class="nav-link" data-toggle="tab" href="#questions">Въпроси</a>
         </li>
         <li class="nav-item">
+            <a class="nav-link" data-toggle="tab" href="#account-types">Акаунти</a>
+        </li>
+        <li class="nav-item">
             <a class="nav-link" data-toggle="tab" href="#phrases">Phrases</a>
         </li>
         <li class="nav-item">
@@ -47,6 +50,9 @@
         </div>
         <div id="questions" class="tab-pane fade">
             @await Html.PartialAsync("_QuizQuestionsGrid", Model.AdminData.Questions)
+        </div>
+        <div id="account-types" class="tab-pane fade">
+            @await Html.PartialAsync("_AccountTypeGrid", Model.AdminData.AccountTypes)
         </div>
         <div id="phrases" class="tab-pane fade">
             @await Html.PartialAsync("_QuizPhrasesGrid", Model.AdminData.QuizPhrases)

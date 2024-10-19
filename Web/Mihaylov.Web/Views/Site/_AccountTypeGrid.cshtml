@@ -1,6 +1,6 @@
 ﻿@using Mihaylov.Api.Site.Client
 @using Mihaylov.Web.Models.Configs
-@model IEnumerable<QuizQuestion>
+@model IEnumerable<AccountType>
 
 @{ int count = 0; int maxColumns = 4; }
 
@@ -14,7 +14,7 @@
             }
 
             <th>
-                <span class="edit-question-button btn btn-success" data-id="">
+                <span class="edit-account-type-button btn btn-success" data-id="">
                     <i class="bi @ViewConstants.NewButton"></i>
                 </span> 
             </th>
@@ -22,11 +22,11 @@
     </thead>
     <tbody>
         <tr>           
-            @foreach (var question in Model)
+            @foreach (var accountType in Model)
             {
                 <td>
-                    <span>@question.Value</span>
-                    <span class="edit-question-button" data-id="@question.Id">
+                    <span>@accountType.Name</span>
+                    <span class="edit-account-type-button" data-id="@accountType.Id">
                         <i class="bi  @ViewConstants.EditButton"></i>
                      </span>                                                
                 </td>
@@ -50,4 +50,4 @@
     </tbody>
 </table>
 
-<div id="question-info"></div>
+<div id="account-type-info"></div>
