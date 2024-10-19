@@ -426,6 +426,7 @@ namespace Mihaylov.Web.Controllers
             return Redirect($"/{NAME}/{nameof(Index)}");
         }
 
+
         private async Task FilterExtend(SiteFilterModel model)
         {
             var accountTypes = await _client.AccountTypesAsync().ConfigureAwait(false);
@@ -527,7 +528,5 @@ namespace Mihaylov.Web.Controllers
 
             return model;
         }
-
-
     }
 }

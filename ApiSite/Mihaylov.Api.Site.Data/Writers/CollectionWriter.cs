@@ -10,13 +10,11 @@ namespace Mihaylov.Api.Site.Data.Writers
 {
     public class CollectionWriter : BaseWriter, ICollectionWriter
     {
-        private readonly ILogger _logger;
         private readonly ICollectionRepository _repository;
 
         public CollectionWriter(ILoggerFactory loggerFactory, IMemoryCache memoryCache, ICollectionRepository repository)
             : base(loggerFactory, memoryCache)
         {
-            _logger = loggerFactory.CreateLogger(this.GetType().Name);
             _repository = repository;
         }
 

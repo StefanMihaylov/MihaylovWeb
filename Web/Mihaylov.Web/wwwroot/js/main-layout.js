@@ -1,7 +1,7 @@
 ﻿'use strict';
 var main = {};
 var constants = {};
-$(document).ready(function () {
+$(function () {
     constants = (function () {
         return {
             BLOCK_UI_DURATION: 0
