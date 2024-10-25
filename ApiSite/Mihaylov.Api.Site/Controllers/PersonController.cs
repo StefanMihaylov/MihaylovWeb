@@ -107,6 +107,7 @@ namespace Mihaylov.Api.Site.Controllers
         public async Task<IActionResult> NewPerson(NewPersonModel input)
         {
             input.AccountTypeId ??= 1;
+            input.Username = input.Username.Trim();
             input.IsPreview ??= true;
 
             var accountTypes = await _collectionManager.GetAllAccountTypesAsync().ConfigureAwait(false);
