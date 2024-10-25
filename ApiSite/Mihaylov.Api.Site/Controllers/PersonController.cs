@@ -114,7 +114,12 @@ namespace Mihaylov.Api.Site.Controllers
             var person = new Person()
             {
                 DateOfBirthType = DateOfBirthType.YearCalculated,
-                Accounts = new List<Account>()
+                Accounts = new List<Account>(),
+            };
+
+            if (!string.IsNullOrEmpty(input.Username))
+            {
+                person.Accounts = new List<Account>()
                 {
                     new Account()
                     {
@@ -122,17 +127,22 @@ namespace Mihaylov.Api.Site.Controllers
                         AccountTypeId = input.AccountTypeId.Value,
                         Username = input.Username,
                         AskDate = DateTime.UtcNow,
-                    }
-                }
-            };
-
-            if (input.AccountTypeId == 3)
+                    } 
+                };
+            }
+            else
             {
-                await _siteHelper.FillNewPersonAsync(person, input.Username).ConfigureAwait(false);
+                input.IsPreview = false;
             }
 
-            var account = person.Accounts.First();
-            if (account.StatusId.HasValue)
+            var account = person.Accounts.FirstOrDefault();
+            if (account?.AccountTypeId == 3)
+            {
+                await _siteHelper.FillNewPersonAsync(person, account.Username).ConfigureAwait(false);
+            }
+
+            
+            if (account?.StatusId != null)
             {
                 var accountStates = await _collectionManager.GetAllAccountStatesAsync().ConfigureAwait(false);
                 account.Status = accountStates.First(s => s.Id == account.StatusId.Value).Name;

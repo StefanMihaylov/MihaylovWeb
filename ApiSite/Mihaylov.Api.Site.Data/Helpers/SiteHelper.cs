@@ -14,6 +14,7 @@ using Mihaylov.Api.Site.Contracts.Models;
 using Mihaylov.Api.Site.Contracts.Writers;
 using Mihaylov.Api.Site.Data.Models;
 using Mihaylov.Common.Generic.Extensions;
+using Datas = Mihaylov.Api.Site.Data.Models;
 
 namespace Mihaylov.Api.Site.Data.Helpers
 {
@@ -158,14 +159,14 @@ namespace Mihaylov.Api.Site.Data.Helpers
             }
         }
 
-        private async Task<PersonInfo> GetPersonInfoAsync(string username, Action<int> progress)
+        private async Task<Datas.PersonInfo> GetPersonInfoAsync(string username, Action<int> progress)
         {
             int stepNumber = 0;
             progress(stepNumber);
 
             _logger.LogDebug($"Helper: Get person by name: {username}");
 
-            var result = new PersonInfo()
+            var result = new Datas.PersonInfo()
             {
                 Username = username,
                 IsDeleted = false,

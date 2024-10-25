@@ -21,6 +21,7 @@ namespace Mihaylov.Web.Models.Configs
         public static string SaveButton = "bi-floppy2";
         public static string ViewButton = "bi-binoculars";
         public static string SearchButton = "bi-search";
+        public static string DeleteButton = "bi-eraser";
 
         public static string DefaultDropDownValue = "--- Select ---";
         public static string DefaultDropDownValueShort = "-----";

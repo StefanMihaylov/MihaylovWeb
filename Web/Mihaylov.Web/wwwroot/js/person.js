@@ -69,6 +69,20 @@ $(function () {
             var $answersContainer = $('#answers-info');
             $answersContainer.empty();
         })
+        .on('click', '.person-details-container .delete-answer-button', function () {
+            var $this = $(this);
+            var id = $this.data('id');
+
+            var url = main.getUrl('Site/DeleteAnswer?id=' + id);
+
+            $.ajax({
+                url: url,
+                type: 'DELETE',
+                success: function (result) {
+                    location.reload();
+                }
+            });
+        })
         .on('click', '.person-details-container .edit-question-button', function () {
             var $questionContainer = $('#question-info');
             $questionContainer.empty();

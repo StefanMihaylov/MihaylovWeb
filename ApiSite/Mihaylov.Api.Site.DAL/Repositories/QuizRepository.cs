@@ -215,6 +215,21 @@ namespace Mihaylov.Api.Site.DAL.Repositories
             }
         }
 
+        public async Task RemoveQuizAnswerAsync(long id)
+        {
+            var answer = await GetQuizAnswerQuery()
+                                .Where(a => a.QuizAnswerId == id)
+                                .Where(a => a.QuestionId == 1)
+                                .Where(a => a.Details == null || a.Details.Length == 0)
+                                .FirstOrDefaultAsync()
+                                .ConfigureAwait(false);
+
+            if (answer != null)
+            {
+                _context.QuizAnswers.Remove(answer);
+                await _context.SaveChangesAsync().ConfigureAwait(false);
+            }
+        }
 
         private IQueryable<DB.QuizAnswer> GetQuizAnswerQuery()
         {

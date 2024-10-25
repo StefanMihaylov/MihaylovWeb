@@ -49,5 +49,10 @@ namespace Mihaylov.Api.Site.Data.Writers
 
             return answer;
         }
+
+        public Task RemoveQuizAnswerAsync(long id)
+        {
+            return _repository.RemoveQuizAnswerAsync(id);
+        }
     }
 }

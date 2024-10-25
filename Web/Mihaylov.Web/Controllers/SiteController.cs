@@ -299,6 +299,18 @@ namespace Mihaylov.Web.Controllers
             return Redirect($"/{NAME}/{nameof(Index)}{query.ToQueryString()}");
         }
 
+        [HttpDelete]
+        public async Task<IActionResult> DeleteAnswer(long? id)
+        {
+            if (id.HasValue)
+            {
+                _client.AddToken(Request.GetToken());
+                await _client.RemoveAnswerAsync(id).ConfigureAwait(false);
+            }
+
+            return Ok();
+        }
+
         public async Task<IActionResult> QuestionView(int? id)
         {
             var model = new QuizQuestion();

@@ -296,9 +296,9 @@ namespace Mihaylov.Api.Site.DAL.Repositories
         public async Task<PersonStatistics> GetStaticticsAsync()
         {
             var mainQuestionId = 2;
-            var activeStates = new List<int> { 1, 2 };
+            var activeStates = new List<int> { 1, 2, 6 };
 
-            var totalPersonCount = await _context.Persons.Include(p => p.Accounts)
+            var totalPersonCount = await _context.Persons
                                                .CountAsync()
                                                .ConfigureAwait(false);
 
@@ -316,31 +316,76 @@ namespace Mihaylov.Api.Site.DAL.Repositories
             var answers = await _context.QuizAnswers.Include(a => a.Unit)
                                                     .Where(a => a.QuestionId == mainQuestionId)
                                                     .GroupBy(a => a.UnitId.HasValue)
-                                                    .Select(g => new PersonStatisticsPairGeneric<bool> { Key = g.Key, Value = g.Count() })
+                                                    .Select(g => new PersonStatisticsPairGeneric<bool> 
+                                                    { 
+                                                        Id = null,
+                                                        TypeId = null,
+                                                        Key = g.Key, 
+                                                        Value = g.Count() 
+                                                    })
                                                     .OrderByDescending(a => a.Key)
                                                     .ToListAsync()
                                                     .ConfigureAwait(false);
 
             var accountTypes = await _context.Accounts.Include(a => a.AccountType)
                                                  .Where(a => a.PersonId.HasValue)
-                                                 .GroupBy(a => a.AccountType.Name)
-                                                 .Select(g => new PersonStatisticsPairGeneric<string> { Key = g.Key, Value = g.Count() })
-                                                 .OrderBy(a => a.Key)
+                                                 .GroupBy(a => new
+                                                 {
+                                                     a.AccountTypeId,
+                                                     a.AccountType.Name
+                                                 })
+                                                 .OrderBy(a => a.Key.AccountTypeId)
+                                                 .Select(g => new PersonStatisticsPairGeneric<string>
+                                                 {
+                                                     Id = null,
+                                                     TypeId = g.Key.AccountTypeId,
+                                                     Key = g.Key.Name,
+                                                     Value = g.Count()
+                                                 })                                                 
                                                  .ToListAsync()
                                                  .ConfigureAwait(false);
 
             var accountStates = await _context.Accounts.Include(a => a.Status)
-                                     .Where(a => a.PersonId.HasValue && a.StatusId.HasValue)
-                                     .GroupBy(a => new { Status = a.Status.Name, a.StatusId, a.AccountTypeId, Type = a.AccountType.Name })
+                                     .Where(a => a.PersonId.HasValue)
+                                     .GroupBy(a => new
+                                     {
+                                         a.StatusId,
+                                         Status = a.Status != null ? a.Status.Name : "Not Asked",
+                                         a.AccountTypeId,
+                                         Type = a.AccountType.Name
+                                     })
                                      .OrderBy(a => a.Key.AccountTypeId)
                                         .ThenBy(a => a.Key.StatusId)
-                                     .Select(g => new PersonStatisticsPairGeneric<string> { Key = $"{g.Key.Type} {g.Key.Status}", Value = g.Count() })
+                                     .Select(g => new PersonStatisticsPairGeneric<string>
+                                     {
+                                         Id = g.Key.StatusId,
+                                         TypeId = g.Key.AccountTypeId,
+                                         Key = $"{g.Key.Type}: '{g.Key.Status}'",
+                                         Value = g.Count()
+                                     })
                                      .ToListAsync()
                                      .ConfigureAwait(false);
 
             var activeAccounts = await _context.Accounts.Include(a => a.Status)
                                      .Where(a => a.PersonId.HasValue && a.StatusId.HasValue)
                                      .Where(a => activeStates.Contains(a.StatusId.Value))
+                                     .GroupBy(a => new
+                                     {
+                                         a.AccountTypeId,
+                                         a.AccountType.Name
+                                     })
+                                     .OrderBy(a => a.Key.AccountTypeId)
+                                     .Select(g => new PersonStatisticsPairGeneric<string>
+                                     {
+                                         Id = null,
+                                         TypeId = g.Key.AccountTypeId,
+                                         Key = g.Key.Name,
+                                         Value = g.Count()
+                                     })
+                                     .ToListAsync()
+                                     .ConfigureAwait(false);
+
+            var totalAccount = await _context.Accounts
                                      .CountAsync()
                                      .ConfigureAwait(false);
 
@@ -353,7 +398,8 @@ namespace Mihaylov.Api.Site.DAL.Repositories
                 Min = min,
                 Max = max,
                 TotalPersonCount = totalPersonCount,
-                ActiveAccountCount = activeAccounts,
+                ActiveAccounts = activeAccounts,
+                TotalAccountCount = totalAccount,
             };
 
             return statistics;

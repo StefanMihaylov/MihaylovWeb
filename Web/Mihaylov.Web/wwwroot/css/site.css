@@ -65,3 +65,9 @@ hr {
 .table td, .table th {
     padding: .2rem;
     padding-left: .5rem;
+}
+
+.table .thead-dark th {
+    background-color: lightgray;
+    color: black
+}

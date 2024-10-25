@@ -27,5 +27,7 @@ namespace Mihaylov.Api.Site.Contracts.Repositories
         Task<QuizAnswer> GetQuizAnswerAsync(long id);
 
         Task<QuizAnswer> AddQuizAnswerAsync(QuizAnswer input);
+
+        Task RemoveQuizAnswerAsync(long id);
     }
 }

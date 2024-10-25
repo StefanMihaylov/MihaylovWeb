@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Mihaylov.Api.Site.Data.Helpers
+namespace Mihaylov.Api.Site.Data.Models
 {
     public class PersonInfo
     {

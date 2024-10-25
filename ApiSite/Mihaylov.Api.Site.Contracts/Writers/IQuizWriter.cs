@@ -10,5 +10,7 @@ namespace Mihaylov.Api.Site.Contracts.Writers
         Task<QuizPhrase> AddOrUpdatePhraseAsync(QuizPhrase input);
 
         Task<QuizAnswer> AddOrUpdateAnswersAsync(QuizAnswer input);
+
+        Task RemoveQuizAnswerAsync(long id);
     }
 }

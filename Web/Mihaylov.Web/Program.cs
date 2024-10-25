@@ -94,14 +94,12 @@ namespace Mihaylov.Web
 
             services.AddModuleInfo();
             services.AddScoped<IModuleService, ModuleService>();
-            services.AddUsersApiClient(Config.GetEnvironmentVariable("Users_Api_Client"));
 
             services.Configure<SiteConfig>(opt =>
             {
                 opt.SiteApiBaseUrl = Config.GetEnvironmentVariable("Site_Api_Client");
             });
-
-            services.AddWeatherApiClient(Config.GetEnvironmentVariable("Weather_Api_Client"));
+            
             services.AddScoped<IWeatherService, WeatherService>();
             services.Configure<WeatherConfig>(opt =>
             {
@@ -112,9 +110,12 @@ namespace Mihaylov.Web
                 opt.Language = Config.GetEnvironmentVariable("Weather_Api_Language", "bg");
             });
 
+            services.AddUsersApiClient(Config.GetEnvironmentVariable("Users_Api_Client"));
+            services.AddWeatherApiClient(Config.GetEnvironmentVariable("Weather_Api_Client"));
             services.AddOtherApiClient(Config.GetEnvironmentVariable("Other_Api_Client"));
             services.AddSiteApiClient(Config.GetEnvironmentVariable("Site_Api_Client"));
 
+            services.AddMediaServices();
             services.Configure<MediaConfig>(opt =>
             {
                 opt.DuplicatePathLocked = Config.GetEnvironmentVariable("Media_Dub_Path_Lock", string.Empty);
@@ -122,8 +123,6 @@ namespace Mihaylov.Web
                 opt.SoftPath = Config.GetEnvironmentVariable("Media_Sort", string.Empty);
                 opt.RenamePath = Config.GetEnvironmentVariable("Media_Rename", string.Empty);
             });
-
-            services.AddMediaServices();
 
             services.AddSignalR();
             services.AddScoped<IProgressReporterFactory, ProgressReporterFactory>();

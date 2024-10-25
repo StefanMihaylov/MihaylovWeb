@@ -64,6 +64,7 @@ namespace Mihaylov.Api.Site.Controllers
             return Ok(question);
         }
 
+
         [HttpGet]
         [ProducesResponseType(typeof(IEnumerable<QuizPhrase>), StatusCodes.Status200OK)]
         public async Task<IActionResult> Phrases()
@@ -108,6 +109,7 @@ namespace Mihaylov.Api.Site.Controllers
             return Ok(units);
         }
 
+
         [HttpGet]
         [ProducesResponseType(typeof(IEnumerable<QuizAnswer>), StatusCodes.Status200OK)]
         public async Task<IActionResult> Answers(long personId)
@@ -151,6 +153,16 @@ namespace Mihaylov.Api.Site.Controllers
             QuizAnswer answer = await _writer.AddOrUpdateAnswersAsync(model).ConfigureAwait(false);
 
             return Ok(answer);
+        }
+        
+        [HttpDelete]
+        [SwaggerOperation(OperationId = "RemoveAnswer")]
+        [ProducesResponseType(typeof(void), StatusCodes.Status200OK)]
+        public async Task<IActionResult> DeleteAnswer(long id)
+        {
+            await _writer.RemoveQuizAnswerAsync(id).ConfigureAwait(false);
+
+            return Ok();
         }
     }
 }

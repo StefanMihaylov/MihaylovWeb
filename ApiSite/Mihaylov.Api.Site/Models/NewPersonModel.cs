@@ -6,7 +6,7 @@ namespace Mihaylov.Api.Site.Models
     {
         public int? AccountTypeId { get; set; }
 
-        [Required]
+        // [Required]
         public string Username { get; set; }
 
         [Required]

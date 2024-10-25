@@ -107,7 +107,7 @@ namespace Mihaylov.Common.Generic.Extensions
 
         public static DateTime GetCreateDate(this int age)
         {
-            return DateTime.UtcNow.Date.AddDays(age);
+            return DateTime.UtcNow.Date.AddDays(-age);
         }
 
 

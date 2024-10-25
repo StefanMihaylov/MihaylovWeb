@@ -2,6 +2,44 @@
 @model PersonFormatedStatistics
 
 <table class="table table-bordered table-striped">
+    <thead>
+        <tr class="thead-dark">
+            @foreach(var header in Model.HeaderData)
+            {
+                <th>@header</th>
+            } 
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var gridRow in Model.GridData)
+        {
+            <tr>
+                @{ int left = 0; }
+                @foreach (var column in gridRow)
+                {
+                    if(left++ > 2)
+                    {
+                        <td>@column</td>
+                    }
+                    else
+                    {
+                        <th>@column</th>
+                    }
+                }
+            </tr>
+        }
+    </tbody>
+    <tfoot>
+        <tr class="thead-dark">
+            @foreach(var footer in Model.FooterData)
+            {
+                <th>@footer</th>
+            } 
+        </tr>
+    </tfoot>
+</table>
+
+<table class="table table-bordered table-striped">
     <tbody>
         <tr>
             @{ int count = 0; int maxColumns = 6; }
