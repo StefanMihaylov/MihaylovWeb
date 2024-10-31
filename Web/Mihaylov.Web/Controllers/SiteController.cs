@@ -483,7 +483,7 @@ namespace Mihaylov.Web.Controllers
 
         private async Task<AccountExtended> GetAccountExtended(AccountViewModel input)
         {
-            Account account = new Account()
+            var account = new Account()
             {
                 PersonId = input.PersonId.Value,
                 AskDate = DateTime.UtcNow,

@@ -5,14 +5,14 @@
 <table class="table table-bordered table-striped">
     <thead>
         <tr>
-            <th>Type)</th>
+            <th>Type</th>
             <th>@Html.NameFor(m => m.Accounts.First().Username)</th>
             <th>@Html.NameFor(m => m.Accounts.First().DisplayName)</th>
             <th>@Html.NameFor(m => m.Accounts.First().Status)</th>
             <th>@Html.NameFor(m => m.Accounts.First().AskDate)</th>
             <th>@Html.NameFor(m => m.Accounts.First().CreateDate)</th>
-            <th>LastOnline)</th>
-            <th>Reconciled)</th>
+            <th>LastOnline</th>
+            <th>Reconciled</th>
             <th>@Html.NameFor(m => m.Accounts.First().Details)</th>
             <th>
                 @if (Model.PersonId > 0)

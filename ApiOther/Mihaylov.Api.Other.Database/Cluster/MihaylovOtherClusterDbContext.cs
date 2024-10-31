@@ -1,23 +1,17 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
-using System.Threading;
-using Microsoft.EntityFrameworkCore;
-using Mihaylov.Api.Other.Database.Cluster.Models;
-using Mihaylov.Common.Abstract.Databases.Interfaces;
+﻿using Microsoft.EntityFrameworkCore;
 using Mihaylov.Api.Other.Database.Cluster.DbConfigurations;
+using Mihaylov.Api.Other.Database.Cluster.Models;
+using Mihaylov.Common.Database.Interfaces;
 
 namespace Mihaylov.Api.Other.Database.Cluster
 {
-    public class MihaylovOtherClusterDbContext : DbContext
+    public class MihaylovOtherClusterDbContext : BaseDbContext<MihaylovOtherClusterDbContext>
     {
         public const string SCHEMA_NAME = "cluster";
 
-        private readonly IAuditService _auditService;
-
         public MihaylovOtherClusterDbContext(DbContextOptions<MihaylovOtherClusterDbContext> options,
-            IAuditService auditService) : base(options)
+            IAuditService auditService) : base(options, auditService)
         {
-            this._auditService = auditService;
         }
 
         public DbSet<Application> Applications { get; set; }
@@ -35,20 +29,6 @@ namespace Mihaylov.Api.Other.Database.Cluster
         public DbSet<ParserSetting> ParserSettings { get; set; }
 
 
-        public override int SaveChanges(bool acceptAllChangesOnSuccess)
-        {
-            ApplyAuditInformation();
-
-            return base.SaveChanges(acceptAllChangesOnSuccess);
-        }
-
-        public override Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = new CancellationToken())
-        {
-            ApplyAuditInformation();
-
-            return base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
-        }
-
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.HasDefaultSchema(SCHEMA_NAME);
@@ -62,13 +42,6 @@ namespace Mihaylov.Api.Other.Database.Cluster
             builder.ApplyConfiguration(new ParserSettingConfiguration());
 
             base.OnModelCreating(builder);
-        }
-
-        private void ApplyAuditInformation()
-        {
-            var entities = ChangeTracker.Entries().ToList();
-
-            _auditService.ApplyAuditInformation(entities);
         }
     }
 }

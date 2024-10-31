@@ -14,7 +14,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Common\Mihaylov.Common.Generic\Mihaylov.Common.Generic.csproj" />
     <ProjectReference Include="..\Mihaylov.Api.Site.Contracts\Mihaylov.Api.Site.Contracts.csproj" />
   </ItemGroup>
 

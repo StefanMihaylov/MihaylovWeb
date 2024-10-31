@@ -7,12 +7,11 @@
 	<ItemGroup>
 		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.26" />
 		<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.26" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.20" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\..\Common\Mihaylov.Common.Abstract\Mihaylov.Common.Abstract.csproj" />
-		<ProjectReference Include="..\..\Common\Mihaylov.Common.Host.Abstract\Mihaylov.Common.Host.Abstract.csproj" />
+		<ProjectReference Include="..\..\Common\Mihaylov.Common.Database\Mihaylov.Common.Database.csproj" />
+		<ProjectReference Include="..\..\Common\Mihaylov.Common.Generic\Mihaylov.Common.Generic.csproj" />
 		<ProjectReference Include="..\Mihaylov.Users.Models\Mihaylov.Users.Models.csproj" />
 	</ItemGroup>
 

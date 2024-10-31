@@ -2,7 +2,8 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Mihaylov.Common.Abstract.Databases;
+using Mihaylov.Common;
+using Mihaylov.Common.Database.Models;
 using Mihaylov.Users.Data.Database;
 using Mihaylov.Users.Data.Database.Models;
 using Mihaylov.Users.Data.Helpers;
@@ -22,6 +23,8 @@ namespace Mihaylov.Users.Data
             {
                 passwordOptions(password);
             }
+
+            services.SetDatabase();
 
             services.AddScoped<IUsersRepository, UsersRepository>();
             services.AddScoped<IExternalRepository, ExternalRepository>();

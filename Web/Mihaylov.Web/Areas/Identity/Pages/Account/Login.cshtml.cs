@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using Mihaylov.Api.Users.Client;
-using Mihaylov.Common.Host.Abstract.Authorization;
+using Mihaylov.Common;
 
 namespace Mihaylov.Web.Areas.Identity.Pages.Account
 {

@@ -1,4 +1,4 @@
-﻿using Mihaylov.Common.Host.Abstract.AssemblyVersion;
+﻿using Mihaylov.Common.Generic.AssemblyVersion;
 
 namespace Mihaylov.Common.Host.AssemblyVersion.Models
 {

@@ -1,21 +1,15 @@
-﻿using System.Threading.Tasks;
-using System.Threading;
-using Microsoft.EntityFrameworkCore;
-using Mihaylov.Api.Site.Database.Models;
-using Mihaylov.Common.Abstract.Databases.Interfaces;
-using System.Linq;
+﻿using Microsoft.EntityFrameworkCore;
 using Mihaylov.Api.Site.Database.DbConfigurations;
+using Mihaylov.Api.Site.Database.Models;
+using Mihaylov.Common.Database.Interfaces;
 
 namespace Mihaylov.Api.Site.Database
 {
-    public class SiteDbContext : DbContext
+    public class SiteDbContext : BaseDbContext<SiteDbContext>
     {
-        private readonly IAuditService _auditService;
-
         public SiteDbContext(DbContextOptions<SiteDbContext> options, IAuditService auditService)
-            : base(options)
+            : base(options, auditService)
         {
-            _auditService = auditService;
         }
 
         public DbSet<Person> Persons { get; set; }
@@ -59,21 +53,6 @@ namespace Mihaylov.Api.Site.Database
 
         public DbSet<QuizAnswer> QuizAnswers { get; set; }
 
-
-        public override int SaveChanges(bool acceptAllChangesOnSuccess)
-        {
-            this.ApplyAuditInformation();
-
-            return base.SaveChanges(acceptAllChangesOnSuccess);
-        }
-
-        public override Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = new CancellationToken())
-        {
-            this.ApplyAuditInformation();
-
-            return base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
-        }
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfiguration(new PersonConfiguration());
@@ -97,12 +76,6 @@ namespace Mihaylov.Api.Site.Database
             modelBuilder.ApplyConfiguration(new QuizAnswerConfiguration());
 
             base.OnModelCreating(modelBuilder);
-        }
-
-        private void ApplyAuditInformation()
-        {
-            var entities = this.ChangeTracker.Entries().ToList();
-            this._auditService.ApplyAuditInformation(entities);
         }
     }
 }

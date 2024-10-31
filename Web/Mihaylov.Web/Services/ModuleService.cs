@@ -5,7 +5,8 @@ using Mihaylov.Api.Other.Client;
 using Mihaylov.Api.Site.Client;
 using Mihaylov.Api.Users.Client;
 using Mihaylov.Api.Weather.Client;
-using Mihaylov.Common.Host.Abstract.AssemblyVersion;
+using Mihaylov.Common.Generic.AssemblyVersion;
+using Mihaylov.Common.Host.AssemblyVersion.Interfaces;
 
 namespace Mihaylov.Web.Services
 {

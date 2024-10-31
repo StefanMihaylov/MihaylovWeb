@@ -2,13 +2,9 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Mihaylov.Api.Site.Data;
 using Mihaylov.Api.Site.Database;
-using Mihaylov.Api.Site.DAL;
-using Mihaylov.Common.Abstract;
-using Mihaylov.Common.Host;
-using Mihaylov.Common.Host.Abstract.Configurations;
 using Mihaylov.Api.Site.Hubs;
+using Mihaylov.Common;
 
 namespace Mihaylov.Api.Site
 {
@@ -42,7 +38,6 @@ namespace Mihaylov.Api.Site
 
             services.AddModuleInfo();
             services.AddEndpointsApiExplorer();
-            services.AddHttpContextAccessor();
             services.AddMemoryCache();
 
             services.AddClientJwtAuthentication(null, null, opt =>
@@ -52,8 +47,7 @@ namespace Mihaylov.Api.Site
                 opt.Audience = Config.GetEnvironmentVariable("JWT_AUDIENCE", string.Empty);
             });
 
-            services.AddCommon()
-                    .AddSiteDatabase(opt =>
+            services.AddDatabase<SiteDbContext>(opt =>
                     {
                         opt.ServerAddress = Config.GetEnvironmentVariable("DB_Site_Address", "192.168.1.100");
                         opt.DatabaseName = Config.GetEnvironmentVariable("DB_Site_Name", "Mihaylov_SiteDb");

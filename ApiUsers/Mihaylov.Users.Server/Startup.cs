@@ -4,9 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Mihaylov.Common.Abstract;
-using Mihaylov.Common.Host;
-using Mihaylov.Common.Host.Abstract.Configurations;
+using Mihaylov.Common;
 using Mihaylov.Common.Host.Authorization;
 using Mihaylov.Users.Data;
 using Mihaylov.Users.Data.Database;
@@ -36,8 +34,7 @@ namespace Mihaylov.Users.Server
                 Audience = Config.GetEnvironmentVariable("JWT_AUDIENCE"),
             };
 
-            services.AddCommon()
-                    .AddUserDatabase(opt =>
+            services.AddUserDatabase(opt =>
                         {
                             opt.ServerAddress = Config.GetEnvironmentVariable("DB_Users_Address");
                             opt.DatabaseName = Config.GetEnvironmentVariable("DB_Users_Name");

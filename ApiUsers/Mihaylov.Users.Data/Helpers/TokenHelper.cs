@@ -6,7 +6,7 @@ using System.Security.Claims;
 using System.Text;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using Mihaylov.Common.Host.Abstract.Authorization;
+using Mihaylov.Common;
 using Mihaylov.Users.Data.Database.Models;
 using Mihaylov.Users.Data.Interfaces;
 

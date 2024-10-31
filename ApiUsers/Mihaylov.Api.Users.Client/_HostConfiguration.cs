@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Net.Http;
 using Microsoft.Extensions.DependencyInjection;
+using Mihaylov.Api.Users.Client;
 
-namespace Mihaylov.Api.Users.Client
+namespace Mihaylov.Api
 {
     public static class _HostConfiguration
     {

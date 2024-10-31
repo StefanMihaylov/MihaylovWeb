@@ -1,5 +1,5 @@
 ﻿using System;
-using Mihaylov.Common.Abstract.Databases.Models;
+using Mihaylov.Common.Database.Models;
 
 namespace Mihaylov.Api.Other.Database.Cluster.Models
 {

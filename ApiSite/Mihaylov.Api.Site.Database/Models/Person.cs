@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Mihaylov.Common.Abstract.Databases.Models;
+using Mihaylov.Common.Database.Models;
 
 namespace Mihaylov.Api.Site.Database.Models
 {

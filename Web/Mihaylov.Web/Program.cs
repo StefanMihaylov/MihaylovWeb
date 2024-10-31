@@ -5,21 +5,16 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Mihaylov.Api.Other.Client;
-using Mihaylov.Api.Users.Client;
-using Mihaylov.Api.Weather.Client;
-using Mihaylov.Api.Site.Client;
-using Mihaylov.Common.Host;
-using Mihaylov.Common.Host.Abstract.Authorization;
-using Mihaylov.Common.Host.Abstract.Configurations;
+using Mihaylov.Api;
+using Mihaylov.Common;
 using Mihaylov.Site.Media;
 using Mihaylov.Web.Areas;
 using Mihaylov.Web.Areas.Identity.Pages.Account;
 using Mihaylov.Web.Hubs;
+using Mihaylov.Web.Models.Configs;
 using Mihaylov.Web.Service;
 using Mihaylov.Web.Service.Interfaces;
 using Mihaylov.Web.Service.Models;
-using Mihaylov.Web.Models.Configs;
 using Mihaylov.Web.Services;
 
 namespace Mihaylov.Web
@@ -29,7 +24,7 @@ namespace Mihaylov.Web
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-            var configuration = builder.Configuration;
+            // var configuration = builder.Configuration;
             //  builder.Services.Configure<aaa>(configuration.GetSection("AppSettings"));
 
             AddDependencies(builder.Services);

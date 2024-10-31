@@ -1,6 +1,6 @@
 ﻿using System;
 using Microsoft.AspNetCore.Identity;
-using Mihaylov.Common.Abstract.Databases.Interfaces;
+using Mihaylov.Common.Database.Interfaces;
 
 namespace Mihaylov.Users.Data.Database.Models
 {

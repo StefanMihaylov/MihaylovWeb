@@ -5,16 +5,16 @@
 <table class="table table-bordered table-striped" id="cluster-grid">
     <thead>
         <tr>
-            <th>@Html.NameFor(m => m.Applications.First().Main.Name)</th>
-            <th>Release)</th>
-            <th>@Html.NameFor(m => m.Applications.First().Main.Version.Version)</th>
-            <th>Helm)</th>
-            @* <th>@Html.LabelFor(m => m.Applications.First().Main.Version.HelmAppVersion, "App")</th> *@
-            <th>@Html.NameFor(m => m.Applications.First().Main.ReleaseUrl)</th>
-            <th>@Html.NameFor(m => m.Applications.First().Main.Deployment)</th>
-            <th>@Html.NameFor(m => m.Applications.First().Main.Files)</th>
-            <th>@Html.NameFor(m => m.Applications.First().Main.Pods)</th>
-            <th>@Html.NameFor(m => m.Applications.First().Main.Notes)</th>
+            <th>Name</th>
+            <th>Release</th>
+            <th>Version</th>
+            <th>Helm</th>
+            @* <th>App</th> *@
+            <th>ReleaseUrl</th>
+            <th>Deployment</th>
+            <th>Files</th>
+            <th>Pods</th>
+            <th>Notes</th>
             <th>Action</th>
         </tr>
     </thead>

@@ -1,21 +1,15 @@
-﻿using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Mihaylov.Api.Dictionary.Database.DbConfigurations;
 using Mihaylov.Api.Dictionary.Database.Models;
-using Mihaylov.Common.Abstract.Databases.Interfaces;
+using Mihaylov.Common.Database.Interfaces;
 
 namespace Mihaylov.Api.Dictionary.Database
 {
-    public class DictionaryDbContext : DbContext
+    public class DictionaryDbContext : BaseDbContext<DictionaryDbContext>
     {
-        private readonly IAuditService _auditService;
-
-        public DictionaryDbContext(DbContextOptions<DictionaryDbContext> options, IAuditService auditService)
-             : base(options)
+        public DictionaryDbContext(DbContextOptions<DictionaryDbContext> options,
+            IAuditService auditService) : base(options, auditService)
         {
-            _auditService = auditService;
         }
 
         public virtual DbSet<Course> Courses { get; set; }
@@ -34,24 +28,9 @@ namespace Mihaylov.Api.Dictionary.Database
         public virtual DbSet<Preposition> Prepositions { get; set; }
 
 
-       // public virtual DbSet<Test> Tests { get; set; }
+        // public virtual DbSet<Test> Tests { get; set; }
 
-       // public virtual DbSet<IncorrectAnswer> IncorrectAnswers { get; set; }       
-
-
-        public override int SaveChanges(bool acceptAllChangesOnSuccess)
-        {
-            this.ApplyAuditInformation();
-
-            return base.SaveChanges(acceptAllChangesOnSuccess);
-        }
-
-        public override Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = new CancellationToken())
-        {
-            this.ApplyAuditInformation();
-
-            return base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
-        }
+        // public virtual DbSet<IncorrectAnswer> IncorrectAnswers { get; set; }       
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -65,12 +44,6 @@ namespace Mihaylov.Api.Dictionary.Database
             modelBuilder.ApplyConfiguration(new PrepositionConfiguration());
 
             base.OnModelCreating(modelBuilder);
-        }
-
-        private void ApplyAuditInformation()
-        {
-            var entities = this.ChangeTracker.Entries().ToList();
-            this._auditService.ApplyAuditInformation(entities);
         }
     }
 }

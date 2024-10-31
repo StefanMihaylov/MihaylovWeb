@@ -10,17 +10,14 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using Mihaylov.Common.Host.Abstract.AssemblyVersion;
-using Mihaylov.Common.Host.Abstract.Authorization;
-using Mihaylov.Common.Host.Abstract.Configurations;
-using Mihaylov.Common.Host.AssemblyVersion;
 using Mihaylov.Common.Host.AssemblyVersion.Interfaces;
 using Mihaylov.Common.Host.AssemblyVersion.Models;
+using Mihaylov.Common.Host.AssemblyVersion.Services;
 using Mihaylov.Common.Host.Authorization;
+using Mihaylov.Common.Host.SwaggerConfig;
 using Swashbuckle.AspNetCore.SwaggerGen;
-using static Mihaylov.Common.Host.SwaggerDocsHelpers;
 
-namespace Mihaylov.Common.Host
+namespace Mihaylov.Common
 {
     public static class _HostConfiguration
     {
@@ -38,7 +35,7 @@ namespace Mihaylov.Common.Host
         }
 
         public static IServiceCollection AddClientJwtAuthentication(this IServiceCollection services,
-    string cookieName, ClaimType? usernameClaimType, Action<JwtTokenSettings> settings)
+            string cookieName, ClaimType? usernameClaimType, Action<JwtTokenSettings> settings)
         {
             var config = new JwtTokenSettings();
             settings(config);

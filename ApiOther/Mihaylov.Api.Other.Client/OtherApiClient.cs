@@ -1,6 +1,6 @@
 ﻿using System.Net.Http;
 using System.Net.Http.Headers;
-using Mihaylov.Common.Host.Abstract.AssemblyVersion;
+using Mihaylov.Common.Generic.AssemblyVersion;
 
 namespace Mihaylov.Api.Other.Client
 {

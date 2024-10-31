@@ -9,7 +9,7 @@ using Mihaylov.Api.Site.Data.Managers;
 using Mihaylov.Api.Site.Data.Models;
 using Mihaylov.Api.Site.Data.Writers;
 
-namespace Mihaylov.Api.Site.Data
+namespace Mihaylov.Api
 {
     public static class _HostConfigurations
     {

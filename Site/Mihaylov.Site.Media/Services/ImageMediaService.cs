@@ -111,7 +111,7 @@ namespace Mihaylov.Site.Media.Services
             // var hashBytes = hasher.ComputeHash(stream);
             // string convertedHash = MakeHashString(hashBytes);
 
-            var hash = GetCheckSum(stream, progress);
+            var hash = base.GetCheckSum(stream, progress);
 
             return hash;
         }

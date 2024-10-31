@@ -4,7 +4,7 @@ using Mihaylov.Api.Dictionary.Contracts.Writers;
 using Mihaylov.Api.Dictionary.Data.Managers;
 using Mihaylov.Api.Dictionary.Data.Writers;
 
-namespace Mihaylov.Api.Dictionary.Data
+namespace Mihaylov.Api
 {
     public static class _HostConfigurations
     {

@@ -1,11 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
-using Mihaylov.Common.Host;
-using Mihaylov.Common.Host.Abstract.Configurations;
-using Mihaylov.Common.Abstract;
-using Mihaylov.Api.Dictionary.DAL;
-using Mihaylov.Api.Dictionary.Data;
-using Mihaylov.Api.Dictionary.Database;
 using Microsoft.EntityFrameworkCore;
+using Mihaylov.Api.Dictionary.Database;
+using Mihaylov.Common;
 
 namespace Mihaylov.Api.Dictionary
 {
@@ -39,7 +35,6 @@ namespace Mihaylov.Api.Dictionary
 
             services.AddModuleInfo();
             services.AddEndpointsApiExplorer();
-            services.AddHttpContextAccessor();
             // services.AddMemoryCache();
 
             services.AddClientJwtAuthentication(null, null, opt =>
@@ -49,8 +44,7 @@ namespace Mihaylov.Api.Dictionary
                 opt.Audience = Config.GetEnvironmentVariable("JWT_AUDIENCE", string.Empty);
             });
 
-            services.AddCommon()
-                    .AddDictionaryDatabase(opt =>
+            services.AddDatabase<DictionaryDbContext>(opt =>
                     {
                         opt.ServerAddress = Config.GetEnvironmentVariable("DB_Dictionary_Address", "192.168.1.100");
                         opt.DatabaseName = Config.GetEnvironmentVariable("DB_Dictionary_Name", "Mihaylov_DictionaryDb");

@@ -7,8 +7,7 @@ using Microsoft.Extensions.Hosting;
 using Mihaylov.Api.Weather.Contracts.Interfaces;
 using Mihaylov.Api.Weather.Data;
 using Mihaylov.Api.Weather.Data.Configuration;
-using Mihaylov.Common.Host;
-using Mihaylov.Common.Host.Abstract.Configurations;
+using Mihaylov.Common;
 
 namespace Mihaylov.Api.Weather
 {

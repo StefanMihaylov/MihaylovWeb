@@ -1,7 +1,7 @@
 ﻿using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
-using Mihaylov.Common.Host.Abstract.AssemblyVersion;
+using Mihaylov.Common.Generic.AssemblyVersion;
 
 namespace Mihaylov.Api.Site.Client
 {

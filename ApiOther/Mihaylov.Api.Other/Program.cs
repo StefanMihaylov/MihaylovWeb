@@ -2,12 +2,9 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Mihaylov.Api.Other.Data;
 using Mihaylov.Api.Other.Database.Cluster;
 using Mihaylov.Api.Other.Database.Shows;
-using Mihaylov.Common.Abstract;
-using Mihaylov.Common.Host;
-using Mihaylov.Common.Host.Abstract.Configurations;
+using Mihaylov.Common;
 
 namespace Mihaylov.Api.Other
 {
@@ -41,22 +38,19 @@ namespace Mihaylov.Api.Other
 
             services.AddModuleInfo();
             services.AddEndpointsApiExplorer();
-            services.AddHttpContextAccessor();
             services.AddMemoryCache();
 
-            services.AddCommon()
-                    .AddOtherDatabase(opt =>
+            services.AddOtherDatabase(opt =>
             {
                 opt.ServerAddress = Config.GetEnvironmentVariable("DB_Other_Address", "192.168.1.100");
                 opt.DatabaseName = Config.GetEnvironmentVariable("DB_Other_Name", "Mihaylov_OtherDb");
                 opt.UserName = Config.GetEnvironmentVariable("DB_Other_UserName", "");
                 opt.Password = Config.GetEnvironmentVariable("DB_Other_Password", "");
-            });
-
-            services.MigrateDatabase<MihaylovOtherShowDbContext>(c => c.Migrate());
-            services.MigrateDatabase<MihaylovOtherClusterDbContext>(c => c.Migrate());
-
-            services.AddOtherServices();
+            })
+                .MigrateDatabase<MihaylovOtherShowDbContext>(c => c.Migrate(), true)
+                .MigrateDatabase<MihaylovOtherClusterDbContext>(c => c.Migrate(), true)
+                .AddOtherRepositories()
+                .AddOtherServices();
 
             services.AddClientJwtAuthentication(null, null, opt =>
             {
