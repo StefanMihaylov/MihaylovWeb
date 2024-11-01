@@ -1,5 +1,5 @@
 using Mihaylov.Api.Site.Contracts.Models;
-using Mihaylov.Common.Generic.Extensions;
+using Mihaylov.Common;
 
 namespace Mihaylov.Api.Site.Data.Tests
 {

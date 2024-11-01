@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Options;
+using Mihaylov.Api.Site.Contracts.Helpers;
+using Mihaylov.Api.Site.Contracts.Helpers.Models;
+using Mihaylov.Common.Generic.Servises.Interfaces;
 using Mihaylov.Common.Host.Authorization;
-using Mihaylov.Site.Media.Interfaces;
-using Mihaylov.Site.Media.Models;
 using Mihaylov.Web.Hubs;
 using Mihaylov.Web.Models;
 using Mihaylov.Web.Models.Configs;
@@ -35,8 +37,8 @@ namespace Mihaylov.Web.Controllers
             _progressReporter = progressReporter;
             _cache = cache;
 
-            _reportPath = $"{_file.GetBasePath()}/response.json";
-            _sortReportPath = $"{_file.GetBasePath()}/sortResponse.json";
+            _reportPath = $"{_mediaService.GetBasePath()}/response.json";
+            _sortReportPath = $"{_mediaService.GetBasePath()}/sortResponse.json";
             _config = settings.Value;
         }
 
@@ -174,7 +176,8 @@ namespace Mihaylov.Web.Controllers
                 files.AddRange(nonlockedFiles);
             }
 
-            var result = _mediaService.GetDuplicates(files);
+            var content = _mediaService.GetDuplicates(files);
+            var result = JsonSerializer.Serialize(content);
             _file.SaveFile(_reportPath, result);
 
             return Ok();
@@ -187,7 +190,11 @@ namespace Mihaylov.Web.Controllers
 
             var files = _mediaService.GetAllFiles(_config.SoftPath, false, false, false, progressReporter.Report);
 
-            var result = _mediaService.GetSorted(files);
+            var content = _mediaService.GetSorted(files);
+
+            content.LastProcessed = new DateTime(2024, 10, 31);
+
+            var result = JsonSerializer.Serialize(content);
             _file.SaveFile(_sortReportPath, result);
 
             return Ok();

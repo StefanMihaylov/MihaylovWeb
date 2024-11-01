@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Mihaylov.Common.Generic.Extensions;
+using Mihaylov.Common;
 
 namespace Mihaylov.Api.Site.Contracts.Models
 {

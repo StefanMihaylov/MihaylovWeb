@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Mihaylov.Api.Site.Contracts.Models;
 using Mihaylov.Api.Site.Contracts.Repositories;
 using Mihaylov.Api.Site.Contracts.Writers;
-using Mihaylov.Common.Generic.Extensions;
+using Mihaylov.Common;
 
 namespace Mihaylov.Api.Site.Data.Writers
 {

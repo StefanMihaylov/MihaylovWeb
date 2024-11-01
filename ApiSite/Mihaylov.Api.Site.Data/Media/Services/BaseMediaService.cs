@@ -1,19 +1,20 @@
 ﻿using System;
-using System.Drawing;
 using System.IO;
 using System.Security.Cryptography;
 using Microsoft.Extensions.Options;
-using Mihaylov.Site.Media.Interfaces;
-using Mihaylov.Site.Media.Models;
+using Mihaylov.Api.Site.Contracts.Helpers.Models;
+using Mihaylov.Api.Site.Data.Media.Interfaces;
+using Mihaylov.Common;
+using Mihaylov.Common.Generic.Servises.Interfaces;
 
-namespace Mihaylov.Site.Media.Services
+namespace Mihaylov.Api.Site.Data.Media.Services
 {
     public abstract class BaseMediaService : IBaseMediaService
     {
-        protected readonly FileWrapperConfig _config;
+        protected readonly PathConfig _config;
         protected readonly IFileWrapper _fileWrapper;
 
-        public BaseMediaService(IFileWrapper fileWrapper, IOptions<FileWrapperConfig> settings)
+        public BaseMediaService(IFileWrapper fileWrapper, IOptions<PathConfig> settings)
         {
             _config = settings.Value;
             _fileWrapper = fileWrapper;
@@ -26,34 +27,35 @@ namespace Mihaylov.Site.Media.Services
 
         public abstract MediaInfoSizeModel GetSize(string filePath, bool calculateChecksum, Action<int> progress);
 
-        public abstract void SaveThumbnail(string filePath, Size size, string outputFile);
+        protected abstract MemoryStream GetThumbnail(string filePath, SizeModel size, string outputFile);
 
         protected abstract string ThumbnailExtension { get; }
 
-        public byte[] GetThumbnail(string filePath, int width, int height, int thumbnailWidth)
+
+        public byte[] GetThumbnail(string filePath, SizeModel inputSize, int thumbnailWidth)
         {
             var outputFile = $"{_config.TempPath}/{Guid.NewGuid()}.{ThumbnailExtension}";
-            Size size = CalculateSize(width, height, thumbnailWidth);
+            SizeModel size = CalculateSize(inputSize, thumbnailWidth);
 
-            SaveThumbnail(filePath, size, outputFile);
+            using var imageStream = GetThumbnail(filePath, size, outputFile);
+            var bytes = imageStream.ToArray();
 
-            var bytes = _fileWrapper.ReadFile(outputFile);
             _fileWrapper.DeleteFile(outputFile);
 
             return bytes;
         }
 
-        protected Size CalculateSize(int width, int height, int thumbnailWidth)
+        protected SizeModel CalculateSize(SizeModel size, int thumbnailWidth)
         {
-            if (height == 0 || width == 0)
+            if (size == null || size.Height == 0 || size.Width == 0)
             {
-                return new Size(thumbnailWidth, thumbnailWidth);
+                return new SizeModel(thumbnailWidth, thumbnailWidth);
             }
 
-            var ratio = (decimal)height / width;
+            var ratio = (decimal)size.Height / size.Width;
             var resizedHeight = (int)Math.Round(thumbnailWidth * ratio);
 
-            return new Size(thumbnailWidth, resizedHeight);
+            return new SizeModel(thumbnailWidth, resizedHeight);
         }
 
         protected string GetCheckSum(Stream stream, Action<int> progress)

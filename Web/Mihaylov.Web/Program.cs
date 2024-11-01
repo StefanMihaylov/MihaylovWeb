@@ -7,7 +7,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Mihaylov.Api;
 using Mihaylov.Common;
-using Mihaylov.Site.Media;
 using Mihaylov.Web.Areas;
 using Mihaylov.Web.Areas.Identity.Pages.Account;
 using Mihaylov.Web.Hubs;

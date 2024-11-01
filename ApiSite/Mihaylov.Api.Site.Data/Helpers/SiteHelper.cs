@@ -13,7 +13,7 @@ using Mihaylov.Api.Site.Contracts.Managers;
 using Mihaylov.Api.Site.Contracts.Models;
 using Mihaylov.Api.Site.Contracts.Writers;
 using Mihaylov.Api.Site.Data.Models;
-using Mihaylov.Common.Generic.Extensions;
+using Mihaylov.Common;
 using Datas = Mihaylov.Api.Site.Data.Models;
 
 namespace Mihaylov.Api.Site.Data.Helpers

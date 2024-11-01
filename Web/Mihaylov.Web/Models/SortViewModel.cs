@@ -1,4 +1,5 @@
-﻿using Mihaylov.Site.Media.Models;
+﻿using Mihaylov.Api.Site.Contracts.Helpers.Models;
+using Mihaylov.Common.Generic.Servises.Models;
 using System;
 using System.Collections.Generic;
 

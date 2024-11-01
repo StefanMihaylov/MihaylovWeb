@@ -3,23 +3,36 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
-using Mihaylov.Site.Media.Interfaces;
-using Mihaylov.Site.Media.Models;
+using Microsoft.Extensions.Options;
+using Mihaylov.Api.Site.Contracts.Helpers;
+using Mihaylov.Api.Site.Contracts.Helpers.Models;
+using Mihaylov.Api.Site.Data.Media.Interfaces;
+using Mihaylov.Common;
+using Mihaylov.Common.Generic.Servises.Interfaces;
+using Mihaylov.Common.Generic.Servises.Models;
 
-namespace Mihaylov.Site.Media.Services
+namespace Mihaylov.Api.Site.Data.Helpers
 {
     public class MediaService : IMediaService
     {
         private readonly IFileWrapper _file;
         private readonly IImageMediaService _imageMediaService;
-        public readonly IVideoMediaService _videoMediaService;
+        private readonly IVideoMediaService _videoMediaService;
+        private readonly PathConfig _config;
 
         public MediaService(IFileWrapper fileWrapper, IImageMediaService imageMediaService,
-            IVideoMediaService videoMediaService)
+            IVideoMediaService videoMediaService, IOptions<PathConfig> settings)
         {
             _file = fileWrapper;
             _imageMediaService = imageMediaService;
             _videoMediaService = videoMediaService;
+
+            _config = settings.Value;
+        }
+
+        public string GetBasePath()
+        {
+            return _config.BasePath;
         }
 
         public IEnumerable<MediaInfoModel> GetAllFiles(string directoryPath, bool includeSubdirectories, bool readOnly,
@@ -62,7 +75,7 @@ namespace Mihaylov.Site.Media.Services
             var mediaInfo = GetMediaData(fileinfo, false, false, a => { });
             IBaseMediaService service = GetService(mediaInfo.IsImage);
 
-            bytes = service.GetThumbnail(filePath, mediaInfo.Width, mediaInfo.Height, size);
+            bytes = service.GetThumbnail(filePath, mediaInfo.Size, size);
 
             return bytes;
         }
@@ -96,8 +109,8 @@ namespace Mihaylov.Site.Media.Services
 
             var result = new SortResponse()
             {
-                FileCount = files.Count(),
-                LastProcessed = new DateTime(2024, 8, 28),
+                LastProcessed = DateTime.Now,
+                FileCount = files.Count(),                
                 Files = sorted
             };
 
@@ -106,7 +119,7 @@ namespace Mihaylov.Site.Media.Services
 
         public T GetReportData<T>(string fileName, string basePath) where T : class
         {
-            basePath = basePath ?? _file.GetBasePath();
+            basePath = basePath ?? _config.BasePath;
             var path = Path.Combine(basePath, fileName);
 
             using var jsonStream = _file.GetStreamFile(path);
@@ -139,12 +152,11 @@ namespace Mihaylov.Site.Media.Services
                 Name = fileInfo.Name,
                 Extension = fileInfo.Extension,
                 SubDirectories = fileInfo.SubDirectories,
-                Size = fileInfo.Length,
+                FileSize = fileInfo.Length,
                 DownloadedOn = fileInfo.LastWriteTime,
                 Readonly = readOnly,
                 IsImage = isImage,
-                Width = sizeInfo?.Width ?? 0,
-                Height = sizeInfo?.Height ?? 0,
+                Size = sizeInfo.Size,
                 Lenght = sizeInfo?.Lenght,
                 Checksum = sizeInfo?.Checksum,
             };

@@ -1,27 +1,31 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
-using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using Microsoft.Extensions.Options;
-using Mihaylov.Site.Media.Interfaces;
-using Mihaylov.Site.Media.Models;
+using Mihaylov.Api.Site.Contracts.Helpers.Models;
+using Mihaylov.Api.Site.Data.Media.Interfaces;
+using Mihaylov.Common.Generic.Servises.Interfaces;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Formats;
+using SixLabors.ImageSharp.Formats.Bmp;
+using SixLabors.ImageSharp.Formats.Png;
 using SixLabors.ImageSharp.Formats.Webp;
 using SixLabors.ImageSharp.Processing;
 
-namespace Mihaylov.Site.Media.Services
+namespace Mihaylov.Api.Site.Data.Media.Services
 {
     public class ImageMediaService : BaseMediaService, IImageMediaService, IBaseMediaService
     {
         private const string BMP = "bmp";
         private const string WEBP = "webp";
+        private const string PNG = "png";
 
         private readonly IEnumerable<string> _imageExtensions;
 
         protected override string ThumbnailExtension => WEBP;
 
-        public ImageMediaService(IFileWrapper fileWrapper, IOptions<FileWrapperConfig> settings)
+        public ImageMediaService(IFileWrapper fileWrapper, IOptions<PathConfig> settings)
             : base(fileWrapper, settings)
         {
             _imageExtensions = GetImageExtensions();
@@ -41,17 +45,17 @@ namespace Mihaylov.Site.Media.Services
         {
             try
             {
-                using var image = Image.FromFile(filePath);
+                ImageInfo imageInfo = Image.Identify(filePath);
 
                 var result = new MediaInfoSizeModel()
                 {
-                    Height = image.Height,
-                    Width = image.Width,
+                    Size = new SizeModel(imageInfo.Width, imageInfo.Height),
                     Lenght = null,
                 };
 
                 if (calculateChecksum)
                 {
+                    using var image = Image.Load(filePath);
                     var checksum = GetImageChecksum(image, progress);
                     result.Checksum = checksum;
                 }
@@ -70,69 +74,61 @@ namespace Mihaylov.Site.Media.Services
             return null;
         }
 
-        public override void SaveThumbnail(string filePath, Size size, string outputFile)
+        protected override MemoryStream GetThumbnail(string filePath, SizeModel size, string outputFile)
         {
+            IImageEncoder imageEncoder;
+
             switch (ThumbnailExtension)
             {
                 case BMP:
                     {
-                        using var image = Image.FromFile(filePath);
-
-                        var thumbImage = image.GetThumbnailImage(size.Width, size.Height, () => false, IntPtr.Zero);
-                        thumbImage.Save(outputFile);
+                        imageEncoder = new BmpEncoder();
                         break;
                     }
 
                 case WEBP:
                     {
-                        using var inStream = _fileWrapper.GetStreamFile(filePath);
-                        using var image = SixLabors.ImageSharp.Image.Load(inStream);
-                        image.Mutate(x => x.Resize(size.Width, size.Height));
+                        imageEncoder = new WebpEncoder();
+                        break;
+                    }
 
-                        using var outStream = new MemoryStream();
-                        image.Save(outStream, new WebpEncoder());
-                        outStream.Seek(0, SeekOrigin.Begin);
-
-                        _fileWrapper.SaveStreamFile(outStream, outputFile);
+                case PNG:
+                    {
+                        imageEncoder = new PngEncoder();
                         break;
                     }
 
                 default:
                     throw new Exception($"The extension {ThumbnailExtension} is not supported");
             }
-        }
 
+            using var image = Image.Load(filePath);
+            image.Mutate(x => x.Resize(size.Width, size.Height));
+
+            var outStream = new MemoryStream();
+            image.Save(outStream, imageEncoder);
+            outStream.Seek(0, SeekOrigin.Begin);
+
+            return outStream;
+        }
 
         private string GetImageChecksum(Image image, Action<int> progress)
         {
-            using var stream = GetStream(image);
-
-            // using var hasher = SHA256.Create();
-            // var hashBytes = hasher.ComputeHash(stream);
-            // string convertedHash = MakeHashString(hashBytes);
+            using var stream = new MemoryStream();
+            image.Save(stream, image.Metadata.DecodedImageFormat);
+            stream.Seek(0, SeekOrigin.Begin);
 
             var hash = base.GetCheckSum(stream, progress);
 
             return hash;
         }
 
-
-        private Stream GetStream(Image image)
-        {
-            var stream = new MemoryStream();
-            image.Save(stream, image.RawFormat);
-            stream.Seek(0, SeekOrigin.Begin);
-
-            return stream;
-        }
-
         private IEnumerable<string> GetImageExtensions()
         {
-            var extensions = ImageCodecInfo.GetImageEncoders()
-                                    .SelectMany(codec => codec.FilenameExtension
-                                                             .ToLowerInvariant()
-                                                             .Split(';'))
-                                    .ToArray();
+           var extensions = Configuration.Default
+                                .ImageFormats
+                                .SelectMany(x => x.FileExtensions)
+                                .ToList();
 
             return extensions;
         }

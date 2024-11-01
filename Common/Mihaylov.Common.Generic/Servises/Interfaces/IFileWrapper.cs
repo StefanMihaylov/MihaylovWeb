@@ -1,20 +1,18 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using Mihaylov.Site.Media.Models;
+using Mihaylov.Common.Generic.Servises.Models;
 
-namespace Mihaylov.Site.Media.Interfaces
+namespace Mihaylov.Common.Generic.Servises.Interfaces
 {
     public interface IFileWrapper
     {
-        string GetBasePath();
-
         byte[] ReadFile(string path);
 
         Stream GetStreamFile(string path);
 
         void SaveStreamFile(Stream stream, string path);
 
-        void SaveFile(string path, object content);
+        void SaveFile(string path, string content);
 
         IEnumerable<FileInfoModel> GetAllFiles(string directoryPath, bool includeSubdirectories, string basePath = null);
 

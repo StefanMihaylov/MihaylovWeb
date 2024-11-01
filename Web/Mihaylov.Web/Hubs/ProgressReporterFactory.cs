@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.SignalR;
-using Mihaylov.Site.Media.Models;
+using Mihaylov.Api.Site.Contracts.Helpers.Models;
 using System;
 
 namespace Mihaylov.Web.Hubs

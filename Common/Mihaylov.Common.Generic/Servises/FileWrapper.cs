@@ -1,27 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text.Json;
-using Microsoft.Extensions.Options;
-using Mihaylov.Site.Media.Interfaces;
-using Mihaylov.Site.Media.Models;
+using Mihaylov.Common.Generic.Servises.Interfaces;
+using Mihaylov.Common.Generic.Servises.Models;
 
-namespace Mihaylov.Site.Media.Services
+namespace Mihaylov.Common.Generic.Servises
 {
     public class FileWrapper : IFileWrapper
     {
-        private readonly FileWrapperConfig _config;
-
-        public FileWrapper(IOptions<FileWrapperConfig> settings)
-        {
-            _config = settings.Value;
-        }
-
-        public string GetBasePath()
-        {
-            return _config.BasePath;
-        }
-
         public byte[] ReadFile(string path)
         {
             var bytes = File.ReadAllBytes(path);
@@ -41,10 +27,10 @@ namespace Mihaylov.Site.Media.Services
             return stream;
         }
 
-        public void SaveFile(string path, object content)
+        public void SaveFile(string path, string content)
         {
             DeleteFile(path);
-            File.WriteAllText(path, JsonSerializer.Serialize(content));
+            File.WriteAllText(path, content);
         }
 
         public void SaveStreamFile(Stream stream, string path)

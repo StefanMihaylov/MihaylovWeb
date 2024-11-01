@@ -3,7 +3,7 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.Serialization;
 
-namespace Mihaylov.Common.Generic.Extensions
+namespace Mihaylov.Common
 {
     public static class ValueExtensions
     {

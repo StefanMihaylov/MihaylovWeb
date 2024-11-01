@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Mihaylov.Site.Media.Models
+namespace Mihaylov.Api.Site.Contracts.Helpers.Models
 {
     public class MediaInfoModel : MediaInfoSizeModel
     {
@@ -16,7 +16,7 @@ namespace Mihaylov.Site.Media.Models
 
         public bool IsImage { get; set; }
 
-        public long Size { get; set; }
+        public long FileSize { get; set; }
 
         public DateTime DownloadedOn { get; set; }
 

@@ -1,6 +1,6 @@
-﻿namespace Mihaylov.Site.Media.Models
+﻿namespace Mihaylov.Api.Site.Contracts.Helpers.Models
 {
-    public class FileWrapperConfig
+    public class PathConfig
     {
         public string BasePath { get; set; }
 

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Mihaylov.Api.Site.Contracts.Models;
 
-namespace Mihaylov.Api.Site.Contracts.Helpers
+namespace Mihaylov.Api.Site.Contracts.Helpers.Models
 {
     public class PersonExtended : Person
     {
@@ -10,7 +10,7 @@ namespace Mihaylov.Api.Site.Contracts.Helpers
         }
 
         public PersonExtended(Person person)
-            // : base(person)
+        // : base(person)
         {
         }
 

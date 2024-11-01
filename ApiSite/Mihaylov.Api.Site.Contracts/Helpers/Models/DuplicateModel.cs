@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 
-namespace Mihaylov.Site.Media.Models
+namespace Mihaylov.Api.Site.Contracts.Helpers.Models
 {
     public class DuplicateModel
     {

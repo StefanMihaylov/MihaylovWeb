@@ -1,8 +1,8 @@
-﻿using Mihaylov.Site.Media.Models;
+﻿using Mihaylov.Api.Site.Contracts.Helpers.Models;
 using System;
 using System.Collections.Generic;
 
-namespace Mihaylov.Site.Media.Interfaces
+namespace Mihaylov.Api.Site.Contracts.Helpers
 {
     public interface IMediaService
     {
@@ -16,5 +16,7 @@ namespace Mihaylov.Site.Media.Interfaces
         SortResponse GetSorted(IEnumerable<MediaInfoModel> files);
 
         T GetReportData<T>(string fileName, string basePath) where T : class;
+
+        string GetBasePath();
     }
 }

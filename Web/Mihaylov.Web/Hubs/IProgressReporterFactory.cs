@@ -1,5 +1,5 @@
 ﻿using System;
-using Mihaylov.Site.Media.Models;
+using Mihaylov.Api.Site.Contracts.Helpers.Models;
 
 namespace Mihaylov.Web.Hubs
 {

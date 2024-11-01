@@ -1,5 +1,5 @@
 ﻿using System;
-using Mihaylov.Common.Generic.Extensions;
+using Mihaylov.Common;
 
 namespace Mihaylov.Api.Site.Contracts.Models
 {
