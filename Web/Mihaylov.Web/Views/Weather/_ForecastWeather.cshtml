@@ -1,15 +1,15 @@
-﻿@using Mihaylov.Web.Service.Models;
+﻿@using Mihaylov.Api.Weather.Client
 @model IEnumerable<ForecastWeatherResponse>
 
 <table class="table table-bordered table-striped">
     <thead>
         <tr>
-            <th>@Html.LabelFor(m => m.First().Current.Location)</th>
-            <th>@Html.LabelFor(m => m.First().Forecast.First().Date)</th>
-            <th>@Html.LabelFor(m => m.First().Forecast.First().Condition)</th>
-            <th>@Html.LabelFor(m => m.First().Forecast.First().ConditionIcon)</th>
-            <th>@Html.LabelFor(m => m.First().Forecast.First().Temperatures)</th>
-            <th>@Html.LabelFor(m => m.First().Forecast.First().Rains)</th>
+            <th>Град</th>
+            <th>Дата</th>
+            <th>Условия</th>
+            <th>Условия</th>
+            <th>Температури</th>
+            <th>Валежи</th>
         </tr>
     </thead>
     <tbody>

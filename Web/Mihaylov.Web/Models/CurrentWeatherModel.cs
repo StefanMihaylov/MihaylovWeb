@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Mihaylov.Web.Service.Models;
+using Mihaylov.Api.Weather.Client;
 
 namespace Mihaylov.Web.Models
 {

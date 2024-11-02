@@ -34,7 +34,9 @@
             @Html.ValidationMessageFor(m => m.ReleaseDateCommand)
         </td>
         <td>
-            <input type="submit" class="btn btn-primary" value="Добави" />
+            <button type="submit" class="btn btn-success">
+                <i class="bi @ViewConstants.NewButton"></i>
+            </button>
         </td>
     </tr>
 </form>

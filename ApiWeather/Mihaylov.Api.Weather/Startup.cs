@@ -22,12 +22,14 @@ namespace Mihaylov.Api.Weather
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddSwaggerCustom("v1", "v1", "Weather API", "Seek-Ah Weather API", false);
+            services.AddSwaggerCustom("v1", "v1", "Weather API", "Weather API", false);
 
             services.AddControllers();
             services.AddModuleInfo();
+            services.AddMemoryCache();
 
             services.AddScoped<IWeatherApiService, WeatherApiService>();
+            services.AddScoped<IWeatherManager, WeatherManager>();
             services.AddHttpClient(WeatherApiService.WEATHER_CLIENT, config =>
             {
                 config.BaseAddress = new Uri(Config.GetEnvironmentVariable("WeatherApi_Url"));
@@ -36,6 +38,15 @@ namespace Mihaylov.Api.Weather
             services.Configure<WeatherApiSettings>(opt =>
             {
                 opt.AppId = Config.GetEnvironmentVariable("WeatherApi_AppId");
+            });
+
+            services.Configure<WeatherConfig>(opt =>
+            {
+                var cities = Config.GetEnvironmentVariable("Weather_Api_Cities", "Sofia");
+                opt.Cities = cities.Split(new char[] { ';', ',', ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                
+                opt.MetricUnits = Config.GetEnvironmentVariable<bool>("Weather_Api_MetricUnits", bool.TryParse, true);
+                opt.Language = Config.GetEnvironmentVariable("Weather_Api_Language", "bg");
             });
         }
 

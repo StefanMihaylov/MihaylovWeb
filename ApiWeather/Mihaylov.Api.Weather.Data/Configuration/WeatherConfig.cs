@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 
-namespace Mihaylov.Web.Service.Models
+namespace Mihaylov.Api.Weather.Data.Configuration
 {
     public class WeatherConfig
     {

@@ -5,7 +5,6 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
 using Mihaylov.Api.Weather.Contracts.Interfaces;
-using Mihaylov.Api.Weather.Contracts.Models;
 using Mihaylov.Api.Weather.Data.Configuration;
 using Mihaylov.Api.Weather.Data.Models;
 using DTO = Mihaylov.Api.Weather.Contracts.Models;
@@ -28,7 +27,7 @@ namespace Mihaylov.Api.Weather.Data
             _baseUrl = _httpClient.BaseAddress?.AbsoluteUri.TrimEnd('/') ?? string.Empty;
         }
 
-        public async Task<CurrentWeatherModel> CurrentAsync(string city, bool metricUnits, string language)
+        public async Task<DTO.CurrentWeatherModel> CurrentAsync(string city, bool metricUnits, string language)
         {
             var queryString = $"key={_config.AppId}&q={city}&aqi=no&lang={language}";
             var response = await GetResponseAsync<CurrentWeatherResponse>("v1/current.json", queryString).ConfigureAwait(false);
@@ -38,12 +37,12 @@ namespace Mihaylov.Api.Weather.Data
             return result;
         }
 
-        public async Task<ForecastWeatherModel> ForecastAsync(string city, int days, bool metricUnits, string language)
+        public async Task<DTO.ForecastWeatherModel> ForecastAsync(string city, int days, bool metricUnits, string language)
         {
             var queryString = $"key={_config.AppId}&q={city}&days={days}&aqi=no&lang={language}&alerts=no";
             var response = await GetResponseAsync<ForecastWeatherResponse>("v1/forecast.json", queryString).ConfigureAwait(false);
 
-            var result = new ForecastWeatherModel
+            var result = new DTO.ForecastWeatherModel
             {
                 Current = MapCurrentWeather(response, metricUnits),
                 Forecast = response.Forecast.ForecastDay.Select(f => new DTO.ForecastDayModel()
@@ -84,9 +83,9 @@ namespace Mihaylov.Api.Weather.Data
             return response;
         }
 
-        private CurrentWeatherModel MapCurrentWeather(CurrentWeatherResponse response, bool metricUnits)
+        private DTO.CurrentWeatherModel MapCurrentWeather(CurrentWeatherResponse response, bool metricUnits)
         {
-            return new CurrentWeatherModel
+            return new DTO.CurrentWeatherModel
             {
                 Location = response.Location.Name,
                 Country = response.Location.Country,

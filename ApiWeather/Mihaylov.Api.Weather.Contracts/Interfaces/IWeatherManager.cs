@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Mihaylov.Web.Service.Models;
+using Mihaylov.Api.Weather.Contracts.Models;
 
-namespace Mihaylov.Web.Service.Interfaces
+namespace Mihaylov.Api.Weather.Contracts.Interfaces
 {
-    public interface IWeatherService
+    public interface IWeatherManager
     {
         Task<IEnumerable<CurrentWeatherResponse>> GetCurrentWeatherAsync();
 

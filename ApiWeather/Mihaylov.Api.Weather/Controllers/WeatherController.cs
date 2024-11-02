@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -16,25 +17,27 @@ namespace Mihaylov.Api.Weather.Controllers
     public class WeatherController : ControllerBase
     {
         private readonly ILogger _logger;
-        private readonly IWeatherApiService _weatherService;
+        private readonly IWeatherApiService _service;
+        private readonly IWeatherManager _manager;
 
-        public WeatherController(ILoggerFactory loggerFactory, IWeatherApiService weatherService)
+        public WeatherController(ILoggerFactory loggerFactory, IWeatherApiService service, IWeatherManager manager)
         {
             _logger = loggerFactory.CreateLogger(GetType());
-            _weatherService = weatherService;
+            _service = service;
+            _manager = manager;
         }
 
         [HttpGet]
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(CurrentWeatherModel))]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
-        public async Task<IActionResult> Current([FromQuery]RequestModel model)
+        public async Task<IActionResult> Current([FromQuery] RequestModel model)
         {
             try
             {
                 model.AddDefault();
 
-                var response = await _weatherService.CurrentAsync(model.City, model.MetricUnits.Value, model.Language).ConfigureAwait(false);
+                CurrentWeatherModel response = await _service.CurrentAsync(model.City, model.MetricUnits.Value, model.Language).ConfigureAwait(false);
 
                 return Ok(response);
             }
@@ -54,7 +57,79 @@ namespace Mihaylov.Api.Weather.Controllers
             {
                 model.AddDefault();
 
-                var response = await _weatherService.ForecastAsync(model.City, 3, model.MetricUnits.Value, model.Language).ConfigureAwait(false);
+                ForecastWeatherModel response = await _service.ForecastAsync(model.City, 3, model.MetricUnits.Value, model.Language).ConfigureAwait(false);
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
+        }
+
+        [HttpGet]
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<CurrentWeatherResponse>))]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
+        public async Task<IActionResult> CurrentCached()
+        {
+            try
+            {
+                IEnumerable<CurrentWeatherResponse> response = await _manager.GetCurrentWeatherAsync().ConfigureAwait(false);
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
+        }
+
+        [HttpGet]
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(CurrentWeatherResponse))]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
+        public async Task<IActionResult> CurrentByCity(string city)
+        {
+            try
+            {
+                CurrentWeatherResponse response = await _manager.GetCurrentWeatherAsync(city).ConfigureAwait(false);
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
+        }
+
+        [HttpGet]
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<ForecastWeatherResponse>))]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
+        public async Task<IActionResult> ForecastCached()
+        {
+            try
+            {
+                IEnumerable<ForecastWeatherResponse> response = await _manager.GetForecastWeatherAsync().ConfigureAwait(false);
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
+        }
+
+        [HttpGet]
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ForecastWeatherResponse))]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
+        public async Task<IActionResult> ForecastByCity(string city)
+        {
+            try
+            {
+                ForecastWeatherResponse response = await _manager.GetForecastWeatherAsync(city).ConfigureAwait(false);
 
                 return Ok(response);
             }

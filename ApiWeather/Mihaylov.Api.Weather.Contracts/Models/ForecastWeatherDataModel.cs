@@ -1,26 +1,17 @@
-﻿using System.ComponentModel.DataAnnotations;
-using Mihaylov.Api.Weather.Client;
-
-namespace Mihaylov.Web.Service.Models
+﻿namespace Mihaylov.Api.Weather.Contracts.Models
 {
     public class ForecastWeatherDataModel
     {
-        [Display(Name = "Град")]
         public string Location { get; private set; }
 
-        [Display(Name = "Дата")]
         public string Date { get; set; }
 
-        [Display(Name = "Температури")]
         public string Temperatures { get; set; }
 
-        [Display(Name = "Валежи")]
         public string Rains { get; set; }
 
-        [Display(Name = "Условия")]
         public string Condition { get; private set; }
 
-        [Display(Name = "Условия")]
         public string ConditionIcon { get; private set; }
 
 

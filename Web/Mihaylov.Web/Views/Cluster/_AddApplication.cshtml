@@ -1,4 +1,5 @@
 ﻿@namespace Mihaylov.Web.Models.Cluster
+@using Mihaylov.Web.Models.Configs
 @model AddApplicationModel
 
 <form action="/Cluster/AddApp" method="post">
@@ -33,7 +34,9 @@
             @Html.ValidationMessageFor(m => m.Notes)
         </td>
         <td>
-            <input type="submit" class="btn btn-primary" value="Добави" />
+            <button type="submit" class="btn btn-success">
+                <i class="bi @ViewConstants.NewButton"></i>
+            </button>
         </td>
     </tr>
 </form>

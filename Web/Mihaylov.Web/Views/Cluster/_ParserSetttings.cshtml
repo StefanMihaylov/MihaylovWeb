@@ -1,5 +1,6 @@
 ﻿@using Mihaylov.Web.Controllers
 @using Mihaylov.Web.Models.Cluster
+@using Mihaylov.Web.Models.Configs
 @model ClusterMainModel
 
 
@@ -33,7 +34,9 @@
                 <td><my-value>@setting.ReleaseDateSelector</my-value></td>
                 <td><my-value>@setting.ReleaseDateCommand</my-value></td>
                 <td>
-                    @Html.ActionLink("Промени", nameof(ClusterController.Index), "Cluster", new { settingId = setting.Id }, new { @class = "btn btn-primary" })
+                    <a href="/Cluster/Index?settingId=@setting.Id" class="btn btn-primary">
+                        <i class="bi @ViewConstants.EditButton"></i>
+                    </a>
                 </td>
             </tr>
         }

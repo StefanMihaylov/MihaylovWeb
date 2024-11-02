@@ -11,9 +11,6 @@ using Mihaylov.Web.Areas;
 using Mihaylov.Web.Areas.Identity.Pages.Account;
 using Mihaylov.Web.Hubs;
 using Mihaylov.Web.Models.Configs;
-using Mihaylov.Web.Service;
-using Mihaylov.Web.Service.Interfaces;
-using Mihaylov.Web.Service.Models;
 using Mihaylov.Web.Services;
 
 namespace Mihaylov.Web
@@ -92,16 +89,6 @@ namespace Mihaylov.Web
             services.Configure<SiteConfig>(opt =>
             {
                 opt.SiteApiBaseUrl = Config.GetEnvironmentVariable("Site_Api_Client");
-            });
-            
-            services.AddScoped<IWeatherService, WeatherService>();
-            services.Configure<WeatherConfig>(opt =>
-            {
-                var cities = Config.GetEnvironmentVariable("Weather_Api_Cities", "Sofia");
-
-                opt.Cities = cities.Split(new char[] { ';', ',', ' ' }, System.StringSplitOptions.RemoveEmptyEntries);
-                opt.MetricUnits = Config.GetEnvironmentVariable<bool>("Weather_Api_MetricUnits", bool.TryParse, true);
-                opt.Language = Config.GetEnvironmentVariable("Weather_Api_Language", "bg");
             });
 
             services.AddUsersApiClient(Config.GetEnvironmentVariable("Users_Api_Client"));

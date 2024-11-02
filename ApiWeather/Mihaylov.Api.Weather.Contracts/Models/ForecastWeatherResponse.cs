@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Mihaylov.Api.Weather.Client;
 
-namespace Mihaylov.Web.Service.Models
+namespace Mihaylov.Api.Weather.Contracts.Models
 {
     public class ForecastWeatherResponse
     {

@@ -1,5 +1,6 @@
 ﻿@using Mihaylov.Web.Controllers
 @using Mihaylov.Web.Models.Cluster
+@using Mihaylov.Web.Models.Configs
 @model ClusterMainModel
 
 <table class="table table-bordered table-striped" id="cluster-grid">
@@ -15,7 +16,7 @@
             <th>Files</th>
             <th>Pods</th>
             <th>Notes</th>
-            <th>Action</th>
+            <th></th>
         </tr>
     </thead>
     <tbody>
@@ -133,7 +134,9 @@
                             if (application.Main.Files.Count() > 1)
                             {
                                 var content = $"<ul class='custom-popover'><li>{string.Join("</li><li>", application.Main.Files?.Select(b => b?.Name))}</li></ul>";
-                                <button type="button" class="btn btn-secondary" data-container="body" data-toggle="popover" data-placement="top" data-content="@content" data-html="true">Покажи</button>
+                                <button type="button" class="btn btn-secondary" data-container="body" data-toggle="popover" data-placement="top" data-content="@content" data-html="true">
+                                    <i class="bi @ViewConstants.ListButton"></i>
+                                </button>
                             }
                             else
                             {
@@ -148,13 +151,17 @@
                         @if (application.Main.Pods?.Any() == true)
                         {
                             var content = $"<ul class='custom-popover'><li>{string.Join("</li><li>", application.Main.Pods?.Select(b => b?.Name))}</li></ul>";
-                            <button type="button" class="btn btn-secondary" data-container="body" data-toggle="popover" data-placement="top" data-content="@content" data-html="true">Покажи</button>
+                            <button type="button" class="btn btn-secondary" data-container="body" data-toggle="popover" data-placement="top" data-content="@content" data-html="true">
+                                <i class="bi @ViewConstants.ListButton"></i>
+                            </button>
                         }
                     </my-value>
                 </td>
                 <td><my-value>@application.Main.Notes</my-value></td>
                 <td>
-                    @Html.ActionLink("Промени", nameof(ClusterController.Index), "Cluster", new { id = application.Main.Id }, new { @class = "btn btn-primary" })
+                    <a href="/Cluster/Index/@application.Main.Id" class="btn btn-primary">
+                        <i class="bi @ViewConstants.EditButton"></i>
+                    </a>
                 </td>
             </tr>
         }

@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "Weather API",
-    "description": "Seek-Ah Weather API",
+    "description": "Weather API",
     "version": "v1"
   },
   "servers": [
@@ -19,7 +19,7 @@
         "operationId": "ModuleGetInfo",
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "OK",
             "content": {
               "application/json": {
                 "schema": {
@@ -62,7 +62,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "OK",
             "content": {
               "application/json": {
                 "schema": {
@@ -115,11 +115,151 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "OK",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ForecastWeatherModel"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Weather/CurrentCached": {
+      "get": {
+        "tags": [
+          "Weather"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CurrentWeatherResponse"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Weather/CurrentByCity": {
+      "get": {
+        "tags": [
+          "Weather"
+        ],
+        "parameters": [
+          {
+            "name": "city",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CurrentWeatherResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Weather/ForecastCached": {
+      "get": {
+        "tags": [
+          "Weather"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ForecastWeatherResponse"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Weather/ForecastByCity": {
+      "get": {
+        "tags": [
+          "Weather"
+        ],
+        "parameters": [
+          {
+            "name": "city",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ForecastWeatherResponse"
                 }
               }
             }
@@ -186,6 +326,47 @@
         },
         "additionalProperties": false
       },
+      "CurrentWeatherResponse": {
+        "type": "object",
+        "properties": {
+          "location": {
+            "type": "string",
+            "nullable": true,
+            "readOnly": true
+          },
+          "temperature": {
+            "type": "string",
+            "nullable": true,
+            "readOnly": true
+          },
+          "feelsLike": {
+            "type": "string",
+            "nullable": true,
+            "readOnly": true
+          },
+          "wind": {
+            "type": "string",
+            "nullable": true,
+            "readOnly": true
+          },
+          "currentDate": {
+            "type": "string",
+            "nullable": true,
+            "readOnly": true
+          },
+          "condition": {
+            "type": "string",
+            "nullable": true,
+            "readOnly": true
+          },
+          "conditionIcon": {
+            "type": "string",
+            "nullable": true,
+            "readOnly": true
+          }
+        },
+        "additionalProperties": false
+      },
       "ForecastDayModel": {
         "type": "object",
         "properties": {
@@ -220,16 +401,75 @@
         },
         "additionalProperties": false
       },
+      "ForecastWeatherDataModel": {
+        "type": "object",
+        "properties": {
+          "location": {
+            "type": "string",
+            "nullable": true,
+            "readOnly": true
+          },
+          "date": {
+            "type": "string",
+            "nullable": true
+          },
+          "temperatures": {
+            "type": "string",
+            "nullable": true
+          },
+          "rains": {
+            "type": "string",
+            "nullable": true
+          },
+          "condition": {
+            "type": "string",
+            "nullable": true,
+            "readOnly": true
+          },
+          "conditionIcon": {
+            "type": "string",
+            "nullable": true,
+            "readOnly": true
+          }
+        },
+        "additionalProperties": false
+      },
       "ForecastWeatherModel": {
         "type": "object",
         "properties": {
           "current": {
-            "$ref": "#/components/schemas/CurrentWeatherModel"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CurrentWeatherModel"
+              }
+            ],
+            "nullable": true
           },
           "forecast": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/ForecastDayModel"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ForecastWeatherResponse": {
+        "type": "object",
+        "properties": {
+          "current": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CurrentWeatherResponse"
+              }
+            ],
+            "nullable": true
+          },
+          "forecast": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ForecastWeatherDataModel"
             },
             "nullable": true
           }

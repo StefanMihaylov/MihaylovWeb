@@ -15,11 +15,10 @@ COPY ["ApiSite/Mihaylov.Api.Site.Data/Mihaylov.Api.Site.Data.csproj", "ApiSite/M
 COPY ["ApiSite/Mihaylov.Api.Site.Contracts/Mihaylov.Api.Site.Contracts.csproj", "ApiSite/Mihaylov.Api.Site.Contracts/"]
 COPY ["Common/Mihaylov.Common.Generic/Mihaylov.Common.Generic.csproj", "Common/Mihaylov.Common.Generic/"]
 COPY ["Common/Mihaylov.Common.Host/Mihaylov.Common.Host.csproj", "Common/Mihaylov.Common.Host/"]
-COPY ["Web/Mihaylov.Web.Service/Mihaylov.Web.Service.csproj", "Web/Mihaylov.Web.Service/"]
-COPY ["ApiWeather/Mihaylov.Api.Weather.Client/Mihaylov.Api.Weather.Client.csproj", "ApiWeather/Mihaylov.Api.Weather.Client/"]
 COPY ["ApiOther/Mihaylov.Api.Other.Client/Mihaylov.Api.Other.Client.csproj", "ApiOther/Mihaylov.Api.Other.Client/"]
 COPY ["ApiSite/Mihaylov.Api.Site.Client/Mihaylov.Api.Site.Client.csproj", "ApiSite/Mihaylov.Api.Site.Client/"]
 COPY ["ApiUsers/Mihaylov.Api.Users.Client/Mihaylov.Api.Users.Client.csproj", "ApiUsers/Mihaylov.Api.Users.Client/"]
+COPY ["ApiWeather/Mihaylov.Api.Weather.Client/Mihaylov.Api.Weather.Client.csproj", "ApiWeather/Mihaylov.Api.Weather.Client/"]
 RUN dotnet restore "./Web/Mihaylov.Web/Mihaylov.Web.csproj"
 COPY . .
 WORKDIR "/src/Web/Mihaylov.Web"

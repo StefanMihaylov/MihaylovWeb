@@ -1,24 +1,24 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Mihaylov.Api.Weather.Client;
 using Mihaylov.Web.Models;
-using Mihaylov.Web.Service.Interfaces;
 
 namespace Mihaylov.Web.Controllers
 {
     public class WeatherController : Controller
     {
-        private readonly IWeatherService _weatherService;
+        private readonly IWeatherApiClient _client;
 
-        public WeatherController(IWeatherService weatherService)
+        public WeatherController(IWeatherApiClient client)
         {
-            _weatherService = weatherService;
+            _client = client;
         }
 
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            var weather = await _weatherService.GetForecastWeatherAsync().ConfigureAwait(false);
+            var weather = await _client.ForecastCachedAsync().ConfigureAwait(false);
 
             var result = new WeatherModel()
             {
@@ -32,7 +32,7 @@ namespace Mihaylov.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> AddNewCurrentCity(string city)
         {
-            var response = await _weatherService.GetCurrentWeatherAsync(city).ConfigureAwait(false);
+            var response = await _client.CurrentByCityAsync(city).ConfigureAwait(false);
 
             return PartialView("_CurrentWeatherRow", response);
         }
@@ -40,7 +40,7 @@ namespace Mihaylov.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> AddNewForecastCity(string city)
         {
-            var response = await _weatherService.GetForecastWeatherAsync(city).ConfigureAwait(false);
+            var response = await _client.ForecastByCityAsync(city).ConfigureAwait(false);
 
             return PartialView("_ForecastWeatherRow", response);
         }
