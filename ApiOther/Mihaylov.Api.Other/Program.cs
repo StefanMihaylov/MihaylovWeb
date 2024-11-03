@@ -52,7 +52,7 @@ namespace Mihaylov.Api.Other
                 .AddOtherRepositories()
                 .AddOtherServices();
 
-            services.AddClientJwtAuthentication(null, null, opt =>
+            services.AddClientJwtAuthentication(null, opt =>
             {
                 opt.Secret = Config.GetEnvironmentVariable("JWT_AUTHENTICATION_SECRET", "abc");
                 opt.Issuer = Config.GetEnvironmentVariable("JWT_ISSUER", string.Empty);

@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Mihaylov.Api.Site.Client;
+using Mihaylov.Common.Host.Authorization;
 using Mihaylov.Web.Areas;
 using Mihaylov.Web.Areas.Identity.Pages.Account;
 using Mihaylov.Web.Models.Configs;
@@ -12,6 +13,7 @@ using Mihaylov.Web.Models.Site;
 
 namespace Mihaylov.Web.Controllers
 {
+    [JwtAuthorize(Roles = UserConstants.AdminRole)]
     public class SiteController : Controller
     {
         public const string NAME = "Site";

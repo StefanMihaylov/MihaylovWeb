@@ -48,7 +48,7 @@ namespace Mihaylov.Users.Server
                             password.RequireDigit = Config.GetEnvironmentVariable("Password_RequireDigit", bool.TryParse, false);
                             password.RequiredLength = Config.GetEnvironmentVariable("Password_RequiredLength", int.TryParse, 6);
                         })
-                    .AddClientJwtAuthentication(null, null, opt => opt.Copy(jwtConfig))
+                    .AddClientJwtAuthentication(null, opt => opt.Copy(jwtConfig))
                     .AddJwtTokenGenerator(opt =>
                        {
                            opt.Secret = jwtConfig.Secret;

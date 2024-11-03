@@ -1,4 +1,6 @@
 using System.Linq;
+using System.Net;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -17,6 +19,8 @@ namespace Mihaylov.Web
 {
     public class Program
     {
+        private const string LOGIN_URL = "/Identity/Account/Login";
+
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
@@ -43,8 +47,21 @@ namespace Mihaylov.Web
             app.UseStaticFiles();
 
             app.UseRouting();
-            app.UseAuthentication();
-            app.UseAuthorization();
+
+            app.UseAuthentication()
+               .UseStatusCodePages(async context =>
+               {
+                   var response = context.HttpContext.Response;
+
+                   if (response.StatusCode == (int)HttpStatusCode.Unauthorized ||
+                       response.StatusCode == (int)HttpStatusCode.Forbidden)
+                   {
+                       response.Redirect(LOGIN_URL);
+                   }
+
+                  await Task.CompletedTask;
+               })
+               .UseAuthorization();
 
             app.MapControllerRoute(
                 name: "default",
@@ -73,10 +90,15 @@ namespace Mihaylov.Web
                         apm.FeatureProviders.Add(new ViewVersionFeatureProvider(assembly));
                     });
 
-            services.AddRazorPages();            
+            services.AddRazorPages();
             services.AddMemoryCache();
 
-            services.AddClientJwtAuthentication(LoginModel.COOKIE_NAME, ClaimType.Username, opt =>
+            services.AddClientJwtAuthentication(h =>
+            {
+                h.CookieName = LoginModel.COOKIE_NAME;
+                h.UsernameClaimType = ClaimType.Username;
+                h.LoginUrl = LOGIN_URL;
+            }, opt =>
             {
                 opt.Secret = Config.GetEnvironmentVariable("JWT_AUTHENTICATION_SECRET");
                 opt.Issuer = Config.GetEnvironmentVariable("JWT_ISSUER");

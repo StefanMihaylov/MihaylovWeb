@@ -6,11 +6,13 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Logging;
 using Mihaylov.Api.Other.Client;
+using Mihaylov.Common.Host.Authorization;
 using Mihaylov.Web.Areas;
 using Mihaylov.Web.Models.Cluster;
 
 namespace Mihaylov.Web.Controllers
 {
+    [JwtAuthorize(Roles = UserConstants.AdminRole)]
     public class ClusterController : Controller
     {
         private readonly ILogger _logger;

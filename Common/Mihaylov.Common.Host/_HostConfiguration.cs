@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
@@ -35,8 +36,15 @@ namespace Mihaylov.Common
         }
 
         public static IServiceCollection AddClientJwtAuthentication(this IServiceCollection services,
-            string cookieName, ClaimType? usernameClaimType, Action<JwtTokenSettings> settings)
+            Action<WebHostSettings> webSettings, Action<JwtTokenSettings> settings)
         {
+            WebHostSettings webConfig = null;
+            if(webSettings != null)
+            {
+                webConfig = new WebHostSettings();
+                webSettings(webConfig);
+            }
+
             var config = new JwtTokenSettings();
             settings(config);
 
@@ -62,23 +70,32 @@ namespace Mihaylov.Common
                     ValidateIssuer = true,
                     ValidAudience = config.Audience,
                     ValidateAudience = true,
-                    NameClaimType = usernameClaimType?.GetClaim() ?? ClaimTypes.Upn,
+                    NameClaimType = webConfig?.UsernameClaimType?.GetClaim() ?? ClaimTypes.Upn,
                     RoleClaimType = ClaimsIdentity.DefaultRoleClaimType,
                 };
                 options.Events = new JwtBearerEvents
                 {
                     OnMessageReceived = context =>
                     {
-                        if (!string.IsNullOrEmpty(cookieName))
+                        if (webConfig != null)
                         {
-                            context.Token = context.Request.Cookies[cookieName];
+                            context.Token = context.Request.Cookies[webConfig.CookieName];
                         }
 
                         return Task.CompletedTask;
                     },
                     OnAuthenticationFailed = context =>
                     {
-                        context.Response.StatusCode = 401;
+                        if (webConfig == null)
+                        {
+                            context.Response.StatusCode = 401;
+                        }
+                        else
+                        {
+                            context.HttpContext.Response.Cookies.Delete(webConfig.CookieName);
+                            context.HttpContext.Response.Redirect(webConfig.LoginUrl);
+                        }
+
                         return Task.CompletedTask;
                     }
                 };
