@@ -18,8 +18,8 @@ namespace Mihaylov.Api
         public static IServiceCollection AddOtherDatabase(this IServiceCollection services,
                 Action<ConnectionStringSettings> connectionString)
         {
-            services.AddDatabase<MihaylovOtherShowDbContext>(connectionString);
-            services.AddDatabase<MihaylovOtherClusterDbContext>(connectionString);
+            services.AddDatabase<MihaylovOtherShowDbContext>(connectionString, MihaylovOtherShowDbContext.SCHEMA_NAME);
+            services.AddDatabase<MihaylovOtherClusterDbContext>(connectionString, MihaylovOtherClusterDbContext.SCHEMA_NAME);
 
             return services;
         }

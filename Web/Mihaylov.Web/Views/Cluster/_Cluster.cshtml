@@ -6,6 +6,7 @@
 <table class="table table-bordered table-striped" id="cluster-grid">
     <thead>
         <tr>
+            <th>#</th>
             <th>Name</th>
             <th>Release</th>
             <th>Version</th>
@@ -28,6 +29,9 @@
         @foreach (var application in Model.Applications)
         {
             <tr>
+                <td style="text-align:center">
+                    @application.Main.Order
+                </td>
                 <td>
                     <my-value>
                         <span style="font-size: 1.4rem">
@@ -67,6 +71,7 @@
                         {
                             var interval = DateTime.UtcNow.Date.Subtract(application.Main.Version.ReleaseDate);
                             var days = $"{interval.TotalDays} дни";
+
                             @days
 
                             <a href="@Url.Action(nameof(ClusterController.ReloadLastVersion), "Cluster", new { id = application.Main.Id })">
@@ -93,6 +98,7 @@
                         @application.Main.Version?.Version
                         @if (application.LastVersion != null && !application.IsLatestVersion)
                         {
+                            <br />
                             @application.LastVersion.Version
                         }
                     </my-value>

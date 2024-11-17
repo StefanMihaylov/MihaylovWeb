@@ -27,5 +27,8 @@ namespace Mihaylov.Api.Other.Contracts.Cluster.Models
 
         [JsonPropertyOrder(8)]
         public string Notes { get; set; }
+
+        [JsonPropertyOrder(9)]
+        public int? Order { get; set; }
     }
 }

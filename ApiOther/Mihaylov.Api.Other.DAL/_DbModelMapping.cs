@@ -91,7 +91,8 @@ namespace Mihaylov.Api.Other.DAL
                                                 .OrderByDescending(f => f.Version)
                                                 .Adapt<IEnumerable<AppVersion>>()
                                                 .FirstOrDefault())
-                .Map(dest => dest.Notes, src => src.Notes);
+                .Map(dest => dest.Notes, src => src.Notes)
+                .Map(dest => dest.Order, src => src.Order);
 
             TypeAdapterConfig<Application, DbC.Application>.NewConfig()
                 .Map(dest => dest.ApplicationId, src => src.Id)
@@ -105,7 +106,8 @@ namespace Mihaylov.Api.Other.DAL
                 .Ignore(dest => dest.Files, src => src.Files)
                 .Ignore(dest => dest.Pods, src => src.Pods)
                 .Ignore(dest => dest.Versions, src => src.Versions)
-                .Map(dest => dest.Notes, src => src.Notes);
+                .Map(dest => dest.Notes, src => src.Notes)
+                .Map(dest => dest.Order, src => src.Order);
 
             TypeAdapterConfig<DbC.ApplicationPod, Pod>.NewConfig()
                 .Map(dest => dest.Id, src => src.ApplicationPodId)

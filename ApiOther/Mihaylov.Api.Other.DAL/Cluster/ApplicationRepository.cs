@@ -23,7 +23,9 @@ namespace Mihaylov.Api.Other.DAL.Cluster
         {
             var query = _dbContext.Applications.AsNoTracking()
                                   .Include(c => c.Pods)
-                                  .Include(c => c.Files);
+                                  .Include(c => c.Files)
+                                  .OrderBy(c => c.Order)
+                                    .ThenBy(c => c.ApplicationId);
 
             var applications = await query.ProjectToType<ApplicationExtended>()
                                     .ToListAsync()

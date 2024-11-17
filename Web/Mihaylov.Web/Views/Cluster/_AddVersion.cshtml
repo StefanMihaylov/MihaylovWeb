@@ -4,6 +4,7 @@
 
 <form action="/Cluster/AddVersion" method="post">
     <tr>
+        <td></td>
         <td>
             @Html.DropDownListFor(m => m.ApplicationId, Model.Applications, ViewConstants.DefaultDropDownValue)
             @Html.ValidationMessageFor(m => m.ApplicationId)

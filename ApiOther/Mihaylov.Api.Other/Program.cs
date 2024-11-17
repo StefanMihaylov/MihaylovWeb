@@ -52,6 +52,8 @@ namespace Mihaylov.Api.Other
                 .AddOtherRepositories()
                 .AddOtherServices();
 
+            // Add-Migration <name> -Context MihaylovOtherClusterDbContext
+
             services.AddClientJwtAuthentication(null, opt =>
             {
                 opt.Secret = Config.GetEnvironmentVariable("JWT_AUTHENTICATION_SECRET", "abc");

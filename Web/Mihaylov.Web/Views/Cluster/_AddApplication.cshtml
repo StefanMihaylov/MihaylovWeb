@@ -6,6 +6,9 @@
     <tr>
         <td>
             @Html.HiddenFor(m => m.Id)
+            @Html.TextBoxFor(m => m.Order, new { aria_autocomplete = "none", autocomplete = "off", @class = "tiny-width" })
+        </td>
+        <td>            
             @Html.TextBoxFor(m => m.Name, new { aria_autocomplete = "none", autocomplete = "off", @class = "short-width" })
             @Html.ValidationMessageFor(m => m.Name)
         </td>

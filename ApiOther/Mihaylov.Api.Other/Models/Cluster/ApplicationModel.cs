@@ -8,6 +8,8 @@ namespace Mihaylov.Api.Other.Models.Cluster
     {
         public int? Id { get; set; }
 
+        public int? Order { get; set; }
+
         [Required]
         [StringLength(ModelConstants.AppNameMaxLength, MinimumLength = 1)]
         public string Name { get; set; }

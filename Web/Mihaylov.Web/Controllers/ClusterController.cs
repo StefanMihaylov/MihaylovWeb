@@ -44,6 +44,7 @@ namespace Mihaylov.Web.Controllers
             var model = new ApplicationModel()
             {
                 Id = inputModel.Id,
+                Order = inputModel.Order,
                 Name = inputModel?.Name,
                 ReleaseUrl = inputModel?.ReleaseUrl,
                 ResourceUrl = inputModel?.ResourceUrl,

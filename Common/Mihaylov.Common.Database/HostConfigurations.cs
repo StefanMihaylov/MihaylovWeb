@@ -22,7 +22,7 @@ namespace Mihaylov.Common
         }
 
         public static IServiceCollection AddDatabase<TContext>(this IServiceCollection services, 
-            Action<ConnectionStringSettings> connectionString) where TContext : DbContext
+            Action<ConnectionStringSettings> connectionString, string schema = null) where TContext : DbContext
         {
             var connectionStringSettings = new ConnectionStringSettings();
             connectionString(connectionStringSettings);
@@ -33,7 +33,7 @@ namespace Mihaylov.Common
             {
                 options.UseSqlServer(connectionStringSettings.GetConnectionString(), opt =>
                 {
-                    opt.MigrationsHistoryTable("__MigrationsHistory");
+                    opt.MigrationsHistoryTable("__MigrationsHistory", schema);
 
                 });
                 options.ConfigureWarnings(w => w.Ignore(RelationalEventId.CommandExecuted));

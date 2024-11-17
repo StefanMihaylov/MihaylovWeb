@@ -11,6 +11,7 @@ namespace Mihaylov.Api.Other.Database.Cluster.DbConfigurations
         {
             builder.HasKey(b => b.ApplicationId).HasName("ApplicationId");
 
+            builder.Property(c => c.Order).IsRequired(false);
             builder.Property(c => c.Name).IsRequired().HasMaxLength(ModelConstants.AppNameMaxLength);
             builder.Property(c => c.ReleaseUrl).IsRequired().HasMaxLength(ModelConstants.AppUrlMaxLength);
             builder.Property(c => c.SiteUrl).IsRequired(false).HasMaxLength(ModelConstants.AppUrlMaxLength);

@@ -7,6 +7,8 @@ namespace Mihaylov.Api.Other.Database.Cluster.Models
     {
         public int ApplicationId { get; set; }
 
+        public int? Order {  get; set; }
+
         public string Name { get; set; }
 
         public string SiteUrl { get; set; }        

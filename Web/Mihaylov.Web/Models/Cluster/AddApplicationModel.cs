@@ -9,6 +9,8 @@ namespace Mihaylov.Web.Models.Cluster
     {
         public int? Id { get; set; }
 
+        public int? Order { get; set; }
+
         [Required]
         public string Name { get; set; }
 
