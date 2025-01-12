@@ -41,14 +41,13 @@ namespace Mihaylov.Api.Other.Data.Cluster
         public async Task<LastVersionModel> GetLastVersionOnlineAsync(int applicationId)
         {
             var applications = await _clusterService.GetAllApplicationsAsync().ConfigureAwait(false);
-            var settings = await _clusterService.GetParserSettingsAsync().ConfigureAwait(false);
-
             var application = applications.FirstOrDefault(a => a.Id == applicationId);
             if (application == null)
             {
                 return null;
             }
 
+            var settings = await _clusterService.GetParserSettingsAsync().ConfigureAwait(false);
             var setting = settings.Where(s => s.ApplicationId == application.Id)
                                   .OrderByDescending(s => s.Id)
                                   .FirstOrDefault();
@@ -232,12 +231,12 @@ namespace Mihaylov.Api.Other.Data.Cluster
 
             if (!string.IsNullOrEmpty(parameterStart))
             {
-                value = value.TrimStart(parameterStart[0]);
+                value = value.TrimStart(parameterStart.ToArray());
             }
 
             if (!string.IsNullOrEmpty(parameterEnd))
             {
-                value = value.TrimEnd(parameterEnd[0]);
+                value = value.TrimEnd(parameterEnd.ToArray());
             }
 
             return value;

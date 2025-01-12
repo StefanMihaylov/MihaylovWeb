@@ -50,7 +50,15 @@ namespace Mihaylov.Api.Other
                 .MigrateDatabase<MihaylovOtherShowDbContext>(c => c.Migrate(), true)
                 .MigrateDatabase<MihaylovOtherClusterDbContext>(c => c.Migrate(), true)
                 .AddOtherRepositories()
-                .AddOtherServices();
+                .AddOtherServices(nexus =>
+                {
+                    nexus.BaseUrl = Config.GetEnvironmentVariable("Nexus_Base_Url");
+                    nexus.Username = Config.GetEnvironmentVariable("Nexus_Username");
+                    nexus.Password = Config.GetEnvironmentVariable("Nexus_Password"); 
+                    nexus.RepositoryName = Config.GetEnvironmentVariable("Nexus_Repository", "docker-hosted");
+                    nexus.SkippedVersionCount = Config.GetEnvironmentVariable("Nexus_Skipped_Version_Count", int.TryParse, 3);
+                    nexus.SkippedVersionMonthsAge = Config.GetEnvironmentVariable<int>("Nexus_Skipped_Version_Months_Age", int.TryParse, 6);
+                });
 
             // Add-Migration <name> -Context MihaylovOtherClusterDbContext
 

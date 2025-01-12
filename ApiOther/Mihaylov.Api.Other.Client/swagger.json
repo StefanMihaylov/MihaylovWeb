@@ -1047,6 +1047,184 @@
         }
       }
     },
+    "/api/Nexus/Images": {
+      "get": {
+        "tags": [
+          "Nexus"
+        ],
+        "responses": {
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NexusImages"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Nexus/ClearImages": {
+      "delete": {
+        "tags": [
+          "Nexus"
+        ],
+        "responses": {
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Nexus/Image": {
+      "delete": {
+        "tags": [
+          "Nexus"
+        ],
+        "parameters": [
+          {
+            "name": "imageId",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Nexus/Blobs": {
+      "get": {
+        "tags": [
+          "Nexus"
+        ],
+        "responses": {
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NexusBlobs"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Nexus/RunTasks": {
+      "post": {
+        "tags": [
+          "Nexus"
+        ],
+        "responses": {
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/Test/TestLastVersion": {
       "post": {
         "tags": [
@@ -1791,6 +1969,91 @@
           },
           "jenkinsBuildNumber": {
             "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "NexusBlobResponse": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "type": {
+            "type": "string",
+            "nullable": true
+          },
+          "unavailable": {
+            "type": "boolean"
+          },
+          "blobCount": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "totalSizeInBytes": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "availableSpaceInBytes": {
+            "type": "integer",
+            "format": "int64"
+          }
+        },
+        "additionalProperties": false
+      },
+      "NexusBlobs": {
+        "type": "object",
+        "properties": {
+          "blobs": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/NexusBlobResponse"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "NexusImage": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "nullable": true
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "version": {
+            "type": "string",
+            "nullable": true
+          },
+          "lastModified": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "isLocked": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "NexusImages": {
+        "type": "object",
+        "properties": {
+          "images": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/NexusImage"
+              },
+              "nullable": true
+            },
             "nullable": true
           }
         },

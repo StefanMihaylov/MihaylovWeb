@@ -38,7 +38,7 @@ namespace Mihaylov.Api.Site.Data.Media.Services
                 return false;
             }
 
-            return _imageExtensions.Contains($"*{fileExtension.ToLowerInvariant()}");
+            return _imageExtensions.Contains($"{fileExtension.TrimStart('.').ToLowerInvariant()}");
         }
 
         public override MediaInfoSizeModel GetSize(string filePath, bool calculateChecksum, Action<int> progress)

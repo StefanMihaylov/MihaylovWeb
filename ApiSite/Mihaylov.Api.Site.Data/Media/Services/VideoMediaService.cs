@@ -71,7 +71,7 @@ namespace Mihaylov.Api.Site.Data.Media.Services
             {
                 FFMpeg.Snapshot(filePath, outputFile, size.Convert(), null);
 
-                var stream = _fileWrapper.GetStreamFile(outputFile);
+               using var stream = _fileWrapper.GetStreamFile(outputFile);
 
                 var outStream = new MemoryStream();
                 stream.CopyTo(outStream);

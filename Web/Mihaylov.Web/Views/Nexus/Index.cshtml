@@ -1,0 +1,90 @@
+﻿@using Mihaylov.Common;
+@using Mihaylov.Web.Models.Configs
+@using Mihaylov.Web.Models.Nexus
+@model NexusMainModel
+
+<h3>Nexus blobs</h3>
+<table class="table table-bordered table-striped" id="blob-grid">
+    <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Available</th>
+        <th>BlobCount</th>
+        <th>TotalSize</th>
+        <th>AvailableSpace</th>
+    </tr>
+
+    @foreach (var blob in Model.Blobs.Blobs)
+    {
+        <tr>
+            <td>@blob.Name</td>
+            <td>@blob.Type</td>
+            <td>
+                @if (blob.Unavailable)
+                {
+                    <span style="color:red">
+                        <i class="bi bi-shift-fill"></i>
+                    </span>
+                }
+                else
+                {
+                    <span style="color:green">
+                        <i class="bi bi-check-circle-fill"></i>
+                    </span>
+                }
+            </td>
+            <td>@blob.BlobCount</td>
+            <td>@blob.TotalSizeInBytes.FormatBytes()</td>
+            <td>@blob.AvailableSpaceInBytes.FormatBytes()</td>
+        </tr>
+    }
+
+</table>
+
+<h3>Nexus Images</h3>
+<a href="/Nexus/Clear" class="btn btn-info">Изчисти</a>
+
+<table class="table table-bordered table-striped" id="images-grid">
+    <tr>
+        <th>Name</th>
+        <th>Version</th>
+        <th>LastModified</th>
+    </tr>
+
+    @foreach (var imageKV in Model.Images.Images)
+    {
+        bool isFirst = true;
+        foreach (var image in imageKV.Value)
+        {
+            <tr>
+                <td>
+                    @if (isFirst)
+                    {
+                        @imageKV.Key
+                    }
+
+                </td>
+                <td>
+                    @if (!@image.IsLocked)
+                    {
+                        <span style="color:red">
+                            <i class="bi bi-shift-fill"></i>
+                        </span>
+                    }
+                    else
+                    {
+                        <span style="color:green">
+                            <i class="bi bi-check-circle-fill"></i>
+                        </span>
+                    }
+
+                    @image.Version
+                </td>
+                <td>@image.LastModified?.ToString(ViewConstants.DateTimeFormatSimple)</td>
+            </tr>
+
+            isFirst = false;
+        }
+    }
+
+</table>

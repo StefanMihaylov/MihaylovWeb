@@ -57,7 +57,7 @@ namespace Mihaylov.Api
             services.Configure<PathConfig>(opt =>
             {
                 opt.BasePath = directory;
-                opt.FFMpegPath = Path.Combine(directory, "binaries");
+                opt.FFMpegPath = Path.Combine(directory, "Media/binaries");
                 opt.TempPath = Path.Combine(directory, "temp");
             });
 

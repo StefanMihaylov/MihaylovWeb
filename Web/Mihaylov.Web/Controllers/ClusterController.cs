@@ -195,6 +195,22 @@ namespace Mihaylov.Web.Controllers
                 if (lastVersion != null && application.Version != null)
                 {
                     isLastVersion = application.Version.Version == lastVersion.Version;
+                    if (!isLastVersion)
+                    {
+                        try
+                        {
+                            var appVersion = new Version(application.Version.Version);
+                            var lastVersionModel = new Version(lastVersion.Version);
+
+                            if (appVersion > lastVersionModel)
+                            {
+                                isLastVersion = true;
+                            }
+                        }
+                        catch (Exception)
+                        {
+                        }
+                    }
                 }
 
                 return new ApplicationViewModel()
@@ -215,6 +231,7 @@ namespace Mihaylov.Web.Controllers
                     inputModel = new AddApplicationModel()
                     {
                         Id = app.Id,
+                        Order = app.Order,
                         Name = app.Name,
                         Deployment = app.Deployment,
                         SiteUrl = app.SiteUrl,
