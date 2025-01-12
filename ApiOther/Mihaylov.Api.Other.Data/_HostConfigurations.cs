@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Mihaylov.Api.Other.Contracts.Cluster.Interfaces;
 using Mihaylov.Api.Other.Contracts.Nexus.Interfaces;
@@ -20,7 +21,10 @@ namespace Mihaylov.Api
             services.AddScoped<IClusterService, ClusterService>();
             services.AddScoped<IVersionService, VersionService>();
 
-            services.AddHttpClient(NexusApiService.NEXUS_CLIENT_NAME);
+            services.AddHttpClient(NexusApiService.NEXUS_CLIENT_NAME).ConfigurePrimaryHttpMessageHandler(_ => new HttpClientHandler
+            {
+                ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => { return true; }
+            });
             services.Configure<NexusConfiguration>(nexusConfig);
             services.AddScoped<INexusApiService, NexusApiService>();
 
