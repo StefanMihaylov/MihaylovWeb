@@ -87,11 +87,14 @@ namespace Mihaylov.Api.Other.Data.Cluster
                 }
 
                 var exeName = Path.GetFileName(veleroFile.FullName);
-                velero = $"{_config.VeleroPath}/{exeName}";
+                velero = $"{_config.VeleroPath}/{exeName}";                
 
                 File.Copy(veleroFile.FullName, velero, true);
+                if (!_config.CmdPath.Contains("cmd"))
+                {
+                    ExecuteCommand("chmod", $"+x {velero}");
+                }                
             }
-
 
             var result = ExecuteCommand(velero, command);
 
@@ -137,12 +140,16 @@ namespace Mihaylov.Api.Other.Data.Cluster
             {
                 // create the ProcessStartInfo using "cmd" as the program to be run, and "/c " as the parameters.
                 // Incidentally, /c tells cmd that we want it to execute the command that follows, and then exit.
-                var procStartInfo = new ProcessStartInfo(_config.CmdPath, $"{_config.CmdArguments} {exePath} {command}");
-                // The following commands are needed to redirect the standard output. 
-                //This means that it will be redirected to the Process.StandardOutput StreamReader.
-                procStartInfo.RedirectStandardOutput = true;
-                procStartInfo.UseShellExecute = false;
-                procStartInfo.CreateNoWindow = true;     // Do not create the black window.
+                var procStartInfo = new ProcessStartInfo(_config.CmdPath, $"{_config.CmdArguments} \"{exePath} {command}\"")
+                {
+                    // The following commands are needed to redirect the standard output. 
+                    //This means that it will be redirected to the Process.StandardOutput StreamReader.
+                    RedirectStandardOutput = true,
+                    UseShellExecute = false,
+                    CreateNoWindow = true     // Do not create the black window.
+                };
+
+                _logger.LogInformation($"Executing command: {procStartInfo.FileName} {procStartInfo.Arguments}");
 
                 var proc = new Process();
                 proc.StartInfo = procStartInfo;
@@ -154,7 +161,7 @@ namespace Mihaylov.Api.Other.Data.Cluster
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, $"ExecuteCommandSync failed. Error: {ex.Message}");
+                _logger.LogError(ex, $"ExecuteCommand failed. Error: {ex.Message}");
                 throw;
             }
         }
