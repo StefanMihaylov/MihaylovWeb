@@ -10,10 +10,10 @@ using System.Threading.Tasks;
 using System.Web;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Mihaylov.Api.Other.Contracts.Nexus.Interfaces;
-using Mihaylov.Api.Other.Contracts.Nexus.Models;
+using Mihaylov.Api.Other.Contracts.Cluster.Interfaces;
+using Mihaylov.Api.Other.Contracts.Cluster.Models.Nexus;
 
-namespace Mihaylov.Api.Other.Data.Nexus
+namespace Mihaylov.Api.Other.Data.Cluster
 {
     public class NexusApiService : INexusApiService
     {
@@ -67,7 +67,7 @@ namespace Mihaylov.Api.Other.Data.Nexus
             var ImagesForDeletion = images.GroupBy(a => a.Name)
                                .Select(g => new
                                {
-                                   Key = g.Key,
+                                   g.Key,
                                    Value = g.Where(a => a.Version != "latest")
                                             .OrderByDescending(a => a.LastModified)
                                             .ThenByDescending(a => a.Version)
@@ -88,7 +88,7 @@ namespace Mihaylov.Api.Other.Data.Nexus
             var result = images.GroupBy(a => a.Name)
                                .Select(g => new
                                {
-                                   Key = g.Key,
+                                   g.Key,
                                    Value = g.OrderByDescending(a => a.LastModified)
                                             .ThenByDescending(a => a.Version)
                                             .AsEnumerable(),
@@ -201,7 +201,7 @@ namespace Mihaylov.Api.Other.Data.Nexus
                 if (!string.IsNullOrEmpty(_conifg.Username) && !string.IsNullOrEmpty(_conifg.Password))
                 {
                     var authenticationString = $"{_conifg.Username}:{_conifg.Password}";
-                    var base64EncodedAuthenticationString = Convert.ToBase64String(ASCIIEncoding.ASCII.GetBytes(authenticationString));
+                    var base64EncodedAuthenticationString = Convert.ToBase64String(Encoding.ASCII.GetBytes(authenticationString));
                     request.Headers.Authorization = new AuthenticationHeaderValue("Basic", base64EncodedAuthenticationString);
                 }
 

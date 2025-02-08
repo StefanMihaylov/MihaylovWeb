@@ -1,11 +1,11 @@
 ﻿using System;
 
-namespace Mihaylov.Api.Other.Contracts.Nexus.Models
+namespace Mihaylov.Api.Other.Contracts.Cluster.Models.Nexus
 {
     public class NexusBlobResponse
     {
         public string Name { get; set; }
-        
+
         public string Type { get; set; }
 
         public bool Unavailable { get; set; }

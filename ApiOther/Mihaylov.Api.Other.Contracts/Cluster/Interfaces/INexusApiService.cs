@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
-using Mihaylov.Api.Other.Contracts.Nexus.Models;
+using Mihaylov.Api.Other.Contracts.Cluster.Models.Nexus;
 
-namespace Mihaylov.Api.Other.Contracts.Nexus.Interfaces
+namespace Mihaylov.Api.Other.Contracts.Cluster.Interfaces
 {
     public interface INexusApiService
     {

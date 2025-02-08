@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Mihaylov.Api.Other.Contracts.Nexus.Models
+namespace Mihaylov.Api.Other.Contracts.Cluster.Models.Nexus
 {
     public class NexusImages
     {

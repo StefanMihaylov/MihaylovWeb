@@ -92,11 +92,14 @@
                     <td>@schedule.CsiSnapshotTimeout</td>
                     <td>@schedule.StorageClassType</td>
                     <td>
-                        <a href="/Velero/CreateBackup/?schedule=@schedule.Name">
-                            <span style="color:green">
-                                <i class="bi bi-play-btn-fill"></i>
-                            </span>
-                        </a>
+                        @if (schedule.Phase == SchedulePhaseType.Enabled)
+                        {
+                            <a href="/Velero/CreateBackup/?schedule=@schedule.Name">
+                                <span style="color:green">
+                                    <i class="bi bi-play-btn-fill"></i>
+                                </span>
+                            </a>
+                        }
                     </td>
                     <td>@schedule.Duration</td>
                     <td>@schedule.Size?.FormatBytes()</td>

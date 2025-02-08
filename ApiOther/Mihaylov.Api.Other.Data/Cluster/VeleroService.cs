@@ -51,7 +51,7 @@ namespace Mihaylov.Api.Other.Data.Cluster
                                 Schedule = g.Key,
                                 Backups = g.OrderByDescending(b => b.CreatedOn).ToList()
                             })
-                            .ToDictionary(g => g.Schedule, g => g.Backups);
+                            .ToDictionary(g => g.Schedule, g => new BackupDetails(g.Backups, false));
 
             var uploadDic = dataUploads.GroupBy(s => s.Backup)
                             .Select(g => new
@@ -66,7 +66,8 @@ namespace Mihaylov.Api.Other.Data.Cluster
             {
                 if (backupDic.ContainsKey(schedule.Name))
                 {
-                    var backupList = backupDic[schedule.Name];
+                    var backupDetails = backupDic[schedule.Name];
+                    backupDetails.Used = true;
 
                     scheduleList.Add(new Schedule()
                     {
@@ -85,22 +86,21 @@ namespace Mihaylov.Api.Other.Data.Cluster
                         SnapshotMoveData = schedule.SnapshotMoveData,
                         StorageLocation = schedule.StorageLocation,
 
-                        Backups = backupList.Select(b => new Backup()
-                        {
-                            Name = b.Name,
-                            CreatedOn = b.CreatedOn,
-                            ExpirationDate = b.ExpirationDate,
-                            Phase = b.Phase,
-                            ItemsBackedUp = b.ItemsBackedUp,
-                            TotalItems = b.TotalItems,
-                            BackupItemOperationsAttempted = b.BackupItemOperationsAttempted,
-                            BackupItemOperationsCompleted = b.BackupItemOperationsCompleted,
-                            Errors = b.Errors,
-                            StartTimestamp = b.StartTimestamp,
-                            CompletionTimestamp = b.CompletionTimestamp,
-                        }).ToList(),
+                        Backups = backupDetails.Backups.Select(b => MapBackup(b)).ToList(),
                     });
                 }
+            }
+
+            var oldSchedules = backupDic.Where(b => !b.Value.Used)
+                                         .ToDictionary(b => b.Key, b => b.Value.Backups);
+
+            foreach (var oldSchedule in oldSchedules)
+            {
+                scheduleList.Add(new Schedule()
+                {
+                    Name = oldSchedule.Key,                   
+                    Backups = oldSchedule.Value.Select(b => MapBackup(b)).ToList(),
+                });
             }
 
             foreach (var schedule in scheduleList)
@@ -161,6 +161,24 @@ namespace Mihaylov.Api.Other.Data.Cluster
             return result;
         }
 
+        private static Backup MapBackup(KubernetesBackup b)
+        {
+            return new Backup()
+            {
+                Name = b.Name,
+                CreatedOn = b.CreatedOn,
+                ExpirationDate = b.ExpirationDate,
+                Phase = b.Phase,
+                ItemsBackedUp = b.ItemsBackedUp,
+                TotalItems = b.TotalItems,
+                BackupItemOperationsAttempted = b.BackupItemOperationsAttempted,
+                BackupItemOperationsCompleted = b.BackupItemOperationsCompleted,
+                Errors = b.Errors,
+                StartTimestamp = b.StartTimestamp,
+                CompletionTimestamp = b.CompletionTimestamp,
+            };
+        }
+
         private int GetBackupCount(IEnumerable<KubernetesBackup> backups, int? days, bool? isSuccessful)
         {
             var query = backups;
@@ -176,6 +194,19 @@ namespace Mihaylov.Api.Other.Data.Cluster
             }
 
             return query.Count();
+        }
+    }
+
+    internal class BackupDetails
+    {
+        public IEnumerable<KubernetesBackup> Backups { get; }
+
+        public bool Used { get; set; }
+
+        public BackupDetails(IEnumerable<KubernetesBackup> backups, bool used)
+        {
+            Backups = backups;
+            Used = used;
         }
     }
 }

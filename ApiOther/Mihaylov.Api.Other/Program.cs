@@ -63,7 +63,7 @@ namespace Mihaylov.Api.Other
                 kube =>
                 {
                     kube.ServiceHost = Config.GetEnvironmentVariable("Kubernetes_Service_Host", string.Empty);
-                    kube.ServicePort = Config.GetEnvironmentVariable("Kubernetes_Service_Port", string.Empty);
+                    kube.ServicePort = Config.GetEnvironmentVariable("Kubernetes_Service_Port", "6443");
                     kube.ConfigPath = Config.GetEnvironmentVariable("Kubernetes_Config_Path", string.Empty);
                 },
                 veleroConfig =>

@@ -1,4 +1,4 @@
-﻿namespace Mihaylov.Api.Other.Contracts.Nexus.Models
+﻿namespace Mihaylov.Api.Other.Contracts.Cluster.Models.Nexus
 {
     public class NexusTask
     {
@@ -6,7 +6,7 @@
 
         public string Name { get; set; }
 
-        public string Message {  get; set; }
+        public string Message { get; set; }
 
         public string LastRunResult { get; set; }
     }

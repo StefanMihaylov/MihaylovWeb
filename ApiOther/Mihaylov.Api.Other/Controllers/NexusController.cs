@@ -2,8 +2,8 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Mihaylov.Api.Other.Contracts.Nexus.Interfaces;
-using Mihaylov.Api.Other.Contracts.Nexus.Models;
+using Mihaylov.Api.Other.Contracts.Cluster.Interfaces;
+using Mihaylov.Api.Other.Contracts.Cluster.Models.Nexus;
 using Mihaylov.Api.Other.Extensions;
 using Mihaylov.Common.Host.Authorization;
 

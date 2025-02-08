@@ -3,11 +3,9 @@ using System.Net.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Mihaylov.Api.Other.Contracts.Cluster.Interfaces;
 using Mihaylov.Api.Other.Contracts.Cluster.Models.Configs;
-using Mihaylov.Api.Other.Contracts.Nexus.Interfaces;
-using Mihaylov.Api.Other.Contracts.Nexus.Models;
+using Mihaylov.Api.Other.Contracts.Cluster.Models.Nexus;
 using Mihaylov.Api.Other.Contracts.Show.Interfaces;
 using Mihaylov.Api.Other.Data.Cluster;
-using Mihaylov.Api.Other.Data.Nexus;
 using Mihaylov.Api.Other.Data.Show;
 
 namespace Mihaylov.Api
