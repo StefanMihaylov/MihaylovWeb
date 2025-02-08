@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Mihaylov.Api.Other.Contracts.Base;
-using Mihaylov.Api.Other.Contracts.Cluster.Models;
+using Mihaylov.Api.Other.Contracts.Cluster.Models.Cluster;
 
 namespace Mihaylov.Api.Other.Models.Cluster
 {

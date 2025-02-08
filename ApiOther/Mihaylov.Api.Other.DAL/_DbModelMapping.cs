@@ -2,11 +2,11 @@
 using System.Linq;
 using Mapster;
 using Microsoft.Extensions.DependencyInjection;
-using Mihaylov.Api.Other.Contracts.Cluster.Models;
 using Mihaylov.Api.Other.Contracts.Show.Models;
 using DbC = Mihaylov.Api.Other.Database.Cluster.Models;
 using Db = Mihaylov.Api.Other.Database.Shows.Models;
 using Dbr = Mihaylov.Api.Other.DAL.Show;
+using Mihaylov.Api.Other.Contracts.Cluster.Models.Cluster;
 
 namespace Mihaylov.Api.Other.DAL
 {

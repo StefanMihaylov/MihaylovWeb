@@ -1,12 +1,12 @@
 ﻿using Microsoft.AspNetCore.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Mihaylov.Api.Other.Contracts.Cluster.Models;
 using Mihaylov.Api.Other.Contracts.Cluster.Interfaces;
 using Microsoft.Extensions.Logging;
 using Mihaylov.Api.Other.Extensions;
 using System.Collections.Generic;
 using Mihaylov.Api.Other.Models.Cluster;
+using Mihaylov.Api.Other.Contracts.Cluster.Models.Version;
 
 namespace Mihaylov.Api.Other.Controllers
 {
@@ -16,6 +16,7 @@ namespace Mihaylov.Api.Other.Controllers
     [Produces("application/json")]
     [ProducesResponseType(typeof(Dictionary<string, string[]>), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
+    [ApiExplorerSettings(IgnoreApi = true)]
     public class TestController : ControllerBase
     {
         private readonly ILogger _logger;

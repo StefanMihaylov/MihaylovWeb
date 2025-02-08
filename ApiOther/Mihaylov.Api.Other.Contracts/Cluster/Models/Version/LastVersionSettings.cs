@@ -1,4 +1,4 @@
-﻿namespace Mihaylov.Api.Other.Contracts.Cluster.Models
+﻿namespace Mihaylov.Api.Other.Contracts.Cluster.Models.Version
 {
     public class LastVersionSettings
     {

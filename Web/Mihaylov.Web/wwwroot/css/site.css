@@ -48,7 +48,8 @@ body {
     max-width: 60px;
 }
 
-ul.custom-popover {
+ul.custom-popover,
+ol.custom-popover {
     margin-bottom: 0px;
     padding-left: 20px;
 }
@@ -69,5 +70,13 @@ hr {
 
 .table .thead-dark th {
     background-color: lightgray;
-    color: black
+    color: black;
 }
+
+.button-red {
+    color: red;
+}
+
+    .button-red:hover {
+        color: red;
+    }

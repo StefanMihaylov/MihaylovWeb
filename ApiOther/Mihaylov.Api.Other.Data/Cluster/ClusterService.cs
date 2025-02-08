@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using Mihaylov.Api.Other.Contracts.Cluster.Interfaces;
-using Mihaylov.Api.Other.Contracts.Cluster.Models;
+using Mihaylov.Api.Other.Contracts.Cluster.Models.Cluster;
 
 namespace Mihaylov.Api.Other.Data.Cluster
 {

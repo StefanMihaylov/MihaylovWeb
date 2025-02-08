@@ -1225,18 +1225,95 @@
         }
       }
     },
-    "/api/Test/TestLastVersion": {
+    "/api/Velero/ExeVersion": {
+      "get": {
+        "tags": [
+          "Velero"
+        ],
+        "responses": {
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Velero/Schedules": {
+      "get": {
+        "tags": [
+          "Velero"
+        ],
+        "responses": {
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ScheduleResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Velero/Backup": {
       "post": {
         "tags": [
-          "Test"
+          "Velero"
         ],
+        "operationId": "CreateBackup",
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
                 "allOf": [
                   {
-                    "$ref": "#/components/schemas/LastVersionSettings"
+                    "$ref": "#/components/schemas/CreateBackupModel"
                   }
                 ]
               }
@@ -1245,7 +1322,7 @@
               "schema": {
                 "allOf": [
                   {
-                    "$ref": "#/components/schemas/LastVersionSettings"
+                    "$ref": "#/components/schemas/CreateBackupModel"
                   }
                 ]
               }
@@ -1254,7 +1331,7 @@
               "schema": {
                 "allOf": [
                   {
-                    "$ref": "#/components/schemas/LastVersionSettings"
+                    "$ref": "#/components/schemas/CreateBackupModel"
                   }
                 ]
               }
@@ -1286,7 +1363,54 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/LastVersionResponse"
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Velero/DeleteBackup": {
+      "delete": {
+        "tags": [
+          "Velero"
+        ],
+        "parameters": [
+          {
+            "name": "backupName",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
                 }
               }
             }
@@ -1517,6 +1641,157 @@
         },
         "additionalProperties": false
       },
+      "Backup": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "createdOn": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "backupItemOperationsAttempted": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "backupItemOperationsCompleted": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "errors": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "startTimestamp": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "completionTimestamp": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "expirationDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "phase": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/BackupPhaseType"
+              }
+            ],
+            "nullable": true
+          },
+          "itemsBackedUp": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "totalItems": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "uploads": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DataUpload"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "BackupPhaseType": {
+        "enum": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11
+        ],
+        "type": "integer",
+        "description": "1 - New, 2 - FailedValidation, 3 - InProgress, 4 - WaitingForPluginOperations, 5 - WaitingForPluginOperationsPartiallyFailed, 6 - Finalizing, 7 - FinalizingPartiallyFailed, 8 - Completed, 9 - PartiallyFailed, 10 - Failed, 11 - Deleting",
+        "format": "int32",
+        "x-enumNames": [
+  "New",
+  "FailedValidation",
+  "InProgress",
+  "WaitingForPluginOperations",
+  "WaitingForPluginOperationsPartiallyFailed",
+  "Finalizing",
+  "FinalizingPartiallyFailed",
+  "Completed",
+  "PartiallyFailed",
+  "Failed",
+  "Deleting"
+],
+        "x-ms-enum": {
+  "name": "BackupPhaseType",
+  "modelAsString": false,
+  "values": [
+    {
+      "value": 1,
+      "name": "New"
+    },
+    {
+      "value": 2,
+      "name": "FailedValidation"
+    },
+    {
+      "value": 3,
+      "name": "InProgress"
+    },
+    {
+      "value": 4,
+      "name": "WaitingForPluginOperations"
+    },
+    {
+      "value": 5,
+      "name": "WaitingForPluginOperationsPartiallyFailed"
+    },
+    {
+      "value": 6,
+      "name": "Finalizing"
+    },
+    {
+      "value": 7,
+      "name": "FinalizingPartiallyFailed"
+    },
+    {
+      "value": 8,
+      "name": "Completed"
+    },
+    {
+      "value": 9,
+      "name": "PartiallyFailed"
+    },
+    {
+      "value": 10,
+      "name": "Failed"
+    },
+    {
+      "value": 11,
+      "name": "Deleting"
+    }
+  ]
+}
+      },
       "Band": {
         "type": "object",
         "properties": {
@@ -1734,6 +2009,19 @@
         },
         "additionalProperties": false
       },
+      "CreateBackupModel": {
+        "required": [
+          "scheduleName"
+        ],
+        "type": "object",
+        "properties": {
+          "scheduleName": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
       "CurrencyType": {
         "enum": [
           1,
@@ -1757,6 +2045,123 @@
     {
       "value": 2,
       "name": "EUR"
+    }
+  ]
+}
+      },
+      "DataUpload": {
+        "type": "object",
+        "properties": {
+          "claimName": {
+            "type": "string",
+            "nullable": true
+          },
+          "volumeName": {
+            "type": "string",
+            "nullable": true
+          },
+          "cephName": {
+            "type": "string",
+            "nullable": true
+          },
+          "storageClassName": {
+            "type": "string",
+            "nullable": true
+          },
+          "capacity": {
+            "type": "string",
+            "nullable": true
+          },
+          "phase": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/DataUploadPhaseType"
+              }
+            ],
+            "nullable": true
+          },
+          "bytesDone": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          },
+          "totalBytes": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          },
+          "startTimestamp": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "completionTimestamp": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "DataUploadPhaseType": {
+        "enum": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ],
+        "type": "integer",
+        "description": "1 - New, 2 - Accepted, 3 - Prepared, 4 - InProgress, 5 - Canceling, 6 - Canceled, 7 - Completed, 8 - Failed",
+        "format": "int32",
+        "x-enumNames": [
+  "New",
+  "Accepted",
+  "Prepared",
+  "InProgress",
+  "Canceling",
+  "Canceled",
+  "Completed",
+  "Failed"
+],
+        "x-ms-enum": {
+  "name": "DataUploadPhaseType",
+  "modelAsString": false,
+  "values": [
+    {
+      "value": 1,
+      "name": "New"
+    },
+    {
+      "value": 2,
+      "name": "Accepted"
+    },
+    {
+      "value": 3,
+      "name": "Prepared"
+    },
+    {
+      "value": 4,
+      "name": "InProgress"
+    },
+    {
+      "value": 5,
+      "name": "Canceling"
+    },
+    {
+      "value": 6,
+      "name": "Canceled"
+    },
+    {
+      "value": 7,
+      "name": "Completed"
+    },
+    {
+      "value": 8,
+      "name": "Failed"
     }
   ]
 }
@@ -1857,32 +2262,6 @@
             "allOf": [
               {
                 "$ref": "#/components/schemas/LastVersionModel"
-              }
-            ],
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "LastVersionSettings": {
-        "type": "object",
-        "properties": {
-          "applicationId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "version": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/ParseModel"
-              }
-            ],
-            "nullable": true
-          },
-          "releaseDate": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/ParseModel"
               }
             ],
             "nullable": true
@@ -2087,24 +2466,6 @@
         },
         "additionalProperties": false
       },
-      "ParseModel": {
-        "type": "object",
-        "properties": {
-          "url": {
-            "type": "string",
-            "nullable": true
-          },
-          "selector": {
-            "type": "string",
-            "nullable": true
-          },
-          "command": {
-            "type": "string",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
       "ParserSetting": {
         "type": "object",
         "properties": {
@@ -2272,6 +2633,174 @@
             "type": "string"
           },
           "applicationId": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "Schedule": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "createdOn": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "cron": {
+            "type": "string",
+            "nullable": true
+          },
+          "paused": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "csiSnapshotTimeout": {
+            "type": "string",
+            "nullable": true
+          },
+          "lastBackup": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "phase": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/SchedulePhaseType"
+              }
+            ],
+            "nullable": true
+          },
+          "includedNamespaces": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "excludedResources": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "itemOperationTimeout": {
+            "type": "string",
+            "nullable": true
+          },
+          "matchLabels": {
+            "type": "string",
+            "nullable": true
+          },
+          "expiration": {
+            "type": "string",
+            "nullable": true
+          },
+          "snapshotMoveData": {
+            "type": "boolean"
+          },
+          "storageLocation": {
+            "type": "string",
+            "nullable": true
+          },
+          "backups": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Backup"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "SchedulePhaseType": {
+        "enum": [
+          1,
+          2,
+          3
+        ],
+        "type": "integer",
+        "description": "1 - New, 2 - Enabled, 3 - FailedValidation",
+        "format": "int32",
+        "x-enumNames": [
+  "New",
+  "Enabled",
+  "FailedValidation"
+],
+        "x-ms-enum": {
+  "name": "SchedulePhaseType",
+  "modelAsString": false,
+  "values": [
+    {
+      "value": 1,
+      "name": "New"
+    },
+    {
+      "value": 2,
+      "name": "Enabled"
+    },
+    {
+      "value": 3,
+      "name": "FailedValidation"
+    }
+  ]
+}
+      },
+      "ScheduleResponse": {
+        "type": "object",
+        "properties": {
+          "statistics": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ScheduleStatistics"
+              }
+            ],
+            "nullable": true
+          },
+          "schedules": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Schedule"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ScheduleStatistics": {
+        "type": "object",
+        "properties": {
+          "scheduleCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalBackupCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "lastWeekBackupCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "lastDayBackupCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalSuccessfulBackupCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "lastWeekSuccessfulBackupCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "lastDaySuccessfulBackupCount": {
             "type": "integer",
             "format": "int32"
           }

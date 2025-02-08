@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Mihaylov.Api.Other.Contracts.Cluster.Models
+namespace Mihaylov.Api.Other.Contracts.Cluster.Models.Cluster
 {
     public class ApplicationExtended : Application
     {

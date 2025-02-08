@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Mihaylov.Api.Other.Contracts.Cluster.Interfaces;
-using Mihaylov.Api.Other.Contracts.Cluster.Models;
+using Mihaylov.Api.Other.Contracts.Cluster.Models.Cluster;
 using Mihaylov.Api.Other.Extensions;
 using Mihaylov.Api.Other.Models.Cluster;
 using Mihaylov.Common.Host.Authorization;

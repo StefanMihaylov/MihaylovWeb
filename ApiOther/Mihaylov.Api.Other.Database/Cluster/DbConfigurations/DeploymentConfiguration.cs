@@ -2,7 +2,7 @@
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Mihaylov.Api.Other.Contracts.Cluster.Models;
+using Mihaylov.Api.Other.Contracts.Cluster.Models.Cluster;
 using Mihaylov.Api.Other.Database.Cluster.Models;
 
 namespace Mihaylov.Api.Other.Database.Cluster.DbConfigurations

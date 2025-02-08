@@ -5,7 +5,7 @@ using Mapster;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Mihaylov.Api.Other.Contracts.Cluster.Interfaces;
-using Mihaylov.Api.Other.Contracts.Cluster.Models;
+using Mihaylov.Api.Other.Contracts.Cluster.Models.Cluster;
 using Mihaylov.Api.Other.Database.Cluster;
 using DB = Mihaylov.Api.Other.Database.Cluster.Models;
 

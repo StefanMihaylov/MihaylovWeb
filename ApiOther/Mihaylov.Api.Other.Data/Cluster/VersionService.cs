@@ -5,7 +5,8 @@ using AngleSharp;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using Mihaylov.Api.Other.Contracts.Cluster.Interfaces;
-using Mihaylov.Api.Other.Contracts.Cluster.Models;
+using Mihaylov.Api.Other.Contracts.Cluster.Models.Cluster;
+using Mihaylov.Api.Other.Contracts.Cluster.Models.Version;
 
 namespace Mihaylov.Api.Other.Data.Cluster
 {

@@ -91,8 +91,10 @@ namespace Mihaylov.Api.Other.Data.Nexus
                                    Key = g.Key,
                                    Value = g.OrderByDescending(a => a.LastModified)
                                             .ThenByDescending(a => a.Version)
-                                            .AsEnumerable()
+                                            .AsEnumerable(),
+                                   LastModified = g.Max(a => a.LastModified)
                                })
+                               .OrderByDescending(g => g.LastModified)
                                .ToDictionary(a => a.Key, a => a.Value);
 
             return new NexusImages()

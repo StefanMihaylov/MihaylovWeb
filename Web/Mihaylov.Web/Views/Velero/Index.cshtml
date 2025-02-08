@@ -1,0 +1,148 @@
+﻿@using Mihaylov.Common;
+@using Mihaylov.Api.Other.Client
+@using Mihaylov.Web.Models.Velero
+@model SchedulesMainModel
+
+<div class="row h6">
+    <div class="col-sm-2">
+        <span>Velero schedules: @Model.Statistics.ScheduleCount</span>
+    </div>
+    <div class="col-sm-2">
+        <span>1 ден: @Model.Statistics.LastDaySuccessfulBackupCount / @Model.Statistics.LastDayBackupCount</span>
+    </div>
+    <div class="col-sm-2">
+        <span>7 дни: @Model.Statistics.LastWeekSuccessfulBackupCount / @Model.Statistics.LastWeekBackupCount</span>
+    </div>
+    <div class="col-sm-2">
+        <span>Общо: @Model.Statistics.TotalSuccessfulBackupCount / @Model.Statistics.TotalBackupCount</span>
+    </div>
+    <div class="col-sm-2">
+        <span>Velero: @Model.VeleroVersion</span>
+    </div>
+    <div class="col-sm-2">
+    </div>
+</div>
+
+<div class="row">
+    <table class="table table-bordered table-striped" id="shedule-grid">
+        <thead>
+            <tr>
+                <th style="min-width:280px;">Name</th>
+                <th style="min-width:80px;">CRON</th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th>Timeout</th>
+                <th>Storage</th>
+                <th></th>
+                <th>Duration</th>
+                <th style="min-width:100px;">Size</th>
+                <th>Capacity</th>
+
+                @foreach (var date in Model.Dates)
+                {
+                    <th>@date.ToString("d.M")</th>
+                }
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var schedule in Model.Schedules)
+            {
+                <tr>
+                    <td>@schedule.Name</td>
+                    <td>@schedule.Cron</td>
+                    <td>                        
+                        <span data-container="body" data-toggle="popover" data-placement="top" data-content="@schedule.PopupContent" data-html="true">
+                            @if (schedule.Phase == SchedulePhaseType.Enabled)
+                            {
+                                <span style="color:green">
+                                    <i class="bi bi-check-circle-fill"></i>
+                                </span>
+                            }
+                            else
+                            {
+                                <span style="color:orange">
+                                    <i class="bi bi-exclamation-circle-fill"></i>
+                                </span>
+                            }
+                        </span>
+                    </td>
+                    <td>
+                        @if (schedule.Paused == true)
+                        {
+                            <span style="color:orange">
+                                <i class="bi bi-pause-circle-fill"></i>
+                            </span>
+                        }
+                        else
+                        {
+                            <span style="color:green">
+                                <i class="bi bi-check-circle-fill"></i>
+                            </span>
+                        }
+                    </td>
+                    <td>
+                        @if (schedule.SnapshotMoveData)
+                        {
+                            <span style="color:green">
+                                <i class="bi bi-database-fill"></i>
+                            </span>
+                        }
+                    </td>
+                    <td>@schedule.CsiSnapshotTimeout</td>
+                    <td>@schedule.StorageClassType</td>
+                    <td>
+                        <a href="/Velero/CreateBackup/?schedule=@schedule.Name">
+                            <span style="color:green">
+                                <i class="bi bi-play-btn-fill"></i>
+                            </span>
+                        </a>
+                    </td>
+                    <td>@schedule.Duration</td>
+                    <td>@schedule.Size?.FormatBytes()</td>
+                    <td>@schedule.Capacity</td>
+
+                    @foreach (var date in Model.Dates)
+                    {
+                        <td>
+                            @foreach (var backup in schedule.BackupExtended)
+                            {
+                                @if (backup.CreatedOn.HasValue && backup.CreatedOn.Value.Date == date)
+                                {
+                                    <span data-container="body" data-toggle="popover" data-placement="top" data-content="@backup.PopupContent" data-html="true">
+                                        @if (backup.Phase == BackupPhaseType.Completed)
+                                        {
+                                            <span style="color:green">
+                                                <i class="bi bi-check-circle-fill"></i>
+                                            </span>
+                                        }
+                                        else if (backup.Phase == BackupPhaseType.PartiallyFailed)
+                                        {
+                                            <span style="color:orange">
+                                                <i class="bi bi-exclamation-circle-fill"></i>
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span style="color:lightgreen">
+                                                <i class="bi bi-question-circle-fill"></i>
+                                            </span>
+                                        }
+                                    </span>
+                                }
+                            }
+                        </td>
+                    }
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@section Scripts {
+    <script>
+        $(function () {
+            $('[data-toggle="popover"]').popover();
+        });
+    </script>
+}

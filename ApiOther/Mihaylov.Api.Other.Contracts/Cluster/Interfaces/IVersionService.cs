@@ -1,5 +1,5 @@
 ﻿using System.Threading.Tasks;
-using Mihaylov.Api.Other.Contracts.Cluster.Models;
+using Mihaylov.Api.Other.Contracts.Cluster.Models.Version;
 
 namespace Mihaylov.Api.Other.Contracts.Cluster.Interfaces
 {

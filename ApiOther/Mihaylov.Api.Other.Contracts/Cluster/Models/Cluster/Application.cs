@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace Mihaylov.Api.Other.Contracts.Cluster.Models
+namespace Mihaylov.Api.Other.Contracts.Cluster.Models.Cluster
 {
     public class Application
     {

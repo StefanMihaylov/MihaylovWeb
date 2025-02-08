@@ -41,23 +41,40 @@ namespace Mihaylov.Api.Other
             services.AddMemoryCache();
 
             services.AddOtherDatabase(opt =>
-            {
-                opt.ServerAddress = Config.GetEnvironmentVariable("DB_Other_Address", "192.168.1.100");
-                opt.DatabaseName = Config.GetEnvironmentVariable("DB_Other_Name", "Mihaylov_OtherDb");
-                opt.UserName = Config.GetEnvironmentVariable("DB_Other_UserName", "");
-                opt.Password = Config.GetEnvironmentVariable("DB_Other_Password", "");
-            })
+                {
+                    opt.ServerAddress = Config.GetEnvironmentVariable("DB_Other_Address", "192.168.1.100");
+                    opt.DatabaseName = Config.GetEnvironmentVariable("DB_Other_Name", "Mihaylov_OtherDb");
+                    opt.UserName = Config.GetEnvironmentVariable("DB_Other_UserName", "");
+                    opt.Password = Config.GetEnvironmentVariable("DB_Other_Password", "");
+                })
                 .MigrateDatabase<MihaylovOtherShowDbContext>(c => c.Migrate(), true)
                 .MigrateDatabase<MihaylovOtherClusterDbContext>(c => c.Migrate(), true)
                 .AddOtherRepositories()
-                .AddOtherServices(nexus =>
+                .AddOtherServices(
+                nexus =>
                 {
                     nexus.BaseUrl = Config.GetEnvironmentVariable("Nexus_Base_Url");
                     nexus.Username = Config.GetEnvironmentVariable("Nexus_Username");
-                    nexus.Password = Config.GetEnvironmentVariable("Nexus_Password"); 
+                    nexus.Password = Config.GetEnvironmentVariable("Nexus_Password");
                     nexus.RepositoryName = Config.GetEnvironmentVariable("Nexus_Repository", "docker-hosted");
                     nexus.SkippedVersionCount = Config.GetEnvironmentVariable("Nexus_Skipped_Version_Count", int.TryParse, 3);
                     nexus.SkippedVersionMonthsAge = Config.GetEnvironmentVariable<int>("Nexus_Skipped_Version_Months_Age", int.TryParse, 6);
+                },
+                kube =>
+                {
+                    kube.ServiceHost = Config.GetEnvironmentVariable("Kubernetes_Service_Host", string.Empty);
+                    kube.ServicePort = Config.GetEnvironmentVariable("Kubernetes_Service_Port", string.Empty);
+                    kube.ConfigPath = Config.GetEnvironmentVariable("Kubernetes_Config_Path", string.Empty);
+                },
+                veleroConfig =>
+                {
+                    veleroConfig.DownloadBasePath = Config.GetEnvironmentVariable("Velero_Download_BasePath", "https://github.com/vmware-tanzu/velero/releases/download");
+                    veleroConfig.DownloadVersion = Config.GetEnvironmentVariable("Velero_Download_Version");
+                    veleroConfig.DownloadFileName = Config.GetEnvironmentVariable("Velero_Download_FileName"); 
+                    veleroConfig.TempPath = Config.GetEnvironmentVariable("Velero_Temp_Path");
+                    veleroConfig.VeleroPath = Config.GetEnvironmentVariable("Velero_Path");
+                    veleroConfig.CmdPath = Config.GetEnvironmentVariable("Velero_Cmd_Path", "cmd");
+                    veleroConfig.CmdArguments = Config.GetEnvironmentVariable("Velero_Cmd_Arguments", "/c");
                 });
 
             // Add-Migration <name> -Context MihaylovOtherClusterDbContext
@@ -70,7 +87,7 @@ namespace Mihaylov.Api.Other
             });
         }
 
-        private static void Configure(WebApplication app)
+        private static void Configure(IApplicationBuilder app)
         {
             app.UseSwaggerCustom("APP_Scheme", "APP_PathPrefix", "v1", "Other API V1");
 
