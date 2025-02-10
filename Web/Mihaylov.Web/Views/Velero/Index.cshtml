@@ -8,7 +8,7 @@
         <span>Velero schedules: @Model.Statistics.ScheduleCount</span>
     </div>
     <div class="col-sm-2">
-        <span>1 ден: @Model.Statistics.LastDaySuccessfulBackupCount / @Model.Statistics.LastDayBackupCount</span>
+        <span>24 часа: @Model.Statistics.LastDaySuccessfulBackupCount / @Model.Statistics.LastDayBackupCount</span>
     </div>
     <div class="col-sm-2">
         <span>7 дни: @Model.Statistics.LastWeekSuccessfulBackupCount / @Model.Statistics.LastWeekBackupCount</span>
@@ -92,7 +92,7 @@
                     <td>@schedule.CsiSnapshotTimeout</td>
                     <td>@schedule.StorageClassType</td>
                     <td>
-                        @if (schedule.Phase == SchedulePhaseType.Enabled)
+                        @if (schedule.Paused != true)
                         {
                             <a href="/Velero/CreateBackup/?schedule=@schedule.Name">
                                 <span style="color:green">
