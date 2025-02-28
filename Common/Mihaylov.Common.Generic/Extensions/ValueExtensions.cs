@@ -158,5 +158,51 @@ namespace Mihaylov.Common
 
             return string.Format("{0:0.##} {1}", dblSByte, Suffix[i]);
         }
+
+        public static long? GetBytes(this string size)
+        {
+            const long KiB = 1024;
+            const long MiB = KiB * KiB;
+            const long GiB = MiB * KiB;
+            const long TiB = GiB * KiB;
+
+            if (string.IsNullOrEmpty(size))
+            {
+                return null;
+            }
+
+            var sizeParts = size.Split(' ');
+            if (sizeParts.Length != 2)
+            {
+                return null;
+            }
+
+            var value = decimal.Parse(sizeParts[0]);
+            var unit = sizeParts[1];
+
+            long multiplier;
+            switch (unit)
+            {
+                case "B":
+                    multiplier = 1;
+                    break;
+                case "KiB":
+                    multiplier = KiB;
+                    break;
+                case "MiB":
+                    multiplier = MiB;
+                    break;
+                case "GiB":
+                    multiplier = GiB;
+                    break;
+                case "TiB":
+                    multiplier = TiB;
+                    break;
+                default:
+                    return null;
+            }
+
+            return (long)(value * multiplier);
+        }
     }
 }

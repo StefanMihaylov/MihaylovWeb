@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Mihaylov.Api.Other.Client;
+using Mihaylov.Common;
 
 namespace Mihaylov.Web.Models.Velero
 {
@@ -34,20 +35,17 @@ namespace Mihaylov.Web.Models.Velero
 
         private BackupViewModel LastBackupModel => BackupExtended?.FirstOrDefault();
 
-        private DataUpload LastUpload => LastBackupModel?.Uploads
-                                                        ?.OrderByDescending(u => u.Capacity)
-                                                        ?.FirstOrDefault();
         public TimeSpan? Duration => LastBackupModel?.Duration;
 
-        public long? Size => LastUpload?.TotalBytes ?? LastUpload?.BytesDone;
+        public long? Size => GetSize(LastBackupModel?.Uploads);
 
-        public string Capacity => LastUpload?.Capacity;
+        public long? Capacity => LastBackupModel?.Uploads?.Sum(a => a.Capacity.GetBytes());
 
         public string StorageClassType
         {
             get
             {
-                var storageClassName = LastUpload?.StorageClassName;
+                var storageClassName = LastBackupModel?.Uploads?.FirstOrDefault()?.StorageClassName;
                 if (string.IsNullOrEmpty(storageClassName))
                 {
                     return string.Empty;
@@ -59,6 +57,44 @@ namespace Mihaylov.Web.Models.Velero
                     "rook-ceph-filesystem" => "File",
                     _ => "unknown",
                 };
+            }
+        }
+
+        public long? SizeStandardDeviation
+        {
+            get
+            {
+                var sizeList = BackupExtended.Where(b => b.Uploads != null)
+                                             .Select(b => GetSize(b.Uploads))
+                                             .Where(s => s.HasValue)
+                                             .Select(s => (decimal)s.Value)
+                                             .ToList();
+
+                if (sizeList == null || sizeList.Count < 2)
+                {
+                    return null;
+                }
+
+                decimal average = sizeList.Average();
+                decimal sumOfSquaresOfDifferences = sizeList.Sum(val => (val - average) * (val - average));
+
+                double standartDeviation = Math.Sqrt((double)(sumOfSquaresOfDifferences / (sizeList.Count - 1)));
+
+                return (long)standartDeviation;
+            }
+        }
+
+        public int? SizeDeviation
+        {
+            get
+            {
+                if (!Size.HasValue || !SizeStandardDeviation.HasValue)
+                {
+                    return null;
+                }
+
+                var result = (decimal)SizeStandardDeviation.Value / Size.Value;
+                return (int)(result * 100);
             }
         }
 
@@ -110,6 +146,23 @@ namespace Mihaylov.Web.Models.Velero
 
                 return builder.ToString();
             }
+        }
+
+        private long? GetSize(IEnumerable<DataUpload> uploads)
+        {
+            if (uploads == null || !uploads.Any())
+            {
+                return null;
+            }
+
+            var query = uploads.Where(f => (f.TotalBytes ?? f.BytesDone).HasValue);
+            if (!query.Any())
+            {
+                return null;
+            }
+
+            long result = query.Sum(a => a.TotalBytes ?? a.BytesDone.Value);
+            return result;
         }
     }
 }

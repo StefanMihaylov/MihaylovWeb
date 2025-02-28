@@ -36,6 +36,7 @@
                 <th>Storage</th>
                 <th></th>
                 <th>Duration</th>
+                <th style="min-width:110px;">Size SD</th>
                 <th style="min-width:100px;">Size</th>
                 <th>Capacity</th>
 
@@ -51,7 +52,7 @@
                 <tr>
                     <td>@schedule.Name</td>
                     <td>@schedule.Cron</td>
-                    <td>                        
+                    <td>
                         <span data-container="body" data-toggle="popover" data-placement="top" data-content="@schedule.PopupContent" data-html="true">
                             @if (schedule.Phase == SchedulePhaseType.Enabled)
                             {
@@ -102,8 +103,17 @@
                         }
                     </td>
                     <td>@schedule.Duration</td>
+                    <td>
+                        @schedule.SizeStandardDeviation?.FormatBytes()
+                        @if(schedule.SizeDeviation > 10)
+                        {
+                            <span style="color:red">
+                                <i class="bi bi-exclamation-triangle-fill"></i>
+                            </span>
+                        }
+                    </td>
                     <td>@schedule.Size?.FormatBytes()</td>
-                    <td>@schedule.Capacity</td>
+                    <td>@schedule.Capacity?.FormatBytes()</td>
 
                     @foreach (var date in Model.Dates)
                     {

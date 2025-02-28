@@ -21,7 +21,7 @@
                 <div class="col-auto">
                     <div class="input-group mb-3">
                         <div class="input-group-prepend">
-                            <span class="input-group-text">Директория</span>
+                            <span class="input-group-text">Dir</span>
                         </div>
                         <span id="move-pics-dir-span" class="form-control" style="min-width:100px"></span>
                         <input id="move-pics-dir" name="dir" class="form-control" hidden />
@@ -96,7 +96,9 @@
                                                     <div class="col-auto">
                                                         @if (!file.Readonly)
                                                         {
-                                                            <a href="/Media/DeleteFileById?id=@file.FileId&redirectUrl=@Model.RedirectUrl" class="btn btn-danger">Delete</a>
+                                                            <a href="/Media/DeleteFileById?id=@file.FileId&redirectUrl=@Model.RedirectUrl" class="button-red">
+                                                                <i class='bi bi-x-circle-fill'></i>
+                                                            </a>
                                                         }
                                                         else
                                                         {
