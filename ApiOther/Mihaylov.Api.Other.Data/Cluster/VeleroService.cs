@@ -42,8 +42,8 @@ namespace Mihaylov.Api.Other.Data.Cluster
             var pvcs = await _kubernetesHelper.GetPersistanceVolumeClaimsAsync(null).ConfigureAwait(false);
             var pvs = await _kubernetesHelper.GetPersistanceVolumesAsync().ConfigureAwait(false);
 
-            var pvcDic = pvcs.ToDictionary(g => g.Name, g => g);
-            var pvDic = pvs.ToDictionary(g => g.Claim, g => g);
+            var pvcDic = pvcs.ToDictionary(g => $"{g.Namespace}_{g.Name}", g => g);
+            var pvDic = pvs.ToDictionary(g => $"{g.Namespace}_{g.Claim}", g => g);
 
             var backupDic = backups.GroupBy(s => s.ScheduleName)
                             .Select(g => new
@@ -98,7 +98,7 @@ namespace Mihaylov.Api.Other.Data.Cluster
             {
                 scheduleList.Add(new Schedule()
                 {
-                    Name = oldSchedule.Key,                   
+                    Name = oldSchedule.Key,
                     Backups = oldSchedule.Value.Select(b => MapBackup(b)).ToList(),
                 });
             }
@@ -115,13 +115,16 @@ namespace Mihaylov.Api.Other.Data.Cluster
                         {
                             PersistentVolumeClaim pvc = null;
                             PersistentVolume pv = null;
-                            if (pvcDic.ContainsKey(u.SourcePVC))
-                            {
-                                pvc = pvcDic[u.SourcePVC];
 
-                                if (pvDic.ContainsKey(pvc.Name))
+                            var pvcKey = $"{u.SourceNamespace}_{u.SourcePVC}";
+                            if (pvcDic.ContainsKey(pvcKey))
+                            {
+                                pvc = pvcDic[pvcKey];
+
+                                var pvKey = $"{pvc.Namespace}_{pvc.Name}";
+                                if (pvDic.ContainsKey(pvKey))
                                 {
-                                    pv = pvDic[pvc.Name];
+                                    pv = pvDic[pvKey];
                                 }
                             }
 

@@ -69,17 +69,20 @@
                         </span>
                     </td>
                     <td>
-                        @if (schedule.Paused == true)
+                        @if(schedule.Phase == SchedulePhaseType.Enabled)
                         {
-                            <span style="color:orange">
-                                <i class="bi bi-pause-circle-fill"></i>
-                            </span>
-                        }
-                        else
-                        {
-                            <span style="color:green">
-                                <i class="bi bi-check-circle-fill"></i>
-                            </span>
+                            if (schedule.Paused == true)
+                            {
+                                <span style="color:orange">
+                                    <i class="bi bi-pause-circle-fill"></i>
+                                </span>
+                            }
+                            else
+                            {
+                                <span style="color:green">
+                                    <i class="bi bi-check-circle-fill"></i>
+                                </span>
+                            }
                         }
                     </td>
                     <td>
@@ -93,7 +96,7 @@
                     <td>@schedule.CsiSnapshotTimeout</td>
                     <td>@schedule.StorageClassType</td>
                     <td>
-                        @if (schedule.Paused != true)
+                        @if (schedule.Paused != true && schedule.Phase == SchedulePhaseType.Enabled)
                         {
                             <a href="/Velero/CreateBackup/?schedule=@schedule.Name">
                                 <span style="color:green">
