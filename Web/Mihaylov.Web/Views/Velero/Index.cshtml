@@ -36,7 +36,8 @@
                 <th>Storage</th>
                 <th></th>
                 <th>Duration</th>
-                <th style="min-width:110px;">Size SD</th>
+                <th style="min-width:100px;">Size SD</th>
+                <th>Usage</th>
                 <th style="min-width:100px;">Size</th>
                 <th>Capacity</th>
 
@@ -69,7 +70,7 @@
                         </span>
                     </td>
                     <td>
-                        @if(schedule.Phase == SchedulePhaseType.Enabled)
+                        @if (schedule.Phase == SchedulePhaseType.Enabled)
                         {
                             if (schedule.Paused == true)
                             {
@@ -107,12 +108,34 @@
                     </td>
                     <td>@schedule.Duration</td>
                     <td>
-                        @schedule.SizeStandardDeviation?.FormatBytes()
-                        @if(schedule.SizeDeviation > 10)
+                        @if (schedule.SizeStandardDeviation.HasValue)
                         {
-                            <span style="color:red">
-                                <i class="bi bi-exclamation-triangle-fill"></i>
+                            var durationStyle = string.Empty;
+                            @if (schedule.SizeDeviation > 10)
+                            {
+                                durationStyle = "color:red";
+                            }
+
+                            <span style="@durationStyle">
+                                @schedule.SizeStandardDeviation.Value.FormatBytes()
                             </span>
+
+                            @* <span style="color:red">
+                            <i class="bi bi-exclamation-triangle-fill"></i>
+                            </span> *@
+                        }
+                    </td>
+                    <td>
+                        @if (schedule.VolumeUsage.HasValue)
+                        {                            
+                            var usageStyle = string.Empty;
+                            if (schedule.VolumeUsage.Value > 75)
+                            {
+                                usageStyle = "color:red";
+                            }
+
+                            var usage = $"{schedule.VolumeUsage}%";
+                            <span style="@usageStyle">@usage</span>
                         }
                     </td>
                     <td>@schedule.Size?.FormatBytes()</td>

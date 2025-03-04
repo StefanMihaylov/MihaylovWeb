@@ -98,6 +98,21 @@ namespace Mihaylov.Web.Models.Velero
             }
         }
 
+        public int? VolumeUsage
+        {
+            get
+            {
+                if (!Size.HasValue || !Capacity.HasValue || Capacity.Value <= 0)
+                {
+                    return null;
+                }
+
+                var result = (decimal)Size.Value / Capacity.Value;
+                
+                return (int)(result * 100);
+            }
+        }
+
         public string PopupContent
         {
             get

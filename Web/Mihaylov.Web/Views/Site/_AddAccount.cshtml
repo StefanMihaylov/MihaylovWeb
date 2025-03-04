@@ -33,7 +33,7 @@
             </div>
             <div class="form-group col-auto">
                 @Html.LabelFor(m => Model.AskDate)
-                @Html.TextBoxFor(m => Model.AskDate, ViewConstants.DateFormat, new { @class = ViewConstants.EdithorClass, style = ViewConstants.Width100 })
+                @Html.TextBoxFor(m => Model.AskDate, ViewConstants.DateTimeFormat, new { @class = ViewConstants.EdithorClass, style = ViewConstants.Width100 })
                 @Html.ValidationMessageFor(m => Model.AskDate)
             </div>
             <div class="form-group col-auto">
