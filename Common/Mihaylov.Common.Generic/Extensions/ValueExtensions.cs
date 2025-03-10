@@ -52,7 +52,7 @@ namespace Mihaylov.Common
             return age;
         }
 
-        public static DateTime? GetBirthDate(this DateTime? date, int? age, bool typeHasValue, bool isCalculated)
+        public static DateTime? GetBirthDate(this DateTime? date, int? age, bool typeHasValue, bool isCalculated, DateTime currentDate)
         {
             if (!typeHasValue)
             {
@@ -66,7 +66,7 @@ namespace Mihaylov.Common
 
             if (isCalculated)
             {
-                return age.GetBirthDate();
+                return age.GetBirthDate(currentDate);
             }
 
             return null;
@@ -79,20 +79,20 @@ namespace Mihaylov.Common
             return !result;
         }
 
-        public static DateTime? GetBirthDate(this int? age)
+        public static DateTime? GetBirthDate(this int? age, DateTime date)
         {
             if (!age.HasValue)
             {
                 return null;
             }
 
-            var birthDate = age.Value.GetBirthDate();
+            var birthDate = age.Value.GetBirthDate(date);
             return birthDate;
         }
 
-        public static DateTime GetBirthDate(this int age)
+        public static DateTime GetBirthDate(this int age, DateTime date)
         {
-            return DateTime.UtcNow.Date.AddYears(-age).AddMonths(-6);
+            return date.Date.AddYears(-age).AddMonths(-6);
         }
 
         public static DateTime? GetCreateDate(this int? age)

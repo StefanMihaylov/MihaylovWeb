@@ -141,7 +141,6 @@ namespace Mihaylov.Api.Site.Controllers
             {
                 await _siteHelper.FillNewPersonAsync(person, account.Username).ConfigureAwait(false);
             }
-
             
             if (account?.StatusId != null)
             {

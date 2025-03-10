@@ -43,7 +43,7 @@ namespace Mihaylov.Api.Site.Data.Tests
 
             var isCalculating = type == DateOfBirthType.YearCalculated;
             var type1 = date.IsBirthDateTypeValid(age, isCalculating) ? type : null;
-            var date1 = date.GetBirthDate(age, type.HasValue, isCalculating);
+            var date1 = date.GetBirthDate(age, type.HasValue, isCalculating, DateTime.UtcNow);
 
             Assert.AreEqual(typeResult, type1);
             Assert.AreEqual(dateResult, date1);

@@ -26,6 +26,22 @@ namespace Mihaylov.Web.Models.Velero
 
         public TimeSpan? Duration => CompletionTimestamp - StartTimestamp;
 
+        public bool IsSizeValid
+        {
+            get
+            {
+                if (Uploads == null || !Uploads.Any())
+                {
+                    return true;
+                }
+
+                var query = Uploads.All(f => f.TotalBytes.HasValue && f.BytesDone.HasValue &&
+                                             f.TotalBytes == f.BytesDone);
+
+                return query;
+            }
+        }
+
         public string PopupContent
         {
             get

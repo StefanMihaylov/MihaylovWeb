@@ -127,7 +127,7 @@
                     </td>
                     <td>
                         @if (schedule.VolumeUsage.HasValue)
-                        {                            
+                        {
                             var usageStyle = string.Empty;
                             if (schedule.VolumeUsage.Value > 75)
                             {
@@ -138,7 +138,19 @@
                             <span style="@usageStyle">@usage</span>
                         }
                     </td>
-                    <td>@schedule.Size?.FormatBytes()</td>
+                    <td>
+                        @if (schedule.Size.HasValue)
+                        {
+                            var sizeStyle = string.Empty;
+                            @if (!schedule.IsSizeValid)
+                            {
+                                sizeStyle = "color:red";
+                            }
+                            <span style="@sizeStyle">
+                                @schedule.Size.Value.FormatBytes()
+                            </span>
+                        }
+                    </td>
                     <td>@schedule.Capacity?.FormatBytes()</td>
 
                     @foreach (var date in Model.Dates)
@@ -151,7 +163,13 @@
                                     <span data-container="body" data-toggle="popover" data-placement="top" data-content="@backup.PopupContent" data-html="true">
                                         @if (backup.Phase == BackupPhaseType.Completed)
                                         {
-                                            <span style="color:green">
+                                            var phaseStyle = "color:green";
+                                            @if (!backup.IsSizeValid)
+                                            {
+                                                phaseStyle = "color:chocolate";
+                                            }
+
+                                            <span style="@phaseStyle">
                                                 <i class="bi bi-check-circle-fill"></i>
                                             </span>
                                         }

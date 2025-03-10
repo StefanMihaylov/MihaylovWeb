@@ -81,8 +81,10 @@ namespace Mihaylov.Api.Site.Data.Helpers
 
             if (personInfo.Age.HasValue)
             {
+                var currentDate = personInfo.CreateDate == new DateTime() ? DateTime.UtcNow : personInfo.CreateDate;
+
                 person.DateOfBirthType = DateOfBirthType.YearCalculated;
-                person.DateOfBirth = person.DateOfBirth.GetBirthDate(personInfo.Age, true, true);
+                person.DateOfBirth = person.DateOfBirth.GetBirthDate(personInfo.Age, true, true, currentDate);
             }
 
             if (!string.IsNullOrEmpty(personInfo.City))

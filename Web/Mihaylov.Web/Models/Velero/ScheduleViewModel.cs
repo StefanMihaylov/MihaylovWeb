@@ -39,6 +39,8 @@ namespace Mihaylov.Web.Models.Velero
 
         public long? Size => GetSize(LastBackupModel?.Uploads);
 
+        public bool IsSizeValid => LastBackupModel?.IsSizeValid ?? true;
+
         public long? Capacity => LastBackupModel?.Uploads?.Sum(a => a.Capacity.GetBytes());
 
         public string StorageClassType

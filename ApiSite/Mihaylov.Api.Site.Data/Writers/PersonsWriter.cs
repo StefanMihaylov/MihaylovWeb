@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Mihaylov.Api.Site.Contracts.Models;
 using Mihaylov.Api.Site.Contracts.Repositories;
 using Mihaylov.Api.Site.Contracts.Writers;
+using Mihaylov.Api.Site.Data.Models;
 using Mihaylov.Common;
 
 namespace Mihaylov.Api.Site.Data.Writers
@@ -24,8 +25,10 @@ namespace Mihaylov.Api.Site.Data.Writers
             var type = input.DateOfBirthType;
             var isCalculating = type == DateOfBirthType.YearCalculated;
 
+            var currentDate = input.CreatedOn == new DateTime() ? DateTime.UtcNow : input.CreatedOn;
+
             input.DateOfBirthType = input.DateOfBirth.IsBirthDateTypeValid(age, isCalculating) ? type : null;
-            input.DateOfBirth = input.DateOfBirth.GetBirthDate(age, type.HasValue, isCalculating);
+            input.DateOfBirth = input.DateOfBirth.GetBirthDate(age, type.HasValue, isCalculating, currentDate);
 
             return _repository.AddOrUpdatePersonAsync(input);
         }
