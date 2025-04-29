@@ -39,7 +39,7 @@ namespace Mihaylov.Common
             Action<WebHostSettings> webSettings, Action<JwtTokenSettings> settings)
         {
             WebHostSettings webConfig = null;
-            if(webSettings != null)
+            if (webSettings != null)
             {
                 webConfig = new WebHostSettings();
                 webSettings(webConfig);
@@ -52,12 +52,14 @@ namespace Mihaylov.Common
 
             var signingKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(config.Secret));
 
-            services.AddAuthentication(options =>
+            var authBuilder = services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = UserConstants.AuthenticationScheme;
                 options.DefaultScheme = UserConstants.AuthenticationScheme;
                 options.DefaultChallengeScheme = UserConstants.AuthenticationScheme;
-            }).AddJwtBearer(options =>
+            });
+
+            authBuilder.AddJwtBearer(options =>
             {
                 options.SaveToken = true;
                 options.RequireHttpsMetadata = false;
@@ -99,8 +101,12 @@ namespace Mihaylov.Common
                         return Task.CompletedTask;
                     }
                 };
-            })
-            .AddIdentityCookies(o => { });
+            });
+
+            if (webConfig != null)
+            {
+                authBuilder.AddIdentityCookies(o => { });
+            }
 
             services.AddAuthorization(options =>
             {
@@ -126,7 +132,7 @@ namespace Mihaylov.Common
 
                 if (isPrivate)
                 {
-                    options.AddSwaggerAuthentication("Bearer");
+                    options.AddSwaggerAuthentication(UserConstants.AuthenticationScheme);
                 }
 
                 options.SchemaFilter<EnumExtensionSchemaFilter>();

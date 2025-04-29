@@ -53,11 +53,13 @@ namespace Mihaylov.Common.Host.SwaggerConfig
 
             try
             {
-                return AppDomain.CurrentDomain
-                                .GetAssemblies()
-                                .SelectMany(x => x.GetTypes())
-                                .Single(x => x.FullName != null
-                                          && x.Name == enumTypeName);
+                var assemblies = AppDomain.CurrentDomain.GetAssemblies()
+                                            .Where(x => x.FullName.StartsWith("Mihaylov"));
+
+                var type = assemblies.SelectMany(x => x.GetTypes())
+                                     .Single(x => x.FullName != null && x.Name == enumTypeName);
+
+                return type;
             }
             catch (InvalidOperationException e)
             {

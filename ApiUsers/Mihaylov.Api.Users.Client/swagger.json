@@ -1,5 +1,5 @@
 {
-  "openapi": "3.0.1",
+  "openapi": "3.0.4",
   "info": {
     "title": "Users API",
     "version": "v1"
@@ -18,7 +18,7 @@
         "operationId": "ExternalGetExternalSchemes",
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "OK",
             "content": {
               "text/plain": {
                 "schema": {
@@ -59,24 +59,36 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/RegisterRequestModel"
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/RegisterRequestModel"
+                  }
+                ]
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/RegisterRequestModel"
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/RegisterRequestModel"
+                  }
+                ]
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/RegisterRequestModel"
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/RegisterRequestModel"
+                  }
+                ]
               }
             }
           }
         },
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "OK",
             "content": {
               "text/plain": {
                 "schema": {
@@ -108,24 +120,36 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/LoginRequestModel"
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/LoginRequestModel"
+                  }
+                ]
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/LoginRequestModel"
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/LoginRequestModel"
+                  }
+                ]
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/LoginRequestModel"
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/LoginRequestModel"
+                  }
+                ]
               }
             }
           }
         },
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "OK",
             "content": {
               "text/plain": {
                 "schema": {
@@ -175,7 +199,7 @@
         "operationId": "ModuleGetInfo",
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "OK",
             "content": {
               "application/json": {
                 "schema": {
@@ -195,7 +219,7 @@
         "operationId": "RolesGetRoles",
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "OK",
             "content": {
               "application/json": {
                 "schema": {
@@ -228,7 +252,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "OK",
             "content": {
               "application/json": {
                 "schema": {
@@ -250,24 +274,36 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/CreateRoleRequest"
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/CreateRoleRequest"
+                  }
+                ]
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/CreateRoleRequest"
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/CreateRoleRequest"
+                  }
+                ]
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/CreateRoleRequest"
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/CreateRoleRequest"
+                  }
+                ]
               }
             }
           }
         },
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "OK",
             "content": {
               "application/json": {
                 "schema": {
@@ -309,24 +345,36 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/UpdateRoleRequest"
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/UpdateRoleRequest"
+                  }
+                ]
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/UpdateRoleRequest"
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/UpdateRoleRequest"
+                  }
+                ]
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/UpdateRoleRequest"
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/UpdateRoleRequest"
+                  }
+                ]
               }
             }
           }
         },
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "OK",
             "content": {
               "application/json": {
                 "schema": {
@@ -368,24 +416,36 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/AddRoleToUserRequest"
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/AddRoleToUserRequest"
+                  }
+                ]
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/AddRoleToUserRequest"
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/AddRoleToUserRequest"
+                  }
+                ]
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/AddRoleToUserRequest"
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/AddRoleToUserRequest"
+                  }
+                ]
               }
             }
           }
         },
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "OK",
             "content": {
               "application/json": {
                 "schema": {
@@ -435,7 +495,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "OK",
             "content": {
               "application/json": {
                 "schema": {
@@ -475,7 +535,7 @@
         "operationId": "UsersGetUsers",
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "OK",
             "content": {
               "application/json": {
                 "schema": {
@@ -518,7 +578,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "OK",
             "content": {
               "application/json": {
                 "schema": {
@@ -550,24 +610,36 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/ChangePasswordRequest"
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/ChangePasswordRequest"
+                  }
+                ]
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/ChangePasswordRequest"
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/ChangePasswordRequest"
+                  }
+                ]
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/ChangePasswordRequest"
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/ChangePasswordRequest"
+                  }
+                ]
               }
             }
           }
         },
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "OK",
             "content": {
               "application/json": {
                 "schema": {
@@ -609,24 +681,36 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/UpdateUserModel"
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/UpdateUserModel"
+                  }
+                ]
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/UpdateUserModel"
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/UpdateUserModel"
+                  }
+                ]
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/UpdateUserModel"
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/UpdateUserModel"
+                  }
+                ]
               }
             }
           }
         },
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "OK",
             "content": {
               "application/json": {
                 "schema": {
@@ -676,7 +760,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "OK",
             "content": {
               "application/json": {
                 "schema": {

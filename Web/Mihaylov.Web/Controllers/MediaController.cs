@@ -203,6 +203,11 @@ namespace Mihaylov.Web.Controllers
         [HttpPost]
         public IActionResult CreateDirectory([FromForm] string direcrotyName)
         {
+            if (string.IsNullOrEmpty(direcrotyName))
+            {
+                return Redirect(nameof(Sort));
+            }
+
             _file.CreateDirectory(_config.SoftPath, direcrotyName);
             return Redirect(nameof(Sort));
         }
