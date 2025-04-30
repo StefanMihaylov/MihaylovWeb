@@ -17,7 +17,7 @@ namespace Mihaylov.Api.Users.Client
         public UsersApiClient(IHttpClientFactory httpClientFactory)
             : this(httpClientFactory.CreateClient(USERS_API_CLIENT_NAME))
         {
-            _baseUrl = _httpClient.BaseAddress.AbsoluteUri;
+            BaseUrl = _httpClient.BaseAddress.AbsoluteUri;
         }
 
         public void AddToken(string token)

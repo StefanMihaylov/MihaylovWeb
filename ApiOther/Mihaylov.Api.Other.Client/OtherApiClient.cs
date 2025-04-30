@@ -16,7 +16,7 @@ namespace Mihaylov.Api.Other.Client
         public OtherApiClient(IHttpClientFactory httpClientFactory)
             : this(httpClientFactory.CreateClient(OTHER_API_CLIENT_NAME))
         {
-            _baseUrl = _httpClient.BaseAddress.AbsoluteUri;
+            BaseUrl = _httpClient.BaseAddress.AbsoluteUri;
         }
 
         public void AddToken(string token)

@@ -19,7 +19,7 @@ namespace Mihaylov.Api.Site.Client
         public SiteApiClient(IHttpClientFactory httpClientFactory)
             : this(httpClientFactory.CreateClient(SITE_API_CLIENT_NAME))
         {
-            _baseUrl = _httpClient.BaseAddress.AbsoluteUri;
+            BaseUrl = _httpClient.BaseAddress.AbsoluteUri;
         }
 
         public void AddToken(string token)

@@ -10,7 +10,7 @@ namespace Mihaylov.Api.Weather.Client
         public WeatherApiClient(IHttpClientFactory httpClientFactory)
             : this(httpClientFactory.CreateClient(WEATHER_API_CLIENT_NAME))
         {
-            _baseUrl = _httpClient.BaseAddress.AbsoluteUri;
+            BaseUrl = _httpClient.BaseAddress.AbsoluteUri;
         }
     }
 
