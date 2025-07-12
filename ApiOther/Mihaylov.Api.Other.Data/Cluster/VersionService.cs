@@ -26,9 +26,15 @@ namespace Mihaylov.Api.Other.Data.Cluster
             _memoryCache = memoryCache;
         }
 
-        public async Task<LastVersionModel> GetLastVersionAsync(int applicationId)
+        public async Task<LastVersionModel> GetLastVersionAsync(int applicationId, bool? reload)
         {
             string key = GetKey(applicationId);
+
+            if (reload == true)
+            {
+                _memoryCache.Remove(key);
+            }
+
             if (!_memoryCache.TryGetValue(key, out LastVersionModel lastVersion))
             {
                 lastVersion = await GetLastVersionOnlineAsync(applicationId).ConfigureAwait(false);
@@ -86,12 +92,6 @@ namespace Mihaylov.Api.Other.Data.Cluster
             return result;
         }
 
-        public void Reload(int applicationId)
-        {
-            string key = GetKey(applicationId);
-            _memoryCache.Remove(key);
-        }
-
         private static string GetKey(int applicationId)
         {
             return $"{SHOW_LAST_VERSION}_{applicationId}";
@@ -99,21 +99,19 @@ namespace Mihaylov.Api.Other.Data.Cluster
 
         private async Task<LastVersionModel> GetLastVersionAsync(LastVersionSettings configuration)
         {
-            var version = await GetValueAsync(configuration.Version, null).ConfigureAwait(false);
-            var release = await GetValueAsync(configuration.ReleaseDate, version).ConfigureAwait(false);
+            ValueContext version = await GetValueAsync(configuration.Version, null).ConfigureAwait(false);
+            ValueContext release = await GetValueAsync(configuration.ReleaseDate, version).ConfigureAwait(false);
 
             DateTime? releaseDate = ParseDate(release?.Value);
-
-            if (string.IsNullOrEmpty(version?.Value) || !releaseDate.HasValue)
-            {
-                return null;
-            }
 
             var result = new LastVersionModel()
             {
                 ApplicationId = configuration.ApplicationId,
                 Version = version.Value,
-                ReleaseDate = releaseDate.Value.Date,
+                ReleaseDate = releaseDate,
+                IsSuccessful = !string.IsNullOrEmpty(version?.Value) && releaseDate.HasValue,
+                RawVersion = $"{version?.Value} {{{version?.Content}}}",
+                RawReleaseDate = $"{release?.Value} {{{release?.Content}}}"
             };
 
             return result;
@@ -259,6 +257,12 @@ namespace Mihaylov.Api.Other.Data.Cluster
             var splits = text.Split(commandParams[0], StringSplitOptions.RemoveEmptyEntries);
 
             int index = int.Parse(commandParams[1]);
+            if (index < 0 || index >= splits.Length)
+            {
+                _logger.LogError($"Index {index} is out of range for splits array of length {splits.Length}.");
+                return null;
+            }
+
             string value = splits[index];
 
             return value;
@@ -269,7 +273,7 @@ namespace Mihaylov.Api.Other.Data.Cluster
             DateTime? releaseDate = null;
             if (!string.IsNullOrEmpty(input) && DateTime.TryParse(input, out DateTime date))
             {
-                releaseDate = date;
+                releaseDate = date.Date;
             }
 
             return releaseDate;

@@ -1,6 +1,4 @@
-﻿@using Mihaylov.Web.Controllers
-@using Mihaylov.Web.Models.Cluster
-@using Mihaylov.Web.Models.Configs
+﻿@using Mihaylov.Web.Models.Cluster
 @model ClusterMainModel
 
 <table class="table table-bordered table-striped" id="cluster-grid">
@@ -22,158 +20,14 @@
     </thead>
     <tbody>
         @await Html.PartialAsync("_AddVersion", Model.Version)
-
-        <tr style="border-bottom: 2pt solid black;"></tr>
-        <tr></tr>
+        @await Html.PartialAsync("_NewLine")
 
         @foreach (var application in Model.Applications)
         {
-            <tr>
-                <td style="text-align:center">
-                    @application.Main.Order
-                </td>
-                <td>
-                    <my-value>
-                        <span style="font-size: 1.4rem">
-                            @if (application.LastVersion != null)
-                            {
-                                if (!application.IsLatestVersion)
-                                {
-                                    <span style="color:red">
-                                        <i class="bi bi-shift-fill"></i>
-                                    </span>
-                                }
-                                else
-                                {
-                                    <span style="color:green">
-                                        <i class="bi bi-check-circle-fill"></i>
-                                    </span>
-                                }
-                            }
-                            else
-                            {
-                                if (application.ParserSettingAvailable)
-                                {
-                                    <span style="color:red">
-                                        <i class="bi bi-exclamation-triangle-fill"></i>
-                                    </span>
-                                }
-                            }
-                        </span>
-
-                        @application.Main.Name
-                    </my-value>
-                </td>
-                <td>
-                    <my-value>
-                        @if (application.Main.Version != null)
-                        {
-                            var interval = DateTime.UtcNow.Date.Subtract(application.Main.Version.ReleaseDate);
-                            var days = $"{interval.TotalDays} дни";
-
-                            @days
-
-                            <a href="@Url.Action(nameof(ClusterController.ReloadLastVersion), "Cluster", new { id = application.Main.Id })">
-                                <span style="color:blue">
-                                    <i class="bi bi-repeat"></i>
-                                </span>
-                            </a>
-                        }
-
-                        @if (application.LastVersion != null && !application.IsLatestVersion)
-                        {
-                            <br />
-                            var interval = DateTime.UtcNow.Date.Subtract(application.LastVersion.ReleaseDate.Date);
-                            var days = $"{interval.TotalDays} дни";
-                            var fullDate = application.LastVersion.ReleaseDate.ToString("yyyy.MM.dd");
-                            var lastVersionFillInfo = $"{days} ({fullDate})";
-
-                            @lastVersionFillInfo
-                        }
-                    </my-value>
-                </td>
-                <td>
-                    <my-value>
-                        @application.Main.Version?.Version
-                        @if (application.LastVersion != null && !application.IsLatestVersion)
-                        {
-                            <br />
-                            @application.LastVersion.Version
-                        }
-                    </my-value>
-                </td>
-                <td><my-value>@application.Main.Version?.HelmVersion</my-value></td>
-                <td style="display: none;"><my-value>@application.Main.Version?.HelmAppVersion</my-value></td>
-                <td>
-                    <my-value>
-                        <span style="font-size: 1.4rem">
-                            @if (!string.IsNullOrEmpty(@application.Main.SiteUrl))
-                            {
-                                <a href="@application.Main.SiteUrl" target="_blank">
-                                    <i class="bi bi-globe"></i>
-                                </a>
-                            }
-                            <a href="@application.Main.ReleaseUrl" target="_blank">
-                                <i class="bi bi-shift-fill"></i>
-                            </a>
-                            @if (!string.IsNullOrEmpty(@application.Main.ResourceUrl))
-                            {
-                                <a href="@application.Main.ResourceUrl" target="_blank">
-                                    <i class="bi bi-download"></i>
-                                </a>
-                            }
-                            @if (!string.IsNullOrEmpty(@application.Main.GithubVersionUrl))
-                            {
-                                <a href="@application.Main.GithubVersionUrl" target="_blank">
-                                    <i class="bi bi-github"></i>
-                                </a>
-                            }
-                        </span>
-                    </my-value>
-                </td>
-                <td><my-value>@application.Main.Deployment.ToString()</my-value></td>
-                <td>
-                    <my-value>
-                        @if (application.Main.Files?.Any() == true)
-                        {
-                            if (application.Main.Files.Count() > 1)
-                            {
-                                var content = $"<ul class='custom-popover'><li>{string.Join("</li><li>", application.Main.Files?.Select(b => b?.Name))}</li></ul>";
-                                <button type="button" class="btn btn-secondary" data-container="body" data-toggle="popover" data-placement="top" data-content="@content" data-html="true">
-                                    <i class="bi @ViewConstants.ListButton"></i>
-                                </button>
-                            }
-                            else
-                            {
-                                var fileName = application.Main.Files?.Select(b => b?.Name).First();
-                                @fileName
-                            }
-                        }
-                    </my-value>
-                </td>
-                <td>
-                    <my-value>
-                        @if (application.Main.Pods?.Any() == true)
-                        {
-                            var content = $"<ul class='custom-popover'><li>{string.Join("</li><li>", application.Main.Pods?.Select(b => b?.Name))}</li></ul>";
-                            <button type="button" class="btn btn-secondary" data-container="body" data-toggle="popover" data-placement="top" data-content="@content" data-html="true">
-                                <i class="bi @ViewConstants.ListButton"></i>
-                            </button>
-                        }
-                    </my-value>
-                </td>
-                <td><my-value>@application.Main.Notes</my-value></td>
-                <td>
-                    <a href="/Cluster/Index/@application.Main.Id" class="btn btn-primary">
-                        <i class="bi @ViewConstants.EditButton"></i>
-                    </a>
-                </td>
-            </tr>
+            @await Html.PartialAsync("_Application", application)
         }
 
-        <tr style="border-bottom: 2pt solid black;"></tr>
-        <tr></tr>
-
+        @await Html.PartialAsync("_NewLine")
         @await Html.PartialAsync("_AddApplication", Model.Input)
         @await Html.PartialAsync("_AddAdditional", Model.Additional)
     </tbody>

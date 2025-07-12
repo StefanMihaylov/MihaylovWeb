@@ -145,23 +145,14 @@ namespace Mihaylov.Api.Other.Controllers
 
         [HttpGet]
         [ProducesResponseType(typeof(LastVersionResponse), StatusCodes.Status200OK)]
-        public async Task<IActionResult> LastVersion(int id)
+        public async Task<IActionResult> LastVersion(int id, bool? reload)
         {
-            var result = await _versionService.GetLastVersionAsync(id).ConfigureAwait(false);
+            var result = await _versionService.GetLastVersionAsync(id, reload).ConfigureAwait(false);
 
             return Ok(new LastVersionResponse()
             {
                 LastVersion = result,
             });
-        }
-
-        [HttpDelete]
-        [ProducesResponseType(typeof(void), StatusCodes.Status200OK)]
-        public IActionResult ReloadLastVersion(int id)
-        {
-            _versionService.Reload(id);
-
-            return Ok();
         }
     }
 }

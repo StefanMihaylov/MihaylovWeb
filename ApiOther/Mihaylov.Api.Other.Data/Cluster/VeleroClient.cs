@@ -68,15 +68,26 @@ namespace Mihaylov.Api.Other.Data.Cluster
 
         private async Task<string> GetResponseAsync(string command)
         {
-            var velero = VeleroExePath();
-            if (string.IsNullOrWhiteSpace(velero))
+            _logger.LogInformation("Start velero exe command 'command'");
+
+            var veleroPath = VeleroExePath();
+            _logger.LogInformation($"Velero path: '{veleroPath}'");
+
+            if (string.IsNullOrWhiteSpace(veleroPath))
             {
                 Directory.Delete(_config.TempPath, true);
                 Directory.CreateDirectory(_config.TempPath);
 
+                _logger.LogInformation("Directory created");
+
                 var zipFilePah = GetZipFilePah();
+
+                _logger.LogInformation($"Zip path: '{zipFilePah}'");
+
                 await DownloadVeleroAsync(zipFilePah).ConfigureAwait(false);
                 UnzipVelero(zipFilePah);
+
+                _logger.LogInformation($"exe downloaded");
 
                 var unzipDir = Path.GetFileNameWithoutExtension(Path.GetFileNameWithoutExtension(zipFilePah));
                 var zipDirectory = new DirectoryInfo($"{_config.TempPath}/{unzipDir}");
@@ -87,16 +98,20 @@ namespace Mihaylov.Api.Other.Data.Cluster
                 }
 
                 var exeName = Path.GetFileName(veleroFile.FullName);
-                velero = $"{_config.VeleroPath}/{exeName}";                
+                veleroPath = $"{_config.VeleroPath}/{exeName}";                
 
-                File.Copy(veleroFile.FullName, velero, true);
+                File.Copy(veleroFile.FullName, veleroPath, true);
                 if (!_config.CmdPath.Contains("cmd"))
                 {
-                    ExecuteCommand("chmod", $"+x {velero}");
+                    ExecuteCommand("chmod", $"+x {veleroPath}");
                 }                
             }
 
-            var result = ExecuteCommand(velero, command);
+            _logger.LogInformation($"Before Execute '{command}' command");
+
+            var result = ExecuteCommand(veleroPath, command);
+
+            _logger.LogInformation($"'{command}' command response: {result}");
 
             return result;
         }

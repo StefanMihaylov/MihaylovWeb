@@ -9,7 +9,7 @@
             @Html.TextBoxFor(m => m.Order, new { aria_autocomplete = "none", autocomplete = "off", @class = "tiny-width" })
         </td>
         <td>            
-            @Html.TextBoxFor(m => m.Name, new { aria_autocomplete = "none", autocomplete = "off", @class = "short-width" })
+            @Html.TextBoxFor(m => m.Name, new { aria_autocomplete = "none", autocomplete = "off", @class = "short-width", style = "min-width: 200px;" })
             @Html.ValidationMessageFor(m => m.Name)
         </td>
         <td></td>

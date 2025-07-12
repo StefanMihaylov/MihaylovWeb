@@ -8,8 +8,8 @@ namespace Mihaylov.Web.Models.Cluster
 
         public LastVersionModel LastVersion { get; set; }
 
-        public bool IsLatestVersion { get; set; }
+        public VersionIconType Icon { get; set; }
 
-        public bool ParserSettingAvailable { get; set; }
+        public bool IsNew => Icon == VersionIconType.New && LastVersion?.IsSuccessful == true;
     }
 }

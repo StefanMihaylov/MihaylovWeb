@@ -1,0 +1,162 @@
+﻿@using Mihaylov.Web.Controllers
+@using Mihaylov.Web.Models.Cluster
+@using Mihaylov.Web.Models.Configs
+@model ApplicationViewModel
+
+<tr id="app-@Model.Main.Id" data-id="@Model.Main.Id" class="lazy-load">
+    <td style="text-align:center">
+        @Model.Main.Order
+    </td>
+    <td>
+        <my-value>
+            <span style="font-size: 1.4rem">
+                @switch (Model.Icon)
+                {
+                    case VersionIconType.OK:
+                        <span style="color:green">
+                            <i class="bi bi-check-circle-fill"></i>
+                        </span>
+                        break;
+
+                    case VersionIconType.New:
+                        <span style="color:red">
+                            <i class="bi bi-shift-fill"></i>
+                        </span>
+                        break;
+
+                    case VersionIconType.Error:
+                        <span style="color:red">
+                            <i class="bi bi-exclamation-triangle-fill"></i>
+                        </span>
+                        break;
+
+                    case VersionIconType.Unknown:
+                        <span style="color:orange">
+                            <i class="bi bi-question-circle-fill"></i>
+                        </span>
+                        break;
+
+                    case VersionIconType.None:
+                    default:
+                        break;
+                }
+            </span>
+
+            @Model.Main.Name
+        </my-value>
+    </td>
+    <td>
+        <my-value>
+            @if (Model.Main.Version != null)
+            {
+                var interval = DateTime.UtcNow.Date.Subtract(Model.Main.Version.ReleaseDate);
+                var days = $"{interval.TotalDays} дни";
+
+                @days
+
+                <span style="color:blue" class="reload">
+                    <i class="bi bi-repeat"></i>
+                </span>
+            }
+
+            @if (Model.IsNew)
+            {
+                <br />
+                var interval = DateTime.UtcNow.Date.Subtract(Model.LastVersion.ReleaseDate.Value.Date);
+                var days = $"{interval.TotalDays} дни";
+                var fullDate = Model.LastVersion.ReleaseDate.Value.ToString("yyyy.MM.dd");
+                var lastVersionFillInfo = $"{days} ({fullDate})";
+
+                @lastVersionFillInfo
+            }
+
+            @if(Model.Icon == VersionIconType.Error)
+            {
+                <br />
+                @Model.LastVersion?.RawReleaseDate
+            }
+        </my-value>
+    </td>
+    <td>
+        <my-value>
+            @Model.Main.Version?.Version
+            @if (Model.IsNew)
+            {
+                <br />
+                @Model.LastVersion.Version
+            }
+
+            @if (Model.Icon == VersionIconType.Error)
+            {
+                <br />
+                @Model.LastVersion?.RawVersion
+            }
+        </my-value>
+    </td>
+    <td><my-value>@Model.Main.Version?.HelmVersion</my-value></td>
+    <td style="display: none;"><my-value>@Model.Main.Version?.HelmAppVersion</my-value></td>
+    <td>
+        <my-value>
+            <span style="font-size: 1.4rem">
+                @if (!string.IsNullOrEmpty(Model.Main.SiteUrl))
+                {
+                    <a href="@Model.Main.SiteUrl" target="_blank">
+                        <i class="bi bi-globe"></i>
+                    </a>
+                }
+                <a href="@Model.Main.ReleaseUrl" target="_blank">
+                    <i class="bi bi-shift-fill"></i>
+                </a>
+                @if (!string.IsNullOrEmpty(Model.Main.ResourceUrl))
+                {
+                    <a href="@Model.Main.ResourceUrl" target="_blank">
+                        <i class="bi bi-download"></i>
+                    </a>
+                }
+                @if (!string.IsNullOrEmpty(Model.Main.GithubVersionUrl))
+                {
+                    <a href="@Model.Main.GithubVersionUrl" target="_blank">
+                        <i class="bi bi-github"></i>
+                    </a>
+                }
+            </span>
+        </my-value>
+    </td>
+    <td><my-value>@Model.Main.Deployment.ToString()</my-value></td>
+    <td>
+        <my-value>
+            @if (Model.Main.Files?.Any() == true)
+            {
+                if (Model.Main.Files.Count() > 1)
+                {
+                    var content = $"<ul class='custom-popover'><li>{string.Join("</li><li>", Model.Main.Files?.Select(b => b?.Name))}</li></ul>";
+                    <button type="button" class="btn btn-secondary" data-container="body" data-toggle="popover" data-placement="top" data-content="@content" data-html="true">
+                        <i class="bi @ViewConstants.ListButton"></i>
+                    </button>
+                }
+                else
+                {
+                    var fileName = Model.Main.Files?.Select(b => b?.Name).First();
+                    @fileName
+                }
+            }
+        </my-value>
+    </td>
+    <td>
+        <my-value>
+            @if (Model.Main.Pods?.Any() == true)
+            {
+                var content = $"<ul class='custom-popover'><li>{string.Join("</li><li>", Model.Main.Pods?.Select(b => b?.Name))}</li></ul>";
+                <button type="button" class="btn btn-secondary" data-container="body" data-toggle="popover" data-placement="top" data-content="@content" data-html="true">
+                    <i class="bi @ViewConstants.ListButton"></i>
+                </button>
+            }
+        </my-value>
+    </td>
+    <td><my-value>@Model.Main.Notes</my-value></td>
+    <td>
+        <a href="/Cluster/Index/@Model.Main.Id" class="btn btn-primary">
+            <i class="bi @ViewConstants.EditButton"></i>
+        </a>
+    </td>
+</tr>

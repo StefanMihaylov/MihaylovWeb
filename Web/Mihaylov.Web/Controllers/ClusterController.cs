@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -149,16 +148,70 @@ namespace Mihaylov.Web.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> ReloadLastVersion(int Id)
+        public async Task<IActionResult> GetLastVersion(int id, bool? reload)
         {
             _client.AddToken(Request.GetToken());
-            await _client.ReloadLastVersionAsync(Id).ConfigureAwait(false);
+            var applications = await _client.ApplicationsAsync().ConfigureAwait(false);
+            var application = applications.FirstOrDefault(a => a.Id == id);
 
-            return RedirectToAction(nameof(Index));
+            var parserSettings = await _client.ParserSettingsAsync().ConfigureAwait(false);
+            var availableSettings = parserSettings.Any(p => p.ApplicationId == application.Id);
+
+            LastVersionModel lastVersion = null;
+            VersionIconType icon;
+            if (!availableSettings)
+            {
+                icon = VersionIconType.None;
+            }
+            else
+            {
+                var lastVersionResponse = await _client.LastVersionAsync(id, reload).ConfigureAwait(false);
+                lastVersion = lastVersionResponse.LastVersion;
+                if (lastVersion == null || !lastVersion.IsSuccessful)
+                {
+                    icon = VersionIconType.Error;
+                }
+                else
+                {
+                    var isLastVersion = false;
+                    if (lastVersion.IsSuccessful && application.Version != null)
+                    {
+                        isLastVersion = application.Version.Version == lastVersion.Version;
+
+                        if (!isLastVersion)
+                        {
+                            try
+                            {
+                                var appVersion = new Version(application.Version.Version);
+                                var lastVersionModel = new Version(lastVersion.Version);
+
+                                if (appVersion > lastVersionModel)
+                                {
+                                    isLastVersion = true;
+                                }
+                            }
+                            catch (Exception)
+                            {
+                            }
+                        }
+                    }
+
+                    icon = isLastVersion ? VersionIconType.OK : VersionIconType.New;
+                }
+            }
+
+            var viewModel = new ApplicationViewModel()
+            {
+                Main = application,
+                LastVersion = lastVersion,
+                Icon = icon,
+            };
+
+            return PartialView("_Application", viewModel);
         }
 
         private async Task<ClusterMainModel> FillModelAsync(int? id, int? settingId, AddApplicationModel inputModel,
-        AddAdditionalModel additional, AddVersionModel version, AddParserSettingModel parserSetting)
+            AddAdditionalModel additional, AddVersionModel version, AddParserSettingModel parserSetting)
         {
             _client.AddToken(Request.GetToken());
             var applications = await _client.ApplicationsAsync().ConfigureAwait(false);
@@ -176,49 +229,13 @@ namespace Mihaylov.Web.Controllers
                       .ToList();
 
             var parserSettings = await _client.ParserSettingsAsync().ConfigureAwait(false);
-
-            var appIds = applications.Select(a => a.Id);
-            var versionDictionary = new Dictionary<int, LastVersionModel>();
-            var availableSettings = new HashSet<int>(parserSettings.Select(p => p.ApplicationId));
-
-            foreach (var appId in appIds)
-            {
-                var lastVersion = await _client.LastVersionAsync(appId).ConfigureAwait(false);
-                versionDictionary.Add(appId, lastVersion.LastVersion);
-            }
-
             var applicationsExtended = applications.Select(application =>
             {
-                var lastVersion = versionDictionary[application.Id];
-
-                var isLastVersion = false;
-                if (lastVersion != null && application.Version != null)
-                {
-                    isLastVersion = application.Version.Version == lastVersion.Version;
-                    if (!isLastVersion)
-                    {
-                        try
-                        {
-                            var appVersion = new Version(application.Version.Version);
-                            var lastVersionModel = new Version(lastVersion.Version);
-
-                            if (appVersion > lastVersionModel)
-                            {
-                                isLastVersion = true;
-                            }
-                        }
-                        catch (Exception)
-                        {
-                        }
-                    }
-                }
-
                 return new ApplicationViewModel()
                 {
                     Main = application,
-                    LastVersion = lastVersion,
-                    IsLatestVersion = isLastVersion,
-                    ParserSettingAvailable = availableSettings.Contains(application.Id),
+                    LastVersion = null,
+                    Icon = VersionIconType.Unknown,
                 };
             })
             .ToList();
