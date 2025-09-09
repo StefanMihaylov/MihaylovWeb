@@ -17,7 +17,7 @@ namespace Mihaylov.Web.Controllers
     public class SiteController : Controller
     {
         public const string NAME = "Site";
-        
+
         private readonly ISiteApiClient _client;
         private readonly SiteConfig _settings;
 
@@ -30,12 +30,24 @@ namespace Mihaylov.Web.Controllers
         public async Task<IActionResult> Index([FromQuery] SiteFilterModel model)
         {
             _client.AddToken(Request.GetToken());
+            var defaultConfig = await _client.DefaultFilterAsync().ConfigureAwait(false);
+
+            if (!model.AccountTypeId.HasValue && defaultConfig?.AccountTypeId != null)
+            {
+                model.AccountTypeId = defaultConfig.AccountTypeId;
+            }
+
             PersonGrid grid = await _client.PersonsAsync(model, 10).ConfigureAwait(false);
             PersonFormatedStatistics statistics = await _client.FormatedStatisticsAsync().ConfigureAwait(false);
 
             IEnumerable<QuizPhrase> quizPhrases = await _client.PhrasesAsync().ConfigureAwait(false);
             IEnumerable<QuizQuestion> quizQuestions = await _client.QuestionsAsync().ConfigureAwait(false);
+            IEnumerable<DefaultFilter> defaultFilters = await _client.DefaultFiltersAsync().ConfigureAwait(false);
             IEnumerable<AccountType> accountTypes = await _client.AccountTypesAsync().ConfigureAwait(false);
+            IEnumerable<AccountStatus> accountStates = await _client.AccountStatesAsync().ConfigureAwait(false);
+
+            model.AccountTypes = accountTypes;
+            model.AccountStates = accountStates;
 
             PersonExtended personExtended = null;
             NewPersonViewModel newPersonFilter = null;
@@ -43,28 +55,36 @@ namespace Mihaylov.Web.Controllers
             {
                 personExtended = await GetPersonExtended(model.PersonId.Value).ConfigureAwait(false);
             }
-            else if (model.IsNewPerson == true)
+            else if (model.IsNewPerson == true) // preview only
             {
                 var request = new NewPersonModel()
                 {
                     AccountTypeId = model.AccountTypeId,
                     Username = model.AccountName,
-                    IsPreview = true,
+                    IsPreview = true, // always true
                 };
 
                 Person newPerson = await _client.NewPersonAsync(request).ConfigureAwait(false);
-                personExtended = await GetPersonExtended(newPerson).ConfigureAwait(false);                
+
+                if (defaultConfig?.StatusId != null)
+                {
+                    var account = newPerson.Accounts?.FirstOrDefault();
+                    if (account != null)
+                    {
+                        account.StatusId = defaultConfig.StatusId;
+                    }
+                }
+
+                personExtended = await GetPersonExtended(newPerson).ConfigureAwait(false);
 
                 newPersonFilter = new NewPersonViewModel()
                 {
                     AccountTypeId = model.AccountTypeId,
                     AccountName = model.AccountName,
-                    IsPreview = false,
+                    IsPreview = false, // always false
                     AccountTypes = accountTypes,
                 };
             }
-
-            await FilterExtend(model).ConfigureAwait(false);
 
             var main = new SiteMainModel()
             {
@@ -78,6 +98,7 @@ namespace Mihaylov.Web.Controllers
                     Questions = quizQuestions,
                     AccountTypes = accountTypes,
                     QuizPhrases = quizPhrases,
+                    DefaultFilters = defaultFilters,
                 },
                 OtherTabModel = new OtherTabModel()
                 {
@@ -95,16 +116,18 @@ namespace Mihaylov.Web.Controllers
             return Redirect($"/{NAME}/{nameof(Index)}{query.ToQueryString()}");
         }
 
-        public async Task<IActionResult> NewPersonView()
+        public async Task<IActionResult> NewPersonView(int? accountTypeId)
         {
             _client.AddToken(Request.GetToken());
+
+            var defaultConfig = await _client.DefaultFilterAsync().ConfigureAwait(false);
             var accountTypes = await _client.AccountTypesAsync().ConfigureAwait(false);
 
             var model = new NewPersonViewModel()
             {
-                AccountTypeId = null,
+                AccountTypeId = accountTypeId,
                 AccountName = null,
-                IsPreview = true,
+                IsPreview = defaultConfig?.IsPreview,  // null, false, true,
                 AccountTypes = accountTypes,
             };
 
@@ -127,25 +150,9 @@ namespace Mihaylov.Web.Controllers
             };
 
             _client.AddToken(Request.GetToken());
+            var defaultConfig = await _client.DefaultFilterAsync().ConfigureAwait(false);
 
-            if (input.IsPreview == false)
-            {
-                var request = new NewPersonModel()
-                {
-                    AccountTypeId = input.AccountTypeId,
-                    Username = input.AccountName,
-                    IsPreview = input.IsPreview,
-                };
-
-                Person newPerson = await _client.NewPersonAsync(request).ConfigureAwait(false);
-
-                query.PersonId = newPerson.Id;
-                query.AccountName = query.AccountNameExact;
-                query.AccountNameExact = null;
-
-                return Redirect($"/{NAME}/{nameof(Index)}{query.ToQueryString()}");
-            }
-
+            // already exists?
             PersonGrid grid = await _client.PersonsAsync(query, null).ConfigureAwait(false);
 
             query.AccountName = query.AccountNameExact;
@@ -153,11 +160,44 @@ namespace Mihaylov.Web.Controllers
             if (grid.Data.Count() == 1)
             {
                 query.PersonId = grid.Data.First().Id;
-
                 return Redirect($"/{NAME}/{nameof(Index)}{query.ToQueryString()}");
             }
 
-            query.IsNewPerson = true;
+            // preview only
+            if (input.IsPreview == true)
+            {
+                query.IsNewPerson = true;
+                return Redirect($"/{NAME}/{nameof(Index)}{query.ToQueryString()}");
+            }
+
+            // check and save
+            var request = new NewPersonModel()
+            {
+                AccountTypeId = input.AccountTypeId,
+                Username = input.AccountName,
+                StatusId = defaultConfig?.StatusId,
+                IsPreview = input.IsPreview,
+            };
+
+            Person newPerson = await _client.NewPersonAsync(request).ConfigureAwait(false);
+
+            // no username
+            if (!newPerson.Accounts.Any())
+            {
+                return Redirect($"/{NAME}/{nameof(Index)}{query.ToQueryString()}");
+            }
+
+            // still not created?
+            if (newPerson.Id == 0)
+            {
+                query.IsNewPerson = true;
+                return Redirect($"/{NAME}/{nameof(Index)}{query.ToQueryString()}");
+            }
+
+            // created
+            query.PersonId = newPerson.Id;
+            query.AccountNameExact = null;
+
             return Redirect($"/{NAME}/{nameof(Index)}{query.ToQueryString()}");
         }
 
@@ -440,15 +480,45 @@ namespace Mihaylov.Web.Controllers
             return Redirect($"/{NAME}/{nameof(Index)}");
         }
 
-
-        private async Task FilterExtend(SiteFilterModel model)
+        [HttpPost]
+        public async Task<IActionResult> DefaultFilterView(int? id)
         {
-            var accountTypes = await _client.AccountTypesAsync().ConfigureAwait(false);
-            var accountStates = await _client.AccountStatesAsync().ConfigureAwait(false);
+            _client.AddToken(Request.GetToken());
 
-            model.AccountTypes = accountTypes;
-            model.AccountStates = accountStates;
+            var states = await _client.AccountStatesAsync().ConfigureAwait(false);
+            var accountTypes = await _client.AccountTypesAsync().ConfigureAwait(false);
+            var defaultFilters = await _client.DefaultFiltersAsync().ConfigureAwait(false);
+
+            var defaultFilter = defaultFilters.Where(a => a.Id == id).FirstOrDefault();
+            
+            var model = new DefaultFilterExtended(defaultFilter)
+            {
+                AccountTypes = accountTypes,
+                States = states,
+            };
+
+            return PartialView("_AddDefaultFilter", model);
         }
+
+        [HttpPost]
+        public async Task<IActionResult> SaveDefaultFilter(DefaultFilterModel model)
+        {
+            var request = new AddDefaultFilterModel()
+            {
+                Id = model.Id,
+                IsEnabled = model.IsEnabled.Value,
+                AccountTypeId = model.AccountTypeId,
+                StatusId = model.StatusId,
+                IsArchive = model.IsArchive.Value,
+                IsPreview = model.IsPreview,
+            };
+
+            _client.AddToken(Request.GetToken());
+            DefaultFilter filter = await _client.AddDefailtFilterAsync(request).ConfigureAwait(false);
+
+            return Redirect($"/{NAME}/{nameof(Index)}");
+        }
+
 
         private async Task<PersonExtended> GetPersonExtended(long id)
         {
@@ -480,6 +550,7 @@ namespace Mihaylov.Web.Controllers
                 Ethnicities = ethnicities,
                 Orientations = orientations,
             };
+
             return result;
         }
 
@@ -504,11 +575,14 @@ namespace Mihaylov.Web.Controllers
                 AccountTypes = accountTypes,
                 AccountStates = accountStates,
             };
+
             return model;
         }
 
         private async Task<AnswerExtended> GetAnswerExtended(AnswerViewModel input)
         {
+            var defaultConfig = await _client.DefaultFilterAsync().ConfigureAwait(false); ;
+
             var answer = new QuizAnswer()
             {
                 PersonId = input.PersonId.Value,
@@ -519,13 +593,19 @@ namespace Mihaylov.Web.Controllers
             {
                 answer = await _client.AnswerAsync(input.Id).ConfigureAwait(false);
             }
-            else
+            else if (defaultConfig?.IsArchive == true)
             {
                 var answers = await _client.AnswersAsync(answer.PersonId).ConfigureAwait(false);
                 if (answers.Any())
                 {
                     var lastAskDate = answers.OrderByDescending(a => a.AskDate).First().AskDate;
                     answer.AskDate = lastAskDate.AddSeconds(1);
+                }
+                else
+                {
+                    Person person = await _client.PersonAsync(input.PersonId.Value).ConfigureAwait(false);
+                    var accountDate = person.Accounts?.OrderByDescending(a => a.AskDate).FirstOrDefault()?.AskDate;
+                    answer.AskDate = accountDate ?? DateTime.UtcNow;
                 }
             }
 

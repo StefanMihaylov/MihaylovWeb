@@ -80,3 +80,8 @@ hr {
     .button-red:hover {
         color: red;
     }
+
+.highlight {
+    background-color: darkgrey;
+    padding: 15px;
+}

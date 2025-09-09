@@ -61,6 +61,8 @@ namespace Mihaylov.Api.Site
                         opt.SiteUrl = Config.GetEnvironmentVariable("Site_SourceUrl");
                     });
 
+            // Add-Migration <name>
+
             services.AddSignalR();
             services.AddScoped<IProgressReporterFactory, ProgressReporterFactory>();
             services.AddCors(options =>

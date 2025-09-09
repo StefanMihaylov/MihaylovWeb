@@ -179,7 +179,11 @@ $(function () {
 
             var url = main.getUrl('Site/NewPersonView');
 
-            $.post(url, {}, function (res) {
+            var $dropdown = $('.person-details-container .search-form #AccountTypeId');
+            var accountTypeId = $dropdown.val();
+            var data = { accountTypeId: accountTypeId };
+
+            $.post(url, data, function (res) {
                 $newPersonSearchContainer.empty().append(res);
             }).fail(function (res) {
                 $newPersonSearchContainer.empty().append(res);
@@ -188,6 +192,26 @@ $(function () {
         })
         .on('click', '.person-details-container .close-new-person-button', function () {
             $newPersonSearchContainer.empty();
+        })
+        .on('click', '.person-details-container .edit-default-filter-button', function () {
+            var $defaultFilterContainer = $('#default-filter-info');
+            $defaultFilterContainer.empty();
+
+            var $this = $(this);
+            var id = $this.data('id');
+            var url = main.getUrl('Site/DefaultFilterView');
+            var data = { id: id };
+
+            $.post(url, data, function (res) {
+                $defaultFilterContainer.empty().append(res);
+            }).fail(function (res) {
+                $defaultFilterContainer.empty().append(res);
+            }).always(function () {
+            });
+        })
+        .on('click', '.person-details-container .close-default-filter-button', function () {
+            var $defaultFilterContainer = $('#default-filter-info');
+            $defaultFilterContainer.empty();
         })
         ;
 

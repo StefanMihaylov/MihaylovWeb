@@ -107,52 +107,58 @@ namespace Mihaylov.Api.Site.Controllers
         public async Task<IActionResult> NewPerson(NewPersonModel input)
         {
             input.AccountTypeId ??= 1;
-            input.Username = input.Username.Trim();
-            input.IsPreview ??= true;
-
-            var accountTypes = await _collectionManager.GetAllAccountTypesAsync().ConfigureAwait(false);
+            input.Username = input.Username?.Trim();
 
             var person = new Person()
             {
                 DateOfBirthType = DateOfBirthType.YearCalculated,
-                Accounts = new List<Account>(),
             };
 
-            if (!string.IsNullOrEmpty(input.Username))
+            if (string.IsNullOrEmpty(input.Username))
             {
-                person.Accounts = new List<Account>()
+                return Ok(person);
+            }
+
+            var accountTypes = await _collectionManager.GetAllAccountTypesAsync().ConfigureAwait(false);
+
+            var account = new Account()
+            {
+                AccountType = accountTypes.First(a => a.Id == input.AccountTypeId).Name,
+                AccountTypeId = input.AccountTypeId.Value,
+                Username = input.Username,
+                AskDate = DateTime.UtcNow,
+                StatusId = input.StatusId,
+            };
+
+            person.Accounts = new List<Account>() { account };
+
+            if (account.AccountTypeId == 3)
+            {
+                if (input.IsPreview == null)
                 {
-                    new Account()
-                    {
-                        AccountType = accountTypes.First(a => a.Id == input.AccountTypeId).Name,
-                        AccountTypeId = input.AccountTypeId.Value,
-                        Username = input.Username,
-                        AskDate = DateTime.UtcNow,
-                    } 
-                };
+                    input.IsPreview = true;
+                }
+                else
+                {
+                    await _siteHelper.FillNewPersonAsync(person, account.Username).ConfigureAwait(false);
+                }
             }
             else
             {
                 input.IsPreview = false;
             }
 
-            var account = person.Accounts.FirstOrDefault();
-            if (account?.AccountTypeId == 3)
-            {
-                await _siteHelper.FillNewPersonAsync(person, account.Username).ConfigureAwait(false);
-            }
-            
-            if (account?.StatusId != null)
-            {
-                var accountStates = await _collectionManager.GetAllAccountStatesAsync().ConfigureAwait(false);
-                account.Status = accountStates.First(s => s.Id == account.StatusId.Value).Name;
-            }
-
-            if (!input.IsPreview.Value)
+            if (input.IsPreview == false)
             {
                 var newPerson = await _writer.AddNewPersonAsync(person, person.Age).ConfigureAwait(false);
 
                 return Ok(newPerson);
+            }
+
+            if (account.StatusId.HasValue)
+            {
+                var accountStates = await _collectionManager.GetAllAccountStatesAsync().ConfigureAwait(false);
+                account.Status = accountStates.First(s => s.Id == account.StatusId.Value).Name;
             }
 
             return Ok(person);

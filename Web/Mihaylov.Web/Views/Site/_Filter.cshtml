@@ -9,13 +9,13 @@
     var accountStates = Model.AccountStates.GetListItems((t, v) => new SelectListItem(t, v), u => u.Id, u => u.Name);
 }
 
-@using (Html.BeginForm(nameof(SiteController.Search), SiteController.NAME, FormMethod.Post, new { @class = "form" }))
+@using (Html.BeginForm(nameof(SiteController.Search), SiteController.NAME, FormMethod.Post, new { @class = "form search-form" }))
 {
     <fieldset>
         <div class="form-row">
             <div class="form-group col-auto">
                 @Html.LabelFor(m => Model.AccountTypeId, "Type")
-                @Html.DropDownListFor(m => Model.AccountTypeId, accountTypes, ViewConstants.DefaultDropDownValueShort, new { @class = ViewConstants.EdithorClass, style = ViewConstants.Width100 })
+                @Html.DropDownListFor(m => Model.AccountTypeId, accountTypes, ViewConstants.DefaultDropDownValueShort, new { @class = ViewConstants.EdithorClass, style = ViewConstants.Width120 })
             </div>
             <div class="form-group col-auto">
                 @Html.LabelFor(m => Model.AccountName)

@@ -1,0 +1,53 @@
+﻿@using Mihaylov.Api.Site.Client
+@using Mihaylov.Web.Models.Configs
+@model IEnumerable<DefaultFilter>
+
+<table class="table table-bordered table-striped">
+    <caption style="caption-side: top;">Филтри</caption>
+    <thead>
+        <tr>
+            <th>@Html.NameFor(m => m.First().IsEnabled)</th>
+            <th>@Html.NameFor(m => m.First().AccountType)</th>
+            <th>@Html.NameFor(m => m.First().Status)</th>
+            <th>@Html.NameFor(m => m.First().IsArchive)</th>
+            <th>@Html.NameFor(m => m.First().IsPreview)</th>
+            <th>
+                <span class="edit-default-filter-button btn btn-success" data-id="">
+                    <i class="bi @ViewConstants.NewButton"></i>
+                </span>
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var filter in Model)
+        {
+            <tr>
+                <td>
+                    @if (filter.IsEnabled)
+                    {
+                        <span style="color:green">
+                            <i class="bi bi-check-circle-fill"></i>
+                        </span>
+                    }
+                    else
+                    {
+                        <span style="color:red">
+                            <i class="bi bi-x-circle-fill"></i>
+                        </span>
+                    }
+                </td>
+                <td>@filter.AccountType</td>
+                <td>@filter.Status</td>
+                <td>@filter.IsArchive</td>
+                <td>@filter.IsPreview</td>
+                <td>
+                    <span class="btn btn-secondary edit-default-filter-button" data-id="@filter.Id">
+                        <i class="bi  @ViewConstants.EditButton"></i>
+                    </span>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div id="default-filter-info"></div>

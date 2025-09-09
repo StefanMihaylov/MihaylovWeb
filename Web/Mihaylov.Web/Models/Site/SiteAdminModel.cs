@@ -10,5 +10,7 @@ namespace Mihaylov.Web.Models.Site
         public IEnumerable<AccountType> AccountTypes { get; set; }
 
         public IEnumerable<QuizPhrase> QuizPhrases { get; set; }
+
+        public IEnumerable<DefaultFilter> DefaultFilters { get; set; }
     }
 }

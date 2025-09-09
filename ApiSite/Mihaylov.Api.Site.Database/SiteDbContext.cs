@@ -53,6 +53,8 @@ namespace Mihaylov.Api.Site.Database
 
         public DbSet<QuizAnswer> QuizAnswers { get; set; }
 
+        public DbSet<DefaultFilter> DefaultFilters { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfiguration(new PersonConfiguration());
@@ -74,6 +76,7 @@ namespace Mihaylov.Api.Site.Database
             modelBuilder.ApplyConfiguration(new QuizPhraseConfiguration());
             modelBuilder.ApplyConfiguration(new QuizQuestionConfiguration());
             modelBuilder.ApplyConfiguration(new QuizAnswerConfiguration());
+            modelBuilder.ApplyConfiguration(new DefaultFilterConfiguration());
 
             base.OnModelCreating(modelBuilder);
         }

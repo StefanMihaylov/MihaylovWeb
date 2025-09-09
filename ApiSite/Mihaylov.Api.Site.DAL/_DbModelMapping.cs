@@ -197,6 +197,26 @@ namespace Mihaylov.Api.Site.DAL
                 .Map(dest => dest.LastOnlineDate, src => src.LastOnlineDate)
                 .Map(dest => dest.ReconciledDate, src => src.ReconciledDate)
                 .Map(dest => dest.Details, src => src.Details);
+
+            TypeAdapterConfig<Db.DefaultFilter, DefaultFilter>.NewConfig()
+                .Map(dest => dest.Id, src => src.DefaultFilterId)
+                .Map(dest => dest.IsEnabled, src => src.IsEnabled)
+                .Map(dest => dest.AccountTypeId, src => src.AccountTypeId)
+                .Map(dest => dest.AccountType, src => src.AccountType.Name)
+                .Map(dest => dest.StatusId, src => src.StatusId)
+                .Map(dest => dest.Status, src => src.Status.Name)
+                .Map(dest => dest.IsArchive, src => src.IsArchive)
+                .Map(dest => dest.IsPreview, src => src.IsPreview);
+
+            TypeAdapterConfig<DefaultFilter, Db.DefaultFilter>.NewConfig()
+                .Map(dest => dest.DefaultFilterId, src => src.Id)
+                .Map(dest => dest.IsEnabled, src => src.IsEnabled)
+                .Map(dest => dest.AccountTypeId, src => src.AccountTypeId)
+                .Ignore(src => src.AccountType)
+                .Map(dest => dest.StatusId, src => src.StatusId)
+                .Ignore(dest => dest.Status)
+                .Map(dest => dest.IsArchive, src => src.IsArchive)
+                .Map(dest => dest.IsPreview, src => src.IsPreview);
         }
     }
 }

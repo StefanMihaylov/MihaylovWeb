@@ -1,0 +1,50 @@
+﻿@using Mihaylov.Web.Controllers
+@using Mihaylov.Web.Models.Configs
+@using Mihaylov.Web.Models.Site
+@using Mihaylov.Common.Generic.Extensions
+@model DefaultFilterExtended
+
+@{
+    var accountTypes = Model.AccountTypes.GetListItems((t, v) => new SelectListItem(t, v), u => u.Id, u => u.Name);
+    var accountStates = Model.States.GetListItems((t, v) => new SelectListItem(t, v), u => u.Id, u => u.Name);
+    var boolValues = new[] { false, true }.GetListItems((t, v) => new SelectListItem(t, v), u => u, u => u.ToString());
+}
+
+@using (Html.BeginForm(nameof(SiteController.SaveDefaultFilter), SiteController.NAME, FormMethod.Post, new { @class = "form" }))
+{
+    <fieldset>
+        <div class="form-row">
+            <div class="form-group col-auto">
+                @Html.LabelFor(m => Model.IsEnabled)
+                @Html.DropDownListFor(m => Model.IsEnabled, boolValues, ViewConstants.DefaultDropDownValue, new { @class = ViewConstants.EdithorClass, style = ViewConstants.Width200 })
+                @Html.ValidationMessageFor(m => Model.IsEnabled)
+            </div>
+            <div class="form-group col-auto">
+                @Html.LabelFor(m => Model.AccountTypeId, "Type")
+                @Html.DropDownListFor(m => Model.AccountTypeId, accountTypes, ViewConstants.DefaultDropDownValue, new { @class = ViewConstants.EdithorClass, style = ViewConstants.Width200 })
+            </div>
+            <div class="form-group col-auto">
+                @Html.LabelFor(m => Model.StatusId, "Status")
+                @Html.DropDownListFor(m => Model.StatusId, accountStates, ViewConstants.DefaultDropDownValue, new { @class = ViewConstants.EdithorClass, style = ViewConstants.Width200 })
+            </div>
+            <div class="form-group col-auto">
+                @Html.LabelFor(m => Model.IsArchive)
+                @Html.DropDownListFor(m => Model.IsArchive, boolValues, ViewConstants.DefaultDropDownValue, new { @class = ViewConstants.EdithorClass, style = ViewConstants.Width200 })
+                @Html.ValidationMessageFor(m => Model.IsArchive)
+            </div>
+            <div class="form-group col-auto">
+                @Html.LabelFor(m => Model.IsPreview)
+                @Html.DropDownListFor(m => Model.IsPreview, boolValues, ViewConstants.DefaultDropDownValue, new { @class = ViewConstants.EdithorClass, style = ViewConstants.Width200 })
+            </div>
+            <div class="form-group col-auto">
+                @Html.HiddenFor(m => Model.Id)
+                <button type="submit" class="submit-btn btn btn-primary">
+                    <i class="bi @ViewConstants.SaveButton"></i>
+                </button>
+                <span class="btn btn-danger close-default-filter-button">
+                    <i class="bi @ViewConstants.CloseButton"></i>
+                </span>
+            </div>
+        </div>
+    </fieldset>
+}

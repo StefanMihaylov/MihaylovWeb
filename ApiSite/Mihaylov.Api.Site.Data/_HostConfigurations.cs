@@ -28,10 +28,12 @@ namespace Mihaylov.Api
             services.AddScoped<ICollectionManager, CollectionManager>();
             services.AddScoped<IPersonsManager, PersonsManager>();
             services.AddScoped<IQuizManager, QuizManager>();
+            services.AddScoped<IConfigurationManager, ConfigurationManager>();
 
             services.AddScoped<ICollectionWriter, CollectionWriter>();
             services.AddScoped<IPersonsWriter, PersonsWriter>();
             services.AddScoped<IQuizWriter, QuizWriter>();
+            services.AddScoped<IConfigurationWriter, ConfigurationWriter>();
 
             services.AddScoped<ISiteHelper, SiteHelper>();
 

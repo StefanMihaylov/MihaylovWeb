@@ -9,7 +9,7 @@ namespace Mihaylov.Web.Models.Site
 
         public string AccountName { get; set; }
 
-        public bool IsPreview { get; set; }
+        public bool? IsPreview { get; set; }
 
         public IEnumerable<AccountType> AccountTypes { get; set; }
     }

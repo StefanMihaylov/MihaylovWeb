@@ -37,6 +37,9 @@
             <a class="nav-link" data-toggle="tab" href="#phrases">Phrases</a>
         </li>
         <li class="nav-item">
+            <a class="nav-link" data-toggle="tab" href="#filters">Filters</a>
+        </li>
+        <li class="nav-item">
             <a class="nav-link" data-toggle="tab" href="#other">Other</a>
         </li>
     </ul>
@@ -56,6 +59,9 @@
         </div>
         <div id="phrases" class="tab-pane fade">
             @await Html.PartialAsync("_QuizPhrasesGrid", Model.AdminData.QuizPhrases)
+        </div>
+        <div id="filters" class="tab-pane fade">
+            @await Html.PartialAsync("_DefaultFiltersGrid", Model.AdminData.DefaultFilters)
         </div>
         <div id="other" class="tab-pane fade">
             @await Html.PartialAsync("_OtherTab", Model.OtherTabModel)

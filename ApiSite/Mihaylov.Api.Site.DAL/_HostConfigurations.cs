@@ -14,6 +14,7 @@ namespace Mihaylov.Api
             services.AddScoped<ICollectionRepository, CollectionRepository>();
             services.AddScoped<IPersonsRepository, PersonsRepository>();
             services.AddScoped<IQuizRepository, QuizRepository>();
+            services.AddScoped<IConfigurationRepository, ConfigurationRepository>();
 
             return services;
         }
