@@ -37,6 +37,10 @@
             @Html.ValidationMessageFor(m => m.Notes)
         </td>
         <td>
+            @Html.DropDownListFor(m => m.ParserSettingId, Model.ParserSettings, ViewConstants.DefaultDropDownValue, new { @class = "short-width", style = "min-width: 110px;" })
+            @Html.ValidationMessageFor(m => m.ParserSettingId)
+        </td>
+        <td>
             <button type="submit" class="btn btn-success">
                 <i class="bi @ViewConstants.NewButton"></i>
             </button>

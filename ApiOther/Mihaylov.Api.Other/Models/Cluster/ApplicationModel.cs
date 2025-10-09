@@ -32,5 +32,7 @@ namespace Mihaylov.Api.Other.Models.Cluster
 
         [StringLength(ModelConstants.AppNotesMaxLength)]
         public string Notes { get; set; }
+
+        public int? ParserSettingId { get; set; }
     }
 }

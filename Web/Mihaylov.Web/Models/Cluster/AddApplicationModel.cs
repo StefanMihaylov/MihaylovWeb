@@ -28,7 +28,10 @@ namespace Mihaylov.Web.Models.Cluster
 
         public string Notes { get; set; }
 
+        public int? ParserSettingId { get; set; }
 
         public IEnumerable<SelectListItem> DeploymentTypes { get; set; }
+
+        public IEnumerable<SelectListItem> ParserSettings { get; set; }
     }
 }

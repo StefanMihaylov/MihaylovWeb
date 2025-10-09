@@ -9,5 +9,7 @@ namespace Mihaylov.Api.Other.Contracts.Cluster.Models.Cluster
         public IEnumerable<DeploymentFile> Files { get; set; }
 
         public AppVersion Version { get; set; }
+
+        public IEnumerable<VersionHistory> Versions { get; set; }
     }
 }

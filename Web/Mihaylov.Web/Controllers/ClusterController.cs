@@ -51,6 +51,7 @@ namespace Mihaylov.Web.Controllers
                 GithubVersionUrl = inputModel?.GithubVersionUrl,
                 Deployment = inputModel?.Deployment ?? DeploymentType.Yaml,
                 Notes = inputModel?.Notes,
+                ParserSettingId = inputModel?.ParserSettingId,
             };
 
             _client.AddToken(Request.GetToken());
@@ -132,7 +133,8 @@ namespace Mihaylov.Web.Controllers
             var model = new ParserSettingModel()
             {
                 Id = inputModel.Id,
-                ApplicationId = inputModel.ApplicationId.Value,
+                Name = inputModel.Name,
+                ApplicationId = inputModel.ApplicationId,
                 VersionUrlType = inputModel.VersionUrlType.Value,
                 VersionSelector = inputModel.VersionSelector,
                 VersionCommand = inputModel.VersionCommand,
@@ -154,12 +156,9 @@ namespace Mihaylov.Web.Controllers
             var applications = await _client.ApplicationsAsync().ConfigureAwait(false);
             var application = applications.FirstOrDefault(a => a.Id == id);
 
-            var parserSettings = await _client.ParserSettingsAsync().ConfigureAwait(false);
-            var availableSettings = parserSettings.Any(p => p.ApplicationId == application.Id);
-
             LastVersionModel lastVersion = null;
             VersionIconType icon;
-            if (!availableSettings)
+            if (!application.ParserSettingId.HasValue)
             {
                 icon = VersionIconType.None;
             }
@@ -229,6 +228,11 @@ namespace Mihaylov.Web.Controllers
                       .ToList();
 
             var parserSettings = await _client.ParserSettingsAsync().ConfigureAwait(false);
+            var parserSettingsDropDown = parserSettings.Where(p => !string.IsNullOrWhiteSpace(p.Name))
+                                            .OrderBy(p => p.Name)
+                                            .Select(v => new SelectListItem(v.Name, v.Id.ToString()))
+                                            .ToList();
+
             var applicationsExtended = applications.Select(application =>
             {
                 return new ApplicationViewModel()
@@ -256,6 +260,7 @@ namespace Mihaylov.Web.Controllers
                         ResourceUrl = app.ResourceUrl,
                         GithubVersionUrl = app.GithubVersionUrl,
                         Notes = app.Notes,
+                        ParserSettingId = app.ParserSettingId,
                     };
                 }
             }
@@ -268,6 +273,7 @@ namespace Mihaylov.Web.Controllers
                     parserSetting = new AddParserSettingModel()
                     {
                         Id = settings.Id,
+                        Name = settings.Name,
                         ApplicationId = settings.ApplicationId,
                         VersionUrlType = settings.VersionUrlType,
                         VersionSelector = settings.VersionSelector,
@@ -303,6 +309,7 @@ namespace Mihaylov.Web.Controllers
             }
 
             inputModel.DeploymentTypes = deploymentTypes;
+            inputModel.ParserSettings = parserSettingsDropDown;
             additional.Applications = applicationDropDown;
             version.Applications = applicationDropDown;
             parserSetting.UrlTypes = UrlTypes;

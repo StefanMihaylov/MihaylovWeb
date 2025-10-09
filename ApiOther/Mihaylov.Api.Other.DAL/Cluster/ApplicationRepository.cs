@@ -24,6 +24,7 @@ namespace Mihaylov.Api.Other.DAL.Cluster
             var query = _dbContext.Applications.AsNoTracking()
                                   .Include(c => c.Pods)
                                   .Include(c => c.Files)
+                                  .Include(c => c.Versions)
                                   .OrderBy(c => c.Order ?? 999)
                                     .ThenBy(c => c.ApplicationId);
 

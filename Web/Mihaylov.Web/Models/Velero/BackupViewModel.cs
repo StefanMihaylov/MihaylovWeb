@@ -1,8 +1,9 @@
-﻿using Mihaylov.Common;
+﻿using System;
+using System.Linq;
 using System.Text;
 using Mihaylov.Api.Other.Client;
-using System.Linq;
-using System;
+using Mihaylov.Common;
+using Mihaylov.Web.Models.Configs;
 
 namespace Mihaylov.Web.Models.Velero
 {
@@ -50,7 +51,7 @@ namespace Mihaylov.Web.Models.Velero
 
                 builder.Append("<ul class='custom-popover'>");
                 AddPopupLine(builder, "Name", Name);
-                AddPopupLine(builder, "Delete", $"<a href='/Velero/DeleteBackup/?backup={Name}' class='button-red'><i class='bi bi-x-circle-fill'></i></a>");
+                AddPopupLine(builder, "Delete", $"<a href='/Velero/DeleteBackup/?backup={Name}' class='button-red'><i class='bi {ViewConstants.CloseCircleButton}'></i></a>");
                 AddPopupLine(builder, "Phase", Phase?.ToString());
                 AddPopupLine(builder, "Created", CreatedOn?.ToString("yyyy-MM-dd HH:mm:ss"));
                 AddPopupLine(builder, "Completed", CompletionTimestamp?.ToString("yyyy-MM-dd HH:mm:ss"));

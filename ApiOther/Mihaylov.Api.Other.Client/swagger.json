@@ -259,6 +259,65 @@
         }
       }
     },
+    "/api/Cluster/Versions": {
+      "get": {
+        "tags": [
+          "Cluster"
+        ],
+        "parameters": [
+          {
+            "name": "applicationId",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/VersionHistory"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/Cluster/Version": {
       "post": {
         "tags": [
@@ -1520,6 +1579,15 @@
             "format": "int32",
             "nullable": true
           },
+          "parserSettingId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "parserSettingName": {
+            "type": "string",
+            "nullable": true
+          },
           "pods": {
             "type": "array",
             "items": {
@@ -1540,6 +1608,13 @@
                 "$ref": "#/components/schemas/AppVersion"
               }
             ],
+            "nullable": true
+          },
+          "versions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/VersionHistory"
+            },
             "nullable": true
           }
         },
@@ -1602,6 +1677,11 @@
             "maxLength": 1000,
             "minLength": 0,
             "type": "string",
+            "nullable": true
+          },
+          "parserSettingId": {
+            "type": "integer",
+            "format": "int32",
             "nullable": true
           }
         },
@@ -2451,9 +2531,14 @@
             "type": "integer",
             "format": "int32"
           },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
           "applicationId": {
             "type": "integer",
-            "format": "int32"
+            "format": "int32",
+            "nullable": true
           },
           "applicationName": {
             "type": "string",
@@ -2523,7 +2608,6 @@
       },
       "ParserSettingModel": {
         "required": [
-          "applicationId",
           "versionSelector",
           "versionUrlType"
         ],
@@ -2536,7 +2620,12 @@
           },
           "applicationId": {
             "type": "integer",
-            "format": "int32"
+            "format": "int32",
+            "nullable": true
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
           },
           "versionUrlType": {
             "allOf": [
@@ -2844,6 +2933,24 @@
             "maxLength": 100,
             "type": "string",
             "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "VersionHistory": {
+        "type": "object",
+        "properties": {
+          "version": {
+            "type": "string",
+            "nullable": true
+          },
+          "releaseDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "createdOn": {
+            "type": "string",
+            "format": "date-time"
           }
         },
         "additionalProperties": false

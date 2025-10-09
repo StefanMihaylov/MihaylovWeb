@@ -25,6 +25,10 @@ namespace Mihaylov.Api.Other.Database.Cluster.Models
 
         public string Notes { get; set; }
 
+        public int? ParserSettingId { get; set; }
+
+        public ParserSetting ParserSetting { get; set; }
+
         public IEnumerable<ApplicationVersion> Versions { get; set; }
 
         public IEnumerable<ApplicationPod> Pods { get; set; }

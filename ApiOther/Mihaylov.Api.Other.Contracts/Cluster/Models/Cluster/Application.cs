@@ -30,5 +30,11 @@ namespace Mihaylov.Api.Other.Contracts.Cluster.Models.Cluster
 
         [JsonPropertyOrder(9)]
         public int? Order { get; set; }
+
+        [JsonPropertyOrder(10)]
+        public int? ParserSettingId { get; set; }
+
+        [JsonPropertyOrder(11)]
+        public string ParserSettingName { get; set; }
     }
 }

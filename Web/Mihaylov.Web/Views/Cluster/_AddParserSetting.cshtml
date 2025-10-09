@@ -6,9 +6,13 @@
     <tr>
         <td>
             @Html.HiddenFor(m => m.Id)
+            @Html.TextBoxFor(m => m.Name, new { aria_autocomplete = "none", autocomplete = "off", @class = "short-width" })
+            @Html.ValidationMessageFor(m => m.Name)
+        </td>
+@*         <td>
             @Html.DropDownListFor(m => m.ApplicationId, Model.Applications, ViewConstants.DefaultDropDownValue)
             @Html.ValidationMessageFor(m => m.ApplicationId)
-        </td>
+        </td> *@
         <td>
             @Html.DropDownListFor(m => m.VersionUrlType, Model.UrlTypes, ViewConstants.DefaultDropDownValue)
             @Html.ValidationMessageFor(m => m.VersionUrlType)

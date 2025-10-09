@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Mapster;
@@ -16,6 +17,20 @@ namespace Mihaylov.Api.Other.DAL.Cluster
         public VersionRepository(ILoggerFactory loggerFactory, MihaylovOtherClusterDbContext dbContext)
             : base(loggerFactory, dbContext)
         {
+        }
+
+        public async Task<IEnumerable<VersionHistory>> GetVersionsAsync(int applicationId, int size)
+        {
+            var query = _dbContext.ApplicationVersions.AsNoTracking()
+                                            .Where(v => v.ApplicationId == applicationId)
+                                            .OrderByDescending(v => v.CreatedOn)
+                                            .Take(size);
+
+            var historyList = await query.ProjectToType<VersionHistory>()
+                                          .ToListAsync()
+                                          .ConfigureAwait(false);
+
+            return historyList;
         }
 
         public async Task<AppVersion> AddOrUpdateAsync(AppVersion model, int applicationId)

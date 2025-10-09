@@ -57,6 +57,7 @@ namespace Mihaylov.Api.Other.Controllers
                 ResourceUrl = model?.ResourceUrl,
                 Deployment = model?.Deployment ?? DeploymentType.Yaml,
                 Notes = model?.Notes,
+                ParserSettingId = model?.ParserSettingId,
             };
 
             ApplicationExtended application = await _service.AddOrUpdateApplicationAsync(request).ConfigureAwait(false);
@@ -94,6 +95,20 @@ namespace Mihaylov.Api.Other.Controllers
             return Ok(file);
         }
 
+        [HttpGet]
+        [ProducesResponseType(typeof(IEnumerable<VersionHistory>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> Versions(int applicationId, int size)
+        {
+            if (size <= 0)
+            {
+                size = 10;
+            }
+
+            IEnumerable<VersionHistory> versions = await _service.GetVersionsAsync(applicationId, size).ConfigureAwait(false);
+
+            return Ok(versions);
+        }
+
         [HttpPost]
         [ProducesResponseType(typeof(AppVersion), StatusCodes.Status200OK)]
         public async Task<IActionResult> Version(AppVersionModel model)
@@ -128,7 +143,8 @@ namespace Mihaylov.Api.Other.Controllers
             var request = new ParserSetting()
             {
                 Id = model?.Id ?? 0,
-                ApplicationId = model?.ApplicationId ?? 0,
+                ApplicationId = model?.ApplicationId,
+                Name = model?.Name,
                 ApplicationName = null,
                 VersionUrlType = model?.VersionUrlType ?? VersionUrlType.ReleaseUrl,
                 VersionSelector = model?.VersionSelector,

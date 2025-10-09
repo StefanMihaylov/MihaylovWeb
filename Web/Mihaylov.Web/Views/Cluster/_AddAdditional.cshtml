@@ -16,13 +16,14 @@
         <td></td>
         <td style="display: none;"></td>
         <td>
-            @Html.TextBoxFor(m => m.File, new { aria_autocomplete = "none", autocomplete = "off", @class = "short-width" })
+            @Html.TextBoxFor(m => m.File, new { aria_autocomplete = "none", autocomplete = "off", style = "max-width: 90px;" })
             @Html.ValidationMessageFor(m => m.File)
         </td>
         <td>
-            @Html.TextBoxFor(m => m.Pod, new { aria_autocomplete = "none", autocomplete = "off", @class = "short-width" })
+            @Html.TextBoxFor(m => m.Pod, new { aria_autocomplete = "none", autocomplete = "off", style = "max-width: 90px;" })
             @Html.ValidationMessageFor(m => m.Pod)
         </td>
+        <td></td>
         <td></td>
         <td>
             <button type="submit" class="btn btn-success">

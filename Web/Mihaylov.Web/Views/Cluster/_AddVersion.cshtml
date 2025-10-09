@@ -14,7 +14,7 @@
             @Html.ValidationMessageFor(m => m.ReleaseDate)
         </td>
         <td>
-            @Html.TextBoxFor(m => m.Version, new { aria_autocomplete = "none", autocomplete = "off", @class = "tiny-width" })
+            @Html.TextBoxFor(m => m.Version, new { aria_autocomplete = "none", autocomplete = "off", @class = "tiny-width", style = "min-width: 80px;" })
             @Html.ValidationMessageFor(m => m.Version)
         </td>
         <td>
@@ -25,6 +25,7 @@
             @Html.TextBoxFor(m => m.HelmAppVersion, new { aria_autocomplete = "none", autocomplete = "off", @class = "tiny-width" })
             @Html.ValidationMessageFor(m => m.HelmAppVersion)
         </td>
+        <td></td>
         <td></td>
         <td></td>
         <td></td>

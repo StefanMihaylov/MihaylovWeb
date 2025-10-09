@@ -40,8 +40,7 @@ namespace Mihaylov.Api.Other.DAL.Cluster
             try
             {
                 var dbModel = await _dbContext.ParserSettings
-                                .Where(t => t.ApplicationId == model.ApplicationId &&
-                                            t.ParserSettingId == model.Id)
+                                .Where(t => t.ParserSettingId == model.Id)
                                 .FirstOrDefaultAsync()
                                 .ConfigureAwait(false);
 

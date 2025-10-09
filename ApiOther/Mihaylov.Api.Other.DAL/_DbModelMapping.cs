@@ -91,8 +91,14 @@ namespace Mihaylov.Api.Other.DAL
                                                 .OrderByDescending(f => f.Version)
                                                 .Adapt<IEnumerable<AppVersion>>()
                                                 .FirstOrDefault())
+                .Map(dest => dest.Versions, src => src.Versions.AsQueryable()
+                                                .OrderByDescending(f => f.CreatedOn)
+                                                .Take(6)
+                                                .Adapt<IEnumerable<VersionHistory>>())
                 .Map(dest => dest.Notes, src => src.Notes)
-                .Map(dest => dest.Order, src => src.Order);
+                .Map(dest => dest.Order, src => src.Order)
+                .Map(dest => dest.ParserSettingId, src => src.ParserSettingId)
+                .Map(dest => dest.ParserSettingName, src => src.ParserSetting.Name);
 
             TypeAdapterConfig<Application, DbC.Application>.NewConfig()
                 .Map(dest => dest.ApplicationId, src => src.Id)
@@ -107,7 +113,8 @@ namespace Mihaylov.Api.Other.DAL
                 .Ignore(dest => dest.Pods, src => src.Pods)
                 .Ignore(dest => dest.Versions, src => src.Versions)
                 .Map(dest => dest.Notes, src => src.Notes)
-                .Map(dest => dest.Order, src => src.Order);
+                .Map(dest => dest.Order, src => src.Order)
+                .Map(dest => dest.ParserSettingId, src => src.ParserSettingId);
 
             TypeAdapterConfig<DbC.ApplicationPod, Pod>.NewConfig()
                 .Map(dest => dest.Id, src => src.ApplicationPodId)
@@ -127,8 +134,14 @@ namespace Mihaylov.Api.Other.DAL
                 .Map(dest => dest.ReleaseDate, src => src.ReleaseDate)
                 .TwoWays();
 
+            TypeAdapterConfig<DbC.ApplicationVersion, VersionHistory>.NewConfig()
+                .Map(dest => dest.Version, src => src.Version)
+                .Map(dest => dest.ReleaseDate, src => src.ReleaseDate)
+                .Map(dest => dest.CreatedOn, src => src.CreatedOn);
+
             TypeAdapterConfig<ParserSetting, DbC.ParserSetting>.NewConfig()
                 .Map(dest => dest.ParserSettingId, src => src.Id)
+                .Map(dest => dest.Name, src => src.Name)
                 .Map(dest => dest.ApplicationId, src => src.ApplicationId)
                 .Ignore(dest => dest.Application, src => src.Application)
                 .Map(dest => dest.VersionUrlVersionId, src => (byte)src.VersionUrlType)
@@ -142,6 +155,7 @@ namespace Mihaylov.Api.Other.DAL
 
             TypeAdapterConfig<DbC.ParserSetting, ParserSetting>.NewConfig()
                 .Map(dest => dest.Id, src => src.ParserSettingId)
+                .Map(dest => dest.Name, src => src.Name)
                 .Map(dest => dest.ApplicationId, src => src.ApplicationId)
                 .Map(dest => dest.ApplicationName, src => src.Application.Name)
                 .Map(dest => dest.VersionUrlType, src => (VersionUrlType)src.VersionUrlVersionId)

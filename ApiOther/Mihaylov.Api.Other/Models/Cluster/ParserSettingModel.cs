@@ -8,8 +8,9 @@ namespace Mihaylov.Api.Other.Models.Cluster
     {
         public int? Id { get; set; }
 
-        [Required]
         public int? ApplicationId { get; set; }
+
+        public string Name { get; set; }
 
         [Required]
         public VersionUrlType? VersionUrlType { get; set; }

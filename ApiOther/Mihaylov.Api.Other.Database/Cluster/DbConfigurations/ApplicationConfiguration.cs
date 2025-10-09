@@ -22,6 +22,9 @@ namespace Mihaylov.Api.Other.Database.Cluster.DbConfigurations
             builder.Property(c => c.DeploymentId).IsRequired().HasDefaultValue(1);
             builder.HasOne(c => c.Deployment).WithMany().HasForeignKey(c => c.DeploymentId).IsRequired().OnDelete(DeleteBehavior.NoAction);
 
+            builder.Property(c => c.ParserSettingId).IsRequired(false);
+            builder.HasOne(c => c.ParserSetting).WithMany().HasForeignKey(c => c.ParserSettingId).IsRequired(false).OnDelete(DeleteBehavior.NoAction);
+
             builder.EntityConfiguration();
 
             builder.HasIndex(b => b.Name).IsUnique();

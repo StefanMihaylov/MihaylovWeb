@@ -27,6 +27,8 @@
 
         public const int ParserSelectorMaxLength = 4000;
 
+        public const int ParserNameMaxLength = 50;
+
         public const int ParserComandsMaxLength = 100;
     }
 }

@@ -55,9 +55,19 @@ namespace Mihaylov.Api.Other.Data.Cluster
             }
 
             var settings = await _clusterService.GetParserSettingsAsync().ConfigureAwait(false);
-            var setting = settings.Where(s => s.ApplicationId == application.Id)
+
+            ParserSetting setting;
+            if (application.ParserSettingId.HasValue)
+            {
+                setting = settings.Single(s => s.Id == application.ParserSettingId.Value);
+            }
+            else
+            {
+                setting = settings.Where(s => s.ApplicationId == application.Id)
                                   .OrderByDescending(s => s.Id)
                                   .FirstOrDefault();
+            }
+
             if (setting == null)
             {
                 return null;
@@ -65,7 +75,7 @@ namespace Mihaylov.Api.Other.Data.Cluster
 
             var configuration = new LastVersionSettings()
             {
-                ApplicationId = setting.ApplicationId,
+                ApplicationId = application.Id,
                 Version = new ParseModel()
                 {
                     Url = GetUrlByType(setting.VersionUrlType, application),
@@ -107,7 +117,7 @@ namespace Mihaylov.Api.Other.Data.Cluster
             var result = new LastVersionModel()
             {
                 ApplicationId = configuration.ApplicationId,
-                Version = version.Value,
+                Version = version?.Value,
                 ReleaseDate = releaseDate,
                 IsSuccessful = !string.IsNullOrEmpty(version?.Value) && releaseDate.HasValue,
                 RawVersion = $"{version?.Value} {{{version?.Content}}}",

@@ -1,5 +1,6 @@
 ﻿$(function () {
-    $('[data-toggle="popover"]').popover();
+    var $popups = $('[data-toggle="popover"]');
+    $popups.popover();
 
     var getLastVersion = function (row, reload) {
         var $this = $(row);
@@ -7,7 +8,10 @@
         if (id) {
             var url = '/cluster/getLastVersion?id=' + id + '&reload=' + reload;
             $.get(url, function (data, status) {
-                $this.replaceWith(data)
+                $this.replaceWith(data);
+
+                $('[data-toggle="popover"]').popover();
+                $('[data-toggle="version-popover"]').popover();
             });
         }
     };

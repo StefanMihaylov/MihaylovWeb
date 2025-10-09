@@ -70,7 +70,7 @@
                 @lastVersionFillInfo
             }
 
-            @if(Model.Icon == VersionIconType.Error)
+            @if (Model.Icon == VersionIconType.Error)
             {
                 <br />
                 @Model.LastVersion?.RawReleaseDate
@@ -80,6 +80,14 @@
     <td>
         <my-value>
             @Model.Main.Version?.Version
+            @if (Model.Main.Versions?.Any() == true)
+            {
+                var content = $"<ul class='custom-popover'><li>{string.Join("</li><li>", Model.Main.Versions.Select(b => $"{b.Version} ({b.ReleaseDate.ToString("dd.MM.yyyy")}) - {b.CreatedOn.ToString("yyyy.MM.dd")}"))}</li></ul>";
+                <span style="color:blue" class="version-history" data-container="body" data-toggle="version-popover" data-id="@Model.Main.Id" data-placement="top" data-content="@content" data-html="true">
+                    <i class="bi @ViewConstants.ListButton"></i>
+                </span>
+            }
+
             @if (Model.IsNew)
             {
                 <br />
@@ -154,6 +162,7 @@
         </my-value>
     </td>
     <td><my-value>@Model.Main.Notes</my-value></td>
+    <td><my-value>@Model.Main.ParserSettingName</my-value></td>
     <td>
         <a href="/Cluster/Index/@Model.Main.Id" class="btn btn-primary">
             <i class="bi @ViewConstants.EditButton"></i>

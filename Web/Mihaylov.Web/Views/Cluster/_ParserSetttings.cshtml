@@ -7,7 +7,8 @@
 <table class="table table-bordered table-striped" id="parser-settings-grid">
     <thead>
         <tr>
-            <th>@Html.LabelFor(m => m.ParserSettings.First().ApplicationName, "Application")</th>
+            <th>@Html.LabelFor(m => m.ParserSettings.First().Name, "Name")</th>
+@*             <th>@Html.LabelFor(m => m.ParserSettings.First().ApplicationName, "Application")</th> *@
             <th>@Html.LabelFor(m => m.ParserSettings.First().VersionUrlType, "Version")</th>
             <th>@Html.LabelFor(m => m.ParserSettings.First().VersionSelector, "Selector")</th>
             <th>@Html.LabelFor(m => m.ParserSettings.First().VersionCommand, "Command")</th>
@@ -26,7 +27,8 @@
         @foreach (var setting in Model.ParserSettings)
         {
             <tr>
-                <td><my-value>@setting.ApplicationName</my-value></td>
+                <td><my-value>@setting.Name</my-value></td>
+@*                 <td><my-value>@setting.ApplicationName</my-value></td> *@
                 <td><my-value>@setting.VersionUrlType.ToString()</my-value></td>
                 <td><my-value>@setting.VersionSelector</my-value></td>
                 <td><my-value>@setting.VersionCommand</my-value></td>

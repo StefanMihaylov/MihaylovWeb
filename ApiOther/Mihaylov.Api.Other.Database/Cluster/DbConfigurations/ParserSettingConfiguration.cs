@@ -11,14 +11,16 @@ namespace Mihaylov.Api.Other.Database.Cluster.DbConfigurations
         {
             builder.HasKey(b => b.ParserSettingId).HasName("ParserSettingId");
 
+            builder.Property(c => c.Name).IsRequired(false).HasMaxLength(ModelConstants.ParserNameMaxLength);
+
             builder.Property(c => c.SelectorVersion).IsRequired().HasMaxLength(ModelConstants.ParserSelectorMaxLength);
             builder.Property(c => c.CommandsVersion).IsRequired().HasMaxLength(ModelConstants.ParserComandsMaxLength);
 
             builder.Property(c => c.SelectorRelease).IsRequired(false).HasMaxLength(ModelConstants.ParserSelectorMaxLength);
             builder.Property(c => c.CommandsRelease).IsRequired().HasMaxLength(ModelConstants.ParserComandsMaxLength);
 
-            builder.Property(c => c.ApplicationId).IsRequired();
-            builder.HasOne(c => c.Application).WithMany(a => a.ParserSettings).IsRequired().OnDelete(DeleteBehavior.NoAction);
+            builder.Property(c => c.ApplicationId).IsRequired(false);
+            builder.HasOne(c => c.Application).WithMany(a => a.ParserSettings).IsRequired(false).OnDelete(DeleteBehavior.NoAction);
 
             builder.Property(c => c.VersionUrlVersionId).IsRequired();
             builder.HasOne(c => c.VersionUrlVersion).WithMany(a => a.VersionSettings).IsRequired().OnDelete(DeleteBehavior.NoAction);

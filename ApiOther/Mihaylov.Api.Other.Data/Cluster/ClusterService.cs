@@ -71,6 +71,11 @@ namespace Mihaylov.Api.Other.Data.Cluster
             return file;
         }
 
+        public Task<IEnumerable<VersionHistory>> GetVersionsAsync(int applicationId, int size)
+        {
+            return _versionRepository.GetVersionsAsync(applicationId, size);
+        }
+
         public async Task<AppVersion> AddOrUpdateVersionAsync(AppVersion model, int applicationId)
         {
             var version = await _versionRepository.AddOrUpdateAsync(model, applicationId).ConfigureAwait(false);
