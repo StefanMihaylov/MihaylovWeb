@@ -88,7 +88,7 @@ namespace Mihaylov.Api.Other.DAL
                                                 .OrderBy(f => f.ApplicationPodId)
                                                 .Adapt<IEnumerable<Pod>>())
                 .Map(dest => dest.Version, src => src.Versions.AsQueryable()
-                                                .OrderByDescending(f => f.Version)
+                                                .OrderByDescending(f => f.ReleaseDate)
                                                 .Adapt<IEnumerable<AppVersion>>()
                                                 .FirstOrDefault())
                 .Map(dest => dest.Versions, src => src.Versions.AsQueryable()

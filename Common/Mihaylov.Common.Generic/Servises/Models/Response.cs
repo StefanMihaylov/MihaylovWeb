@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Mihaylov.Api.Other.Contracts.Cluster.Models.Nexus
+namespace Mihaylov.Common.Generic.Servises.Models
 {
     public class Response<T> where T : class
     {

@@ -1,7 +1,7 @@
 ﻿using System.Net;
 using System.Net.Http;
 
-namespace Mihaylov.Api.Other.Contracts.Cluster.Models.Nexus
+namespace Mihaylov.Common.Generic.Servises.Models
 {
     public class BaseHttpResponse
     {

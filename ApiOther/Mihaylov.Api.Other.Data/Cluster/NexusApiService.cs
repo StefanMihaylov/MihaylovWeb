@@ -2,39 +2,32 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Reflection;
-using System.Text;
-using System.Text.Json;
 using System.Threading.Tasks;
-using System.Web;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Mihaylov.Api.Other.Contracts.Cluster.Interfaces;
 using Mihaylov.Api.Other.Contracts.Cluster.Models.Nexus;
+using Mihaylov.Common.Generic.Servises;
+using Mihaylov.Common.Generic.Servises.Models;
 
 namespace Mihaylov.Api.Other.Data.Cluster
 {
-    public class NexusApiService : INexusApiService
+    public class NexusApiService : HttpClientExtention, INexusApiService
     {
         public const string NEXUS_CLIENT_NAME = "NexusHttpClientName";
 
         private readonly ILogger _logger;
-        private readonly IHttpClientFactory _httpClientFactory;
-        private readonly JsonSerializerOptions _jsonOptions;
+        private readonly IHttpClientFactory _httpClientFactory;        
         private readonly NexusConfiguration _conifg;
 
-        public NexusApiService(ILoggerFactory loggerFactory, IHttpClientFactory httpFactory,
-            IOptions<NexusConfiguration> settings)
+        public NexusApiService(IHttpClientFactory httpFactory, ILoggerFactory loggerFactory,
+            IOptions<NexusConfiguration> settings) 
+            : base(httpFactory, loggerFactory, NEXUS_CLIENT_NAME,
+                  new ApiConfig(settings.Value.BaseUrl, settings.Value.Username, settings.Value.Password, null))
         {
             _logger = loggerFactory.CreateLogger<NexusApiService>();
             _httpClientFactory = httpFactory;
             _conifg = settings.Value;
-
-            _jsonOptions = new JsonSerializerOptions
-            {
-                PropertyNameCaseInsensitive = true
-            };
         }
 
         public async Task<NexusImages> GetDockerImagesAsync()
@@ -177,99 +170,6 @@ namespace Mihaylov.Api.Other.Data.Cluster
                                 x => x, e => e).ConfigureAwait(false);
 
             return response;
-        }
-
-
-        private async Task<Response<TResponse>> GetResponse<TRequest, TResS, TResF, TResponse>
-            (HttpMethod method, string relUrl, TRequest requestBody, string methodName, Func<TResS, TResponse> outputMap,
-            Func<TResF, string> errorMap) where TRequest : class where TResponse : class
-        {
-            try
-            {
-                _logger.LogInformation($"Calling {methodName}...");
-
-                var url = $"{_conifg.BaseUrl.TrimEnd('/')}{relUrl}";
-
-                if ((method == HttpMethod.Get || method == HttpMethod.Delete) && requestBody != null)
-                {
-                    url += $"?{GetQueryString(requestBody)}";
-                }
-
-                var request = new HttpRequestMessage(method, url);
-                request.Headers.Add("Accept", "application/json");
-
-                if (!string.IsNullOrEmpty(_conifg.Username) && !string.IsNullOrEmpty(_conifg.Password))
-                {
-                    var authenticationString = $"{_conifg.Username}:{_conifg.Password}";
-                    var base64EncodedAuthenticationString = Convert.ToBase64String(Encoding.ASCII.GetBytes(authenticationString));
-                    request.Headers.Authorization = new AuthenticationHeaderValue("Basic", base64EncodedAuthenticationString);
-                }
-
-                if ((method == HttpMethod.Post || method == HttpMethod.Put) && requestBody != null)
-                {
-                    var requestString = JsonSerializer.Serialize(requestBody);
-                    request.Content = new StringContent(requestString, Encoding.UTF8, "application/json");
-                }
-
-                BaseHttpResponse response = await GetRespose(request).ConfigureAwait(false);
-
-                if (!response.IsSuccessStatusCode)
-                {
-                    string errorMessage = response.StatusCode.ToString();
-                    if (!string.IsNullOrEmpty(response.Body))
-                    {
-                        TResF errorResponse = JsonSerializer.Deserialize<TResF>(response.Body, _jsonOptions);
-                        errorMessage = errorMap(errorResponse) ?? response.Body;
-                    }
-
-                    return new Response<TResponse>(errorMessage);
-                }
-
-                TResponse result = default;
-                if (!string.IsNullOrEmpty(response.Body))
-                {
-                    TResS resultResponse = JsonSerializer.Deserialize<TResS>(response.Body, _jsonOptions);
-                    result = outputMap(resultResponse);
-                }
-
-                return new Response<TResponse>(result);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, $"{methodName}.failed. Error message: {ex.Message}");
-                return new Response<TResponse>(ex.Message);
-            }
-        }
-
-        private async Task<BaseHttpResponse> GetRespose(HttpRequestMessage request)
-        {
-            HttpClient httpClient = _httpClientFactory.CreateClient(NEXUS_CLIENT_NAME);
-            HttpResponseMessage responseMessage = await httpClient.SendAsync(request).ConfigureAwait(false);
-            string response = await responseMessage.Content.ReadAsStringAsync().ConfigureAwait(false);
-
-            request.Dispose();
-
-            return new BaseHttpResponse(response, responseMessage);
-        }
-
-        private string GetQueryString<T>(T request) where T : class
-        {
-            var queries = new List<string>();
-
-            PropertyInfo[] properties = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance);
-
-            foreach (var property in properties)
-            {
-                string name = JsonNamingPolicy.CamelCase.ConvertName(property.Name);
-                string value = property.GetValue(request, null)?.ToString();
-
-                if (!string.IsNullOrEmpty(value))
-                {
-                    queries.Add($"{name}={HttpUtility.UrlEncode(value)}");
-                }
-            }
-
-            return string.Join("&", queries);
         }
     }
 }

@@ -75,6 +75,11 @@ namespace Mihaylov.Api.Other
                     veleroConfig.VeleroPath = Config.GetEnvironmentVariable("Velero_Path");
                     veleroConfig.CmdPath = Config.GetEnvironmentVariable("Velero_Cmd_Path", "cmd");
                     veleroConfig.CmdArguments = Config.GetEnvironmentVariable("Velero_Cmd_Arguments", "/c");
+                },
+                immich =>
+                {
+                    immich.BaseUrl = Config.GetEnvironmentVariable("Immich_Base_Url");
+                    immich.ApiKey = Config.GetEnvironmentVariable("Immich_Api_Key");
                 });
 
             // Add-Migration <name> -Context MihaylovOtherClusterDbContext
