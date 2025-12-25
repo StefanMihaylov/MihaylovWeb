@@ -19,6 +19,20 @@ namespace Mihaylov.Api.Other.DAL.Cluster
         {
         }
 
+        public async Task<IEnumerable<AppVersion>> GetAllVersionsAsync(int applicationId)
+        {
+            var query = _dbContext.ApplicationVersions.AsNoTracking()
+                                            .Where(v => v.ApplicationId == applicationId)
+                                            .OrderByDescending(v => v.CreatedOn)
+                                            .AsQueryable();
+
+            var versions = await query.ProjectToType<AppVersion>()
+                                          .ToListAsync()
+                                          .ConfigureAwait(false);
+
+            return versions;
+        }
+
         public async Task<IEnumerable<VersionHistory>> GetVersionsAsync(int applicationId, int size)
         {
             var query = _dbContext.ApplicationVersions.AsNoTracking()

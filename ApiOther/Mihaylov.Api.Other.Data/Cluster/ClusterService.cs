@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
@@ -78,6 +79,14 @@ namespace Mihaylov.Api.Other.Data.Cluster
 
         public async Task<AppVersion> AddOrUpdateVersionAsync(AppVersion model, int applicationId)
         {
+            var oldVersions = await _versionRepository.GetAllVersionsAsync(applicationId).ConfigureAwait(false);
+            var oldVersion = oldVersions.Where(v => v.Version == model.Version && v.ReleaseDate == model.ReleaseDate).FirstOrDefault();
+            if (oldVersion != null)
+            {
+                _logger.LogInformation($"Duplicate version detected: {model.Version} for applicationId: {applicationId}");
+                return oldVersion;
+            }
+
             var version = await _versionRepository.AddOrUpdateAsync(model, applicationId).ConfigureAwait(false);
             ClearCache();
 

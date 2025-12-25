@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.OutputCaching;
 using Microsoft.Extensions.Logging;
 using Mihaylov.Api.Other.Client;
 using Mihaylov.Web.Areas;
@@ -28,6 +29,7 @@ namespace Mihaylov.Web.Controllers
         }
 
         [HttpGet]
+        [OutputCache(Duration = 3600, VaryByRouteValueNames = new[] { "id" })]
         public async Task<IActionResult> Thumbnail(string id)
         {
             _client.AddToken(Request.GetToken());

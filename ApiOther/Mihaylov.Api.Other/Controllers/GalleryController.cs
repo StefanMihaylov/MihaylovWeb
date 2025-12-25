@@ -1,22 +1,21 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Mihaylov.Api.Other.Contracts.Gallery.Interfaces;
 using Mihaylov.Api.Other.Contracts.Gallery.Models;
 using Mihaylov.Api.Other.Extensions;
-using Mihaylov.Common.Host.Authorization;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace Mihaylov.Api.Other.Controllers
 {
-    [JwtAuthorize(Roles = UserConstants.AdminRole)]
+    [AllowAnonymous]
     [Route("api/[controller]/[action]")]
     [ApiController]
     [TypeFilter(typeof(ErrorFilter))]
     [Produces("application/json")]
     [ProducesResponseType(typeof(Dictionary<string, string[]>), StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
     public class GalleryController : ControllerBase
     {
         private readonly IImmichService _service;

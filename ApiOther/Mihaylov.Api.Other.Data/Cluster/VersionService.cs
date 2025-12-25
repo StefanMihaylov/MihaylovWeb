@@ -39,7 +39,10 @@ namespace Mihaylov.Api.Other.Data.Cluster
             {
                 lastVersion = await GetLastVersionOnlineAsync(applicationId).ConfigureAwait(false);
 
-                _memoryCache.Set(key, lastVersion, TimeSpan.FromMinutes(CACHE_DURATION));
+                if (lastVersion != null)
+                {
+                    _memoryCache.Set(key, lastVersion, TimeSpan.FromMinutes(CACHE_DURATION));
+                }
             }
 
             return lastVersion;
@@ -90,14 +93,14 @@ namespace Mihaylov.Api.Other.Data.Cluster
                 }
             };
 
-            var result = await GetLastVersionAsync(configuration).ConfigureAwait(false);
+            var result = await ComputeLastVersionAsync(configuration).ConfigureAwait(false);
 
             return result;
         }
 
         public async Task<LastVersionModel> TestLastVersionAsync(LastVersionSettings configuration)
         {
-            var result = await GetLastVersionAsync(configuration).ConfigureAwait(false);
+            var result = await ComputeLastVersionAsync(configuration).ConfigureAwait(false);
 
             return result;
         }
@@ -107,7 +110,7 @@ namespace Mihaylov.Api.Other.Data.Cluster
             return $"{SHOW_LAST_VERSION}_{applicationId}";
         }
 
-        private async Task<LastVersionModel> GetLastVersionAsync(LastVersionSettings configuration)
+        private async Task<LastVersionModel> ComputeLastVersionAsync(LastVersionSettings configuration)
         {
             ValueContext version = await GetValueAsync(configuration.Version, null).ConfigureAwait(false);
             ValueContext release = await GetValueAsync(configuration.ReleaseDate, version).ConfigureAwait(false);

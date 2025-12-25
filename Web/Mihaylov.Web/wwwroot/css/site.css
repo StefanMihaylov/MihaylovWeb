@@ -89,7 +89,11 @@ hr {
 .gallery-container {
 }
 
-    .gallery-container a, :hover, :visited, :link, :active {
+    .gallery-container a,
+    .gallery-container a:hover,
+    .gallery-container a:visited,
+    .gallery-container a:link,
+    .gallery-container a:active {
         color: black;
         text-decoration: none;
     }

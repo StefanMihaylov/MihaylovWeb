@@ -6,6 +6,8 @@ namespace Mihaylov.Api.Other.Contracts.Cluster.Interfaces
 {
     public interface IVersionRepository
     {
+        Task<IEnumerable<AppVersion>> GetAllVersionsAsync(int applicationId);
+
         Task<IEnumerable<VersionHistory>> GetVersionsAsync(int applicationId, int size);
 
         Task<AppVersion> AddOrUpdateAsync(AppVersion model, int applicationId);

@@ -1837,12 +1837,6 @@ namespace Mihaylov.Api.Other.Client
                             throw new SwaggerException<System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>>("Bad Request", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
-                        if (status_ == 401)
-                        {
-                            string responseText_ = ( response_.Content == null ) ? string.Empty : await ReadAsStringAsync(response_.Content, cancellationToken).ConfigureAwait(false);
-                            throw new SwaggerException("Unauthorized", status_, responseText_, headers_, null);
-                        }
-                        else
                         {
                             var responseData_ = response_.Content == null ? null : await ReadAsStringAsync(response_.Content, cancellationToken).ConfigureAwait(false);
                             throw new SwaggerException("The HTTP status code of the response was not expected (" + status_ + ").", status_, responseData_, headers_, null);
@@ -1933,12 +1927,6 @@ namespace Mihaylov.Api.Other.Client
                                 throw new SwaggerException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
                             throw new SwaggerException<System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>>("Bad Request", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
-                        }
-                        else
-                        if (status_ == 401)
-                        {
-                            string responseText_ = ( response_.Content == null ) ? string.Empty : await ReadAsStringAsync(response_.Content, cancellationToken).ConfigureAwait(false);
-                            throw new SwaggerException("Unauthorized", status_, responseText_, headers_, null);
                         }
                         else
                         {

@@ -1075,9 +1075,6 @@
               }
             }
           },
-          "401": {
-            "description": "Unauthorized"
-          },
           "200": {
             "description": "OK",
             "content": {
@@ -1125,9 +1122,6 @@
                 }
               }
             }
-          },
-          "401": {
-            "description": "Unauthorized"
           },
           "200": {
             "description": "OK",

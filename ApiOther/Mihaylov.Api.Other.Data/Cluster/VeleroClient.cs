@@ -160,17 +160,29 @@ namespace Mihaylov.Api.Other.Data.Cluster
                     // The following commands are needed to redirect the standard output. 
                     //This means that it will be redirected to the Process.StandardOutput StreamReader.
                     RedirectStandardOutput = true,
+                    RedirectStandardError = true,
                     UseShellExecute = false,
                     CreateNoWindow = true     // Do not create the black window.
                 };
 
                 _logger.LogInformation($"Executing command: {procStartInfo.FileName} {procStartInfo.Arguments}");
 
-                var proc = new Process();
-                proc.StartInfo = procStartInfo;
+                using var proc = new Process()
+                {
+                    StartInfo = procStartInfo
+                };
                 proc.Start();
 
                 string result = proc.StandardOutput.ReadToEnd();
+                var error = proc.StandardError.ReadToEnd();
+
+                proc.WaitForExit();
+
+                if (!string.IsNullOrWhiteSpace(error))
+                {
+                    _logger.LogError($"Command execution error: {error}");
+                    throw new ApplicationException($"Command execution error: {error}");
+                }
 
                 return result;
             }

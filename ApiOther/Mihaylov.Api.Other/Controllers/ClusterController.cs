@@ -49,7 +49,7 @@ namespace Mihaylov.Api.Other.Controllers
             var request = new Application()
             {
                 Id = model?.Id ?? 0,
-                Order = model.Order ?? 0,
+                Order = model?.Order ?? 0,
                 Name = model?.Name,
                 SiteUrl = model?.SiteUrl,
                 ReleaseUrl = model?.ReleaseUrl,
