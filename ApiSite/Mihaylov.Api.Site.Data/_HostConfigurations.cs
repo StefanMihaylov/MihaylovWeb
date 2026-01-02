@@ -2,8 +2,12 @@
 using System.IO;
 using System.Net.Http;
 using System.Reflection;
+using CoenM.ImageHash;
+using CoenM.ImageHash.HashAlgorithms;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Mihaylov.Api.Site.Contracts.Helpers;
+using Mihaylov.Api.Site.Contracts.Helpers.Models;
 using Mihaylov.Api.Site.Contracts.Managers;
 using Mihaylov.Api.Site.Contracts.Writers;
 using Mihaylov.Api.Site.Data.Helpers;
@@ -12,10 +16,8 @@ using Mihaylov.Api.Site.Data.Media.Interfaces;
 using Mihaylov.Api.Site.Data.Media.Services;
 using Mihaylov.Api.Site.Data.Models;
 using Mihaylov.Api.Site.Data.Writers;
-using Mihaylov.Common.Generic.Servises.Interfaces;
 using Mihaylov.Common.Generic.Servises;
-using Mihaylov.Api.Site.Contracts.Helpers.Models;
-using Microsoft.Extensions.DependencyInjection.Extensions;
+using Mihaylov.Common.Generic.Servises.Interfaces;
 
 namespace Mihaylov.Api
 {
@@ -67,6 +69,8 @@ namespace Mihaylov.Api
             services.AddScoped<IImageMediaService, ImageMediaService>();
             services.AddScoped<IVideoMediaService, VideoMediaService>();
             services.AddScoped<IMediaService, MediaService>();
+
+            services.AddScoped<IImageHash, PerceptualHash>(); // AverageHash, DifferenceHash,
 
             return services;
         }

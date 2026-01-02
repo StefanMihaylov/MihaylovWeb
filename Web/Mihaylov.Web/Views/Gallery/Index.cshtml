@@ -5,15 +5,16 @@
     @foreach (var album in Model)
     {
         <div class="gallery-container col-md-2">
-            <a href="@album.AlbumLink" target="_blank">
-                <img src="/Gallery/Thumbnail/@album.ThumbnailAssetId" />
-                <div>
-                    <div class="title">@album.Name</div>
-                    <div>@album.StartDate.ToString("dd.MM") - @album.EndDate.ToString("dd.MM.yyyy")</div>
-                    <div>@album.AssetCount снимки</div>
+            <a href="@album.AlbumLink" target="_blank" class="gallery-link">
+                <div class="gallery-wraper">
+                    <img src="/Gallery/Thumbnail/@album.ThumbnailAssetId" />
+                    <div class="gallery-caption">
+                        <div class="title">@album.Name</div>
+                        <div>@album.StartDate.ToString("dd.MM") - @album.EndDate.ToString("dd.MM.yyyy")</div>
+                        <div>@album.AssetCount снимки</div>
+                    </div>
                 </div>
             </a>
         </div>
-
     }
 </div>

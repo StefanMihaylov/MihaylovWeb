@@ -52,6 +52,8 @@ namespace Mihaylov.Web.Controllers
                                  .Select(d => new DuplicateModel()
                                  {
                                      Checksum = d.Checksum,
+                                     Hash = d.Hash,
+                                     Similarity = d.Similarity,
                                      List = d.List.Where(f => _file.GetFileInfo(f.FullPath).Exists),
                                      Count = d.Count
                                  })
@@ -175,6 +177,12 @@ namespace Mihaylov.Web.Controllers
                 var nonlockedFiles = _mediaService.GetAllFiles(_config.DuplicatePathNotLocked, true, false, true, progressReporter.Report);
                 files.AddRange(nonlockedFiles);
             }
+
+            //var allFiles = JsonSerializer.Serialize(files);
+            //_file.SaveFile($"{_mediaService.GetBasePath()}/allFiles.json", allFiles);
+
+            //var fileBytes = _file.ReadFile($"{_mediaService.GetBasePath()}/allFiles.json");
+            //var files = JsonSerializer.Deserialize<List<MediaInfoModel>>(fileBytes);
 
             var content = _mediaService.GetDuplicates(files);
             var result = JsonSerializer.Serialize(content);

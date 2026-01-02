@@ -51,6 +51,8 @@ namespace Mihaylov.Api.Site.Data.Media.Services
                     using var stream = _fileWrapper.GetStreamFile(filePath);
                     var checksum = GetCheckSum(stream, p => progress(p));
                     result.Checksum = checksum;
+
+                    result.PerceptualHash = null;
                 }
                 catch (Exception ex)
                 {

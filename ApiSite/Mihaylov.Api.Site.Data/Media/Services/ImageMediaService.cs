@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using CoenM.ImageHash;
 using Microsoft.Extensions.Options;
 using Mihaylov.Api.Site.Contracts.Helpers.Models;
 using Mihaylov.Api.Site.Data.Media.Interfaces;
@@ -11,6 +12,7 @@ using SixLabors.ImageSharp.Formats;
 using SixLabors.ImageSharp.Formats.Bmp;
 using SixLabors.ImageSharp.Formats.Png;
 using SixLabors.ImageSharp.Formats.Webp;
+using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
 
 namespace Mihaylov.Api.Site.Data.Media.Services
@@ -22,13 +24,15 @@ namespace Mihaylov.Api.Site.Data.Media.Services
         private const string PNG = "png";
 
         private readonly IEnumerable<string> _imageExtensions;
+        private readonly IImageHash _hashAlgorithm;
 
         protected override string ThumbnailExtension => WEBP;
 
-        public ImageMediaService(IFileWrapper fileWrapper, IOptions<PathConfig> settings)
+        public ImageMediaService(IFileWrapper fileWrapper, IImageHash hashAlgorithm, IOptions<PathConfig> settings)
             : base(fileWrapper, settings)
         {
             _imageExtensions = GetImageExtensions();
+            _hashAlgorithm = hashAlgorithm;
         }
 
         public bool IsImageFile(string fileExtension)
@@ -55,9 +59,12 @@ namespace Mihaylov.Api.Site.Data.Media.Services
 
                 if (calculateChecksum)
                 {
-                    using var image = Image.Load(filePath);
+                    using var image = Image.Load<Rgba32>(filePath);
                     var checksum = GetImageChecksum(image, progress);
                     result.Checksum = checksum;
+
+                    var hash = _hashAlgorithm.Hash(image);
+                    result.PerceptualHash = hash;
                 }
                 else
                 {

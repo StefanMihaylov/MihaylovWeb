@@ -16,17 +16,13 @@ namespace Mihaylov.Api.Other.Data.Cluster
     {
         public const string NEXUS_CLIENT_NAME = "NexusHttpClientName";
 
-        private readonly ILogger _logger;
-        private readonly IHttpClientFactory _httpClientFactory;        
         private readonly NexusConfiguration _conifg;
 
         public NexusApiService(IHttpClientFactory httpFactory, ILoggerFactory loggerFactory,
-            IOptions<NexusConfiguration> settings) 
+            IOptions<NexusConfiguration> settings)
             : base(httpFactory, loggerFactory, NEXUS_CLIENT_NAME,
                   new ApiConfig(settings.Value.BaseUrl, settings.Value.Username, settings.Value.Password, null))
         {
-            _logger = loggerFactory.CreateLogger<NexusApiService>();
-            _httpClientFactory = httpFactory;
             _conifg = settings.Value;
         }
 
@@ -47,6 +43,8 @@ namespace Mihaylov.Api.Other.Data.Cluster
                     Version = a.Version,
                     LastModified = a.Assets.FirstOrDefault()?.LastModified,
                     IsLocked = true,
+                    Sha256 = a.Assets.FirstOrDefault()?.Checksum != null && a.Assets.FirstOrDefault().Checksum.ContainsKey("sha256") ?
+                                a.Assets.FirstOrDefault().Checksum["sha256"] : null
                 }));
 
                 nextPage = response.Data.ContinuationToken;
@@ -78,17 +76,27 @@ namespace Mihaylov.Api.Other.Data.Cluster
                 }
             }
 
-            var result = images.GroupBy(a => a.Name)
-                               .Select(g => new
-                               {
-                                   g.Key,
-                                   Value = g.OrderByDescending(a => a.LastModified)
-                                            .ThenByDescending(a => a.Version)
-                                            .AsEnumerable(),
-                                   LastModified = g.Max(a => a.LastModified)
-                               })
-                               .OrderByDescending(g => g.LastModified)
-                               .ToDictionary(a => a.Key, a => a.Value);
+            var result = images.GroupBy(a => new { a.Name, a.Sha256 })
+                   .Select(g => new NexusImage()
+                   {
+                       Id = g.OrderByDescending(a => a.LastModified).First().Id,
+                       Name = g.Key.Name,
+                       Version = string.Join(" / ", g.Select(a => a.Version).OrderBy(a => a)),
+                       LastModified = g.First().LastModified,
+                       IsLocked = g.First().IsLocked,
+                       Sha256 = g.First().Sha256
+                   })
+                   .GroupBy(a => a.Name)
+                   .Select(g => new
+                   {
+                       Name = g.Key,
+                       Value = g.OrderByDescending(a => a.LastModified)
+                                .ThenByDescending(a => a.Version)
+                                .AsEnumerable(),
+                       LastModified = g.Max(a => a.LastModified)
+                   })
+                   .OrderByDescending(g => g.LastModified)
+                   .ToDictionary(a => a.Name, a => a.Value);
 
             return new NexusImages()
             {

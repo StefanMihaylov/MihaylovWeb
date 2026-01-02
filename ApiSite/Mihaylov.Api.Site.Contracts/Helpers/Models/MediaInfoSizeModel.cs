@@ -9,5 +9,7 @@ namespace Mihaylov.Api.Site.Contracts.Helpers.Models
         public SizeModel Size { get; set; }
 
         public string Checksum { get; set; }
+
+        public ulong? PerceptualHash { get; set; }
     }
 }
