@@ -50,52 +50,63 @@ namespace Mihaylov.Api.Other.Data.Cluster
 
         public async Task<LastVersionModel> GetLastVersionOnlineAsync(int applicationId)
         {
-            var applications = await _clusterService.GetAllApplicationsAsync().ConfigureAwait(false);
-            var application = applications.FirstOrDefault(a => a.Id == applicationId);
-            if (application == null)
+            try
             {
-                return null;
-            }
-
-            var settings = await _clusterService.GetParserSettingsAsync().ConfigureAwait(false);
-
-            ParserSetting setting;
-            if (application.ParserSettingId.HasValue)
-            {
-                setting = settings.Single(s => s.Id == application.ParserSettingId.Value);
-            }
-            else
-            {
-                setting = settings.Where(s => s.ApplicationId == application.Id)
-                                  .OrderByDescending(s => s.Id)
-                                  .FirstOrDefault();
-            }
-
-            if (setting == null)
-            {
-                return null;
-            }
-
-            var configuration = new LastVersionSettings()
-            {
-                ApplicationId = application.Id,
-                Version = new ParseModel()
+                var applications = await _clusterService.GetAllApplicationsAsync().ConfigureAwait(false);
+                var application = applications.FirstOrDefault(a => a.Id == applicationId);
+                if (application == null)
                 {
-                    Url = GetUrlByType(setting.VersionUrlType, application),
-                    Selector = setting.VersionSelector,
-                    Command = setting.VersionCommand,
-                },
-                ReleaseDate = new ParseModel()
-                {
-                    Url = GetUrlByType(setting.ReleaseDateUrlType, application),
-                    Selector = setting.ReleaseDateSelector,
-                    Command = setting.ReleaseDateCommand,
+                    return null;
                 }
-            };
 
-            var result = await ComputeLastVersionAsync(configuration).ConfigureAwait(false);
+                var settings = await _clusterService.GetParserSettingsAsync().ConfigureAwait(false);
 
-            return result;
+                ParserSetting setting;
+                if (application.ParserSettingId.HasValue)
+                {
+                    setting = settings.Single(s => s.Id == application.ParserSettingId.Value);
+                }
+                else
+                {
+                    setting = settings.Where(s => s.ApplicationId == application.Id)
+                                      .OrderByDescending(s => s.Id)
+                                      .FirstOrDefault();
+                }
+
+                if (setting == null)
+                {
+                    return null;
+                }
+
+                var configuration = new LastVersionSettings()
+                {
+                    ApplicationId = application.Id,
+                    Version = new ParseModel()
+                    {
+                        Url = GetUrlByType(setting.VersionUrlType, application),
+                        Selector = setting.VersionSelector,
+                        Command = setting.VersionCommand,
+                    },
+                    ReleaseDate = new ParseModel()
+                    {
+                        Url = GetUrlByType(setting.ReleaseDateUrlType, application),
+                        Selector = setting.ReleaseDateSelector,
+                        Command = setting.ReleaseDateCommand,
+                    }
+                };
+
+                var result = await ComputeLastVersionAsync(configuration).ConfigureAwait(false);
+
+                _logger.LogInformation("GetLastVersionOnline succeeded. ApplicationId: {applicationId}, Version: {version}, ReleaseDate: {releaseDate:yyyy.MM.dd}",
+                    applicationId, result.Version, result.ReleaseDate);
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "GetLastVersionOnline failed. Error: {error}", ex.Message);
+                throw;
+            }
         }
 
         public async Task<LastVersionModel> TestLastVersionAsync(LastVersionSettings configuration)
@@ -149,13 +160,16 @@ namespace Mihaylov.Api.Other.Data.Cluster
 
                 var config = Configuration.Default.WithDefaultLoader();
                 var context = BrowsingContext.New(config);
-                var document = await context.OpenAsync(address);
+                var document = await context.OpenAsync(address).ConfigureAwait(false);
 
                 var cells = document.QuerySelectorAll(selector)?.ToList();
-                var cell = cells?.FirstOrDefault();
 
+                _logger.LogInformation($"Document loaded from '{address}'. Size: {document.DocumentElement?.OuterHtml.Length}. Found: {cells.Count} selector matches.");
+
+                var cell = cells?.FirstOrDefault();
                 if (cell == null)
                 {
+                    _logger.LogError("no selector match.");
                     return null;
                 }
 
