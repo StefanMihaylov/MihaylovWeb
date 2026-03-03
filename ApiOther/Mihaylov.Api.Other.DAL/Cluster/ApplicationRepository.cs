@@ -25,6 +25,7 @@ namespace Mihaylov.Api.Other.DAL.Cluster
                                   .Include(c => c.Pods)
                                   .Include(c => c.Files)
                                   .Include(c => c.Versions)
+                                  .Where(c => c.IsDeleted != true)
                                   .OrderBy(c => c.Order ?? 999)
                                     .ThenBy(c => c.ApplicationId);
 

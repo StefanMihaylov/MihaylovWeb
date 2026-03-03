@@ -37,6 +37,8 @@ namespace Mihaylov.Api.Other.Database.Cluster.Models
 
         public IEnumerable<ParserSetting> ParserSettings { get; set; }
 
+        public bool? IsDeleted { get; set; }
+
         public Application()
         {
             Versions = new List<ApplicationVersion>();
