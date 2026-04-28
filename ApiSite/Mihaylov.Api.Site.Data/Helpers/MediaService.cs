@@ -83,7 +83,7 @@ namespace Mihaylov.Api.Site.Data.Helpers
         public DuplicateResponse GetDuplicates(IEnumerable<MediaInfoModel> files)
         {
             var duplicates = GetDuplucatesChecksum(files);
-            GetDuplucatesHash(duplicates, files, 6);
+           // GetDuplucatesHash(duplicates, files, 6);
 
             var result = new DuplicateResponse()
             {

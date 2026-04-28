@@ -1,0 +1,22 @@
+﻿@using Mihaylov.Web.Controllers
+@using Mihaylov.Web.Models.Gear
+@model ListsViewModel
+
+<div class="row">
+    <div class="col-3">
+        @await Html.PartialAsync("_SmallGrid", new SmallGridViewModel(Model.Categories, "Категории", nameof(GearController.SaveCategory)))
+    </div>
+    <div class="col-3">
+        @await Html.PartialAsync("_SmallGrid", new SmallGridViewModel(Model.Brands, "Марки", nameof(GearController.SaveBrand)))
+    </div>
+    <div class="col-3">
+        @await Html.PartialAsync("_SmallGrid", new SmallGridViewModel(Model.Shops, "Магазини", nameof(GearController.SaveShop)))
+    </div>
+    <div class="col-3">
+        @await Html.PartialAsync("_SmallGrid", new SmallGridViewModel(Model.Groups, "Групи", nameof(GearController.SaveGroup)))
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/gear-lists.js"></script>
+}

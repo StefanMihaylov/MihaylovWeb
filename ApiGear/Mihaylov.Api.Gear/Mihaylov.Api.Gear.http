@@ -1,0 +1,6 @@
+@Mihaylov.Api.Gear_HostAddress = http://localhost:5236
+
+GET {{Mihaylov.Api.Gear_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

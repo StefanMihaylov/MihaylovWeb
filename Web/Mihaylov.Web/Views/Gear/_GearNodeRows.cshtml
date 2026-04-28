@@ -1,0 +1,115 @@
+﻿@using Mihaylov.Api.Gear.Client
+@using Mihaylov.Web.Models.Gear
+@model GearNodeRowsVewModel
+
+@if (Model.Nodes.Any())
+{
+    var indent = Model.Level * 25; // 25px indentation per level
+
+    @foreach (var node in Model.Nodes)
+    {
+        var excluded = node.IsExcluded ? "text-muted bg-light table-secondary" : string.Empty;
+        var packed = node.IsPacked ? "table-success" : string.Empty;
+
+        <tr class="@excluded @packed">
+            <td style="padding-left: @(indent)px">
+
+                @if (node.NodeType == NodeType.Group)
+                {
+                    <i class="fa fa-folder text-warning mr-2"></i>
+                }
+                else if (node.NodeType == NodeType.Category)
+                {
+                    <i class="fa fa-tags text-info mr-2"></i>
+                }
+                else
+                {
+                    <i class="fa fa-cube text-secondary mr-2"></i>
+                }
+
+                <span style="color:red">
+                    @if (node.IsExcluded)
+                    {
+                        <i class="fa fa-thumbs-down mr-2"></i>
+                    }
+
+                    @if (node.IsRequired)
+                    {
+                        <i class="fa fa-exclamation-triangle mr-2"></i>
+                    }
+
+                    @if (node.IsInventoryItemActive == false)
+                    {
+                        <i class="fa fa-ban mr-2"></i>
+                    }
+                </span>
+
+                <span>@(node.GroupName ?? node.CategoryName ?? node.InventoryItem)</span>
+            </td>
+            <td>
+                @if (node.Quantity > 0)
+                {
+                    var color = "badge-secondary";
+                    if (node.Quantity > 1)
+                    {
+                        color = "badge-primary";
+                    }
+
+                    <span class="badge badge-pill @color p-2">@node.Quantity</span>
+                }
+            </td>
+            <td>
+                @if (node.InventoryKitContents != null && node.InventoryKitContents.Any())
+                {
+                    <div class="inventory-kit-row">
+                        <i class="fas fa-boxes text-info mr-1" style="font-size: 0.75rem;" title="Kit Contents"></i>
+                        @string.Join(" • ", node.InventoryKitContents.Select(x => x.Name))
+                    </div>
+                }
+            </td>
+            <td>
+                @if (node.Quantity > 0)
+                {
+                    <a class="btn btn-xs toggle-pack-button" style="font-size: 1.4rem"
+                       asp-area="" asp-controller="Gear" asp-action="Packed"
+                       asp-route-tripId="@node.TripId" asp-route-nonPacked="@Model.NonPacked" asp-route-nodeId="@node.Id">
+                        @if (node.IsPacked)
+                        {
+                            <span style="color:green">
+                                <i class="bi bi-check-circle-fill"></i>
+                            </span>
+                        }
+                        else
+                        {
+                            <span>
+                                <i class="bi bi-question-diamond"></i>
+                            </span>
+                        }
+                    </a>
+                }
+            </td>
+            <td class="text-right">
+                <div class="btn-group">
+
+                    <button class="btn btn-xs btn-outline-primary gearnode-btn-edit" data-json='@Json.Serialize(node)'>
+                        <i class="fa fa-edit"></i>
+                    </button>
+
+                    @if (node.NodeType != NodeType.Item)
+                    {
+                        <button class="btn btn-xs btn-outline-success gearnode-btn-add" data-parent-id="@node.Id">
+                            <i class="fa fa-plus"></i>
+                        </button>
+                    }
+
+                    <a class="btn btn-warning" asp-area="" asp-controller="Gear" asp-action="DeleteNode"
+                       asp-route-tripId="@node.TripId" asp-route-nonPacked="@Model.NonPacked" asp-route-nodeId="@node.Id">
+                        <i class="fa fa-trash"></i>
+                    </a>
+                </div>
+            </td>
+        </tr>
+
+        @await Html.PartialAsync("_GearNodeRows", new GearNodeRowsVewModel(Model.AllNodes, node.Id, Model.Level + 1, Model.NonPacked))
+    }
+}

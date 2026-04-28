@@ -1,4 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Mihaylov.Api.Site.Client;
 using Mihaylov.Common.Generic.Extensions;
 using Mihaylov.Web.Models.Configs;
@@ -33,6 +36,15 @@ namespace Mihaylov.Web.Models.Configs
         public const string DateTimeFormat = "{0:yyyy.MM.dd HH:mm:ss}";
         public const string DateFormatSimple = "yyyy.MM.dd";
         public const string DateTimeFormatSimple = "yyyy.MM.dd HH:mm:ss";
+
+
+        public static IEnumerable<SelectListItem> GetEnumDropdown<TEnum>() where TEnum : struct, Enum
+        {
+            return Enum.GetValues(typeof(TEnum))
+                    .Cast<TEnum>()
+                    .Select(v => new SelectListItem(v.ToString(), Convert.ToInt32(v).ToString()))
+                    .ToList();
+        }
 
         public static string ToQueryString(this IGridRequest request)
         {

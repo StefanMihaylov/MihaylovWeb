@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using Mihaylov.Api.Gear.Client;
 using Mihaylov.Api.Other.Client;
 using Mihaylov.Api.Site.Client;
 using Mihaylov.Api.Users.Client;
@@ -21,16 +22,20 @@ namespace Mihaylov.Web.Services
         private readonly IWeatherApiClient _weatherApiClient;
         private readonly IOtherApiClient _otherApiClient;
         private readonly ISiteApiClient _siteApiClient;
+        private readonly IGearApiClient _gearApiClient;
 
         public ModuleService(ILoggerFactory loggerFactory, IModuleAssemblyService module, IUsersApiClient usersApiClient,
-           IWeatherApiClient weatherApiClient, IOtherApiClient otherApiClient, ISiteApiClient siteApiClient)
+           IWeatherApiClient weatherApiClient, IOtherApiClient otherApiClient, ISiteApiClient siteApiClient,
+           IGearApiClient gearApiClient)
         {
             _logger = loggerFactory.CreateLogger(this.GetType());
             _module = module;
+
             _usersApiClient = usersApiClient;
             _weatherApiClient = weatherApiClient;
             _otherApiClient = otherApiClient;
             _siteApiClient = siteApiClient;
+            _gearApiClient = gearApiClient;
         }
 
         public async Task<IEnumerable<ModuleInfoModel>> GetModuleVersionsAsync()
@@ -41,6 +46,7 @@ namespace Mihaylov.Web.Services
                 await TryActionAsync(_weatherApiClient.ModuleGetInfoAsync,"Weather").ConfigureAwait(false),
                 await TryActionAsync(_otherApiClient.ModuleGetInfoAsync,"Other").ConfigureAwait(false),
                 await TryActionAsync(_siteApiClient.ModuleGetInfoAsync,"Site").ConfigureAwait(false),
+                await TryActionAsync(_gearApiClient.ModuleGetInfoAsync,"Gear").ConfigureAwait(false),
             };
 
             var result = new List<ModuleInfoModel>()

@@ -1,0 +1,128 @@
+﻿@using Mihaylov.Web.Models.Configs
+@using Mihaylov.Web.Models.Gear
+@model TripViewModel
+
+<div class="gearnode-container mt-4">
+    <div class="card shadow-sm border-dark">
+        <div class="card-header bg-dark text-white d-flex flex-column">
+            <div class="d-flex justify-content-between align-items-center w-100">
+                <h5 class="mb-0"><i class="fa fa-list-ul"></i> @Model.Trip.Title - @Model.Trip.Year</h5>
+                <span class="align-items-end radio-container">
+
+                    <span class="btn-group btn-group-toggle btn-group-sm mr-3" data-toggle="buttons">
+                        <label class="btn btn-outline-light @(!Model.NonPacked ? "active" : "")">
+                            <input type="radio" name="gearFilter" id="filterAll" autocomplete="off" @(!Model.NonPacked ? "checked" : "")>
+                            All Items
+                        </label>
+                        <label class="btn btn-outline-light @(Model.NonPacked ? "active" : "")">
+                            <input type="radio" name="gearFilter" id="filterUnpacked" autocomplete="off" @(Model.NonPacked ? "checked" : "") data-trip-id="@Model.Trip.Id">
+                            <i class="fa fa-box-open mr-1"></i> Unpacked
+                        </label>
+                    </span>
+
+                    <button class="btn btn-outline-light btn-sm gearnode-btn-add" data-parent-id="">
+                        <i class="fa fa-plus"></i> Добави
+                    </button>
+                    <a class="btn btn-outline-light btn-sm" asp-area="" asp-controller="Gear" asp-action="Index">
+                        <i class="bi bi-box-arrow-in-right"></i> Назад
+                    </a>
+                </span>
+            </div>
+            <div class="mt-2">@Model.Trip.Notes</div>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-sm table-hover mb-0" id="gearTreeTable">
+                    <thead class="thead-light">
+                        <tr>
+                            <th>Node Name</th>
+                            <th style="width: 5%">Qty</th>
+                            <th style="width: 30%">Детайли</th>
+                            <th style="width: 10%">Status</th>
+                            <th class="text-right">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @await Html.PartialAsync("_GearNodeRows", new GearNodeRowsVewModel(Model.Trip.Nodes, null, 1, Model.NonPacked))
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+            <h6 class="mb-0"><i class="fa fa-list-ul"></i> Елементи: @Model.Trip.Nodes.Select(n => n.Quantity).Count()</h6>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade gearnode-modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <form asp-action="SaveGearNode" method="post">
+                <div class="modal-header">
+                    <h5 class="gearnode-modal-title">Edit Gear Node</h5>
+                    <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" name="Id" class="gearnode-field-id" />
+                    <input type="hidden" name="TripId" value="@Model.Trip.Id" />
+                    <input type="hidden" name="ParentId" class="gearnode-field-parentid" />
+                    <input type="hidden" name="NonPacked" value="@Model.NonPacked.ToString().ToLower()" />
+
+                    <div class="form-group">
+                        <label>Node Type</label>
+                        @Html.DropDownList("NodeType", Model.Types, new { @class = "short-width form-control gearnode-field-type", style = "min-width: 100px;" })
+                    </div>
+
+                    <div class="form-group gearnode-selector-group">
+                        <label>Select Group</label>
+                        @Html.DropDownList("GroupId", Model.Groups, ViewConstants.DefaultDropDownValue, new { @class = "short-width form-control gearnode-dropdown gearnode-field-groupid", style = "min-width: 100px;" })
+                    </div>
+
+                    <div class="form-group gearnode-selector-group d-none">
+                        <label>Select Category</label>
+                        @Html.DropDownList("CategoryId", Model.Categories, ViewConstants.DefaultDropDownValue, new { @class = "short-width form-control gearnode-dropdown gearnode-field-categoryId", style = "min-width: 100px;" })
+                    </div>
+
+                    <div class="form-group gearnode-selector-group d-none">
+                        <label>Select Inventory Item</label>
+                        @Html.DropDownList("InventoryItemId", Model.Items, ViewConstants.DefaultDropDownValue, new { @class = "short-width form-control gearnode-dropdown gearnode-field-itemid select2-searchable", style = "min-width: 100px; width: 100%" })
+                    </div>
+
+                    <div class="row">
+                        <div class="col-6 form-group">
+                            <label>Quantity</label>
+                            <input type="number" name="Quantity" class="form-control gearnode-field-qty" min="0" />
+                        </div>
+                        <div class="col-6 d-flex align-items-center pt-3">
+                            <div class="custom-control custom-checkbox">
+                                <input type="checkbox" name="IsRequired" class="form-check-input checkbox-lg custom-control-input gearnode-field-required" id="chkRequired" value="true">
+                                <label class="custom-control-label" for="chkRequired">Required</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6 form-group">
+                            <div class="custom-control custom-checkbox">
+                                <input type="checkbox" name="IsPacked" class="form-check-input checkbox-lg custom-control-input gearnode-field-packed" id="chkPacked" value="true">
+                                <label class="custom-control-label" for="chkPacked">Packed</label>
+                            </div>
+                        </div>
+                        <div class="col-6 form-group">
+                            <div class="custom-control custom-checkbox">
+                                <input type="checkbox" name="IsExcluded" class="form-check-input checkbox-lg custom-control-input gearnode-field-excluded" id="chkExcluded" value="true">
+                                <label class="custom-control-label" for="chkExcluded">Excluded</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Save Node</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/gear-trip.js"></script>
+}

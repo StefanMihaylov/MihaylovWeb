@@ -1,0 +1,1640 @@
+{
+  "openapi": "3.0.4",
+  "info": {
+    "title": "Gear API",
+    "description": "Gear API",
+    "version": "v1"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:5236/"
+    }
+  ],
+  "paths": {
+    "/api/Collections/Categories": {
+      "get": {
+        "tags": [
+          "Collections"
+        ],
+        "responses": {
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Category"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Collections/Category": {
+      "post": {
+        "tags": [
+          "Collections"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/Category"
+                  }
+                ]
+              }
+            },
+            "text/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/Category"
+                  }
+                ]
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/Category"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Category"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Collections/Currencies": {
+      "get": {
+        "tags": [
+          "Collections"
+        ],
+        "responses": {
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Currency"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Collections/Brands": {
+      "get": {
+        "tags": [
+          "Collections"
+        ],
+        "responses": {
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Brand"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Collections/Brand": {
+      "post": {
+        "tags": [
+          "Collections"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/Brand"
+                  }
+                ]
+              }
+            },
+            "text/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/Brand"
+                  }
+                ]
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/Brand"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Brand"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Collections/Groups": {
+      "get": {
+        "tags": [
+          "Collections"
+        ],
+        "responses": {
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Group"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Collections/Group": {
+      "post": {
+        "tags": [
+          "Collections"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/Group"
+                  }
+                ]
+              }
+            },
+            "text/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/Group"
+                  }
+                ]
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/Group"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Group"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Collections/Shops": {
+      "get": {
+        "tags": [
+          "Collections"
+        ],
+        "responses": {
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Shop"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Collections/Shop": {
+      "post": {
+        "tags": [
+          "Collections"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/Shop"
+                  }
+                ]
+              }
+            },
+            "text/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/Shop"
+                  }
+                ]
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/Shop"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Shop"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Inventory/List": {
+      "get": {
+        "tags": [
+          "Inventory"
+        ],
+        "operationId": "InventoryList",
+        "parameters": [
+          {
+            "name": "isActive",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Inventory"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Inventory/Add": {
+      "post": {
+        "tags": [
+          "Inventory"
+        ],
+        "operationId": "InventoryAdd",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/AddInventoryModel"
+                  }
+                ]
+              }
+            },
+            "text/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/AddInventoryModel"
+                  }
+                ]
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/AddInventoryModel"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "integer",
+                  "format": "int64"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Module/GetInfo": {
+      "get": {
+        "tags": [
+          "Module"
+        ],
+        "operationId": "ModuleGetInfo",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ModuleInfo"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Trip/List": {
+      "get": {
+        "tags": [
+          "Trip"
+        ],
+        "operationId": "TripList",
+        "responses": {
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Trip"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Trip/Get": {
+      "get": {
+        "tags": [
+          "Trip"
+        ],
+        "operationId": "TripGet",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "notPacked",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TripFull"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Trip/Add": {
+      "post": {
+        "tags": [
+          "Trip"
+        ],
+        "operationId": "TripAdd",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/AddTripModel"
+                  }
+                ]
+              }
+            },
+            "text/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/AddTripModel"
+                  }
+                ]
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/AddTripModel"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Trip"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Trip/Node": {
+      "post": {
+        "tags": [
+          "Trip"
+        ],
+        "operationId": "TripNode",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/AddGearNode"
+                  }
+                ]
+              }
+            },
+            "text/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/AddGearNode"
+                  }
+                ]
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/AddGearNode"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "integer",
+                  "format": "int64"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Trip/NodePacked": {
+      "put": {
+        "tags": [
+          "Trip"
+        ],
+        "operationId": "TripNodePacked",
+        "parameters": [
+          {
+            "name": "nodeId",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Trip/Clone": {
+      "post": {
+        "tags": [
+          "Trip"
+        ],
+        "operationId": "TripClone",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "integer",
+                  "format": "int64"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Trip/Delete": {
+      "delete": {
+        "tags": [
+          "Trip"
+        ],
+        "operationId": "TripNodeDelete",
+        "parameters": [
+          {
+            "name": "nodeId",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AddGearNode": {
+        "required": [
+          "isExcluded",
+          "isPacked",
+          "isRequired",
+          "nodeType",
+          "quantity",
+          "tripId"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          },
+          "tripId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "parentId": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          },
+          "nodeType": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/NodeType"
+              }
+            ]
+          },
+          "groupId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "categoryId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "inventoryItemId": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          },
+          "quantity": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "isPacked": {
+            "type": "boolean"
+          },
+          "isExcluded": {
+            "type": "boolean"
+          },
+          "isRequired": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "AddInventoryModel": {
+        "required": [
+          "categoryId",
+          "itemStatus",
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "name": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "brandId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "shopId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "categoryId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "price": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "currencyId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "purchaseDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "itemStatus": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ItemStatus"
+              }
+            ]
+          },
+          "kitContents": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/KitContentItem"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "AddTripModel": {
+        "required": [
+          "title",
+          "year"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          },
+          "title": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "year": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "notes": {
+            "type": "string",
+            "nullable": true
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Brand": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Category": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Currency": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "code": {
+            "type": "string",
+            "nullable": true
+          },
+          "symbol": {
+            "type": "string",
+            "nullable": true
+          },
+          "isDefault": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "GearNode": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "tripId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "parentId": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          },
+          "nodeType": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/NodeType"
+              }
+            ],
+            "x-enumNames": [
+  "Group",
+  "Category",
+  "Item"
+],
+            "x-ms-enum": {
+  "name": "NodeType",
+  "modelAsString": false,
+  "values": [
+    {
+      "value": 1,
+      "name": "Group"
+    },
+    {
+      "value": 2,
+      "name": "Category"
+    },
+    {
+      "value": 3,
+      "name": "Item"
+    }
+  ]
+}
+          },
+          "groupId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "groupName": {
+            "type": "string",
+            "nullable": true
+          },
+          "categoryId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "categoryName": {
+            "type": "string",
+            "nullable": true
+          },
+          "inventoryItemId": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          },
+          "inventoryItem": {
+            "type": "string",
+            "nullable": true
+          },
+          "isInventoryItemActive": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "inventoryKitContents": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/KitContentItem"
+            },
+            "nullable": true
+          },
+          "quantity": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "isPacked": {
+            "type": "boolean"
+          },
+          "isExcluded": {
+            "type": "boolean"
+          },
+          "isRequired": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "Group": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Inventory": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "brandId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "brand": {
+            "type": "string",
+            "nullable": true
+          },
+          "shopId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "shop": {
+            "type": "string",
+            "nullable": true
+          },
+          "categoryId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "category": {
+            "type": "string",
+            "nullable": true
+          },
+          "price": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "currencyId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "currency": {
+            "type": "string",
+            "nullable": true
+          },
+          "purchaseDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "itemStatus": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ItemStatus"
+              }
+            ],
+            "x-enumNames": [
+  "Active",
+  "Broken",
+  "Lost",
+  "Retired",
+  "Ignored"
+],
+            "x-ms-enum": {
+  "name": "ItemStatus",
+  "modelAsString": false,
+  "values": [
+    {
+      "value": 1,
+      "name": "Active"
+    },
+    {
+      "value": 2,
+      "name": "Broken"
+    },
+    {
+      "value": 3,
+      "name": "Lost"
+    },
+    {
+      "value": 4,
+      "name": "Retired"
+    },
+    {
+      "value": 5,
+      "name": "Ignored"
+    }
+  ]
+}
+          },
+          "kitContents": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/KitContentItem"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ItemStatus": {
+        "enum": [
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "type": "integer",
+        "description": "1 - Active, 2 - Broken, 3 - Lost, 4 - Retired, 5 - Ignored",
+        "format": "int32",
+        "x-enumNames": [
+  "Active",
+  "Broken",
+  "Lost",
+  "Retired",
+  "Ignored"
+],
+        "x-ms-enum": {
+  "name": "ItemStatus",
+  "modelAsString": false,
+  "values": [
+    {
+      "value": 1,
+      "name": "Active"
+    },
+    {
+      "value": 2,
+      "name": "Broken"
+    },
+    {
+      "value": 3,
+      "name": "Lost"
+    },
+    {
+      "value": 4,
+      "name": "Retired"
+    },
+    {
+      "value": 5,
+      "name": "Ignored"
+    }
+  ]
+}
+      },
+      "KitContentItem": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ModuleInfo": {
+        "type": "object",
+        "properties": {
+          "moduleName": {
+            "type": "string",
+            "nullable": true
+          },
+          "version": {
+            "type": "string",
+            "nullable": true
+          },
+          "framework": {
+            "type": "string",
+            "nullable": true
+          },
+          "buildDate": {
+            "type": "string",
+            "nullable": true
+          },
+          "gitCommit": {
+            "type": "string",
+            "nullable": true
+          },
+          "jenkinsBuildNumber": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "NodeType": {
+        "enum": [
+          1,
+          2,
+          3
+        ],
+        "type": "integer",
+        "description": "1 - Group, 2 - Category, 3 - Item",
+        "format": "int32",
+        "x-enumNames": [
+  "Group",
+  "Category",
+  "Item"
+],
+        "x-ms-enum": {
+  "name": "NodeType",
+  "modelAsString": false,
+  "values": [
+    {
+      "value": 1,
+      "name": "Group"
+    },
+    {
+      "value": 2,
+      "name": "Category"
+    },
+    {
+      "value": 3,
+      "name": "Item"
+    }
+  ]
+}
+      },
+      "Shop": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Trip": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "year": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "notes": {
+            "type": "string",
+            "nullable": true
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "additionalProperties": false
+      },
+      "TripFull": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "year": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "notes": {
+            "type": "string",
+            "nullable": true
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "nodes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GearNode"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  }
+}

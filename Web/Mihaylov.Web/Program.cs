@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Mihaylov.Api;
+using Mihaylov.Api.Gear.Client;
 using Mihaylov.Common;
 using Mihaylov.Web.Areas;
 using Mihaylov.Web.Areas.Identity.Pages.Account;
@@ -128,6 +129,7 @@ namespace Mihaylov.Web
             services.AddWeatherApiClient(Config.GetEnvironmentVariable("Weather_Api_Client"));
             services.AddOtherApiClient(Config.GetEnvironmentVariable("Other_Api_Client"));
             services.AddSiteApiClient(Config.GetEnvironmentVariable("Site_Api_Client"));
+            services.AddGearApiClient(Config.GetEnvironmentVariable("Gear_Api_Client"));
 
             services.AddMediaServices();
             services.Configure<MediaConfig>(opt =>
