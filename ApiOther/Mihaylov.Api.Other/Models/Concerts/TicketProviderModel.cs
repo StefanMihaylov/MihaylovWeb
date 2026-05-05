@@ -13,5 +13,7 @@ namespace Mihaylov.Api.Other.Models.Concerts
 
         [MaxLength(ModelConstants.TicketProviderUrlMaxLength)]
         public string Url { get; set; }
+
+        public bool? IsActive { get; set; }
     }
 }

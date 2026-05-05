@@ -18,7 +18,7 @@ namespace Mihaylov.Api.Other.Database.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasDefaultSchema("show")
-                .HasAnnotation("ProductVersion", "7.0.18")
+                .HasAnnotation("ProductVersion", "8.0.26")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -30,6 +30,9 @@ namespace Mihaylov.Api.Other.Database.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("BandId"));
+
+                    b.Property<int?>("CountryId")
+                        .HasColumnType("int");
 
                     b.Property<string>("CreatedBy")
                         .IsRequired()
@@ -56,6 +59,8 @@ namespace Mihaylov.Api.Other.Database.Migrations
                     b.HasKey("BandId")
                         .HasName("BandId");
 
+                    b.HasIndex("CountryId");
+
                     b.HasIndex("Name")
                         .IsUnique();
 
@@ -69,6 +74,9 @@ namespace Mihaylov.Api.Other.Database.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ConcertId"));
+
+                    b.Property<int?>("ConcertTypeId")
+                        .HasColumnType("int");
 
                     b.Property<string>("CreatedBy")
                         .IsRequired()
@@ -113,6 +121,8 @@ namespace Mihaylov.Api.Other.Database.Migrations
                     b.HasKey("ConcertId")
                         .HasName("ConcertId");
 
+                    b.HasIndex("ConcertTypeId");
+
                     b.HasIndex("CurrencyId");
 
                     b.HasIndex("LocationId");
@@ -138,6 +148,55 @@ namespace Mihaylov.Api.Other.Database.Migrations
                     b.HasIndex("ConcertId");
 
                     b.ToTable("ConcertBands", "show");
+                });
+
+            modelBuilder.Entity("Mihaylov.Api.Other.Database.Shows.Models.ConcertType", b =>
+                {
+                    b.Property<int>("ConcertTypeId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ConcertTypeId"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.HasKey("ConcertTypeId")
+                        .HasName("ConcertTypeId");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
+
+                    b.ToTable("ConcertTypes", "show");
+                });
+
+            modelBuilder.Entity("Mihaylov.Api.Other.Database.Shows.Models.Country", b =>
+                {
+                    b.Property<int>("CountryId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CountryId"));
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasMaxLength(3)
+                        .HasColumnType("nvarchar(3)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.HasKey("CountryId")
+                        .HasName("CountryId");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
+
+                    b.ToTable("Countries", "show");
                 });
 
             modelBuilder.Entity("Mihaylov.Api.Other.Database.Shows.Models.Currency", b =>
@@ -227,6 +286,11 @@ namespace Mihaylov.Api.Other.Database.Migrations
                         .HasPrecision(3)
                         .HasColumnType("datetime2(3)");
 
+                    b.Property<bool>("IsActive")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(true);
+
                     b.Property<string>("ModifiedBy")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
@@ -253,8 +317,23 @@ namespace Mihaylov.Api.Other.Database.Migrations
                     b.ToTable("TicketProviders", "show");
                 });
 
+            modelBuilder.Entity("Mihaylov.Api.Other.Database.Shows.Models.Band", b =>
+                {
+                    b.HasOne("Mihaylov.Api.Other.Database.Shows.Models.Country", "Country")
+                        .WithMany()
+                        .HasForeignKey("CountryId")
+                        .OnDelete(DeleteBehavior.NoAction);
+
+                    b.Navigation("Country");
+                });
+
             modelBuilder.Entity("Mihaylov.Api.Other.Database.Shows.Models.Concert", b =>
                 {
+                    b.HasOne("Mihaylov.Api.Other.Database.Shows.Models.ConcertType", "ConcertType")
+                        .WithMany("Concerts")
+                        .HasForeignKey("ConcertTypeId")
+                        .OnDelete(DeleteBehavior.NoAction);
+
                     b.HasOne("Mihaylov.Api.Other.Database.Shows.Models.Currency", "Currency")
                         .WithMany()
                         .HasForeignKey("CurrencyId")
@@ -272,6 +351,8 @@ namespace Mihaylov.Api.Other.Database.Migrations
                         .HasForeignKey("TicketProviderId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
+
+                    b.Navigation("ConcertType");
 
                     b.Navigation("Currency");
 
@@ -307,6 +388,11 @@ namespace Mihaylov.Api.Other.Database.Migrations
             modelBuilder.Entity("Mihaylov.Api.Other.Database.Shows.Models.Concert", b =>
                 {
                     b.Navigation("ConcertBands");
+                });
+
+            modelBuilder.Entity("Mihaylov.Api.Other.Database.Shows.Models.ConcertType", b =>
+                {
+                    b.Navigation("Concerts");
                 });
 
             modelBuilder.Entity("Mihaylov.Api.Other.Database.Shows.Models.Location", b =>

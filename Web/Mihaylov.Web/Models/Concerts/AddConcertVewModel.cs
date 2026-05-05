@@ -8,6 +8,8 @@ namespace Mihaylov.Web.Models.Concerts
 {
     public class AddConcertVewModel
     {
+        public int? Id { get; set; }
+
         [Required]
         public DateTime? Date { get; set; }
 
@@ -23,7 +25,9 @@ namespace Mihaylov.Web.Models.Concerts
         public int? Location { get; set; }
 
         [Required]
-        public int? TicketProvider { get; set; } 
+        public int? TicketProvider { get; set; }
+
+        public int? ConcertTypeId { get; set; }
 
         public IEnumerable<int?> BandIds { get; set; }
 
@@ -35,5 +39,9 @@ namespace Mihaylov.Web.Models.Concerts
         public IEnumerable<Location> Locations { get; set; }
 
         public IEnumerable<TicketProvider> TicketProviders { get; set; }
+
+        public IEnumerable<ConcertType> ConcertTypes { get; set; }
+
+        public int Page { get; set; } = 1;
     }
 }

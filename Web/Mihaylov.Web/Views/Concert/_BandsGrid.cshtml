@@ -1,0 +1,55 @@
+﻿@using Mihaylov.Api.Other.Client
+@using Mihaylov.Web.Controllers
+@using Mihaylov.Web.Models.Concerts;
+@model BandViewModel
+
+<div class="col-md-6 band-grid">
+    <h5>Банди - @Model.Bands.Pager.Count</h5>
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>@Html.LabelFor(m => m.Bands.Data.First().Name)</th>
+                <th>@Html.LabelFor(m => m.Bands.Data.First().Country)</th>
+                <th>@Html.LabelFor(m => m.Bands.Data.First().Count)</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var band in Model.Bands.Data)
+            {
+                <tr>
+                    <td><my-value>@band.Name</my-value></td>
+                    <td><my-value>@band.Country</my-value></td>
+                    <td><my-value>@band.Count</my-value></td>
+                    <td>
+                        <span class="btn btn-sm btn-secondary edit-band-btn" data-id="@band.Id" data-name="@band.Name" , data-country="@band.CountryId">
+                            Редактирай
+                        </span>
+                    </td>
+                </tr>
+            }
+
+            <form action="/Concert/Band" method="post">
+            <tr>
+                <td>
+                    <input type="hidden" name="Page" value="@Model.Bands.Pager.Page" />
+                    <input type="hidden" id="band-id-input" name="Id" value="" />
+                    <input type="text" id="new-band-input" name="Name" placeholder="Добави нов" role="presentation" aria-autocomplete="none" autocomplete="false" />
+                    @Html.ValidationMessage("Name")
+                </td>
+                <td>
+                    @Html.DropDownList("CountryId", Model.Countries.Select(a => new SelectListItem(a.Name, a.Id.ToString())), "---", new { id = "new-band-country-id-input" })
+                    @Html.ValidationMessage("CountryId")
+                </td>
+                <td></td>
+                <td>
+                    <input type="submit" class="btn btn-primary" value="Добави" />
+                    <span class="btn btn-secondary band-cancel-btn">Отказ</span>
+                </td>
+            </tr>
+            </form>
+        </tbody>
+    </table>
+
+    @await Html.PartialAsync("_Pager", new PagerExtended(Model.Bands.Pager, ConcertController.BANDS_TAB))
+</div>

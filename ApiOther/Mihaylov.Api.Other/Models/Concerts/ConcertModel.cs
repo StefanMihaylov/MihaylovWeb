@@ -25,6 +25,8 @@ namespace Mihaylov.Api.Other.Models.Concerts
         [Required]
         public CurrencyType? Currency { get; set; }
 
+        public int? ConcertTypeId { get; set; }
+
         [Required]
         public int? TicketProviderId { get; set; }
 

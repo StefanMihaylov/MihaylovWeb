@@ -26,6 +26,10 @@ namespace Mihaylov.Api.Other.Database.Shows
 
         public DbSet<Currency> Currencies { get; set; }
 
+        public DbSet<Country> Countries { get; set; }
+
+        public DbSet<ConcertType> ConcertTypes { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -36,6 +40,8 @@ namespace Mihaylov.Api.Other.Database.Shows
             builder.ApplyConfiguration(new TicketProviderConfiguration());
             builder.ApplyConfiguration(new BandConfiguration());
             builder.ApplyConfiguration(new CurrencyConfiguration());
+            builder.ApplyConfiguration(new CountryConfiguration());
+            builder.ApplyConfiguration(new ConcertTypeConfiguration());
 
             base.OnModelCreating(builder);
         }

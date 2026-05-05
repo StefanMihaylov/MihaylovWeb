@@ -64,6 +64,7 @@ namespace Mihaylov.Api.Other.DAL.Show
                 model.Name = model.Name?.Trim();
 
                 var dbModel = await _dbContext.Concerts
+                    .Include(c => c.ConcertBands)
                     .Where(t => t.ConcertId == model.Id)
                     .FirstOrDefaultAsync()
                     .ConfigureAwait(false);
@@ -76,13 +77,18 @@ namespace Mihaylov.Api.Other.DAL.Show
 
                 dbModel = model.Adapt(dbModel);
 
-                dbModel.ConcertBands.Clear();
-                if (model.Bands.Any())
+                if (dbModel.ConcertBands?.Any() == true)
+                {
+                    _dbContext.ConcertBands.RemoveRange(dbModel.ConcertBands);
+                    dbModel.ConcertBands.Clear();
+                }
+
+                if (model.Bands?.Any() == true)
                 {
                     var bands = model.Bands.Select(b => new DB.ConcertBand()
                     {
                         BandId = b.Id,
-                        ConcertId = model.Id,
+                       // ConcertId = model.Id,
                         Order = 0
                     })
                     .ToList();

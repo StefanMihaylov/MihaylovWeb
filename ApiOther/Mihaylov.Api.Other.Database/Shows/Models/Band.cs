@@ -9,6 +9,10 @@ namespace Mihaylov.Api.Other.Database.Shows.Models
 
         public string Name { get; set; }
 
+        public int? CountryId { get; set; }
+
+        public Country Country { get; set; }
+
         public IEnumerable<Concert> Concerts { get; set; }
 
         public IEnumerable<ConcertBand> ConcertBands { get; set; }

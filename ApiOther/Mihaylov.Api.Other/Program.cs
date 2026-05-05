@@ -82,6 +82,7 @@ namespace Mihaylov.Api.Other
                     immich.ApiKey = Config.GetEnvironmentVariable("Immich_Api_Key");
                 });
 
+            // Add-Migration <name> -Context MihaylovOtherShowDbContext
             // Add-Migration <name> -Context MihaylovOtherClusterDbContext
 
             services.AddClientJwtAuthentication(null, opt =>

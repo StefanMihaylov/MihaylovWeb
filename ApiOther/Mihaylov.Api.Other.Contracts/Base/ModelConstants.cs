@@ -6,6 +6,10 @@
 
         public const int ConcertNameMaxLength = 100;
 
+        public const int ConcertTypeMaxLength = 50;
+
+        public const int CountryNameMaxLength = 100;
+
         public const int LocationNameMaxLength = 100;
 
         public const int TicketProviderNameMaxLength = 100;

@@ -11,6 +11,8 @@ namespace Mihaylov.Api.Other.Database.Shows.Models
 
         public string Url { get; set; }
 
+        public bool IsActive { get; set; }
+
         public IEnumerable<Concert> Concerts { get; set; }
 
         public TicketProvider()

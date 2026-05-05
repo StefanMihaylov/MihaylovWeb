@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 using Mihaylov.Api.Other.Client;
 using Mihaylov.Common.Host.Authorization;
 using Mihaylov.Web.Areas;
@@ -16,6 +17,13 @@ namespace Mihaylov.Web.Controllers
     [JwtAuthorize(Roles = UserConstants.AdminRole)]
     public class ConcertController : Controller
     {
+        public const string CONCERTS_TAB = "concerts";
+        public const string BANDS_TAB = "bands";
+        public const string LOCATIONS_TAB = "locations";
+        public const string PROVIDERS_TAB = "providers";
+        public const string COUNTRIES_TAB = "countries";
+        public const string CONCERT_TYPES_TAB = "concertTypes";
+
         private readonly ILogger _logger;
         private readonly IOtherApiClient _client;
 
@@ -26,21 +34,26 @@ namespace Mihaylov.Web.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Index(int? page)
+        public async Task<IActionResult> Index(int? page, string activeTab)
         {
-            if (!page.HasValue || (page <= 0))
+            if (string.IsNullOrWhiteSpace(activeTab))
             {
-                return Redirect($"/Concert/{nameof(Index)}?page=1");
+                activeTab = CONCERTS_TAB;
             }
 
-            ConcertMainModel viewModel = await FillModel(null, page).ConfigureAwait(false);
+            if (!page.HasValue || (page <= 0))
+            {
+                return Redirect($"/Concert/{nameof(Index)}?page=1&activeTab={activeTab}");
+            }
 
-            var maxPage = Math.Max(viewModel.Concerts.Pager.PageMax ?? 0, viewModel.Bands.Pager.PageMax ?? 0);
+            ConcertMainModel viewModel = await FillModel(null, page, activeTab).ConfigureAwait(false);
+
+            var maxPage = Math.Max(viewModel.Concerts.Pager.PageMax ?? 0, viewModel.Bands.Bands.Pager.PageMax ?? 0);
             maxPage = Math.Max(maxPage, viewModel.Locations.Pager.PageMax ?? 0);
 
             if (maxPage > 0 && page > maxPage)
             {
-                return Redirect($"/Concert/{nameof(Index)}?page={maxPage}");
+                return Redirect($"/Concert/{nameof(Index)}?page={maxPage}&activeTab={activeTab}");
             }
 
             return View(viewModel);
@@ -59,7 +72,7 @@ namespace Mihaylov.Web.Controllers
                 };
             }
 
-            ConcertMainModel viewModel = await FillModel(inputModel, 1).ConfigureAwait(false);
+            ConcertMainModel viewModel = await FillModel(inputModel, 1, CONCERTS_TAB).ConfigureAwait(false);
 
             return View(viewModel);
         }
@@ -69,7 +82,7 @@ namespace Mihaylov.Web.Controllers
         {
             if (!ModelState.IsValid)
             {
-                ConcertMainModel viewModel = await FillModel(inputModel, 1).ConfigureAwait(false);
+                ConcertMainModel viewModel = await FillModel(inputModel, 1, CONCERTS_TAB).ConfigureAwait(false);
                 return View(nameof(IndexRedirect), viewModel);
             }
 
@@ -77,11 +90,12 @@ namespace Mihaylov.Web.Controllers
             {
                 var concert = new ConcertModel()
                 {
-                    Id = 0,
+                    Id = inputModel.Id ?? 0,
                     Date = inputModel.Date.Value,
                     Name = inputModel.Name,
                     Price = (double)inputModel.Price.Value,
                     Currency = (CurrencyType)inputModel.Currency.Value,
+                    ConcertTypeId = inputModel.ConcertTypeId,
                     LocationId = inputModel.Location.Value,
                     TicketProviderId = inputModel.TicketProvider.Value,
                     BandIds = inputModel.BandIds.Where(b => b.HasValue)
@@ -92,7 +106,7 @@ namespace Mihaylov.Web.Controllers
                 _client.AddToken(Request.GetToken());
                 var result = await _client.ConcertAsync(concert).ConfigureAwait(false);
 
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Index), new { page = inputModel.Page, activeTab = CONCERTS_TAB });
             }
             catch (SwaggerException<Dictionary<string, IEnumerable<string>>> ex)
             {
@@ -108,7 +122,7 @@ namespace Mihaylov.Web.Controllers
 
                 _logger.LogError(ex, "Error in Add/update band. Error: {message}", builder.ToString());
 
-                ConcertMainModel viewModel = await FillModel(null, 1).ConfigureAwait(false);
+                ConcertMainModel viewModel = await FillModel(null, 1, CONCERTS_TAB).ConfigureAwait(false);
                 return View(nameof(IndexRedirect), viewModel);
             }
             catch (SwaggerException ex)
@@ -124,19 +138,21 @@ namespace Mihaylov.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Band(string name)
+        public async Task<IActionResult> Band(AddBandViewModel band)
         {
-            if (!string.IsNullOrEmpty(name))
+            if (!string.IsNullOrEmpty(band?.Name))
             {
-                var band = new BandModel()
-                {
-                    Name = name
-                };
-
                 try
                 {
+                    var bandModel = new BandModel()
+                    {
+                        Id = band.Id ?? 0,
+                        Name = band.Name,
+                        CountryId = band.CountryId,
+                    };
+
                     _client.AddToken(Request.GetToken());
-                    var result = await _client.BandAsync(band).ConfigureAwait(false);
+                    var result = await _client.BandAsync(bandModel).ConfigureAwait(false);
                 }
                 catch (SwaggerException<Dictionary<string, IEnumerable<string>>> ex)
                 {
@@ -152,7 +168,8 @@ namespace Mihaylov.Web.Controllers
 
                     _logger.LogError(ex, "Error in Add/update band. Error: {message}", builder.ToString());
 
-                    ConcertMainModel viewModel = await FillModel(null, 1).ConfigureAwait(false);
+                    ConcertMainModel viewModel = await FillModel(null, 1, BANDS_TAB).ConfigureAwait(false);
+
                     return View(nameof(IndexRedirect), viewModel);
                 }
                 catch (SwaggerException ex)
@@ -165,24 +182,19 @@ namespace Mihaylov.Web.Controllers
                 }
             }
 
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(Index), new { page = band.Page, activeTab = BANDS_TAB });
         }
 
         [HttpPost]
-        public async Task<IActionResult> Location(string name)
+        public async Task<IActionResult> Location(LocationModel location)
         {
-            if (!string.IsNullOrEmpty(name))
+            if (!string.IsNullOrEmpty(location?.Name))
             {
-                var location = new LocationModel()
-                {
-                    Name = name
-                };
-
                 _client.AddToken(Request.GetToken());
                 var result = await _client.LocationAsync(location).ConfigureAwait(false);
             }
 
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(Index), new { activeTab = LOCATIONS_TAB });
         }
 
         [HttpPost]
@@ -190,23 +202,49 @@ namespace Mihaylov.Web.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Index), new { activeTab = PROVIDERS_TAB });
             }
 
             var provider = new TicketProviderModel()
             {
+                Id = model.Id ?? 0,
                 Name = model.Name,
                 Url = model.Url,
+                IsActive = model.IsActive,
             };
 
             _client.AddToken(Request.GetToken());
             var result = await _client.TicketProviderAsync(provider).ConfigureAwait(false);
 
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(Index), new { activeTab = PROVIDERS_TAB });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Country(CountryModel model)
+        {
+            if (!string.IsNullOrEmpty(model?.Name))
+            {
+                _client.AddToken(Request.GetToken());
+                var result = await _client.CountryAsync(model).ConfigureAwait(false);
+            }
+
+            return RedirectToAction(nameof(Index), new { activeTab = COUNTRIES_TAB });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ConcertType(ConcertTypeModel model)
+        {
+            if (!string.IsNullOrEmpty(model?.Name))
+            {
+                _client.AddToken(Request.GetToken());
+                var result = await _client.ConcertTypeAsync(model).ConfigureAwait(false);
+            }
+
+            return RedirectToAction(nameof(Index), new { activeTab = CONCERT_TYPES_TAB });
         }
 
 
-        private async Task<ConcertMainModel> FillModel(AddConcertVewModel inputModel, int? page)
+        private async Task<ConcertMainModel> FillModel(AddConcertVewModel inputModel, int? page, string activeTab)
         {
             if (inputModel == null)
             {
@@ -216,33 +254,66 @@ namespace Mihaylov.Web.Controllers
                 };
             }
 
+            if (string.IsNullOrWhiteSpace(activeTab))
+            {
+                activeTab = CONCERTS_TAB;
+            }
+
+            int? concertsPage = 1;
+            int? bandsPage = 1;
+            int? locationsPage = 1;
+            int? ticketsPage = 1;
+            int? countriesPage = 1;
+
+            if (page.HasValue && page > 0)
+            {
+                switch (activeTab)
+                {
+                    case CONCERTS_TAB:
+                        concertsPage = page;
+                        break;
+                    case BANDS_TAB:
+                        bandsPage = page;
+                        break;
+                    case LOCATIONS_TAB:
+                        locationsPage = page;
+                        break;
+                    case PROVIDERS_TAB:
+                        ticketsPage = page;
+                        break;
+                    case COUNTRIES_TAB:
+                        countriesPage = page;
+                        break;
+                }
+            }
+
             _client.AddToken(Request.GetToken());
-            var concerts = await _client.ConcertsAsync(page, 20).ConfigureAwait(false);
+            var concerts = await _client.ConcertsAsync(concertsPage, 20).ConfigureAwait(false);
             var allBands = await _client.BandsAsync(null, null).ConfigureAwait(false);
-            var bands = await _client.BandsAsync(page, 10).ConfigureAwait(false);
+            var bands = await _client.BandsAsync(bandsPage, 20).ConfigureAwait(false);
             var allLocations = await _client.LocationsAsync(null, null).ConfigureAwait(false);
-            var locations = await _client.LocationsAsync(page, 10).ConfigureAwait(false);
-            var ticketProviders = await _client.TicketProvidersAsync(null, null).ConfigureAwait(false);
+            var locations = await _client.LocationsAsync(locationsPage, 20).ConfigureAwait(false);
+            var allTicketProviders = await _client.TicketProvidersAsync(null, null).ConfigureAwait(false);
+            var ticketProviders = await _client.TicketProvidersAsync(ticketsPage, 20).ConfigureAwait(false);
+            var allCountries = await _client.CountriesAsync(null, null).ConfigureAwait(false);
+            var countries = await _client.CountriesAsync(countriesPage, 20).ConfigureAwait(false);
+            var concertTypes = await _client.ConcertTypesAsync().ConfigureAwait(false);
 
             var currencies = Enum.GetValues(typeof(CurrencyType))
                                   .Cast<CurrencyType>()
                                   .Select(v => new SelectListItem(v.ToString(), ((int)v).ToString()))
+                                  .OrderByDescending(c => c.Value)
                                   .ToList();
 
             inputModel.Currencies = currencies;
+            inputModel.ConcertTypes = concertTypes;
             inputModel.Bands = allBands.Data;
             inputModel.Locations = allLocations.Data;
-            inputModel.TicketProviders = ticketProviders.Data;
+            inputModel.TicketProviders = allTicketProviders.Data.Where(tp => tp.IsActive).ToList();
+            inputModel.Page = concertsPage ?? 1;
 
-            var viewModel = new ConcertMainModel()
-            {
-                Concerts = concerts,
-                Bands = bands,
-                Locations = locations,
-                TicketProviders = ticketProviders,
-
-                Input = inputModel
-            };
+            var viewModel = new ConcertMainModel(concerts, new BandViewModel(bands, allCountries.Data), locations,
+                ticketProviders, countries, concertTypes, inputModel, activeTab);
 
             return viewModel;
         }

@@ -4,39 +4,46 @@
 <form action="/Concert/Add" method="post">
     <tr>
         <td>
-            @Html.TextBoxFor(m => m.Date, "{0:yyyy.MM.dd}", new { aria_autocomplete = "none", autocomplete = "off" })
+            <input type="hidden" name="Page" value="@Model.Page" />
+            <input type="hidden" id="concert-id-input" name="Id" value="" />
+            @Html.TextBoxFor(m => m.Date, "{0:yyyy.MM.dd}", new { id = "concert-date-input", aria_autocomplete = "none", autocomplete = "off", @class = "short-width" })
             @Html.ValidationMessageFor(m => m.Date)
         </td>
         <td>
             @* <input type="text" id="concert-name-input" name="Name" placeholder="Добави нов" role="presentation" aria-autocomplete="none" autocomplete="false" /> *@
-            @Html.TextBoxFor(m => m.Name, new { aria_autocomplete = "none", autocomplete = "off" })
+            @Html.TextBoxFor(m => m.Name, new { id = "concert-name-input", aria_autocomplete = "none", autocomplete = "off" })
             @Html.ValidationMessageFor(m => m.Name)
         </td>
         <td>
             @for (int i = 0; i < 6; i++)
             {
-                @Html.DropDownList($"BandIds[{i}]", Model.Bands.Select(a => new SelectListItem(a.Name, a.Id.ToString())), "---", new { style = "min-width: 200px" })
+                @Html.DropDownList($"BandIds[{i}]", Model.Bands.Select(a => new SelectListItem(a.Name, a.Id.ToString())), "---", new { id = $"concert-band-{i}", style = "min-width: 200px" })
                 @Html.ValidationMessage($"BandIds[{i}]")
             }
         </td>
         <td>
-            @Html.TextBoxFor(m => m.Price, "{0:n0}", new { aria_autocomplete = "none", autocomplete = "off" })
+            @Html.DropDownListFor(m => m.ConcertTypeId, Model.ConcertTypes.Select(a => new SelectListItem(a.Name, a.Id.ToString())), "---", new { id = "concert-type-input" })
+            @Html.ValidationMessageFor(m => m.ConcertTypeId)
+        </td>
+        <td>
+            @Html.TextBoxFor(m => m.Price, "{0:n0}", new { id = "concert-price-input", aria_autocomplete = "none", autocomplete = "off", @class = "tiny-width" })
             @Html.ValidationMessageFor(m => m.Price)
         </td>
         <td>
-            @Html.DropDownListFor(m => m.Currency, Model.Currencies)
+            @Html.DropDownListFor(m => m.Currency, Model.Currencies, null, new { id = "concert-currency-input" })
             @Html.ValidationMessageFor(m => m.Currency)
         </td>
         <td>
-            @Html.DropDownListFor(m => m.Location, Model.Locations.Select(a => new SelectListItem(a.Name, a.Id.ToString())), "---")
+            @Html.DropDownListFor(m => m.Location, Model.Locations.Select(a => new SelectListItem(a.Name, a.Id.ToString())), "---", new { id = "concert-location-input" })
             @Html.ValidationMessageFor(m => m.Location)
         </td>
         <td>
-            @Html.DropDownListFor(m => m.TicketProvider, Model.TicketProviders.Select(a => new SelectListItem(a.Name, a.Id.ToString())), "---")
+            @Html.DropDownListFor(m => m.TicketProvider, Model.TicketProviders.Select(a => new SelectListItem(a.Name, a.Id.ToString())), "---", new { id = "concert-ticket-provider-input" })
             @Html.ValidationMessageFor(m => m.TicketProvider)
         </td>
         <td>
             <input type="submit" class="btn btn-primary" value="Добави" />
+            <span class="btn btn-secondary concert-cancel-btn">Отказ</span>
         </td>
     </tr>
 </form>

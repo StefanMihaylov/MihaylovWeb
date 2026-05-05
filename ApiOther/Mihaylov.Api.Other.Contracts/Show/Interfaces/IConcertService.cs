@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Mihaylov.Api.Other.Contracts.Base.Models;
 using Mihaylov.Api.Other.Contracts.Show.Models;
 
@@ -21,5 +22,13 @@ namespace Mihaylov.Api.Other.Contracts.Show.Interfaces
         Task<Grid<TicketProvider>> GetTicketProvidersAsync(GridRequest request);
 
         Task<TicketProvider> AddOrUpdateTicketProviderAsync(TicketProvider model);
+
+        Task<Grid<CountryExtended>> GetCountriesAsync(GridRequest request);
+
+        Task<Country> AddOrUpdateCountryAsync(Country model);
+
+        Task<IEnumerable<ConcertType>> GetConcertTypesAsync();
+
+        Task<ConcertType> AddOrUpdateConcertTypeAsync(ConcertType model);
     }
 }

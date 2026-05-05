@@ -1,16 +1,16 @@
-﻿@namespace Mihaylov.Api.Other.Client
-@model Pager
+﻿@using Mihaylov.Web.Models.Concerts
+@model PagerExtended
 
 <div class="col-auto">
     <nav aria-label="">
         <ul class="pagination ustify-content-end">
             <li class="page-item">
-                <a class="page-link" href="/Concert/index?page=@(Model.Page - 1)">Previous</a>
+                <a class="page-link" href="/Concert/index?page=@(Model.Pager.Page - 1)&activeTab=@Model.ActiveTab">Previous</a>
             </li>
 
-            @for (int i = 1; i <= Model.PageMax; i++)
+            @for (int i = 1; i <= Model.Pager.PageMax; i++)
             {
-                if (i == Model.Page)
+                if (i == Model.Pager.Page)
                 {
                     <li class="page-item active">
                         <span class="page-link">
@@ -22,16 +22,17 @@
                 else
                 {
                     <li class="page-item">
-                        <a class="page-link" href="/Concert/index?page=@i"> @(i)</a>
+                        <a class="page-link" href="/Concert/index?page=@i&activeTab=@Model.ActiveTab"> @(i)</a>
                     </li>
                 }
             }
 
             <li class="page-item">
-                <a class="page-link" href="/Concert/index?page=@(Model.Page + 1)">Next</a>
+                <a class="page-link" href="/Concert/index?page=@(Model.Pager.Page + 1)&activeTab=@Model.ActiveTab">Next</a>
             </li>
+
             <li class="page-item disabled">
-                <span class="page-link">x @Model.PageSize</span>
+                <span class="page-link">x @Model.Pager.PageSize</span>
             </li>
         </ul>        
     </nav>

@@ -16,21 +16,29 @@ namespace Mihaylov.Api.Other.Data.Show
         private readonly IConcertRepository _concerts;
         private readonly ILocationRepository _locations;
         private readonly ITicketProviderRepository _provider;
+        private readonly ICountryRepository _countries;
+        private readonly IConcertTypeRepository _concertTypes;
         private readonly IMemoryCache _memoryCache;
 
         private const string SHOW_ALL_BANDS = "show_all_bands";
         private const string SHOW_ALL_LOCATION = "show_all_Location";
         private const string SHOW_ALL_TICKETPROVIDER = "show_all_TicketProvider";
+        private const string SHOW_ALL_COUNTRIES = "show_all_Country";
+        private const string SHOW_ALL_CONCERT_TYPES = "show_all_ConcertTypes";
+
         private const int CACHE_DURATION = 30;
 
         public ConcertService(ILoggerFactory loggerFactory, IBandRepository bands, IConcertRepository concerts,
-            ILocationRepository locations, ITicketProviderRepository provider, IMemoryCache memoryCache)
+            ILocationRepository locations, ITicketProviderRepository provider, ICountryRepository countries,
+            IConcertTypeRepository concertTypes, IMemoryCache memoryCache)
         {
             _logger = loggerFactory.CreateLogger(GetType());
             _bands = bands;
             _concerts = concerts;
             _locations = locations;
             _provider = provider;
+            _countries = countries;
+            _concertTypes = concertTypes;
             _memoryCache = memoryCache;
         }
 
@@ -44,7 +52,10 @@ namespace Mihaylov.Api.Other.Data.Show
         public async Task<ConcertExtended> AddOrUpdateConcertAsync(Concert model)
         {
             var concert = await _concerts.AddOrUpdateAsync(model).ConfigureAwait(false);
-
+            
+            ClearCache(SHOW_ALL_BANDS);
+            ClearCache(SHOW_ALL_CONCERT_TYPES);
+            
             return concert;
         }
 
@@ -67,6 +78,7 @@ namespace Mihaylov.Api.Other.Data.Show
 
             var band = await _bands.AddOrUpdateAsync(model).ConfigureAwait(false);
             ClearCache(SHOW_ALL_BANDS);
+            ClearCache(SHOW_ALL_COUNTRIES);
 
             return band;
         }
@@ -113,6 +125,50 @@ namespace Mihaylov.Api.Other.Data.Show
             ClearCache(SHOW_ALL_TICKETPROVIDER);
 
             return provider;
+        }
+
+        public async Task<Grid<CountryExtended>> GetCountriesAsync(GridRequest request)
+        {
+            var key = $"{SHOW_ALL_COUNTRIES}_{request.Page}";
+            if (!_memoryCache.TryGetValue(key, out Grid<CountryExtended> countries))
+            {
+                countries = await _countries.GetAllAsync(request).ConfigureAwait(false);
+
+                _memoryCache.Set(key, countries, TimeSpan.FromMinutes(CACHE_DURATION));
+                AddCacheKeys(SHOW_ALL_COUNTRIES, key);
+            }
+
+            return countries;
+        }
+
+        public async Task<Country> AddOrUpdateCountryAsync(Country model)
+        {
+            var country = await _countries.AddOrUpdateAsync(model).ConfigureAwait(false);
+            ClearCache(SHOW_ALL_COUNTRIES);
+
+            return country;
+        }
+
+        public async Task<IEnumerable<ConcertType>> GetConcertTypesAsync()
+        {
+            var key = $"{SHOW_ALL_CONCERT_TYPES}";
+            if (!_memoryCache.TryGetValue(key, out IEnumerable<ConcertType> concertTypes))
+            {
+                concertTypes = await _concertTypes.GetAllAsync().ConfigureAwait(false);
+
+                _memoryCache.Set(key, concertTypes, TimeSpan.FromMinutes(CACHE_DURATION));
+                AddCacheKeys(SHOW_ALL_CONCERT_TYPES, key);
+            }
+
+            return concertTypes;
+        }
+
+        public async Task<ConcertType> AddOrUpdateConcertTypeAsync(ConcertType model)
+        {
+            var concertType = await _concertTypes.AddOrUpdateAsync(model).ConfigureAwait(false);
+            ClearCache(SHOW_ALL_CONCERT_TYPES);
+
+            return concertType;
         }
 
         private void ClearCache(string key)

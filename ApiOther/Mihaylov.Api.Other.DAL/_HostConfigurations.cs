@@ -30,6 +30,8 @@ namespace Mihaylov.Api
             services.AddScoped<IBandRepository, BandRepository>();
             services.AddScoped<ILocationRepository, LocationRepository>();
             services.AddScoped<ITicketProviderRepository, TicketProviderRepository>();
+            services.AddScoped<ICountryRepository, CountryRepository>();
+            services.AddScoped<IConcertTypeRepository, ConcertTypeRepository>();
 
             services.AddTransient<IMapper, Mapper>();
             services.RegisterDbMapping();

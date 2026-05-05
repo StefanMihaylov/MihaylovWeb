@@ -1,0 +1,46 @@
+﻿@using Mihaylov.Api.Other.Client
+@using Mihaylov.Web.Controllers
+@using Mihaylov.Web.Models.Concerts;
+@model IEnumerable<ConcertType>
+
+<div class="col-md-6 concert-type-grid">
+    <h5>Жанрове - @Model.Count()</h5>
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>@Html.LabelFor(m => m.First().Name)</th>
+                <th>@Html.LabelFor(m => m.First().ConcertsCount)</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var type in Model)
+            {
+                <tr>
+                    <td><my-value>@type.Name</my-value></td>
+                    <td><my-value>@type.ConcertsCount</my-value></td>
+                    <td>
+                        <span class="btn btn-sm btn-secondary edit-concert-type-btn" data-id="@type.Id" data-name="@type.Name">
+                            Редактирай
+                        </span>
+                    </td>
+                </tr>
+            }
+
+            <form action="/Concert/ConcertType" method="post">
+            <tr>
+                <td>                    
+                    <input type="hidden" id="concert-type-id-input" name="Id" value="" />
+                    <input type="text" id="new-concert-type-name-input" name="Name" placeholder="Добави нов" role="presentation" aria-autocomplete="none" autocomplete="false" />
+                    @Html.ValidationMessage("Name")
+                </td>
+                <td></td>
+                <td>
+                    <input type="submit" class="btn btn-primary" value="Добави" />
+                    <span class="btn btn-secondary concert-type-cancel-btn">Отказ</span>
+                </td>
+            </tr>
+            </form>
+        </tbody>
+    </table>
+</div>

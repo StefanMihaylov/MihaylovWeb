@@ -11,6 +11,7 @@ namespace Mihaylov.Api.Other.Database.Shows.DbConfigurations
         {
             builder.HasKey(b => b.LocationId).HasName("LocationId");
 
+            builder.Property(c => c.LocationId).IsRequired().ValueGeneratedOnAdd();
             builder.Property(c => c.Name).IsRequired().HasMaxLength(ModelConstants.LocationNameMaxLength);
             builder.EntityConfiguration();
 

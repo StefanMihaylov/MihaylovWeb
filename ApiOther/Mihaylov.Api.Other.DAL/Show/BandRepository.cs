@@ -24,6 +24,7 @@ namespace Mihaylov.Api.Other.DAL.Show
             try
             {
                 var query = _dbContext.Bands.AsNoTracking()
+                             .Include(b => b.Country)
                             .GroupJoin(_dbContext.ConcertBands
                                 .GroupBy(cb => cb.BandId)
                                 .Select(gcb => new BankRank()
@@ -63,7 +64,7 @@ namespace Mihaylov.Api.Other.DAL.Show
                 }
 
                 var bands = await query.ProjectToType<BandExtended>()
-                                       .ToListAsync()   
+                                       .ToListAsync()
                                        .ConfigureAwait(false);
 
                 var result = new Grid<BandExtended>()
@@ -85,22 +86,25 @@ namespace Mihaylov.Api.Other.DAL.Show
         {
             model.Name = model.Name?.Trim();
 
-            try
+            if (model.Id == 0)
             {
-                var exists = await _dbContext.Bands
-                                      .Where(b => b.Name == model.Name)
-                                      .AnyAsync()
-                                      .ConfigureAwait(false);
-
-                if (exists)
+                try
                 {
-                    throw new ArgumentException($"Band '{model.Name}' already exists.", nameof(model.Name));
+                    var exists = await _dbContext.Bands
+                                          .Where(b => b.Name == model.Name)
+                                          .AnyAsync()
+                                          .ConfigureAwait(false);
+
+                    if (exists)
+                    {
+                        throw new ArgumentException($"Band '{model.Name}' already exists.", nameof(model.Name));
+                    }
                 }
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError("Error in add/update band validation. Error: {Message}", ex.Message);
-                throw;
+                catch (Exception ex)
+                {
+                    _logger.LogError("Error in add/update band validation. Error: {Message}", ex.Message);
+                    throw;
+                }
             }
 
             try

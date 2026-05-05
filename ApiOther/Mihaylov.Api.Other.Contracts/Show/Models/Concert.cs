@@ -25,9 +25,15 @@ namespace Mihaylov.Api.Other.Contracts.Show.Models
         public CurrencyType Currency { get; set; }
 
         [JsonPropertyOrder(7)]
-        public int TicketProviderId { get; set; }
+        public int? ConcertTypeId { get; set; }
 
         [JsonPropertyOrder(8)]
+        public string ConcertType { get; set; }
+
+        [JsonPropertyOrder(9)]
+        public int TicketProviderId { get; set; }
+
+        [JsonPropertyOrder(10)]
         public IEnumerable<Band> Bands { get; set; }
     }
 }

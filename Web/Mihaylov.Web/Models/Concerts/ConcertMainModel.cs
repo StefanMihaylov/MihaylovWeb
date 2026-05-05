@@ -1,17 +1,8 @@
-﻿using Mihaylov.Api.Other.Client;
+﻿using System.Collections.Generic;
+using Mihaylov.Api.Other.Client;
 
-namespace Mihaylov.Web.Models.Concerts
-{
-    public class ConcertMainModel
-    {
-        public ConcertExtendedGrid Concerts { get; set; }
+namespace Mihaylov.Web.Models.Concerts;
 
-        public BandExtendedGrid Bands { get; set; }        
-
-        public LocationGrid Locations { get; set; }
-
-        public TicketProviderGrid TicketProviders { get; set; }
-
-        public AddConcertVewModel Input { get; set;}
-    }
-}
+public record ConcertMainModel(ConcertExtendedGrid Concerts, BandViewModel Bands,
+    LocationGrid Locations, TicketProviderGrid TicketProviders, CountryExtendedGrid Countries,
+    IEnumerable<ConcertType> ConcertTypes, AddConcertVewModel Input, string ActiveTab);

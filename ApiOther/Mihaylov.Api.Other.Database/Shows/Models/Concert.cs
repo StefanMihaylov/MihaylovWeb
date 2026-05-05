@@ -26,6 +26,10 @@ namespace Mihaylov.Api.Other.Database.Shows.Models
 
         public TicketProvider TicketProvider { get; set; }
 
+        public int? ConcertTypeId { get; set; }
+
+        public ConcertType ConcertType { get; set; }
+
 
         public IEnumerable<Band> Bands { get; set; }
 

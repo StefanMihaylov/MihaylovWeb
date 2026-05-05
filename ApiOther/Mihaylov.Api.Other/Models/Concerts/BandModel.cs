@@ -10,5 +10,7 @@ namespace Mihaylov.Api.Other.Models.Concerts
         [Required]
         [StringLength(ModelConstants.BandNameMaxLength, MinimumLength = 1)]
         public string Name { get; set; }
+
+        public int? CountryId { get; set; }
     }
 }

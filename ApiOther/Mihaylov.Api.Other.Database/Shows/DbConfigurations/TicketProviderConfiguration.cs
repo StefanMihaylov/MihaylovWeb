@@ -11,8 +11,10 @@ namespace Mihaylov.Api.Other.Database.Shows.DbConfigurations
         {
             builder.HasKey(b => b.TickerProviderId).HasName("TickerProviderId");
 
+            builder.Property(c => c.TickerProviderId).IsRequired().ValueGeneratedOnAdd();
             builder.Property(c => c.Name).IsRequired().HasMaxLength(ModelConstants.TicketProviderNameMaxLength);
             builder.Property(c => c.Url).HasMaxLength(ModelConstants.TicketProviderUrlMaxLength);
+            builder.Property(b => b.IsActive).IsRequired().HasDefaultValue(true);
             builder.EntityConfiguration();
 
             builder.HasIndex(b => b.Name).IsUnique();

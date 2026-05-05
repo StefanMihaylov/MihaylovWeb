@@ -52,6 +52,7 @@ namespace Mihaylov.Api.Other.Controllers
                 LocationId = model.LocationId.Value,
                 Price = model.Price.Value,
                 Currency = model.Currency.Value,
+                ConcertTypeId = model.ConcertTypeId,
                 TicketProviderId = model.TicketProviderId.Value,
                 Bands = model.BandIds.Select(b => new Band() { Id = b }),
             };
@@ -78,6 +79,7 @@ namespace Mihaylov.Api.Other.Controllers
             {
                 Id = model?.Id ?? 0,
                 Name = model?.Name,
+                CountryId = model?.CountryId,
             };
 
             Band band = await _service.AddOrUpdateBandAsync(request).ConfigureAwait(false);
@@ -127,11 +129,61 @@ namespace Mihaylov.Api.Other.Controllers
                 Id = model?.Id ?? 0,
                 Name = model?.Name,
                 Url = model?.Url,
+                IsActive = model?.IsActive ?? true,
             };
 
             TicketProvider provider = await _service.AddOrUpdateTicketProviderAsync(request).ConfigureAwait(false);
 
             return Ok(provider);
+        }
+
+        [HttpGet]
+        [ProducesResponseType(typeof(Grid<CountryExtended>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> Countries([FromQuery] GridRequest request)
+        {
+            Grid<CountryExtended> countries = await _service.GetCountriesAsync(request).ConfigureAwait(false);
+
+            return Ok(countries);
+        }
+
+        [HttpPost]
+        [ProducesResponseType(typeof(Country), StatusCodes.Status200OK)]
+        public async Task<IActionResult> Country(CountryModel model)
+        {
+            var request = new Country()
+            {
+                Id = model?.Id ?? 0,
+                Name = model?.Name,
+                Code = model?.Code,
+            };
+
+            Country country = await _service.AddOrUpdateCountryAsync(request).ConfigureAwait(false);
+
+            return Ok(country);
+        }
+
+        [HttpGet]
+        [ProducesResponseType(typeof(IEnumerable<ConcertType>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> ConcertTypes()
+        {
+            IEnumerable<ConcertType> concertTypes = await _service.GetConcertTypesAsync().ConfigureAwait(false);
+
+            return Ok(concertTypes);
+        }
+
+        [HttpPost]
+        [ProducesResponseType(typeof(ConcertType), StatusCodes.Status200OK)]
+        public async Task<IActionResult> ConcertType(ConcertTypeModel model)
+        {
+            var request = new ConcertType()
+            {
+                Id = model?.Id ?? 0,
+                Name = model?.Name,
+            };
+
+            ConcertType concertType = await _service.AddOrUpdateConcertTypeAsync(request).ConfigureAwait(false);
+
+            return Ok(concertType);
         }
     }
 }

@@ -1,0 +1,48 @@
+﻿@using Mihaylov.Web.Controllers
+@using Mihaylov.Web.Models.Concerts
+@model ConcertViewModel
+
+<div class="col-md-12 concert-grid">
+    @Html.ValidationSummary()
+    <h5>Концерти - @Model.Concerts.Pager.Count</h5>
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>@Html.NameFor(m => m.Concerts.Data.First().Date)</th>
+                <th>@Html.NameFor(m => m.Concerts.Data.First().Name)</th>
+                <th>@Html.NameFor(m => m.Concerts.Data.First().Bands)</th>
+                <th>@Html.NameFor(m => m.Concerts.Data.First().ConcertType)</th>
+                <th>@Html.NameFor(m => m.Concerts.Data.First().Price)</th>
+                <th>@Html.NameFor(m => m.Concerts.Data.First().Currency)</th>
+                <th>@Html.NameFor(m => m.Concerts.Data.First().Location)</th>
+                <th>@Html.NameFor(m => m.Concerts.Data.First().TicketProvider)</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @await Html.PartialAsync("_AddConcert", Model.Input)
+
+            @foreach (var concert in Model.Concerts.Data)
+            {
+                <tr>
+                    <td><my-value>@concert.Date.ToString("yyyy.MM.dd")</my-value></td>
+                    <td><my-value>@concert.Name</my-value></td>
+                    <td><my-value>@string.Join(", ", concert.Bands?.Select(b => b?.Name))</my-value></td>
+                    <td>@concert.ConcertType</td>
+                    <td><my-value>@concert.Price </my-value></td>
+                    <td><my-value>@concert.Currency </my-value></td>
+                    <td><my-value>@concert.Location</my-value></td>
+                    <td><my-value>@concert.TicketProvider</my-value></td>
+                    <td>
+                        <span class="btn btn-sm btn-secondary edit-concert-btn" data-id="@concert.Id" data-date="@concert.Date.ToString("yyyy.MM.dd")" data-json='@Json.Serialize(concert)'>
+                            Редактирай
+                        </span>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    @await Html.PartialAsync("_Pager", new PagerExtended(Model.Concerts.Pager, ConcertController.CONCERTS_TAB))
+
+</div>

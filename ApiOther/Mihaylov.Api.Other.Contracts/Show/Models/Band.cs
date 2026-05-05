@@ -9,5 +9,11 @@ namespace Mihaylov.Api.Other.Contracts.Show.Models
 
         [JsonPropertyOrder(2)]
         public string Name { get; set; }
+
+        [JsonPropertyOrder(3)]
+        public int? CountryId { get; set; }
+
+        [JsonPropertyOrder(4)]
+        public string Country { get; set; }
     }
 }

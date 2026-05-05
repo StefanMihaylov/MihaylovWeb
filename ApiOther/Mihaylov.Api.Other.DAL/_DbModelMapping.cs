@@ -23,11 +23,15 @@ namespace Mihaylov.Api.Other.DAL
             TypeAdapterConfig<Db.Band, Band>.NewConfig()
                 .Map(dest => dest.Id, src => src.BandId)
                 .Map(dest => dest.Name, src => src.Name)
+                .Map(dest => dest.CountryId, src => src.CountryId)
+                .Map(dest => dest.Country, src => src.Country.Name)
                 .TwoWays();
 
             TypeAdapterConfig<Dbr.DbBandExt, BandExtended>.NewConfig()
                 .Map(dest => dest.Id, src => src.Band.BandId)
                 .Map(dest => dest.Name, src => src.Band.Name)
+                .Map(dest => dest.CountryId, src => src.Band.CountryId)
+                .Map(dest => dest.Country, src => src.Band.Country.Name)
                 .Map(dest => dest.Count, src => src.Count);
 
             TypeAdapterConfig<Db.Location, Location>.NewConfig()
@@ -35,11 +39,33 @@ namespace Mihaylov.Api.Other.DAL
                 .Map(dest => dest.Name, src => src.Name)
                 .TwoWays();
 
+            TypeAdapterConfig<Db.Country, Country>.NewConfig()
+                .Map(dest => dest.Id, src => src.CountryId)
+                .Map(dest => dest.Name, src => src.Name)
+                .Map(dest => dest.Code, src => src.Code)
+                .TwoWays();
+
+            TypeAdapterConfig<Dbr.DbCountryExt, CountryExtended>.NewConfig()
+                .Map(dest => dest.Id, src => src.Country.CountryId)
+                .Map(dest => dest.Name, src => src.Country.Name)
+                .Map(dest => dest.Code, src => src.Country.Code)
+                .Map(dest => dest.BandCount, src => src.BandCount ?? 0);
+
             TypeAdapterConfig<Db.TicketProvider, TicketProvider>.NewConfig()
                 .Map(dest => dest.Id, src => src.TickerProviderId)
                 .Map(dest => dest.Name, src => src.Name)
                 .Map(dest => dest.Url, src => src.Url)
+                .Map(dest => dest.IsActive, src => src.IsActive)
                 .TwoWays();
+
+            TypeAdapterConfig<Dbr.DbConcertTypeExt, ConcertType>.NewConfig()
+                .Map(dest => dest.Id, src => src.ConcertTypeId)
+                .Map(dest => dest.Name, src => src.Name)
+                .Map(dest => dest.ConcertsCount, src => src.ConcertsCount);
+
+            TypeAdapterConfig<ConcertType, Db.ConcertType>.NewConfig()
+                .Map(dest => dest.ConcertTypeId, src => src.Id)
+                .Map(dest => dest.Name, src => src.Name);
 
             TypeAdapterConfig<Db.Concert, ConcertExtended>.NewConfig()
                 .Map(dest => dest.Id, src => src.ConcertId)
@@ -49,6 +75,8 @@ namespace Mihaylov.Api.Other.DAL
                 .Map(dest => dest.Location, src => src.Location.Name)
                 .Map(dest => dest.Price, src => src.Price)
                 .Map(dest => dest.Currency, src => (CurrencyType)src.CurrencyId)
+                .Map(dest => dest.ConcertTypeId, src => src.ConcertTypeId)
+                .Map(dest => dest.ConcertType, src => src.ConcertType.Name)
                 .Map(dest => dest.TicketProviderId, src => src.TicketProviderId)
                 .Map(dest => dest.TicketProvider, src => src.TicketProvider.Name)
                 .Map(dest => dest.Bands, src => src.ConcertBands.AsQueryable()
@@ -65,6 +93,8 @@ namespace Mihaylov.Api.Other.DAL
                 .Map(dest => dest.Price, src => src.Price)
                 .Map(dest => dest.CurrencyId, src => (byte)src.Currency)
                 .Ignore(dest => dest.Currency, src => src.Currency)
+                .Map(dest => dest.ConcertTypeId, src => src.ConcertTypeId)
+                .Ignore(dest => dest.ConcertType, src => src.ConcertType)
                 .Map(dest => dest.TicketProviderId, src => src.TicketProviderId)
                 .Ignore(dest => dest.TicketProvider, src => src.TicketProvider)
                 .Ignore(dest => dest.Bands, src => src.Bands)
