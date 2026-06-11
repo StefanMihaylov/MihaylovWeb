@@ -12,6 +12,7 @@ namespace Mihaylov.Api.Other.Database.Cluster.DbConfigurations
         public void Configure(EntityTypeBuilder<VersionUrl> builder)
         {
             builder.HasKey(b => b.VersionUrlId).HasName("VersionUrlId");
+            builder.Property(b => b.VersionUrlId).IsRequired().ValueGeneratedNever();
 
             builder.Property(c => c.Name).IsRequired().HasMaxLength(20);
 

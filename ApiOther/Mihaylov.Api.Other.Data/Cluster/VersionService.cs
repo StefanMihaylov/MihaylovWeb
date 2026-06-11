@@ -1,9 +1,15 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using AngleSharp;
+using AngleSharp.Common;
+using AngleSharp.Dom;
+using k8s.KubeConfigModels;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
+using Microsoft.Playwright;
 using Mihaylov.Api.Other.Contracts.Cluster.Interfaces;
 using Mihaylov.Api.Other.Contracts.Cluster.Models.Cluster;
 using Mihaylov.Api.Other.Contracts.Cluster.Models.Version;
@@ -146,44 +152,45 @@ namespace Mihaylov.Api.Other.Data.Cluster
             var address = configuration?.Url;
             var inputSelector = configuration?.Selector;
 
-            string content = previous?.Content;
+            var content = previous?.Content;
+
             if (!string.IsNullOrEmpty(address) && !string.IsNullOrEmpty(inputSelector))
             {
-                var selectorParts = inputSelector.Split('|');
-                var selector = selectorParts[0];
-
-                string attributeName = null;
-                if (selectorParts.Length > 1)
-                {
-                    attributeName = selectorParts[1];
-                }
-
                 var config = Configuration.Default.WithDefaultLoader();
                 var context = BrowsingContext.New(config);
                 var document = await context.OpenAsync(address).ConfigureAwait(false);
+                await document.WaitForReadyAsync();
 
-                var cells = document.QuerySelectorAll(selector)?.ToList();
+                IEnumerable<IElement> cells = document.QuerySelectorAll(inputSelector)?.ToList();
 
-                _logger.LogInformation($"Document loaded from '{address}'. Size: {document.DocumentElement?.OuterHtml.Length}. Found: {cells.Count} selector matches.");
+                if(cells.Any() == false) // try to load the html with js
+                {
+                    string html = await LoadWithPlaywright(address, inputSelector).ConfigureAwait(false);
 
-                var cell = cells?.FirstOrDefault();
-                if (cell == null)
+                    document = await context.OpenAsync(req => req.Content(html)).ConfigureAwait(false);
+                    cells = document.QuerySelectorAll(inputSelector)?.ToList();
+                }
+
+                _logger.LogInformation($"Document loaded from '{address}'. Size: {document.DocumentElement?.OuterHtml.Length}. Found: {cells.Count()} selector matches.");
+
+                var cellCount = cells.Count();
+                if (cellCount == 0)
                 {
                     _logger.LogError("no selector match.");
                     return null;
                 }
-
-                if (string.IsNullOrEmpty(attributeName))
+                else if (cellCount == 1)
                 {
-                    content = cell?.TextContent;
+                    var cell = cells?.FirstOrDefault();
+                    content = new ContentContext(cell?.TextContent, cells);
                 }
                 else
                 {
-                    content = cell.Attributes.Where(a => a.Name == attributeName).FirstOrDefault()?.Value;
+                    content = new ContentContext(null, cells);
                 }
             }
 
-            if (string.IsNullOrEmpty(content))
+            if (string.IsNullOrEmpty(content.Content) && (content.Cells == null))
             {
                 _logger.LogError("Content is empty.");
                 return null;
@@ -194,7 +201,7 @@ namespace Mihaylov.Api.Other.Data.Cluster
             return result;
         }
 
-        private ValueContext RunCommand(string content, string inputCommand)
+        private ValueContext RunCommand(ContentContext content, string inputCommand)
         {
             if (string.IsNullOrEmpty(inputCommand))
             {
@@ -203,8 +210,8 @@ namespace Mihaylov.Api.Other.Data.Cluster
 
             var commands = inputCommand.Split('§', StringSplitOptions.RemoveEmptyEntries);
 
-            string previousValue = content;
-            string value = string.Empty;
+            ContentContext previousContent = content;
+            ContentContext value = null;
 
             foreach (var command in commands)
             {
@@ -212,7 +219,6 @@ namespace Mihaylov.Api.Other.Data.Cluster
                 if (commandParts.Length != 2)
                 {
                     _logger.LogError($"{command} command is not valid.");
-
                     return null;
                 }
 
@@ -221,25 +227,82 @@ namespace Mihaylov.Api.Other.Data.Cluster
 
                 switch (commandName)
                 {
+                    case "index":
+                        value = Index(previousContent, commandParams);
+                        break;
+                    case "con":
+                        value = Contains(previousContent, commandParams);
+                        break;
+                    case "atr":
+                        value = Attribute(previousContent, commandParams);
+                        break;
                     case "trim":
-                        value = Trim(previousValue, commandParams);
+                        value = Trim(previousContent, commandParams);
                         break;
                     case "split":
-                        value = Split(previousValue, commandParams);
+                        value = Split(previousContent, commandParams);
+                        break;
+                    case "substr":
+                        value = SubString(previousContent, commandParams);
                         break;
                     default:
                         throw new ArgumentException($"Unknown command {commandName}");
                 }
 
-                previousValue = value;
+                previousContent = value;
             }
 
-            return new ValueContext(content, value);
+            return new ValueContext(content, value?.Content);
         }
 
-        private string Trim(string text, string[] commandParams)
+        private ContentContext Index(ContentContext context, string[] commandParams)
         {
-            if (string.IsNullOrWhiteSpace(text))
+            if (context == null || context.Cells.Count() < 1)
+            {
+                return null;
+            }
+
+            var parameter = commandParams[0];
+            if (!int.TryParse(parameter, out int index))
+            {
+                throw new ArgumentException($"Index parameter {parameter} is not a valid integer.");
+            }
+
+            var cell = context.Cells.GetItemByIndex(index);
+
+            return new ContentContext(cell?.TextContent, [cell]);
+        }
+
+        private ContentContext Contains(ContentContext context, string[] commandParams)
+        {
+            if (context.Cells == null || context.Cells.Count() == 0)
+            {
+                return null;
+            }
+
+            var parameter = commandParams[0];
+            var cell = context.Cells.Where(c => c.TextContent.Contains(parameter, StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
+
+            return new ContentContext(cell?.TextContent, [cell]);
+        }
+
+        private ContentContext Attribute(ContentContext context, string[] commandParams)
+        {
+            if (context.Cells.Count() != 1)
+            {
+                return null;
+            }
+
+            var cell = context.Cells.First();
+            var attributeName = commandParams[0];
+            string content = cell.Attributes.Where(a => a.Name == attributeName).FirstOrDefault()?.Value;
+
+            return new ContentContext(content, null);
+        }
+
+        private ContentContext Trim(ContentContext context, string[] commandParams)
+        {
+            if (string.IsNullOrWhiteSpace(context?.Content))
             {
                 return null;
             }
@@ -253,7 +316,7 @@ namespace Mihaylov.Api.Other.Data.Cluster
             var parameterStart = commandParams[0];
             var parameterEnd = commandParams[1];
 
-            var value = text.Trim();
+            var value = context.Content.Trim();
 
             if (!string.IsNullOrEmpty(parameterStart))
             {
@@ -265,12 +328,12 @@ namespace Mihaylov.Api.Other.Data.Cluster
                 value = value.TrimEnd(parameterEnd.ToArray());
             }
 
-            return value;
+            return new ContentContext(value, null);
         }
 
-        private string Split(string text, string[] commandParams)
+        private ContentContext Split(ContentContext context, string[] commandParams)
         {
-            if (string.IsNullOrWhiteSpace(text))
+            if (string.IsNullOrWhiteSpace(context?.Content))
             {
                 return null;
             }
@@ -281,7 +344,7 @@ namespace Mihaylov.Api.Other.Data.Cluster
                 return null;
             }
 
-            var splits = text.Split(commandParams[0], StringSplitOptions.RemoveEmptyEntries);
+            var splits = context.Content.Split(commandParams[0], StringSplitOptions.RemoveEmptyEntries);
 
             int index = int.Parse(commandParams[1]);
             if (index < 0 || index >= splits.Length)
@@ -292,18 +355,102 @@ namespace Mihaylov.Api.Other.Data.Cluster
 
             string value = splits[index];
 
-            return value;
+            return new ContentContext(value, null);
+        }
+
+        private ContentContext SubString(ContentContext context, string[] commandParams)
+        {
+            if (string.IsNullOrWhiteSpace(context?.Content))
+            {
+                return null;
+            }
+
+            if (commandParams.Length < 2)
+            {
+                _logger.LogError("Split parameters are not collect");
+                return null;
+            }
+
+            if(!int.TryParse(commandParams[0], out int startIndex) 
+                || !int.TryParse(commandParams[1], out int length))
+            {
+                _logger.LogError("Invalid substring parameters");
+                return null;
+            }   
+
+            var result = context.Content.Substring(startIndex, length);
+
+            return new ContentContext(result, null);
         }
 
         private DateTime? ParseDate(string input)
         {
             DateTime? releaseDate = null;
-            if (!string.IsNullOrEmpty(input) && DateTime.TryParse(input, out DateTime date))
+            if (!string.IsNullOrEmpty(input))
             {
-                releaseDate = date.Date;
+                if (DateTime.TryParse(input, out DateTime date))
+                {
+                    releaseDate = date.Date;
+                }
+                else
+                {
+                    string[] formats = {
+                        "yyyy-MM-dd HH:mm:ss 'UTC'",
+                        "yyyy-MM-ddTHH:mm:ssZ",
+                        "yyyy-MM-ddTHH-mm-ssZ"
+                    };
+
+                    if (DateTime.TryParseExact(input,
+                                   formats,
+                                   CultureInfo.InvariantCulture,
+                                   DateTimeStyles.AdjustToUniversal | DateTimeStyles.AssumeUniversal,
+                                   out DateTime dateExact))
+                    {
+                        releaseDate = dateExact.Date;
+                    }
+                }
             }
 
             return releaseDate;
+        }
+
+        private async Task<string> LoadWithPlaywright(string address, string inputSelector)
+        {
+            var exitCode = Microsoft.Playwright.Program.Main(["install", "chromium"]);
+            if (exitCode != 0)
+            {
+                throw new Exception("Playwright browser installation failed.");
+            }
+
+            // 1. Get rendered HTML with Playwright
+            using var playwright = await Playwright.CreateAsync().ConfigureAwait(false);
+            var options = new BrowserTypeLaunchOptions()
+            {
+                Headless = true,
+            };
+            await using var browser = await playwright.Chromium.LaunchAsync(options).ConfigureAwait(false);
+            // var page = await browser.NewPageAsync().ConfigureAwait(false);
+
+            var pageContext = await browser.NewContextAsync(new BrowserNewContextOptions
+            {
+                UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+                ViewportSize = new ViewportSize { Width = 1280, Height = 720 }
+            });
+
+            var page = await pageContext.NewPageAsync();
+
+            await page.GotoAsync(address, new PageGotoOptions
+            {
+                WaitUntil = WaitUntilState.DOMContentLoaded,
+                Timeout = 10000
+            }).ConfigureAwait(false);
+
+            // Wait for Angular to finish rendering the tags
+            await page.WaitForSelectorAsync(inputSelector);
+
+            var html = await page.ContentAsync();
+
+            return html;
         }
 
         private string GetUrlByType(VersionUrlType? type, Application application)
@@ -328,17 +475,17 @@ namespace Mihaylov.Api.Other.Data.Cluster
             }
         }
 
-        private class ValueContext
+
+        private record ValueContext(ContentContext Content, string Value);
+
+        private record ContentContext(string Content, IEnumerable<IElement> Cells)
         {
-            public string Value { get; private set; }
-
-            public string Content { get; private set; }
-
-            public ValueContext(string content, string value)
+            public override string ToString()
             {
-                Content = content;
-                Value = value;
+                var cellsCount = Cells?.Any() == true ? $"/{Cells.Count()} cells" : string.Empty; 
+
+                return $"{Content ?? "?"}{cellsCount}";
             }
-        }
+        };
     }
 }

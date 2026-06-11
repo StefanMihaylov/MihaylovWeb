@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Logging;
-using Microsoft.IdentityModel.Tokens;
 using Mihaylov.Api.Other.Client;
 using Mihaylov.Common.Host.Authorization;
 using Mihaylov.Web.Areas;
@@ -83,7 +82,7 @@ namespace Mihaylov.Web.Controllers
             if (!ModelState.IsValid)
             {
                 ConcertMainModel viewModel = await FillModel(inputModel, 1, CONCERTS_TAB).ConfigureAwait(false);
-                return View(nameof(IndexRedirect), viewModel);
+                return RedirectToAction(nameof(IndexRedirect), viewModel);
             }
 
             try
@@ -123,7 +122,7 @@ namespace Mihaylov.Web.Controllers
                 _logger.LogError(ex, "Error in Add/update band. Error: {message}", builder.ToString());
 
                 ConcertMainModel viewModel = await FillModel(null, 1, CONCERTS_TAB).ConfigureAwait(false);
-                return View(nameof(IndexRedirect), viewModel);
+                return RedirectToAction(nameof(IndexRedirect), viewModel);
             }
             catch (SwaggerException ex)
             {
@@ -170,7 +169,7 @@ namespace Mihaylov.Web.Controllers
 
                     ConcertMainModel viewModel = await FillModel(null, 1, BANDS_TAB).ConfigureAwait(false);
 
-                    return View(nameof(IndexRedirect), viewModel);
+                    return RedirectToAction(nameof(IndexRedirect), viewModel);
                 }
                 catch (SwaggerException ex)
                 {

@@ -10,6 +10,7 @@ namespace Mihaylov.Api.Other.Database.Cluster.DbConfigurations
         public void Configure(EntityTypeBuilder<DeploymentFile> builder)
         {
             builder.HasKey(b => b.FileId).HasName("FileId");
+            builder.Property(b => b.FileId).IsRequired().ValueGeneratedOnAdd();
 
             builder.Property(c => c.Name).IsRequired().HasMaxLength(ModelConstants.AppFileNameMaxLength);
 

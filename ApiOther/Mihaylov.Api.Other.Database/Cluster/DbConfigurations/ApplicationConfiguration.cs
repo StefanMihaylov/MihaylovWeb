@@ -10,6 +10,7 @@ namespace Mihaylov.Api.Other.Database.Cluster.DbConfigurations
         public void Configure(EntityTypeBuilder<Application> builder)
         {
             builder.HasKey(b => b.ApplicationId).HasName("ApplicationId");
+            builder.Property(b => b.ApplicationId).IsRequired().ValueGeneratedOnAdd();
 
             builder.Property(c => c.Order).IsRequired(false);
             builder.Property(c => c.Name).IsRequired().HasMaxLength(ModelConstants.AppNameMaxLength);

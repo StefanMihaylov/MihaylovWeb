@@ -134,7 +134,7 @@ namespace Mihaylov.Api.Other.Data.Cluster
         private void UnzipVelero(string zipFilePah)
         {
             using Stream stream = File.OpenRead(zipFilePah);
-            using var reader = ReaderFactory.Open(stream);
+            using var reader = ReaderFactory.OpenReader(stream);
             while (reader.MoveToNextEntry())
             {
                 if (!reader.Entry.IsDirectory)

@@ -12,6 +12,7 @@ namespace Mihaylov.Api.Other.Database.Cluster.DbConfigurations
         public void Configure(EntityTypeBuilder<Deployment> builder)
         {
             builder.HasKey(b => b.DeploymentId).HasName("DeploymentId");
+            builder.Property(b => b.DeploymentId).IsRequired().ValueGeneratedNever();
 
             builder.Property(c => c.Name).IsRequired().HasMaxLength(20);
 

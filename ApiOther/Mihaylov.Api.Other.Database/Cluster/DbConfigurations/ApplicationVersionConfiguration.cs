@@ -10,6 +10,7 @@ namespace Mihaylov.Api.Other.Database.Cluster.DbConfigurations
         public void Configure(EntityTypeBuilder<ApplicationVersion> builder)
         {
             builder.HasKey(b => b.VersionId).HasName("VersionId");
+            builder.Property(b => b.VersionId).IsRequired().ValueGeneratedOnAdd();
 
             builder.Property(c => c.Version).IsRequired(true).HasMaxLength(ModelConstants.AppVersionMaxLength);
             builder.Property(c => c.HelmVersion).IsRequired(false).HasMaxLength(ModelConstants.AppVersionMaxLength);

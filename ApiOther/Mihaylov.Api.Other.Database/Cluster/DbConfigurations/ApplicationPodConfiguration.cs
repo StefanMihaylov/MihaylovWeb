@@ -10,6 +10,7 @@ namespace Mihaylov.Api.Other.Database.Cluster.DbConfigurations
         public void Configure(EntityTypeBuilder<ApplicationPod> builder)
         {
             builder.HasKey(b => b.ApplicationPodId).HasName("ApplicationPodId");
+            builder.Property(b => b.ApplicationPodId).IsRequired().ValueGeneratedOnAdd();
 
             builder.Property(c => c.Name).IsRequired().HasMaxLength(ModelConstants.AppPodNameMaxLength);
 

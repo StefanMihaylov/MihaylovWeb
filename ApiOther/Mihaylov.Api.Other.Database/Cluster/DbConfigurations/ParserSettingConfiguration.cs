@@ -10,6 +10,7 @@ namespace Mihaylov.Api.Other.Database.Cluster.DbConfigurations
         public void Configure(EntityTypeBuilder<ParserSetting> builder)
         {
             builder.HasKey(b => b.ParserSettingId).HasName("ParserSettingId");
+            builder.Property(b => b.ParserSettingId).IsRequired().ValueGeneratedOnAdd();
 
             builder.Property(c => c.Name).IsRequired(false).HasMaxLength(ModelConstants.ParserNameMaxLength);
 
