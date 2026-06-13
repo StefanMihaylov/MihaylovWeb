@@ -416,7 +416,7 @@ namespace Mihaylov.Api.Other.Data.Cluster
 
         private async Task<string> LoadWithPlaywright(string address, string inputSelector)
         {
-            var exitCode = Microsoft.Playwright.Program.Main(["install", "chromium"]);
+            var exitCode = Microsoft.Playwright.Program.Main(["install", "--with-deps", "chromium"],);
             if (exitCode != 0)
             {
                 throw new Exception("Playwright browser installation failed.");
@@ -427,6 +427,7 @@ namespace Mihaylov.Api.Other.Data.Cluster
             var options = new BrowserTypeLaunchOptions()
             {
                 Headless = true,
+                Args = new[] { "--no-sandbox", "--disable-setuid-sandbox" }
             };
             await using var browser = await playwright.Chromium.LaunchAsync(options).ConfigureAwait(false);
             // var page = await browser.NewPageAsync().ConfigureAwait(false);
