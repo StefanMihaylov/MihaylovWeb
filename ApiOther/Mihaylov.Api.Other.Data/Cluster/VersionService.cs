@@ -416,7 +416,7 @@ namespace Mihaylov.Api.Other.Data.Cluster
 
         private async Task<string> LoadWithPlaywright(string address, string inputSelector)
         {
-            var exitCode = Microsoft.Playwright.Program.Main(["install", "--with-deps", "chromium"],);
+            var exitCode = Microsoft.Playwright.Program.Main(["install", "--with-deps", "chromium"]);
             if (exitCode != 0)
             {
                 throw new Exception("Playwright browser installation failed.");
