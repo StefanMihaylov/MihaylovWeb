@@ -109,6 +109,8 @@ namespace Mihaylov.Api.Other
             {
                 endpoints.MapControllers();
             });
+
+            app.InitializeOtherDependencies<Program>();
         }
     }
 }

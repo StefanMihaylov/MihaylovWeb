@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using AngleSharp;
 using AngleSharp.Common;
 using AngleSharp.Dom;
-using k8s.KubeConfigModels;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using Microsoft.Playwright;
@@ -416,12 +415,6 @@ namespace Mihaylov.Api.Other.Data.Cluster
 
         private async Task<string> LoadWithPlaywright(string address, string inputSelector)
         {
-            var exitCode = Microsoft.Playwright.Program.Main(["install", "--with-deps", "chromium"]);
-            if (exitCode != 0)
-            {
-                throw new Exception("Playwright browser installation failed.");
-            }
-
             // 1. Get rendered HTML with Playwright
             using var playwright = await Playwright.CreateAsync().ConfigureAwait(false);
             var options = new BrowserTypeLaunchOptions()

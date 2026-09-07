@@ -1,5 +1,7 @@
 ﻿using System;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Mihaylov.Api.Other.Contracts.Cluster.Interfaces;
 using Mihaylov.Api.Other.Contracts.Cluster.Models.Configs;
 using Mihaylov.Api.Other.Contracts.Cluster.Models.Nexus;
@@ -15,7 +17,7 @@ namespace Mihaylov.Api
 {
     public static class _HostConfigurations
     {
-        public static IServiceCollection AddOtherServices(this IServiceCollection services, 
+        public static IServiceCollection AddOtherServices(this IServiceCollection services,
             Action<NexusConfiguration> nexusConfig, Action<KubernetesSettings> kubeConfig,
             Action<VeleroSettings> veleroConfig, Action<ImmichConfig> immichConfig)
         {
@@ -40,6 +42,20 @@ namespace Mihaylov.Api
             services.AddScoped<IImmichService, ImmichService>();
 
             return services;
+        }
+
+        public static void InitializeOtherDependencies<T>(this IApplicationBuilder app)
+        {
+            var exitCode = Microsoft.Playwright.Program.Main(["install", "--with-deps", "chromium"]);
+            if (exitCode != 0)
+            {
+                throw new Exception("Playwright browser installation failed.");
+            }
+
+            var factory = app.ApplicationServices.GetRequiredService<ILoggerFactory>();
+            var logger = factory.CreateLogger(typeof(T));
+
+            logger.LogInformation("Playwright was configured.");
         }
     }
 }
