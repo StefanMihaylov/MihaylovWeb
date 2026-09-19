@@ -25,6 +25,9 @@ namespace Mihaylov.Api
 
             services.AddScoped<IClusterService, ClusterService>();
             services.AddScoped<IVersionService, VersionService>();
+            services.AddSingleton<ISemaphoreProvider, SemaphoreProvider>();
+            services.AddSingleton<PlaywrightBrowserManager>(_ =>
+                PlaywrightBrowserManager.InstanceAsync.GetAwaiter().GetResult());
 
             services.Configure<KubernetesSettings>(kubeConfig);
             services.AddScoped<IKubernetesHelper, KubernetesHelper>();

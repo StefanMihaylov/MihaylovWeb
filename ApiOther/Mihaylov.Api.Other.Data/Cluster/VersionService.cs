@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
+using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
 using AngleSharp;
 using AngleSharp.Common;
@@ -20,15 +23,18 @@ namespace Mihaylov.Api.Other.Data.Cluster
         private readonly ILogger _logger;
         private readonly IClusterService _clusterService;
         private readonly IMemoryCache _memoryCache;
+        private readonly ISemaphoreProvider _semaphoreProvider;
 
         private const string SHOW_LAST_VERSION = "show_last_version_by_application";
         private const int CACHE_DURATION = 30;
 
-        public VersionService(ILoggerFactory loggerFactory, IClusterService clusterService, IMemoryCache memoryCache)
+        public VersionService(ILoggerFactory loggerFactory, IClusterService clusterService, IMemoryCache memoryCache,
+            ISemaphoreProvider semaphoreProvider)
         {
             _logger = loggerFactory.CreateLogger(GetType());
             _clusterService = clusterService;
             _memoryCache = memoryCache;
+            _semaphoreProvider = semaphoreProvider;
         }
 
         public async Task<LastVersionModel> GetLastVersionAsync(int applicationId, bool? reload)
@@ -162,7 +168,7 @@ namespace Mihaylov.Api.Other.Data.Cluster
 
                 IEnumerable<IElement> cells = document.QuerySelectorAll(inputSelector)?.ToList();
 
-                if(cells.Any() == false) // try to load the html with js
+                if (cells.Any() == false) // try to load the html with js
                 {
                     string html = await LoadWithPlaywright(address, inputSelector).ConfigureAwait(false);
 
@@ -370,12 +376,12 @@ namespace Mihaylov.Api.Other.Data.Cluster
                 return null;
             }
 
-            if(!int.TryParse(commandParams[0], out int startIndex) 
+            if (!int.TryParse(commandParams[0], out int startIndex)
                 || !int.TryParse(commandParams[1], out int length))
             {
                 _logger.LogError("Invalid substring parameters");
                 return null;
-            }   
+            }
 
             var result = context.Content.Substring(startIndex, length);
 
@@ -415,28 +421,21 @@ namespace Mihaylov.Api.Other.Data.Cluster
 
         private async Task<string> LoadWithPlaywright(string address, string inputSelector)
         {
-            // 1. Get rendered HTML with Playwright
-            using var playwright = await Playwright.CreateAsync().ConfigureAwait(false);
-            var options = new BrowserTypeLaunchOptions()
-            {
-                Headless = true,
-                Args = new[] { "--no-sandbox", "--disable-setuid-sandbox" }
-            };
-            await using var browser = await playwright.Chromium.LaunchAsync(options).ConfigureAwait(false);
-            // var page = await browser.NewPageAsync().ConfigureAwait(false);
+            await using var _ = await _semaphoreProvider.AcquireAsync("Playwright", 2);
 
-            var pageContext = await browser.NewContextAsync(new BrowserNewContextOptions
-            {
-                UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
-                ViewportSize = new ViewportSize { Width = 1280, Height = 720 }
-            });
+            var stopwatch = Stopwatch.StartNew();
 
+            var manager = await PlaywrightBrowserManager.InstanceAsync.ConfigureAwait(false);
+
+            var pageContext = await manager.NewContextAsync().ConfigureAwait(false);
             var page = await pageContext.NewPageAsync();
+
+            _logger.LogInformation($"Get page for {address}. Elapsed: {stopwatch.ElapsedMilliseconds} ms");
 
             await page.GotoAsync(address, new PageGotoOptions
             {
                 WaitUntil = WaitUntilState.DOMContentLoaded,
-                Timeout = 10000
+                Timeout = 15000
             }).ConfigureAwait(false);
 
             // Wait for Angular to finish rendering the tags
@@ -444,7 +443,37 @@ namespace Mihaylov.Api.Other.Data.Cluster
 
             var html = await page.ContentAsync();
 
+            _logger.LogInformation($"Get page content from {address}. Elapsed: {stopwatch.ElapsedMilliseconds} ms");
+
+            var cdpSession = await pageContext.NewCDPSessionAsync(page);
+            await cdpSession.SendAsync("Performance.enable");
+            var metrics = await cdpSession.SendAsync("Performance.getMetrics");
+            _logger.LogInformation($"Get metrics from {address}. Metrics: {SummarizeMetrics(metrics)}");
+
             return html;
+        }
+
+        private static string SummarizeMetrics(JsonElement? metrics)
+        {
+            if (metrics == null)
+            {
+                return "No metrics available";
+            }
+
+            double Get(string name) =>
+                metrics.Value.GetProperty("metrics")
+                       .EnumerateArray()
+                       .FirstOrDefault(m => m.GetProperty("name").GetString() == name)
+                       .GetProperty("value")
+                       .GetDouble();
+
+            var navStart = Get("NavigationStart");
+            var dcl = Get("DomContentLoaded");
+
+            return $"NavToDCL={(dcl - navStart) / 1000.0:F2}s | " +
+                   $"ProcessTime={Get("ProcessTime"):F3}s | " +
+                   $"Nodes={Get("Nodes")} | " +
+                   $"Heap={Get("JSHeapUsedSize") / 1024 / 1024:F1}MB";
         }
 
         private string GetUrlByType(VersionUrlType? type, Application application)
@@ -476,7 +505,7 @@ namespace Mihaylov.Api.Other.Data.Cluster
         {
             public override string ToString()
             {
-                var cellsCount = Cells?.Any() == true ? $"/{Cells.Count()} cells" : string.Empty; 
+                var cellsCount = Cells?.Any() == true ? $"/{Cells.Count()} cells" : string.Empty;
 
                 return $"{Content ?? "?"}{cellsCount}";
             }
