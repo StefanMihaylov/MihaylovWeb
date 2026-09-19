@@ -426,11 +426,13 @@ namespace Mihaylov.Api.Other.Data.Cluster
             var stopwatch = Stopwatch.StartNew();
 
             var manager = await PlaywrightBrowserManager.InstanceAsync.ConfigureAwait(false);
-
-            var pageContext = await manager.NewContextAsync().ConfigureAwait(false);
-            var page = await pageContext.NewPageAsync();
+            await using IBrowserContext context = await manager.NewContextAsync().ConfigureAwait(false);
+            var page = await context.NewPageAsync();
 
             _logger.LogInformation($"Get page for {address}. Elapsed: {stopwatch.ElapsedMilliseconds} ms");
+
+            await using var cdpSession = await context.NewCDPSessionAsync(page);
+            await cdpSession.SendAsync("Performance.enable");
 
             await page.GotoAsync(address, new PageGotoOptions
             {
@@ -440,13 +442,10 @@ namespace Mihaylov.Api.Other.Data.Cluster
 
             // Wait for Angular to finish rendering the tags
             await page.WaitForSelectorAsync(inputSelector);
-
             var html = await page.ContentAsync();
 
             _logger.LogInformation($"Get page content from {address}. Elapsed: {stopwatch.ElapsedMilliseconds} ms");
 
-            var cdpSession = await pageContext.NewCDPSessionAsync(page);
-            await cdpSession.SendAsync("Performance.enable");
             var metrics = await cdpSession.SendAsync("Performance.getMetrics");
             _logger.LogInformation($"Get metrics from {address}. Metrics: {SummarizeMetrics(metrics)}");
 
@@ -460,20 +459,38 @@ namespace Mihaylov.Api.Other.Data.Cluster
                 return "No metrics available";
             }
 
-            double Get(string name) =>
-                metrics.Value.GetProperty("metrics")
-                       .EnumerateArray()
-                       .FirstOrDefault(m => m.GetProperty("name").GetString() == name)
-                       .GetProperty("value")
-                       .GetDouble();
+            double? Get(string name)
+            {
+                var match = metrics.Value.GetProperty("metrics")
+                             .EnumerateArray()
+                             .FirstOrDefault(m => m.GetProperty("name").GetString() == name);
+
+                if (match.ValueKind == JsonValueKind.Undefined)
+                {
+                    return null;
+                }
+
+                var value = match.GetProperty("value").GetDouble();
+                return value;
+            }
 
             var navStart = Get("NavigationStart");
             var dcl = Get("DomContentLoaded");
 
-            return $"NavToDCL={(dcl - navStart) / 1000.0:F2}s | " +
-                   $"ProcessTime={Get("ProcessTime"):F3}s | " +
-                   $"Nodes={Get("Nodes")} | " +
-                   $"Heap={Get("JSHeapUsedSize") / 1024 / 1024:F1}MB";
+            var navToDcl = (navStart.HasValue && dcl.HasValue)
+                ? $"{(dcl.Value - navStart.Value) / 1000.0:F2}s"
+                : "N/A (missing timing data)";
+
+            var messages = new List<string>
+            {
+                $"NavToDCL={navToDcl}",
+                $"ProcessTime={Get("ProcessTime"):F3}s",
+                $"Nodes={Get("Nodes")}",
+                $"Heap={Get("JSHeapUsedSize") / 1024 / 1024:F1}MB"
+            };
+
+            var message = string.Join(" | ", messages);
+            return message;
         }
 
         private string GetUrlByType(VersionUrlType? type, Application application)
