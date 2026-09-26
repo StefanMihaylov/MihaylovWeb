@@ -63,5 +63,23 @@ namespace Mihaylov.Api.Other.Controllers
 
             return Ok(result);
         }
+
+        [HttpGet]
+        [ProducesResponseType(typeof(SnapshotResponse), StatusCodes.Status200OK)]
+        public async Task<IActionResult> Snapshots()
+        {
+            SnapshotResponse snapshots = await _service.GetSnapshortsAsync().ConfigureAwait(false);
+
+            return Ok(snapshots);
+        }
+
+        [HttpDelete]
+        [ProducesResponseType(typeof(void), StatusCodes.Status200OK)]
+        public async Task<IActionResult> DeleteSnapshot([FromQuery] string id)
+        {
+            await _service.DeleteSnapshotAsync(id).ConfigureAwait(false);
+
+            return Ok();
+        }
     }
 }

@@ -1762,6 +1762,84 @@
           }
         }
       }
+    },
+    "/api/Velero/Snapshots": {
+      "get": {
+        "tags": [
+          "Velero"
+        ],
+        "responses": {
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SnapshotResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Velero/DeleteSnapshot": {
+      "delete": {
+        "tags": [
+          "Velero"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
     }
   },
   "components": {
@@ -2796,6 +2874,52 @@
   ]
 }
       },
+      "KopiaSnapshot": {
+        "type": "object",
+        "properties": {
+          "snapshotId": {
+            "type": "string",
+            "nullable": true
+          },
+          "kopiaId": {
+            "type": "string",
+            "nullable": true
+          },
+          "date": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "path": {
+            "type": "string",
+            "nullable": true
+          },
+          "size": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "files": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "dirs": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "numFailed": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "locationName": {
+            "type": "string",
+            "nullable": true
+          },
+          "volumeNamespace": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "LastVersionModel": {
         "type": "object",
         "properties": {
@@ -3385,6 +3509,45 @@
             "format": "int32"
           },
           "lastDaySuccessfulBackupCount": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "SnapshotResponse": {
+        "type": "object",
+        "properties": {
+          "orphanedSnapshots": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/KopiaSnapshot"
+            },
+            "nullable": true
+          },
+          "statistics": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/SnapshotStatistics"
+              }
+            ],
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "SnapshotStatistics": {
+        "type": "object",
+        "properties": {
+          "totalUploadCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalSnapshotCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "orchanedSnapshotCount": {
             "type": "integer",
             "format": "int32"
           }

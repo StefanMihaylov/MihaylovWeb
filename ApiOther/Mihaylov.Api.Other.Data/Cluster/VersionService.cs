@@ -4,7 +4,6 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Text.Json;
-using System.Threading;
 using System.Threading.Tasks;
 using AngleSharp;
 using AngleSharp.Common;
@@ -24,17 +23,19 @@ namespace Mihaylov.Api.Other.Data.Cluster
         private readonly IClusterService _clusterService;
         private readonly IMemoryCache _memoryCache;
         private readonly ISemaphoreProvider _semaphoreProvider;
+        private readonly IPlaywrightManager _playwright;
 
         private const string SHOW_LAST_VERSION = "show_last_version_by_application";
         private const int CACHE_DURATION = 30;
 
         public VersionService(ILoggerFactory loggerFactory, IClusterService clusterService, IMemoryCache memoryCache,
-            ISemaphoreProvider semaphoreProvider)
+            ISemaphoreProvider semaphoreProvider, IPlaywrightManager playwright)
         {
             _logger = loggerFactory.CreateLogger(GetType());
             _clusterService = clusterService;
             _memoryCache = memoryCache;
             _semaphoreProvider = semaphoreProvider;
+            _playwright = playwright;
         }
 
         public async Task<LastVersionModel> GetLastVersionAsync(int applicationId, bool? reload)
@@ -425,8 +426,7 @@ namespace Mihaylov.Api.Other.Data.Cluster
 
             var stopwatch = Stopwatch.StartNew();
 
-            var manager = await PlaywrightBrowserManager.InstanceAsync.ConfigureAwait(false);
-            await using IBrowserContext context = await manager.NewContextAsync().ConfigureAwait(false);
+            await using IBrowserContext context = await _playwright.NewContextAsync().ConfigureAwait(false);
             var page = await context.NewPageAsync();
 
             _logger.LogInformation($"Get page for {address}. Elapsed: {stopwatch.ElapsedMilliseconds} ms");

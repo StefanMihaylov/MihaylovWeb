@@ -4,6 +4,7 @@ using Mihaylov.Api.Gear.Core.Application.Commands.CloneTrip;
 using Mihaylov.Api.Gear.Core.Application.Commands.CreateGearNode;
 using Mihaylov.Api.Gear.Core.Application.Commands.CreateTrip;
 using Mihaylov.Api.Gear.Core.Application.Commands.DeleteGearNode;
+using Mihaylov.Api.Gear.Core.Application.Queries.GetParentGearNodes;
 using Mihaylov.Api.Gear.Core.Application.Queries.GetTrips;
 using Mihaylov.Api.Gear.Core.Domain.Enums;
 using Mihaylov.Api.Gear.Extensions;
@@ -120,5 +121,14 @@ public class TripController : ControllerBase
         await _mediator.Send(new DeleteGearNodeCommand(nodeId)).ConfigureAwait(false);
 
         return Ok();
+    }
+
+    [HttpGet()]
+    [SwaggerOperation(OperationId = "TripParents")]
+    [ProducesResponseType(typeof(IEnumerable<GearNodeFlat>), StatusCodes.Status200OK)]
+    public async Task<IActionResult> Parents(long tripId)
+    {
+        var parents = await _mediator.Send(new GetParentGearNodesQuery(tripId)).ConfigureAwait(false);
+        return Ok(parents);
     }
 }

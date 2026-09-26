@@ -66,20 +66,27 @@ namespace Mihaylov.Api.Other
                     kube.ServicePort = Config.GetEnvironmentVariable("Kubernetes_Service_Port", "6443");
                     kube.ConfigPath = Config.GetEnvironmentVariable("Kubernetes_Config_Path", string.Empty);
                 },
+                processConfig =>
+                {
+                    processConfig.CmdPath = Config.GetEnvironmentVariable("Velero_Cmd_Path", "cmd");
+                    processConfig.CmdArguments = Config.GetEnvironmentVariable("Velero_Cmd_Arguments", "/c");
+                },
                 veleroConfig =>
                 {
-                    veleroConfig.DownloadBasePath = Config.GetEnvironmentVariable("Velero_Download_BasePath", "https://github.com/vmware-tanzu/velero/releases/download");
-                    veleroConfig.DownloadVersion = Config.GetEnvironmentVariable("Velero_Download_Version");
-                    veleroConfig.DownloadFileName = Config.GetEnvironmentVariable("Velero_Download_FileName"); 
-                    veleroConfig.TempPath = Config.GetEnvironmentVariable("Velero_Temp_Path");
                     veleroConfig.VeleroPath = Config.GetEnvironmentVariable("Velero_Path");
-                    veleroConfig.CmdPath = Config.GetEnvironmentVariable("Velero_Cmd_Path", "cmd");
-                    veleroConfig.CmdArguments = Config.GetEnvironmentVariable("Velero_Cmd_Arguments", "/c");
+                },
+                kopiaConfig =>
+                {
+                    kopiaConfig.KopiaPath = Config.GetEnvironmentVariable("Kopia_Path");
                 },
                 immich =>
                 {
                     immich.BaseUrl = Config.GetEnvironmentVariable("Immich_Base_Url");
                     immich.ApiKey = Config.GetEnvironmentVariable("Immich_Api_Key");
+                },
+                playwright =>
+                {
+                    playwright.ServerUrl = Config.GetEnvironmentVariable("Playwright_Url");
                 });
 
             // Add-Migration <name> -Context MihaylovOtherShowDbContext
@@ -110,7 +117,7 @@ namespace Mihaylov.Api.Other
                 endpoints.MapControllers();
             });
 
-            app.InitializeOtherDependencies<Program>();
+            // app.InitializeOtherDependencies<Program>();
         }
     }
 }

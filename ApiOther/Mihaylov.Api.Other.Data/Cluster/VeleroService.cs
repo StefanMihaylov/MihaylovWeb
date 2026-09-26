@@ -2,214 +2,392 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Caching.Memory;
 using Mihaylov.Api.Other.Contracts.Cluster.Interfaces;
 using Mihaylov.Api.Other.Contracts.Cluster.Models.Kubernetes;
 using Mihaylov.Api.Other.Contracts.Cluster.Models.Velero;
 
-namespace Mihaylov.Api.Other.Data.Cluster
+namespace Mihaylov.Api.Other.Data.Cluster;
+
+public class VeleroService(IKubernetesHelper kubernetesHelper, IVeleroClient veleroClient,
+    IKopiaClient kopiaClient, IMemoryCache cache) : IVeleroService
 {
-    public class VeleroService : IVeleroService
+    private const string ORPHANED_SNAPSHOTS = "orphanedSnapshots";
+    private const string KOPIA_PASSWORD = "kopiaPassword";
+    private const string STORAGE_CREDENTIALS = "StorageCredentials";
+
+    public Task<string> GetExeVersionAsync()
     {
-        private readonly IKubernetesHelper _kubernetesHelper;
-        private readonly IVeleroClient _veleroClient;
+        return Task.FromResult(veleroClient.GetVersion());
+    }
 
-        public VeleroService(IKubernetesHelper kubernetesHelper, IVeleroClient veleroClient)
+    public Task<string> CreateBackupAsync(string scheduleName)
+    {
+        return Task.FromResult(veleroClient.CreateBackup(scheduleName));
+    }
+
+    public Task<string> DeleteBackupAsync(string backupName)
+    {
+        return Task.FromResult(veleroClient.DeleteBackup(backupName));
+    }
+
+    public async Task DeleteSnapshotAsync(string id)
+    {
+        if (!cache.TryGetValue(ORPHANED_SNAPSHOTS, out IEnumerable<KopiaSnapshot> snapshots))
         {
-            _kubernetesHelper = kubernetesHelper;
-            _veleroClient = veleroClient;
+            return;
         }
 
-        public Task<string> GetExeVersionAsync()
+        var snapshot = snapshots.Where(s => s.SnapshotId == id).FirstOrDefault();
+        if (snapshot == null)
         {
-            return _veleroClient.GetVersionAsync();
+            return;
         }
 
-        public Task<string> CreateBackupAsync(string scheduleName)
+        var locations = await kubernetesHelper.GetVeleroBackupStorageLocationsAsync().ConfigureAwait(false);
+        var location = locations.FirstOrDefault(a => a.Name == snapshot.LocationName);
+        if (location == null)
         {
-            return _veleroClient.CreateBackupAsync(scheduleName);
+            return;
         }
 
-        public Task<string> DeleteBackupAsync(string backupName)
+        var credentials = await GetStorageCredentials(location).ConfigureAwait(false);
+        var kopiaPassword = await GetKopiaPasswordAsync().ConfigureAwait(false);
+        var context = GetKopiaContext(location, snapshot.VolumeNamespace, credentials, kopiaPassword);
+
+        kopiaClient.DeleteSnapshot(context, snapshot.KopiaId);
+    }
+
+    public async Task<ScheduleResponse> GetSchedulesAsync()
+    {
+        var context = await InitializeScheduleContextAsync().ConfigureAwait(false);
+
+        var scheduleList = new List<Schedule>();
+        foreach (var schedule in context.AllSchedules)
         {
-            return _veleroClient.DeleteBackupAsync(backupName);
+            if (context.Backups.TryGetValue(schedule.Name, out BackupDetails backupDetails))
+            {
+                backupDetails.Used = true;
+
+                var shedule = MapSchedule(schedule);
+                shedule.Backups = backupDetails.Backups.Select(b => MapBackup(b, context)).ToList();
+
+                scheduleList.Add(shedule);
+            }
         }
 
-        public async Task<ScheduleResponse> GetSchedulesAsync()
+        var oldSchedules = context.Backups.Where(b => !b.Value.Used)
+                                     .ToDictionary(b => b.Key, b => b.Value.Backups);
+
+        foreach (var oldSchedule in oldSchedules)
         {
-            var schedules = await _kubernetesHelper.GetVeleroSchedulesAsync().ConfigureAwait(false);
-            var backups = await _kubernetesHelper.GetVeleroBackupsAsync().ConfigureAwait(false);
-            var dataUploads = await _kubernetesHelper.GetDataUploadsAsync().ConfigureAwait(false);
-            var pvcs = await _kubernetesHelper.GetPersistanceVolumeClaimsAsync(null).ConfigureAwait(false);
-            var pvs = await _kubernetesHelper.GetPersistanceVolumesAsync().ConfigureAwait(false);
+            scheduleList.Add(new Schedule()
+            {
+                Name = oldSchedule.Key,
+                Backups = oldSchedule.Value.Select(b => MapBackup(b, context)).ToList(),
+            });
+        }
 
-            var pvcDic = pvcs.ToDictionary(g => $"{g.Namespace}_{g.Name}", g => g);
-            var pvDic = pvs.ToDictionary(g => $"{g.Namespace}_{g.Claim}", g => g);
+        var result = new ScheduleResponse()
+        {
+            Schedules = scheduleList.OrderByDescending(s => s.LastBackup).ToList(),
+            Statistics = new ScheduleStatistics()
+            {
+                ScheduleCount = context.AllSchedules.Count(),
+                TotalBackupCount = GetBackupCount(context.AllBackups, null, null),
+                LastWeekBackupCount = GetBackupCount(context.AllBackups, 7, null),
+                LastDayBackupCount = GetBackupCount(context.AllBackups, 1, null),
+                TotalSuccessfulBackupCount = GetBackupCount(context.AllBackups, null, true),
+                LastWeekSuccessfulBackupCount = GetBackupCount(context.AllBackups, 7, true),
+                LastDaySuccessfulBackupCount = GetBackupCount(context.AllBackups, 1, true),
+            }
+        };
 
-            var backupDic = backups.GroupBy(s => s.ScheduleName)
+        return result;
+    }
+
+    public async Task<SnapshotResponse> GetSnapshortsAsync()
+    {
+        var context = await InitializeKopiaContextAsync();
+
+        var result = new SnapshotResponse()
+        {
+            OrphanedSnapshots = context.OrphanedSnapshots.ToList(),
+            Statistics = new SnapshotStatistics()
+            {
+                TotalUploadCount = context.Uploads.Count(),
+                TotalSnapshotCount = context.Snapshots.Count(),
+                OrchanedSnapshotCount = context.OrphanedSnapshots.Count()
+            }
+        };
+
+        return result;
+    }
+
+
+    private static Schedule MapSchedule(KubernetesSchedule schedule)
+    {
+        return new Schedule()
+        {
+            Name = schedule.Name,
+            CreatedOn = schedule.CreatedOn,
+            Cron = schedule.Schedule,
+            Paused = schedule.Paused,
+            CsiSnapshotTimeout = schedule.CsiSnapshotTimeout,
+            LastBackup = schedule.LastBackup,
+            Phase = schedule.Phase,
+            IncludedNamespaces = schedule.IncludedNamespaces,
+            ExcludedResources = schedule.ExcludedResources,
+            Expiration = schedule.Expiration,
+            MatchLabels = schedule.MatchLabels?.Select(kv => $"{kv.Key} : {kv.Value}").FirstOrDefault(),
+            ItemOperationTimeout = schedule.ItemOperationTimeout,
+            SnapshotMoveData = schedule.SnapshotMoveData,
+            StorageLocation = schedule.StorageLocation,
+
+            Backups = null,
+        };
+    }
+
+    private static Backup MapBackup(KubernetesBackup input, ScheduleContext context)
+    {
+        var backup = new Backup()
+        {
+            Name = input.Name,
+            CreatedOn = input.CreatedOn,
+            ExpirationDate = input.ExpirationDate,
+            Phase = input.Phase,
+            ItemsBackedUp = input.ItemsBackedUp,
+            TotalItems = input.TotalItems,
+            BackupItemOperationsAttempted = input.BackupItemOperationsAttempted,
+            BackupItemOperationsCompleted = input.BackupItemOperationsCompleted,
+            Errors = input.Errors,
+            StartTimestamp = input.StartTimestamp,
+            CompletionTimestamp = input.CompletionTimestamp,
+        };
+
+        if (context.Uploads.TryGetValue(backup.Name, out var uploadList))
+        {
+            backup.Uploads = uploadList.Select(u => MapDataUpload(u, context)).ToList();
+        }
+
+        return backup;
+    }
+
+    private static DataUpload MapDataUpload(DataUploadModel dataUpload, ScheduleContext context)
+    {
+        PersistentVolumeClaim pvc = null;
+        PersistentVolume pv = null;
+
+        var pvcKey = $"{dataUpload.SourceNamespace}_{dataUpload.SourcePVC}";
+        if (context.Pvcs.TryGetValue(pvcKey, out PersistentVolumeClaim pvcValue))
+        {
+            pvc = pvcValue;
+
+            var pvKey = $"{pvc.Namespace}_{pvc.Name}";
+            if (context.Pvs.TryGetValue(pvKey, out PersistentVolume pvValue))
+            {
+                pv = pvValue;
+            }
+        }
+
+        return new DataUpload()
+        {
+            ClaimName = dataUpload.SourcePVC,
+            Phase = dataUpload.Phase,
+            TotalBytes = dataUpload.TotalBytes,
+            BytesDone = dataUpload.BytesDone,
+            StartTimestamp = dataUpload.StartTimestamp,
+            CompletionTimestamp = dataUpload.CompletionTimestamp,
+
+            VolumeName = pv?.Name,
+            CephName = pv?.ImageName,
+
+            Capacity = pvc?.Capacity,
+            StorageClassName = pvc?.StorageClassName
+        };
+    }
+
+    private int GetBackupCount(IEnumerable<KubernetesBackup> backups, int? days, bool? isSuccessful)
+    {
+        var query = backups;
+
+        if (days.HasValue)
+        {
+            query = query.Where(b => b.CreatedOn >= DateTime.UtcNow.AddDays(-days.Value));
+        }
+
+        if (isSuccessful.HasValue && isSuccessful.Value)
+        {
+            query = query.Where(b => b.Phase == BackupPhaseType.Completed);
+        }
+
+        return query.Count();
+    }
+
+
+    private async Task<ScheduleContext> InitializeScheduleContextAsync()
+    {
+        var schedules = await kubernetesHelper.GetVeleroSchedulesAsync().ConfigureAwait(false);
+        var backups = await kubernetesHelper.GetVeleroBackupsAsync().ConfigureAwait(false);
+        var dataUploads = await kubernetesHelper.GetDataUploadsAsync().ConfigureAwait(false);
+        var pvcs = await kubernetesHelper.GetPersistanceVolumeClaimsAsync(null).ConfigureAwait(false);
+        var pvs = await kubernetesHelper.GetPersistanceVolumesAsync().ConfigureAwait(false);
+
+        var context = new ScheduleContext
+        {
+            AllSchedules = schedules,
+            AllBackups = backups,
+            Pvcs = pvcs.ToDictionary(g => $"{g.Namespace}_{g.Name}", g => g),
+            Pvs = pvs.ToDictionary(g => $"{g.Namespace}_{g.Claim}", g => g),
+
+            Backups = backups.GroupBy(s => s.ScheduleName)
                             .Select(g => new
                             {
                                 Schedule = g.Key,
                                 Backups = g.OrderByDescending(b => b.CreatedOn).ToList()
                             })
-                            .ToDictionary(g => g.Schedule, g => new BackupDetails(g.Backups, false));
+                            .ToDictionary(g => g.Schedule, g => new BackupDetails(g.Backups, false)),
 
-            var uploadDic = dataUploads.GroupBy(s => s.Backup)
+            Uploads = dataUploads.GroupBy(s => s.Backup)
                             .Select(g => new
                             {
                                 Backup = g.Key,
                                 Uploads = g.OrderByDescending(b => b.CreatedOn).ToList()
                             })
-                            .ToDictionary(g => g.Backup, g => g.Uploads);
+                            .ToDictionary(g => g.Backup, g => g.Uploads)
+        };
 
-            var scheduleList = new List<Schedule>();
-            foreach (var schedule in schedules)
-            {
-                if (backupDic.ContainsKey(schedule.Name))
-                {
-                    var backupDetails = backupDic[schedule.Name];
-                    backupDetails.Used = true;
-
-                    scheduleList.Add(new Schedule()
-                    {
-                        Name = schedule.Name,
-                        CreatedOn = schedule.CreatedOn,
-                        Cron = schedule.Schedule,
-                        Paused = schedule.Paused,
-                        CsiSnapshotTimeout = schedule.CsiSnapshotTimeout,
-                        LastBackup = schedule.LastBackup,
-                        Phase = schedule.Phase,
-                        IncludedNamespaces = schedule.IncludedNamespaces,
-                        ExcludedResources = schedule.ExcludedResources,
-                        Expiration = schedule.Expiration,
-                        MatchLabels = schedule.MatchLabels?.Select(kv => $"{kv.Key} : {kv.Value}").FirstOrDefault(),
-                        ItemOperationTimeout = schedule.ItemOperationTimeout,
-                        SnapshotMoveData = schedule.SnapshotMoveData,
-                        StorageLocation = schedule.StorageLocation,
-
-                        Backups = backupDetails.Backups.Select(b => MapBackup(b)).ToList(),
-                    });
-                }
-            }
-
-            var oldSchedules = backupDic.Where(b => !b.Value.Used)
-                                         .ToDictionary(b => b.Key, b => b.Value.Backups);
-
-            foreach (var oldSchedule in oldSchedules)
-            {
-                scheduleList.Add(new Schedule()
-                {
-                    Name = oldSchedule.Key,
-                    Backups = oldSchedule.Value.Select(b => MapBackup(b)).ToList(),
-                });
-            }
-
-            foreach (var schedule in scheduleList)
-            {
-                foreach (var backup in schedule.Backups)
-                {
-                    if (uploadDic.ContainsKey(backup.Name))
-                    {
-                        var uploadList = uploadDic[backup.Name];
-
-                        backup.Uploads = uploadList.Select(u =>
-                        {
-                            PersistentVolumeClaim pvc = null;
-                            PersistentVolume pv = null;
-
-                            var pvcKey = $"{u.SourceNamespace}_{u.SourcePVC}";
-                            if (pvcDic.ContainsKey(pvcKey))
-                            {
-                                pvc = pvcDic[pvcKey];
-
-                                var pvKey = $"{pvc.Namespace}_{pvc.Name}";
-                                if (pvDic.ContainsKey(pvKey))
-                                {
-                                    pv = pvDic[pvKey];
-                                }
-                            }
-
-                            return new DataUpload()
-                            {
-                                ClaimName = u.SourcePVC,
-                                VolumeName = pv?.Name,
-                                CephName = pv?.ImageName,
-                                Phase = u.Phase,
-                                TotalBytes = u.TotalBytes,
-                                BytesDone = u.BytesDone,
-                                StartTimestamp = u.StartTimestamp,
-                                CompletionTimestamp = u.CompletionTimestamp,
-                                Capacity = pvc?.Capacity,
-                                StorageClassName = pvc?.StorageClassName
-                            };
-                        }).ToList();
-                    }
-                }
-            }
-
-            var result = new ScheduleResponse()
-            {
-                Statistics = new ScheduleStatistics()
-                {
-                    ScheduleCount = schedules.Count(),
-                    TotalBackupCount = GetBackupCount(backups, null, null),
-                    LastWeekBackupCount = GetBackupCount(backups, 7, null),
-                    LastDayBackupCount = GetBackupCount(backups, 1, null),
-                    TotalSuccessfulBackupCount = GetBackupCount(backups, null, true),
-                    LastWeekSuccessfulBackupCount = GetBackupCount(backups, 7, true),
-                    LastDaySuccessfulBackupCount = GetBackupCount(backups, 1, true),
-                },
-                Schedules = scheduleList.OrderByDescending(s => s.LastBackup).ToList(),
-            };
-
-            return result;
-        }
-
-        private static Backup MapBackup(KubernetesBackup b)
-        {
-            return new Backup()
-            {
-                Name = b.Name,
-                CreatedOn = b.CreatedOn,
-                ExpirationDate = b.ExpirationDate,
-                Phase = b.Phase,
-                ItemsBackedUp = b.ItemsBackedUp,
-                TotalItems = b.TotalItems,
-                BackupItemOperationsAttempted = b.BackupItemOperationsAttempted,
-                BackupItemOperationsCompleted = b.BackupItemOperationsCompleted,
-                Errors = b.Errors,
-                StartTimestamp = b.StartTimestamp,
-                CompletionTimestamp = b.CompletionTimestamp,
-            };
-        }
-
-        private int GetBackupCount(IEnumerable<KubernetesBackup> backups, int? days, bool? isSuccessful)
-        {
-            var query = backups;
-
-            if (days.HasValue)
-            {
-                query = query.Where(b => b.CreatedOn >= DateTime.UtcNow.AddDays(-days.Value));
-            }
-
-            if (isSuccessful.HasValue && isSuccessful.Value)
-            {
-                query = query.Where(b => b.Phase == BackupPhaseType.Completed);
-            }
-
-            return query.Count();
-        }
+        return context;
     }
 
-    internal class BackupDetails
+    private async Task<KopiaContext> InitializeKopiaContextAsync()
     {
-        public IEnumerable<KubernetesBackup> Backups { get; }
+        var dataUploads = await kubernetesHelper.GetDataUploadsAsync().ConfigureAwait(false);
 
-        public bool Used { get; set; }
+        var snapshots = await GetAllSnapshotsAsync().ConfigureAwait(false);
 
-        public BackupDetails(IEnumerable<KubernetesBackup> backups, bool used)
+        var dataUploadsSnapshots = dataUploads.ToDictionary(d => d.SnapshotID, d => d);
+        var orphanedSnapshots = snapshots.Where(s => !dataUploadsSnapshots.ContainsKey(s.SnapshotId)).ToList();
+        cache.Set(ORPHANED_SNAPSHOTS, orphanedSnapshots, TimeSpan.FromMinutes(30));
+
+        var context = new KopiaContext()
         {
-            Backups = backups;
-            Used = used;
-        }
+            Uploads = dataUploads,
+            Snapshots = snapshots,
+            OrphanedSnapshots = orphanedSnapshots.OrderByDescending(s => s.Date).ToList(),
+        };
+
+        return context;
     }
+
+    private async Task<IEnumerable<KopiaSnapshot>> GetAllSnapshotsAsync()
+    {
+        var locations = await kubernetesHelper.GetVeleroBackupStorageLocationsAsync().ConfigureAwait(false);
+        var repositories = await kubernetesHelper.GetBackupRepositoriesAsync().ConfigureAwait(false);
+
+        var kopiaPassword = await GetKopiaPasswordAsync().ConfigureAwait(false);
+
+        var snapshots = new List<KopiaSnapshot>();
+        foreach (var location in locations)
+        {
+            var credentials = await GetStorageCredentials(location).ConfigureAwait(false);
+
+            var currentRepositories = repositories.Where(r => r.BackupStorageLocation == location.Name).ToList();
+            foreach (var repository in currentRepositories)
+            {
+                if (!string.IsNullOrEmpty(repository.VolumeNamespace))
+                {
+                    var kopiaContext = GetKopiaContext(location, repository.VolumeNamespace, credentials, kopiaPassword);
+
+                    var currentSnapshots = kopiaClient.GetSnapshots(kopiaContext);
+                    snapshots.AddRange(currentSnapshots);
+                }
+            }
+        }
+
+        return snapshots;
+    }
+
+    private static KopiaConnectModel GetKopiaContext(BackupStorageLocationModel location, string volumeNamespace, Credentials credentials, string kopiaPassword)
+    {
+        return new KopiaConnectModel
+        {
+            LocationName = location.Name,
+            StorageUrl = location.ConfigPublicUrl,
+            Bucket = location.Bucket,
+            ClientId = credentials.ClientId,
+            ClientSecret = credentials.ClientSecret,
+            Password = kopiaPassword,
+            VolumeNamespace = volumeNamespace,
+        };
+    }
+
+    private async Task<string> GetKopiaPasswordAsync()
+    {
+        if (!cache.TryGetValue(KOPIA_PASSWORD, out string kopiaPassword))
+        {
+            kopiaPassword = await kubernetesHelper.GetSecretAsync("velero", "velero-repo-credentials", "repository-password").ConfigureAwait(false);
+
+            if (!string.IsNullOrEmpty(kopiaPassword))
+            {
+                cache.Set(KOPIA_PASSWORD, kopiaPassword, TimeSpan.FromMinutes(60));
+            }
+        }
+
+        return kopiaPassword;
+    }
+
+    private async Task<Credentials> GetStorageCredentials(BackupStorageLocationModel location)
+    {
+        if (!cache.TryGetValue(STORAGE_CREDENTIALS, out Credentials credentials))
+        {
+            var locationCredsBody = await kubernetesHelper.GetSecretAsync(location.Namespace, location.SecretName, location.SecretKey).ConfigureAwait(false);
+            var locationCredsArray = locationCredsBody.Split(['\n', '\r'], StringSplitOptions.RemoveEmptyEntries).Skip(1).ToArray();
+            if (locationCredsArray.Length < 2)
+            {
+                return null;
+            }
+
+            credentials = new Credentials()
+            {
+                ClientId = locationCredsArray[0].Split('=', StringSplitOptions.RemoveEmptyEntries).Skip(1).FirstOrDefault(),
+                ClientSecret = locationCredsArray[1].Split('=', StringSplitOptions.RemoveEmptyEntries).Skip(1).FirstOrDefault(),
+            };
+
+            cache.Set(STORAGE_CREDENTIALS, credentials, TimeSpan.FromMinutes(60));
+        }
+
+        return credentials;
+    }
+}
+
+internal class BackupDetails(IEnumerable<KubernetesBackup> backups, bool used)
+{
+    public IEnumerable<KubernetesBackup> Backups { get; } = backups;
+
+    public bool Used { get; set; } = used;
+}
+
+internal class ScheduleContext
+{
+    public IEnumerable<KubernetesSchedule> AllSchedules { get; set; }
+
+    public IEnumerable<KubernetesBackup> AllBackups { get; set; }
+
+    public IDictionary<string, PersistentVolumeClaim> Pvcs { get; set; }
+
+    public IDictionary<string, PersistentVolume> Pvs { get; set; }
+
+    public IDictionary<string, BackupDetails> Backups { get; set; }
+
+    public IDictionary<string, List<DataUploadModel>> Uploads { get; set; }
+}
+
+internal class KopiaContext
+{
+    public IEnumerable<DataUploadModel> Uploads { get; set; }
+
+    public IEnumerable<KopiaSnapshot> Snapshots { get; set; }
+
+    public IEnumerable<KopiaSnapshot> OrphanedSnapshots { get; set; }
 }

@@ -1,7 +1,5 @@
 ﻿using System;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using Mihaylov.Api.Other.Contracts.Cluster.Interfaces;
 using Mihaylov.Api.Other.Contracts.Cluster.Models.Configs;
 using Mihaylov.Api.Other.Contracts.Cluster.Models.Nexus;
@@ -19,22 +17,27 @@ namespace Mihaylov.Api
     {
         public static IServiceCollection AddOtherServices(this IServiceCollection services,
             Action<NexusConfiguration> nexusConfig, Action<KubernetesSettings> kubeConfig,
-            Action<VeleroSettings> veleroConfig, Action<ImmichConfig> immichConfig)
+            Action<ProcessSettings> processConfig, Action<VeleroSettings> veleroConfig, 
+            Action<KopiaSettings> kopiaSettings, Action<ImmichConfig> immichConfig,
+            Action<PlaywrightSettings> playwrightSettings)
         {
             services.AddScoped<IConcertService, ConcertService>();
 
             services.AddScoped<IClusterService, ClusterService>();
             services.AddScoped<IVersionService, VersionService>();
             services.AddSingleton<ISemaphoreProvider, SemaphoreProvider>();
-            services.AddSingleton<PlaywrightBrowserManager>(_ =>
-                PlaywrightBrowserManager.InstanceAsync.GetAwaiter().GetResult());
+            services.Configure<PlaywrightSettings>(playwrightSettings);
+            services.AddSingleton<IPlaywrightManager, PlaywrightManager>();
 
+            services.Configure<ProcessSettings>(processConfig);
+            services.AddScoped<IProcessHelper, ProcessHelper>();
             services.Configure<KubernetesSettings>(kubeConfig);
             services.AddScoped<IKubernetesHelper, KubernetesHelper>();
             services.AddScoped<IVeleroService, VeleroService>();
             services.Configure<VeleroSettings>(veleroConfig);
             services.AddScoped<IVeleroClient, VeleroClient>();
-            services.AddHttpClient(VeleroClient.VELERO_HTTP_CLIENT).IgnoreCertificate();
+            services.Configure<KopiaSettings>(kopiaSettings);
+            services.AddScoped<IKopiaClient, KopiaClient>();
 
             services.AddHttpClient(NexusApiService.NEXUS_CLIENT_NAME).IgnoreCertificate();
             services.Configure<NexusConfiguration>(nexusConfig);
@@ -47,18 +50,18 @@ namespace Mihaylov.Api
             return services;
         }
 
-        public static void InitializeOtherDependencies<T>(this IApplicationBuilder app)
-        {
-            var exitCode = Microsoft.Playwright.Program.Main(["install", "--with-deps", "chromium"]);
-            if (exitCode != 0)
-            {
-                throw new Exception("Playwright browser installation failed.");
-            }
+        //public static void InitializeOtherDependencies<T>(this IApplicationBuilder app)
+        //{
+        //    var exitCode = Microsoft.Playwright.Program.Main(["install", "--with-deps", "chromium"]);
+        //    if (exitCode != 0)
+        //    {
+        //        throw new Exception("Playwright browser installation failed.");
+        //    }
 
-            var factory = app.ApplicationServices.GetRequiredService<ILoggerFactory>();
-            var logger = factory.CreateLogger(typeof(T));
+        //    var factory = app.ApplicationServices.GetRequiredService<ILoggerFactory>();
+        //    var logger = factory.CreateLogger(typeof(T));
 
-            logger.LogInformation("Playwright was configured.");
-        }
+        //    logger.LogInformation("Playwright was configured.");
+        //}
     }
 }

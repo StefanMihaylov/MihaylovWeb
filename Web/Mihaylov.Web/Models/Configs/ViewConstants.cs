@@ -27,6 +27,7 @@ namespace Mihaylov.Web.Models.Configs
         public const string DeleteButton = "bi-eraser";
         public const string ListButton = "bi-list-ul";
         public const string CloseCircleButton = "bi-x-circle-fill";
+        public const string SuccessCircleButton = "bi-check-circle-fill";
 
         public const string DefaultDropDownValue = "--- Select ---";
         public const string DefaultDropDownValueShort = "-----";

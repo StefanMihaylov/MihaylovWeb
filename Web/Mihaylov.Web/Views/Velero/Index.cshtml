@@ -1,5 +1,6 @@
 ﻿@using Mihaylov.Common;
 @using Mihaylov.Api.Other.Client
+@using Mihaylov.Web.Models.Configs
 @using Mihaylov.Web.Models.Velero
 @model SchedulesMainModel
 
@@ -19,7 +20,7 @@
     <div class="col-sm-2">
         <span>Velero: @Model.VeleroVersion</span>
     </div>
-    <div class="col-sm-2">
+    <div class="col-sm-2">        
     </div>
 </div>
 
@@ -58,7 +59,7 @@
                             @if (schedule.Phase == SchedulePhaseType.Enabled)
                             {
                                 <span style="color:green">
-                                    <i class="bi bi-check-circle-fill"></i>
+                                    <i class="bi @ViewConstants.SuccessCircleButton"></i>
                                 </span>
                             }
                             else
@@ -81,7 +82,7 @@
                             else
                             {
                                 <span style="color:green">
-                                    <i class="bi bi-check-circle-fill"></i>
+                                    <i class="bi @ViewConstants.SuccessCircleButton"></i>
                                 </span>
                             }
                         }
@@ -170,7 +171,7 @@
                                             }
 
                                             <span style="@phaseStyle">
-                                                <i class="bi bi-check-circle-fill"></i>
+                                                <i class="bi @ViewConstants.SuccessCircleButton"></i>
                                             </span>
                                         }
                                         else if (backup.Phase == BackupPhaseType.PartiallyFailed)

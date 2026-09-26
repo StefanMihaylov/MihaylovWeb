@@ -21,5 +21,11 @@ namespace Mihaylov.Api.Other.Contracts.Cluster.Interfaces
         Task<IEnumerable<KubernetesBackup>> GetVeleroBackupsAsync();
 
         Task<IEnumerable<DataUploadModel>> GetDataUploadsAsync();
+
+        Task<IEnumerable<BackupStorageLocationModel>> GetVeleroBackupStorageLocationsAsync();
+
+        Task<IEnumerable<BackupRepositoryModel>> GetBackupRepositoriesAsync();
+
+        Task<string> GetSecretAsync(string namespaceName, string secretName, string key);
     }
 }

@@ -1,13 +1,11 @@
-﻿using System.Threading.Tasks;
-
-namespace Mihaylov.Api.Other.Contracts.Cluster.Interfaces
+﻿namespace Mihaylov.Api.Other.Contracts.Cluster.Interfaces
 {
     public interface IVeleroClient
     {
-        Task<string> GetVersionAsync();
+        string GetVersion();
 
-        Task<string> CreateBackupAsync(string scheduleName);
+        string CreateBackup(string scheduleName);
 
-        Task<string> DeleteBackupAsync(string backupName);
+        public string DeleteBackup(string backupName);
     }
 }

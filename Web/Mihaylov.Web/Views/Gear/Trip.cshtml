@@ -49,7 +49,7 @@
             </div>
         </div>
         <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
-            <h6 class="mb-0"><i class="fa fa-list-ul"></i> Елементи: @Model.Trip.Nodes.Select(n => n.Quantity).Count()</h6>
+            <h6 class="mb-0"><i class="fa fa-list-ul"></i> Елементи: @Model.Trip.Nodes.Where(n => n.Quantity > 0).Select(n => n.Quantity).Count()</h6>
         </div>
     </div>
 </div>
@@ -65,8 +65,13 @@
                 <div class="modal-body">
                     <input type="hidden" name="Id" class="gearnode-field-id" />
                     <input type="hidden" name="TripId" value="@Model.Trip.Id" />
-                    <input type="hidden" name="ParentId" class="gearnode-field-parentid" />
                     <input type="hidden" name="NonPacked" value="@Model.NonPacked.ToString().ToLower()" />
+
+                    <div class="form-group">
+                        <label>Parent</label>
+                        @* <input type="hidden" name="ParentId" class="gearnode-field-parentid" /> *@
+                        @Html.DropDownList("ParentId", Model.Parents, ViewConstants.DefaultDropDownValue, new { @class = "short-width form-control gearnode-field-parentid", style = "min-width: 100px;" })
+                    </div>
 
                     <div class="form-group">
                         <label>Node Type</label>

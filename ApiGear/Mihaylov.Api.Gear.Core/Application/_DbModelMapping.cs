@@ -5,6 +5,7 @@ using Mihaylov.Api.Gear.Core.Application.Queries.GetCategories;
 using Mihaylov.Api.Gear.Core.Application.Queries.GetCurrencies;
 using Mihaylov.Api.Gear.Core.Application.Queries.GetGroups;
 using Mihaylov.Api.Gear.Core.Application.Queries.GetInventory;
+using Mihaylov.Api.Gear.Core.Application.Queries.GetParentGearNodes;
 using Mihaylov.Api.Gear.Core.Application.Queries.GetShops;
 using Mihaylov.Api.Gear.Core.Application.Queries.GetTrips;
 using Mihaylov.Api.Gear.Core.Domain.Enums;
@@ -38,6 +39,19 @@ public static class _DbModelMapping
             .Map(dest => dest.Notes, src => src.Notes)
             .Map(dest => dest.CreatedAt, src => src.CreatedAt)
             .TwoWays();
+
+        TypeAdapterConfig<DbCe.GearNode, GearNodeFlat>.NewConfig()
+            .Map(dest => dest.Id, src => src.GearNodeId)
+            .Map(dest => dest.TripId, src => src.TripId)
+            .Map(dest => dest.ParentName, src =>
+                    src.Parent == null ? null :
+                    src.Parent.Group != null ? src.Parent.Group.Name :
+                    src.Parent.Category != null ? src.Parent.Category.Name :
+                    src.Parent.InventoryItem != null ? src.Parent.InventoryItem.Name : null)
+            .Map(dest => dest.NodeName, src =>
+                    src.Group != null ? src.Group.Name :
+                    src.Category != null ? src.Category.Name :
+                    src.InventoryItem != null ? src.InventoryItem.Name : null);
 
         TypeAdapterConfig<DbCe.GearNode, GearNode>.NewConfig()
             .Map(dest => dest.Id, src => src.GearNodeId)

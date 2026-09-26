@@ -9,8 +9,12 @@ namespace Mihaylov.Api.Other.Contracts.Cluster.Interfaces
 
         Task<ScheduleResponse> GetSchedulesAsync();
 
+        Task<SnapshotResponse> GetSnapshortsAsync();
+
         Task<string> CreateBackupAsync(string scheduleName);
 
         Task<string> DeleteBackupAsync(string backupName);
+
+        Task DeleteSnapshotAsync(string id);
     }
 }

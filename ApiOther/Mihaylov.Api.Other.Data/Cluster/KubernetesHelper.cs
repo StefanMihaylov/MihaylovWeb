@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
-using System.Text.Json;
 using System.Threading.Tasks;
 using k8s;
 using k8s.Models;
@@ -201,7 +200,7 @@ namespace Mihaylov.Api.Other.Data.Cluster
             {
                 Name = b.Metadata.Name,
                 CreatedOn = b.Metadata.CreationTimestamp,
-                
+
                 ScheduleName = b.Metadata.Labels.Where(a => a.Key == "velero.io/schedule-name").Select(a => a.Value).FirstOrDefault(),
                 BackupItemOperationsAttempted = b.Status.BackupItemOperationsAttempted,
                 BackupItemOperationsCompleted = b.Status.BackupItemOperationsCompleted,
@@ -235,15 +234,74 @@ namespace Mihaylov.Api.Other.Data.Cluster
                 SourceNamespace = a.Spec.SourceNamespace,
                 SnapshotType = a.Spec.SnapshotType,
                 CompletionTimestamp = a.Status.CompletionTimestamp,
-                SnapshotID = a.Status.SnapshotID,
                 StartTimestamp = a.Status.StartTimestamp,
                 Phase = Enum.TryParse(a.Status.Phase, true, out DataUploadPhaseType phase) ? phase : null,
                 TotalBytes = a.Status.Progress.TotalBytes,
                 BytesDone = a.Status.Progress.BytesDone,
+                SnapshotID = a.Status.SnapshotID,
             })
             .ToList();
 
             return uploads;
+        }
+
+        public async Task<IEnumerable<BackupStorageLocationModel>> GetVeleroBackupStorageLocationsAsync()
+        {
+            using Kubernetes client = GetClient();
+            var list = await client.ListClusterCustomObjectAsync<BackupStorageLocationList>("velero.io", "v1", "backupstoragelocations").ConfigureAwait(false);
+
+            var locations = list.Items.Select(b => new BackupStorageLocationModel()
+            {
+                Name = b.Metadata.Name,
+                Namespace = b.Metadata.NamespaceProperty,
+                AccessMode = b.Spec.AccessMode,
+                Provider = b.Spec.Provider,
+                Default = b.Spec.Default,
+                ConfigPublicUrl = b.Spec.Config.PublicUrl,
+                ConfigS3Url = b.Spec.Config.S3Url,
+                ConfigRegion = b.Spec.Config.Region,
+                Bucket = b.Spec.ObjectStorage.Bucket,
+                SecretName = b.Spec.Credential.Name,
+                SecretKey = b.Spec.Credential.Key
+            })
+             .OrderBy(b => b.Name)
+             .ToList();
+
+            return locations;
+        }
+
+        public async Task<IEnumerable<BackupRepositoryModel>> GetBackupRepositoriesAsync()
+        {
+            using Kubernetes client = GetClient();
+            var list = await client.ListClusterCustomObjectAsync<BackupRepositoryList>("velero.io", "v1", "backuprepositories").ConfigureAwait(false);
+
+            var repositories = list.Items.Select(r => new BackupRepositoryModel()
+            {
+                Name = r.Metadata.Name,
+                VolumeNamespace = r.Spec.VolumeNamespace,
+                RepositoryType = r.Spec.RepositoryType,
+                BackupStorageLocation = r.Spec.BackupStorageLocation,
+            })
+            .OrderBy(b => b.VolumeNamespace)
+            .ToList();
+
+            return repositories;
+        }
+
+        public async Task<string> GetSecretAsync(string namespaceName, string secretName, string key)
+        {
+            using Kubernetes client = GetClient();
+            V1Secret secret = await client.CoreV1.ReadNamespacedSecretAsync(secretName, namespaceName, true).ConfigureAwait(false);
+
+            secret.Data.TryGetValue(key, out var data);
+
+            string result = null;
+            if (data.Length > 0)
+            {
+                result = Encoding.UTF8.GetString(data).Trim();
+            }
+
+            return result;
         }
 
         // var aaaa = JsonSerializer.Serialize(list, new JsonSerializerOptions() { WriteIndented = true });
@@ -284,7 +342,7 @@ namespace Mihaylov.Api.Other.Data.Cluster
             if (found == false)
             {
                 throw new FormatException($"No byte indicator found in value '{input}'.");
-            }                
+            }
 
             int lastNumber = num;
             string numberPart = input.Substring(0, lastNumber).Trim();
@@ -292,10 +350,10 @@ namespace Mihaylov.Api.Other.Data.Cluster
             if (!double.TryParse(numberPart, numberStyles, formatProvider, out double number))
             {
                 throw new FormatException($"No number found in value '{input}'.");
-            }            
+            }
 
             string sizePart = input.Substring(lastNumber, input.Length - lastNumber).Trim();
-            
+
             return $"{number} {sizePart}B";
         }
     }

@@ -1,7 +1,7 @@
 ﻿namespace Mihaylov.Api.Other.Contracts.Cluster.Models.Configs
 {
-    public class VeleroSettings
+    public class KopiaSettings
     {
-        public string VeleroPath { get; set; }
+        public string KopiaPath { get; set; }
     }
 }

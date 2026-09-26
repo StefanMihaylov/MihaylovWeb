@@ -77,14 +77,16 @@ public class GearController : Controller
         var groups = await _client.GroupsAsync().ConfigureAwait(false);
         var categories = await _client.CategoriesAsync().ConfigureAwait(false);
         var items = await _client.InventoryListAsync(true).ConfigureAwait(false);
+        var parents = await _client.TripParentsAsync(id).ConfigureAwait(false);
 
         var groupsDropDown = groups.Select(v => new SelectListItem(v.Name, v.Id.ToString())).ToList();
         var categoriesDropDown = categories.Select(v => new SelectListItem(v.Name, v.Id.ToString())).ToList();
         var itemsDropDown = items.OrderBy(i => i.CategoryId).Select(v => new SelectListItem($"{v.Name}{(string.IsNullOrWhiteSpace(v.Brand) ? string.Empty : $" ({v.Brand})")} ", v.Id.ToString())).ToList();
+        var parentsDropWoDown = parents.Select(v => new SelectListItem($"{v.NodeName}{(string.IsNullOrWhiteSpace(v.ParentName) ? string.Empty : $"({v.ParentName})")}", v.Id.ToString())).ToList();
 
         var statusTypes = ViewConstants.GetEnumDropdown<NodeType>().OrderByDescending(d => d.Value);
 
-        var tripModel = new TripViewModel(trip, statusTypes, groupsDropDown, categoriesDropDown, itemsDropDown, isNonPacked);
+        var tripModel = new TripViewModel(trip, statusTypes, groupsDropDown, categoriesDropDown, itemsDropDown, parentsDropWoDown, isNonPacked);
 
         return View(tripModel);
     }

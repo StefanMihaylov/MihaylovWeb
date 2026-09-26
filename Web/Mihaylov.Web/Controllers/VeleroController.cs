@@ -57,6 +57,15 @@ namespace Mihaylov.Web.Controllers
         }
 
         [HttpGet]
+        public async Task<IActionResult> SnapshotIndex()
+        {
+            _client.AddToken(Request.GetToken());
+            SnapshotResponse snapshots = await _client.SnapshotsAsync().ConfigureAwait(false);
+
+            return View(snapshots);
+        }
+
+            [HttpGet]
         public async Task<IActionResult> CreateBackup(string schedule)
         {
             _client.AddToken(Request.GetToken());
@@ -71,7 +80,16 @@ namespace Mihaylov.Web.Controllers
         {
             _client.AddToken(Request.GetToken());
             await _client.DeleteBackupAsync(backup).ConfigureAwait(false);
+            
             return RedirectToAction(nameof(Index));
+        }
+
+        public async Task<IActionResult> DeleteSnapshot(string id)
+        {
+            _client.AddToken(Request.GetToken());
+            await _client.DeleteSnapshotAsync(id).ConfigureAwait(false);
+            
+            return RedirectToAction(nameof(SnapshotIndex));
         }
     }
 }

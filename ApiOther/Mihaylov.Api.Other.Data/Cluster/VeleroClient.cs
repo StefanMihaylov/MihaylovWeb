@@ -1,38 +1,31 @@
 ﻿using System;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Net.Http;
-using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Mihaylov.Api.Other.Contracts.Cluster.Interfaces;
 using Mihaylov.Api.Other.Contracts.Cluster.Models.Configs;
-using SharpCompress.Common;
-using SharpCompress.Readers;
 
 namespace Mihaylov.Api.Other.Data.Cluster
 {
     public class VeleroClient : IVeleroClient
     {
-        public const string VELERO_HTTP_CLIENT = "VeleroClient";
-
         private readonly ILogger _logger;
-        private readonly IHttpClientFactory _httpClientFactory;
+        private readonly IProcessHelper _processHelper;
         private readonly VeleroSettings _config;
 
-        public VeleroClient(ILoggerFactory loggerFactory, IHttpClientFactory httpClientFactory, IOptions<VeleroSettings> settings)
+        public VeleroClient(ILoggerFactory loggerFactory, IProcessHelper processHelper, IOptions<VeleroSettings> settings)
         {
             _logger = loggerFactory.CreateLogger(this.GetType());
-            _httpClientFactory = httpClientFactory;
+            _processHelper = processHelper;
             _config = settings.Value;
 
-            NormalizeConfig();
+            _config.VeleroPath = _config.VeleroPath.TrimEnd('/').TrimEnd('\\');
         }
 
-        public async Task<string> GetVersionAsync()
+        public string GetVersion()
         {
-            var response = await GetResponseAsync("version --client-only").ConfigureAwait(false);
+            var response = GetResponse("version --client-only");
 
             var lines = response.Split('\n', StringSplitOptions.RemoveEmptyEntries);
             if (lines.Length < 2)
@@ -50,150 +43,39 @@ namespace Mihaylov.Api.Other.Data.Cluster
             return result;
         }
 
-        public async Task<string> CreateBackupAsync(string scheduleName)
+        public string CreateBackup(string scheduleName)
         {
-            var command = $"backup create --from-schedule {scheduleName}";
-            var response = await GetResponseAsync(command).ConfigureAwait(false);
+            var response = GetResponse($"backup create --from-schedule {scheduleName}");
 
             return response;
         }
 
-        public async Task<string> DeleteBackupAsync(string backupName)
+        public string DeleteBackup(string backupName)
         {
-            var command = $"backup delete {backupName} --confirm";
-            var response = await GetResponseAsync(command).ConfigureAwait(false);
+            var response = GetResponse($"backup delete {backupName} --confirm");
 
             return response;
         }
 
-        private async Task<string> GetResponseAsync(string command)
+        
+        private string GetResponse(string command)
         {
             _logger.LogInformation("Start velero exe command 'command'");
 
             var veleroPath = VeleroExePath();
-            _logger.LogInformation($"Velero path: '{veleroPath}'");
-
             if (string.IsNullOrWhiteSpace(veleroPath))
             {
-                Directory.Delete(_config.TempPath, true);
-                Directory.CreateDirectory(_config.TempPath);
-
-                _logger.LogInformation("Directory created");
-
-                var zipFilePah = GetZipFilePah();
-
-                _logger.LogInformation($"Zip path: '{zipFilePah}'");
-
-                await DownloadVeleroAsync(zipFilePah).ConfigureAwait(false);
-                UnzipVelero(zipFilePah);
-
-                _logger.LogInformation($"exe downloaded");
-
-                var unzipDir = Path.GetFileNameWithoutExtension(Path.GetFileNameWithoutExtension(zipFilePah));
-                var zipDirectory = new DirectoryInfo($"{_config.TempPath}/{unzipDir}");
-                var veleroFile = zipDirectory.GetFiles("velero*").FirstOrDefault();
-                if (veleroFile == null)
-                {
-                    throw new ApplicationException("Velero download failed");
-                }
-
-                var exeName = Path.GetFileName(veleroFile.FullName);
-                veleroPath = $"{_config.VeleroPath}/{exeName}";                
-
-                File.Copy(veleroFile.FullName, veleroPath, true);
-                if (!_config.CmdPath.Contains("cmd"))
-                {
-                    ExecuteCommand("chmod", $"+x {veleroPath}");
-                }                
+                throw new Exception("velero.exe not found");
             }
 
             _logger.LogInformation($"Before Execute '{command}' command");
 
-            var result = ExecuteCommand(veleroPath, command);
+            var result = _processHelper.ExecuteCommand(veleroPath, command);
 
             _logger.LogInformation($"'{command}' command response: {result}");
 
             return result;
         }
-
-        private async Task DownloadVeleroAsync(string zipFilePah)
-        {
-            var url = $"{_config.DownloadBasePath}/v{_config.DownloadVersion}/{VeleroZipFileName()}";
-
-            using HttpClient client = _httpClientFactory.CreateClient(VELERO_HTTP_CLIENT);
-
-            using (var stream = await client.GetStreamAsync(url))
-            {
-                using (var fs = new FileStream(zipFilePah, FileMode.CreateNew))
-                {
-                    await stream.CopyToAsync(fs);
-                }
-            }
-        }
-
-        private void UnzipVelero(string zipFilePah)
-        {
-            using Stream stream = File.OpenRead(zipFilePah);
-            using var reader = ReaderFactory.OpenReader(stream);
-            while (reader.MoveToNextEntry())
-            {
-                if (!reader.Entry.IsDirectory)
-                {
-                    reader.WriteEntryToDirectory(_config.TempPath, new ExtractionOptions()
-                    {
-                        ExtractFullPath = true,
-                        Overwrite = true,
-                        PreserveFileTime = true,
-                    });
-                }
-            }
-        }
-
-        private string ExecuteCommand(string exePath, string command)
-        {
-            try
-            {
-                // create the ProcessStartInfo using "cmd" as the program to be run, and "/c " as the parameters.
-                // Incidentally, /c tells cmd that we want it to execute the command that follows, and then exit.
-                var procStartInfo = new ProcessStartInfo(_config.CmdPath, $"{_config.CmdArguments} \"{exePath} {command}\"")
-                {
-                    // The following commands are needed to redirect the standard output. 
-                    //This means that it will be redirected to the Process.StandardOutput StreamReader.
-                    RedirectStandardOutput = true,
-                    RedirectStandardError = true,
-                    UseShellExecute = false,
-                    CreateNoWindow = true     // Do not create the black window.
-                };
-
-                _logger.LogInformation($"Executing command: {procStartInfo.FileName} {procStartInfo.Arguments}");
-
-                using var proc = new Process()
-                {
-                    StartInfo = procStartInfo
-                };
-                proc.Start();
-
-                string result = proc.StandardOutput.ReadToEnd();
-                var error = proc.StandardError.ReadToEnd();
-
-                proc.WaitForExit();
-
-                if (!string.IsNullOrWhiteSpace(error))
-                {
-                    _logger.LogError($"Command execution error: {error}");
-                    throw new ApplicationException($"Command execution error: {error}");
-                }
-
-                return result;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, $"ExecuteCommand failed. Error: {ex.Message}");
-                throw;
-            }
-        }
-
-        private string VeleroZipFileName() => string.Format(_config.DownloadFileName, _config.DownloadVersion);
 
         private string VeleroExePath()
         {
@@ -205,25 +87,6 @@ namespace Mihaylov.Api.Other.Data.Cluster
             }
 
             return valeroFile.FullName;
-        }
-
-        private string GetZipFilePah() => $"{_config.TempPath}/{VeleroZipFileName()}";
-
-        private void NormalizeConfig()
-        {
-            _config.VeleroPath = _config.VeleroPath.TrimEnd('/').TrimEnd('\\');
-            _config.TempPath = _config.TempPath.TrimEnd('/').TrimEnd('\\');
-            _config.DownloadBasePath = _config.DownloadBasePath.TrimEnd('/').TrimEnd('\\');
-
-            if (!Directory.Exists(_config.VeleroPath))
-            {
-                Directory.CreateDirectory(_config.VeleroPath);
-            }
-
-            if (!Directory.Exists(_config.TempPath))
-            {
-                Directory.CreateDirectory(_config.TempPath);
-            }
         }
     }
 }

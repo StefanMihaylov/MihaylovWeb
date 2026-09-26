@@ -1,0 +1,55 @@
+﻿@using Mihaylov.Common;
+@using Mihaylov.Api.Other.Client
+@using Mihaylov.Web.Models.Configs
+@model SnapshotResponse
+
+<div class="row h6">
+    <div class="col-sm-2">
+        <span>Uploads: @Model.Statistics.TotalUploadCount</span>
+    </div>
+    <div class="col-sm-2">
+        <span>Snapshots: @Model.Statistics.OrchanedSnapshotCount / @Model.Statistics.TotalSnapshotCount</span>
+    </div>
+    <div class="col-sm-2">
+    </div>
+    <div class="col-sm-2">
+    </div>
+    <div class="col-sm-2">
+    </div>
+    <div class="col-sm-2">
+    </div>
+</div>
+
+<div class="row">
+    <table class="table table-bordered table-striped" id="snapshots-grid">
+        <thead>
+            <tr>
+                <th style="min-width:280px;">Име</th>
+                <th style="min-width:100px;">Дата</th>
+                <th>Големина</th>
+                <th>Файлове</th>
+                <th>Директории</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var snapshot in Model.OrphanedSnapshots)
+            {
+                <tr>
+                    <td>@snapshot.Path</td>
+                    <td>@snapshot.Date.ToString("yyyy.MM.dd HH:mm")</td>
+                    <td>@snapshot.Size.FormatBytes()</td>
+                    <td>@snapshot.Files</td>
+                    <td>@snapshot.Dirs</td>
+                    <td>
+                        <a href="/Velero/DeleteSnapshot/?id=@snapshot.SnapshotId">
+                            <span style="color:red">
+                                <i class="bi @ViewConstants.CloseCircleButton"></i>
+                            </span>
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
