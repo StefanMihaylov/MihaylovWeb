@@ -7,6 +7,8 @@ namespace Mihaylov.Api.Other.Contracts.Cluster.Models.Velero
     {
         public IEnumerable<KopiaSnapshot> OrphanedSnapshots { get; set; }
 
+        public IEnumerable<string> OrphanedUploads { get; set; }
+
         public SnapshotStatistics Statistics { get; set; }
     }
 }

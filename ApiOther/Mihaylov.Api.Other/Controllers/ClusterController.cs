@@ -8,7 +8,7 @@ using Mihaylov.Api.Other.Contracts.Cluster.Interfaces;
 using Mihaylov.Api.Other.Contracts.Cluster.Models.Cluster;
 using Mihaylov.Api.Other.Extensions;
 using Mihaylov.Api.Other.Models.Cluster;
-using Mihaylov.Common.Host.Authorization;
+using Mihaylov.Common;
 
 namespace Mihaylov.Api.Other.Controllers
 {

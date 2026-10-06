@@ -1866,6 +1866,9 @@ namespace Mihaylov.Api.Other.Client
         [Newtonsoft.Json.JsonProperty("orphanedSnapshots", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.Collections.Generic.IEnumerable<KopiaSnapshot> OrphanedSnapshots { get; set; }
 
+        [Newtonsoft.Json.JsonProperty("orphanedUploads", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.Collections.Generic.IEnumerable<string> OrphanedUploads { get; set; }
+
         [Newtonsoft.Json.JsonProperty("statistics", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public SnapshotStatistics Statistics { get; set; }
 

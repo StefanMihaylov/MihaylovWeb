@@ -8,9 +8,7 @@ using Mihaylov.Api.Other.Client;
 using Mihaylov.Api.Site.Client;
 using Mihaylov.Api.Users.Client;
 using Mihaylov.Api.Weather.Client;
-using Mihaylov.Common.Generic.AssemblyVersion;
-using Mihaylov.Common.Host.AssemblyVersion.Interfaces;
-using AsModels = Mihaylov.Common.Host.AssemblyVersion.Models;
+using Mihaylov.Common;
 
 namespace Mihaylov.Web.Services
 {
@@ -69,7 +67,7 @@ namespace Mihaylov.Web.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, $"Get Module Info failed. Error: {ex.Message}");
-                return new AsModels.ModuleInfo(name, null, null, null, null, null);
+                return new Mihaylov.Common.ModuleInfo(name, null, null, null, null, null);
             }
         }
     }

@@ -6,7 +6,7 @@ using Mihaylov.Api.Other.Contracts.Cluster.Interfaces;
 using Mihaylov.Api.Other.Contracts.Cluster.Models.Velero;
 using Mihaylov.Api.Other.Extensions;
 using Mihaylov.Api.Other.Models.Cluster;
-using Mihaylov.Common.Host.Authorization;
+using Mihaylov.Common;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace Mihaylov.Api.Other.Controllers

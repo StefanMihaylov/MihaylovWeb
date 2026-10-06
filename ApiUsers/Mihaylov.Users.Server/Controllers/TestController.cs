@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Mihaylov.Common.Host.Authorization;
+using Mihaylov.Common;
 
 namespace Mihaylov.Users.Server.Controllers
 {

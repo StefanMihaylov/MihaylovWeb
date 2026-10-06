@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Mihaylov.Common;
-using Mihaylov.Common.Database.Models;
 using Mihaylov.Users.Data.Database;
 using Mihaylov.Users.Data.Database.Models;
 using Mihaylov.Users.Data.Helpers;

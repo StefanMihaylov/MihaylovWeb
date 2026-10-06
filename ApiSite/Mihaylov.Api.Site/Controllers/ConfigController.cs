@@ -7,7 +7,7 @@ using Mihaylov.Api.Site.Contracts.Models;
 using Mihaylov.Api.Site.Contracts.Writers;
 using Mihaylov.Api.Site.Extensions;
 using Mihaylov.Api.Site.Models;
-using Mihaylov.Common.Host.Authorization;
+using Mihaylov.Common;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace Mihaylov.Api.Site.Controllers

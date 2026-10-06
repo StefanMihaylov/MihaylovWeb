@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="Common/Mihaylov.Common.Database/Mihaylov.Common.Database.csproj" />
+  <Project Path="Common/Mihaylov.Common.Generic/Mihaylov.Common.Generic.csproj" />
+  <Project Path="Common/Mihaylov.Common.Host/Mihaylov.Common.Host.csproj" />
+</Solution>

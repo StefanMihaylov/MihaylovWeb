@@ -110,14 +110,29 @@ public class VeleroService(IKubernetesHelper kubernetesHelper, IVeleroClient vel
     {
         var context = await InitializeKopiaContextAsync();
 
+        var uploads = context.Uploads.ToDictionary(d => d.SnapshotID, d => d);
+        var snapshots = context.Snapshots.ToDictionary(d => d.SnapshotId, d => d);
+
+        var orphanedSnapshots = context.Snapshots.Where(s => !uploads.ContainsKey(s.SnapshotId))
+                                                 .OrderByDescending(s => s.Date)
+                                                 .ToList();
+
+        var orphanedUploads = context.Uploads.Where(s => !snapshots.ContainsKey(s.SnapshotID))
+                                         .OrderByDescending(s => s.Backup)
+                                         .Select(s => s.Backup)
+                                         .ToList();
+
+        cache.Set(ORPHANED_SNAPSHOTS, orphanedSnapshots, TimeSpan.FromMinutes(30));
+
         var result = new SnapshotResponse()
         {
-            OrphanedSnapshots = context.OrphanedSnapshots.ToList(),
+            OrphanedSnapshots = orphanedSnapshots,
+            OrphanedUploads = orphanedUploads,
             Statistics = new SnapshotStatistics()
             {
                 TotalUploadCount = context.Uploads.Count(),
                 TotalSnapshotCount = context.Snapshots.Count(),
-                OrchanedSnapshotCount = context.OrphanedSnapshots.Count()
+                OrchanedSnapshotCount = orphanedSnapshots.Count()
             }
         };
 
@@ -266,15 +281,10 @@ public class VeleroService(IKubernetesHelper kubernetesHelper, IVeleroClient vel
 
         var snapshots = await GetAllSnapshotsAsync().ConfigureAwait(false);
 
-        var dataUploadsSnapshots = dataUploads.ToDictionary(d => d.SnapshotID, d => d);
-        var orphanedSnapshots = snapshots.Where(s => !dataUploadsSnapshots.ContainsKey(s.SnapshotId)).ToList();
-        cache.Set(ORPHANED_SNAPSHOTS, orphanedSnapshots, TimeSpan.FromMinutes(30));
-
         var context = new KopiaContext()
         {
             Uploads = dataUploads,
             Snapshots = snapshots,
-            OrphanedSnapshots = orphanedSnapshots.OrderByDescending(s => s.Date).ToList(),
         };
 
         return context;
@@ -388,6 +398,4 @@ internal class KopiaContext
     public IEnumerable<DataUploadModel> Uploads { get; set; }
 
     public IEnumerable<KopiaSnapshot> Snapshots { get; set; }
-
-    public IEnumerable<KopiaSnapshot> OrphanedSnapshots { get; set; }
 }

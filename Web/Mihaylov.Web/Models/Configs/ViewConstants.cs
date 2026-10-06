@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Mihaylov.Api.Site.Client;
-using Mihaylov.Common.Generic.Extensions;
+using Mihaylov.Common;
 using Mihaylov.Web.Models.Configs;
 
 namespace Mihaylov.Web.Models.Configs

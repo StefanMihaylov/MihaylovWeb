@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Mihaylov.Api.Dictionary.Database.DbConfigurations;
 using Mihaylov.Api.Dictionary.Database.Models;
-using Mihaylov.Common.Database.Interfaces;
+using Mihaylov.Common;
 
 namespace Mihaylov.Api.Dictionary.Database
 {

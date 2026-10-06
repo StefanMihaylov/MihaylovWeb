@@ -1,9 +1,13 @@
-﻿using Mihaylov.Common.Generic.AssemblyVersion;
+﻿namespace Mihaylov.Common;
 
-namespace Mihaylov.Common.Host.AssemblyVersion.Interfaces
+/// <summary>
+/// Defines a service that provides metadata about a module's assembly.
+/// </summary>
+public interface IModuleAssemblyService
 {
-    public interface IModuleAssemblyService
-    {
-        IModuleInfo GetModuleInfo();
-    }
+    /// <summary>
+    /// Gets information about the module.
+    /// </summary>
+    /// <returns>An IModuleInfo that represents the module's metadata and runtime information.</returns>
+    IModuleInfo GetModuleInfo();
 }

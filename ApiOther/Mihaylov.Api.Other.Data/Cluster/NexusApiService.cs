@@ -7,8 +7,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Mihaylov.Api.Other.Contracts.Cluster.Interfaces;
 using Mihaylov.Api.Other.Contracts.Cluster.Models.Nexus;
-using Mihaylov.Common.Generic.Servises;
-using Mihaylov.Common.Generic.Servises.Models;
+using Mihaylov.Common;
 
 namespace Mihaylov.Api.Other.Data.Cluster
 {

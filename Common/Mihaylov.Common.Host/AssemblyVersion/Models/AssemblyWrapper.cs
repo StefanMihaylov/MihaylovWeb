@@ -1,9 +1,14 @@
 ﻿using System.Reflection;
 
-namespace Mihaylov.Common.Host.AssemblyVersion.Models
+namespace Mihaylov.Common;
+
+/// <summary>
+/// Encapsulates a System.Reflection.Assembly instance.
+/// </summary>
+public class AssemblyWrapper
 {
-    public class AssemblyWrapper
-    {
-        public Assembly Assembly { get; set; }
-    }
+    /// <summary>
+    /// Gets or sets the Assembly associated with the object.
+    /// </summary>
+    public Assembly Assembly { get; set; }
 }

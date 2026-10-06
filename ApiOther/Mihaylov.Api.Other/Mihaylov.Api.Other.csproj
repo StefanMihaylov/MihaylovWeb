@@ -22,6 +22,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<PackageReference Include="Mihaylov.Common.Host" Version="0.1.0" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.26">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -30,7 +31,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\..\Common\Mihaylov.Common.Host\Mihaylov.Common.Host.csproj" />
 		<ProjectReference Include="..\Mihaylov.Api.Other.DAL\Mihaylov.Api.Other.DAL.csproj" />
 		<ProjectReference Include="..\Mihaylov.Api.Other.Data\Mihaylov.Api.Other.Data.csproj" />
 	</ItemGroup>

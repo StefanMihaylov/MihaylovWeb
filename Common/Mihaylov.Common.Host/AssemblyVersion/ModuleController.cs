@@ -1,29 +1,26 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Mihaylov.Common.Host.AssemblyVersion.Interfaces;
-using Mihaylov.Common.Host.AssemblyVersion.Models;
 
-namespace Mihaylov.Common.Host.AssemblyVersion
+namespace Mihaylov.Common;
+
+/// <summary>
+/// API controller that exposes endpoints for retrieving module assembly information.
+/// </summary>
+[ApiController]
+[Route("api/[controller]/[action]")]
+[Produces("application/json")]
+public class ModuleController(IModuleAssemblyService moduleService) : ControllerBase
 {
-    [ApiController]
-    [Route("api/[controller]/[action]")]
-    [Produces("application/json")]
-    public class ModuleController : ControllerBase
+    /// <summary>
+    /// Gets information about the module.
+    /// </summary>
+    /// <returns>An HTTP 200 (OK) response containing a ModuleInfo instance.</returns>
+    [HttpGet(Name = "ModuleGetInfo")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ModuleInfo))]
+    public IActionResult GetInfo()
     {
-        private readonly IModuleAssemblyService _moduleService;
+        var info = moduleService.GetModuleInfo();
 
-        public ModuleController(IModuleAssemblyService moduleService)
-        {
-            _moduleService = moduleService;
-        }
-
-        [HttpGet(Name = "ModuleGetInfo")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ModuleInfo))]
-        public IActionResult GetInfo()
-        {
-            var info = _moduleService.GetModuleInfo();
-
-            return Ok(info);
-        }
+        return Ok(info);
     }
 }

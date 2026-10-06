@@ -6,14 +6,25 @@
 		<Nullable>disable</Nullable>
 	</PropertyGroup>
 
+	<PropertyGroup>
+		<Version>0.1.0</Version>
+		<PackageId>Mihaylov.Common.Database</PackageId>
+		<Description>Shared Database utilities.</Description>
+		<Authors>Mihaylov</Authors>
+	</PropertyGroup>
+	
+	<PropertyGroup>
+		<DebugType>embedded</DebugType>
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+		<IncludeSymbols>true</IncludeSymbols>
+		<EmbedUntrackedSources>true</EmbedUntrackedSources>
+		<PublishRepositoryUrl>true</PublishRepositoryUrl>
+	</PropertyGroup>
+
 	<ItemGroup>
 		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.26" />
 	</ItemGroup>
-
-	<!--<ItemGroup Condition=" '$(TargetFramework)' == 'net6.0' ">
-		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.20" />
-		<PackageReference Include="System.Text.Json" Version="9.0.8" />
-	</ItemGroup>-->
 
 	<ItemGroup>
 		<FrameworkReference Include="Microsoft.AspNetCore.App" />

@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Mihaylov.Api.Users.Client;
-using Mihaylov.Common.Host.Authorization;
+using Mihaylov.Common;
 
 namespace Mihaylov.Web.Areas.Identity.Pages.Account.Manage
 {

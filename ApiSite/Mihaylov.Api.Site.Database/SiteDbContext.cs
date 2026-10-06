@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Mihaylov.Api.Site.Database.DbConfigurations;
 using Mihaylov.Api.Site.Database.Models;
-using Mihaylov.Common.Database.Interfaces;
+using Mihaylov.Common;
 
 namespace Mihaylov.Api.Site.Database
 {

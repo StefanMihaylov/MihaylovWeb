@@ -1,19 +1,24 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Mihaylov.Common.Generic.Servises.Interfaces;
-using Mihaylov.Common.Generic.Servises.Models;
 
-namespace Mihaylov.Common.Generic.Servises
+namespace Mihaylov.Common
 {
+    /// <summary>
+    /// Provides file and directory operations using System.IO, including reading files as bytes, obtaining read
+    /// streams, saving text or streams (overwriting existing files), deleting and moving files, enumerating files and
+    /// directories, and retrieving file metadata.
+    /// </summary>
     public class FileWrapper : IFileWrapper
     {
+        /// <inheritdoc />
         public byte[] ReadFile(string path)
         {
             var bytes = File.ReadAllBytes(path);
             return bytes;
         }
 
+        /// <inheritdoc />
         public Stream GetStreamFile(string path)
         {
             if (!File.Exists(path))
@@ -27,12 +32,14 @@ namespace Mihaylov.Common.Generic.Servises
             return stream;
         }
 
+        /// <inheritdoc />
         public void SaveFile(string path, string content)
         {
             DeleteFile(path);
             File.WriteAllText(path, content);
         }
 
+        /// <inheritdoc />
         public void SaveStreamFile(Stream stream, string path)
         {
             DeleteFile(path);
@@ -42,6 +49,7 @@ namespace Mihaylov.Common.Generic.Servises
             stream.Seek(0, SeekOrigin.Begin);
         }
 
+        /// <inheritdoc />
         public IEnumerable<FileInfoModel> GetAllFiles(string directoryPath, bool includeSubdirectories, string basePath = null)
         {
             if (basePath == null)
@@ -74,6 +82,7 @@ namespace Mihaylov.Common.Generic.Servises
             return files;
         }
 
+        /// <inheritdoc />
         public IEnumerable<DirInfoModel> GetDirectories(string directoryPath)
         {
             var directoryInfo = new DirectoryInfo(directoryPath);
@@ -91,6 +100,7 @@ namespace Mihaylov.Common.Generic.Servises
             return result;
         }
 
+        /// <inheritdoc />
         public string CreateDirectory(string basePath, string name)
         {
             var fullPath = Path.Combine(basePath, name);
@@ -98,6 +108,7 @@ namespace Mihaylov.Common.Generic.Servises
             return info.FullName;
         }
 
+        /// <inheritdoc />
         public void MoveFiles(string dir, IEnumerable<string> files)
         {
             foreach (var file in files)
@@ -108,12 +119,14 @@ namespace Mihaylov.Common.Generic.Servises
             }
         }
 
+        /// <inheritdoc />
         public FileInfoModel GetFileInfo(string path)
         {
             var fileInfo = new FileInfo(path);
             return GetFileInfoModel(fileInfo, null);
         }
 
+        /// <inheritdoc />
         public void DeleteFile(string filePath)
         {
             if (File.Exists(filePath))

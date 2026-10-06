@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Mihaylov.Api.Site.Client;
-using Mihaylov.Common.Host.Authorization;
+using Mihaylov.Common;
 using Mihaylov.Web.Areas;
 using Mihaylov.Web.Areas.Identity.Pages.Account;
 using Mihaylov.Web.Models.Configs;

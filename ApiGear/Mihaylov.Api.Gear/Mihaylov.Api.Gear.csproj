@@ -20,6 +20,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<PackageReference Include="Mihaylov.Common.Host" Version="0.1.0" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.19">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -28,7 +29,6 @@
 	</ItemGroup>	
 	
   <ItemGroup>
-    <ProjectReference Include="..\..\Common\Mihaylov.Common.Host\Mihaylov.Common.Host.csproj" />
     <ProjectReference Include="..\Mihaylov.Api.Gear.Core\Mihaylov.Api.Gear.Core.csproj" />
     <ProjectReference Include="..\Mihaylov.Api.Gear.Infrastructure\Mihaylov.Api.Gear.Infrastructure.csproj" />
   </ItemGroup>

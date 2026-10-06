@@ -8,8 +8,6 @@ using Mihaylov.Api.Site.Contracts.Helpers;
 using Mihaylov.Api.Site.Contracts.Helpers.Models;
 using Mihaylov.Api.Site.Data.Media.Interfaces;
 using Mihaylov.Common;
-using Mihaylov.Common.Generic.Servises.Interfaces;
-using Mihaylov.Common.Generic.Servises.Models;
 
 namespace Mihaylov.Api.Site.Data.Helpers
 {

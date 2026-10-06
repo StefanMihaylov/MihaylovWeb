@@ -2,8 +2,17 @@
 
 namespace Mihaylov.Common
 {
+    /// <summary>
+    /// Provides extension methods to map ClaimType values to System.Security.Claims.ClaimTypes strings.
+    /// </summary>
     public static class ClaimMap
     {
+        /// <summary>
+        /// Maps a ClaimType value to the corresponding claim type string from System.Security.Claims.ClaimTypes.
+        /// </summary>
+        /// <param name="type">The ClaimType to map.</param>
+        /// <returns>The corresponding claim type string from System.Security.Claims.ClaimTypes.</returns>
+        /// <exception cref="System.ArgumentException">Thrown when the provided ClaimType is not recognized.</exception>
         public static string GetClaim(this ClaimType type)
         {
             switch (type)

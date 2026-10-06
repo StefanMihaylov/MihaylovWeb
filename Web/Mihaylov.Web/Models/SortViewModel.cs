@@ -1,5 +1,5 @@
 ﻿using Mihaylov.Api.Site.Contracts.Helpers.Models;
-using Mihaylov.Common.Generic.Servises.Models;
+using Mihaylov.Common;
 using System;
 using System.Collections.Generic;
 

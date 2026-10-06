@@ -8,7 +8,7 @@ using Microsoft.Extensions.Logging;
 using Mihaylov.Api.Site.Contracts.Models;
 using Mihaylov.Api.Site.Contracts.Repositories;
 using Mihaylov.Api.Site.Database;
-using Mihaylov.Common.Generic.Extensions;
+using Mihaylov.Common;
 using DB = Mihaylov.Api.Site.Database.Models;
 
 namespace Mihaylov.Api.Site.DAL.Repositories

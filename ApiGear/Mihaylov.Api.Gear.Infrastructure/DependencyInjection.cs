@@ -2,7 +2,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Mihaylov.Api.Gear.Core.Application.Interfaces;
 using Mihaylov.Api.Gear.Infrastructure.Persistence;
 using Mihaylov.Common;
-using Mihaylov.Common.Database.Models;
 
 namespace Mihaylov.Api.Gear.Infrastructure;
 

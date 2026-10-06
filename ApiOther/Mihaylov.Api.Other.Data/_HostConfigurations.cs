@@ -9,7 +9,7 @@ using Mihaylov.Api.Other.Data.Cluster;
 using Mihaylov.Api.Other.Data.Gallery;
 using Mihaylov.Api.Other.Data.Gallery.Models;
 using Mihaylov.Api.Other.Data.Show;
-using Mihaylov.Common.Generic.Extensions;
+using Mihaylov.Common;
 
 namespace Mihaylov.Api
 {

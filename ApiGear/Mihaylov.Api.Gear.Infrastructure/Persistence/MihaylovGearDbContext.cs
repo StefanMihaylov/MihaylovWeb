@@ -4,7 +4,7 @@ using Mihaylov.Api.Gear.Core.Domain.Entities;
 using Mihaylov.Api.Gear.Core.Domain.Enums;
 using Mihaylov.Api.Gear.Core.Domain.Lookups;
 using Mihaylov.Api.Gear.Infrastructure.Persistence.Configurations;
-using Mihaylov.Common.Database.Interfaces;
+using Mihaylov.Common;
 
 namespace Mihaylov.Api.Gear.Infrastructure.Persistence;
 

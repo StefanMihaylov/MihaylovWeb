@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Mihaylov.Common.Host.Authorization;
+using Mihaylov.Common;
 using Mihaylov.Users.Data.Interfaces;
 using Mihaylov.Users.Models.Requests;
 using Mihaylov.Users.Models.Responses;

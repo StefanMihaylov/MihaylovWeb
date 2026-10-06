@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Mihaylov.Api.Other.Contracts.Cluster.Interfaces;
 using Mihaylov.Api.Other.Contracts.Cluster.Models.Nexus;
 using Mihaylov.Api.Other.Extensions;
-using Mihaylov.Common.Host.Authorization;
+using Mihaylov.Common;
 
 namespace Mihaylov.Api.Other.Controllers
 {

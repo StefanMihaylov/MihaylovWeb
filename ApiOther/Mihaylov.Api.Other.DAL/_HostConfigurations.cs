@@ -9,7 +9,6 @@ using Mihaylov.Api.Other.DAL.Show;
 using Mihaylov.Api.Other.Database.Cluster;
 using Mihaylov.Api.Other.Database.Shows;
 using Mihaylov.Common;
-using Mihaylov.Common.Database.Models;
 
 namespace Mihaylov.Api
 {

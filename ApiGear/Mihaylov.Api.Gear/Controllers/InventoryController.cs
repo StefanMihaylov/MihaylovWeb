@@ -5,7 +5,7 @@ using Mihaylov.Api.Gear.Core.Application.Queries.GetInventory;
 using Mihaylov.Api.Gear.Core.Domain.Enums;
 using Mihaylov.Api.Gear.Extensions;
 using Mihaylov.Api.Gear.Models;
-using Mihaylov.Common.Host.Authorization;
+using Mihaylov.Common;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace Mihaylov.Api.Gear.Controllers

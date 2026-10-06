@@ -7,7 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Common\Mihaylov.Common.Database\Mihaylov.Common.Database.csproj" />
+    <PackageReference Include="Mihaylov.Common.Database" Version="0.1.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Mihaylov.Api.Site.Contracts\Mihaylov.Api.Site.Contracts.csproj" />
   </ItemGroup>
 

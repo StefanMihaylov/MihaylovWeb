@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Mihaylov.Api.Other.Database.Cluster.DbConfigurations;
 using Mihaylov.Api.Other.Database.Cluster.Models;
-using Mihaylov.Common.Database.Interfaces;
+using Mihaylov.Common;
 
 namespace Mihaylov.Api.Other.Database.Cluster
 {

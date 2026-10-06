@@ -10,7 +10,7 @@ using Mihaylov.Api.Gear.Core.Application.Queries.GetCurrencies;
 using Mihaylov.Api.Gear.Core.Application.Queries.GetGroups;
 using Mihaylov.Api.Gear.Core.Application.Queries.GetShops;
 using Mihaylov.Api.Gear.Extensions;
-using Mihaylov.Common.Host.Authorization;
+using Mihaylov.Common;
 
 namespace Mihaylov.Api.Gear.Controllers
 {

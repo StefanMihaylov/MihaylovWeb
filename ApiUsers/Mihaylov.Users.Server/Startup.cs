@@ -5,7 +5,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Mihaylov.Common;
-using Mihaylov.Common.Host.Authorization;
 using Mihaylov.Users.Data;
 using Mihaylov.Users.Data.Database;
 

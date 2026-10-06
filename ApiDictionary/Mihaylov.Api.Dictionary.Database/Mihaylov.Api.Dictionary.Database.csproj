@@ -6,8 +6,11 @@
 	<Nullable>disable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Mihaylov.Common.Database" Version="0.1.0" />
+  </ItemGroup>
+
 	<ItemGroup>
-	  <ProjectReference Include="..\..\Common\Mihaylov.Common.Database\Mihaylov.Common.Database.csproj" />
 	  <ProjectReference Include="..\Mihaylov.Api.Dictionary.Contracts\Mihaylov.Api.Dictionary.Contracts.csproj" />
 	</ItemGroup>
 

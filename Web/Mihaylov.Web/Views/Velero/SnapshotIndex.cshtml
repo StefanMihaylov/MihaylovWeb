@@ -20,6 +20,17 @@
     </div>
 </div>
 
+<div class="row h6">
+    <div class="col-sm-3">
+        <span>Повредени снапшоти</span>
+    </div>
+    <div class="col-sm-3">
+    </div>
+    <div class="col-sm-3">
+    </div>
+    <div class="col-sm-3">
+    </div>
+</div>
 <div class="row">
     <table class="table table-bordered table-striped" id="snapshots-grid">
         <thead>
@@ -53,3 +64,35 @@
         </tbody>
     </table>
 </div>
+
+@if (Model.OrphanedUploads.Any())
+{
+    <div class="row h6">
+        <div class="col-sm-3">
+            <span>Повредени бекъпи</span>
+        </div>
+        <div class="col-sm-3">
+        </div>
+        <div class="col-sm-3">
+        </div>
+        <div class="col-sm-3">
+        </div>
+    </div>
+    <div class="row">
+        <table class="table table-bordered table-striped" id="uploads-grid">
+            <thead>
+                <tr>
+                    <th>бекъп</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var upload in Model.OrphanedUploads)
+                {
+                    <tr>
+                        <td>@upload</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}

@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using Mihaylov.Common.Generic.AssemblyVersion;
+using Mihaylov.Common;
 
 namespace Mihaylov.Web.Services
 {

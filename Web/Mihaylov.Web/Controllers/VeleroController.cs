@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Mihaylov.Api.Other.Client;
-using Mihaylov.Common.Host.Authorization;
+using Mihaylov.Common;
 using Mihaylov.Web.Areas;
 using Mihaylov.Web.Models.Velero;
 

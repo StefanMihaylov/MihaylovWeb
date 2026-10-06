@@ -7,6 +7,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<PackageReference Include="Mihaylov.Common.Database" Version="0.1.0" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.19">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -14,7 +15,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\..\Common\Mihaylov.Common.Database\Mihaylov.Common.Database.csproj" />
 		<ProjectReference Include="..\Mihaylov.Api.Gear.Core\Mihaylov.Api.Gear.Core.csproj" />
 	</ItemGroup>
 

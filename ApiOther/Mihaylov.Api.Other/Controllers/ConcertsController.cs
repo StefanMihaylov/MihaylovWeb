@@ -9,7 +9,7 @@ using Mihaylov.Api.Other.Contracts.Show.Interfaces;
 using Mihaylov.Api.Other.Contracts.Show.Models;
 using Mihaylov.Api.Other.Extensions;
 using Mihaylov.Api.Other.Models.Concerts;
-using Mihaylov.Common.Host.Authorization;
+using Mihaylov.Common;
 
 namespace Mihaylov.Api.Other.Controllers
 {

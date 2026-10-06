@@ -6,7 +6,7 @@ using CoenM.ImageHash;
 using Microsoft.Extensions.Options;
 using Mihaylov.Api.Site.Contracts.Helpers.Models;
 using Mihaylov.Api.Site.Data.Media.Interfaces;
-using Mihaylov.Common.Generic.Servises.Interfaces;
+using Mihaylov.Common;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats;
 using SixLabors.ImageSharp.Formats.Bmp;

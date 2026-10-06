@@ -16,8 +16,7 @@ using Mihaylov.Api.Site.Data.Media.Interfaces;
 using Mihaylov.Api.Site.Data.Media.Services;
 using Mihaylov.Api.Site.Data.Models;
 using Mihaylov.Api.Site.Data.Writers;
-using Mihaylov.Common.Generic.Servises;
-using Mihaylov.Common.Generic.Servises.Interfaces;
+using Mihaylov.Common;
 
 namespace Mihaylov.Api
 {

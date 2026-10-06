@@ -1,5 +1,5 @@
 ﻿using System;
-using Mihaylov.Common.Database.Models;
+using Mihaylov.Common;
 
 namespace Mihaylov.Api.Site.Database.Models
 {

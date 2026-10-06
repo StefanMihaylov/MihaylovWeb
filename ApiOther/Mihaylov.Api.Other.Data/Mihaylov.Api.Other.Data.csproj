@@ -7,6 +7,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<PackageReference Include="Mihaylov.Common.Generic" Version="0.1.0" />
 		<PackageReference Include="AngleSharp" Version="1.8.2" />
 		<PackageReference Include="KubernetesClient" Version="19.0.2" />
 		<PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.3.13" />
@@ -17,7 +18,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\..\Common\Mihaylov.Common.Generic\Mihaylov.Common.Generic.csproj" />
 	  <ProjectReference Include="..\Mihaylov.Api.Other.Contracts\Mihaylov.Api.Other.Contracts.csproj" />
 	</ItemGroup>
 

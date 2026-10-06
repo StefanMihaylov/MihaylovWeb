@@ -5,13 +5,13 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<PackageReference Include="Mihaylov.Common.Generic" Version="0.1.0" />
+		<PackageReference Include="Mihaylov.Common.Database" Version="0.1.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.19" />
 		<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.19" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\..\Common\Mihaylov.Common.Database\Mihaylov.Common.Database.csproj" />
-		<ProjectReference Include="..\..\Common\Mihaylov.Common.Generic\Mihaylov.Common.Generic.csproj" />
 		<ProjectReference Include="..\Mihaylov.Users.Models\Mihaylov.Users.Models.csproj" />
 	</ItemGroup>
 

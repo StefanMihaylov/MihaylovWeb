@@ -9,8 +9,7 @@ using Microsoft.Extensions.Options;
 using Mihaylov.Api.Other.Contracts.Gallery.Interfaces;
 using Mihaylov.Api.Other.Contracts.Gallery.Models;
 using Mihaylov.Api.Other.Data.Gallery.Models;
-using Mihaylov.Common.Generic.Servises;
-using Mihaylov.Common.Generic.Servises.Models;
+using Mihaylov.Common;
 
 namespace Mihaylov.Api.Other.Data.Gallery
 {
