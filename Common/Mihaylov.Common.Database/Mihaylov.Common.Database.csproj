@@ -12,14 +12,14 @@
 		<Description>Shared Database utilities.</Description>
 		<Authors>Mihaylov</Authors>
 	</PropertyGroup>
-	
+
 	<PropertyGroup>
 		<DebugType>embedded</DebugType>
-		<GenerateDocumentationFile>true</GenerateDocumentationFile>
-		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
-		<IncludeSymbols>true</IncludeSymbols>
-		<EmbedUntrackedSources>true</EmbedUntrackedSources>
 		<PublishRepositoryUrl>true</PublishRepositoryUrl>
+		<EmbedUntrackedSources>true</EmbedUntrackedSources>
+		<!--<SymbolPackageFormat>snupkg</SymbolPackageFormat>-->
+		<!--<IncludeSymbols>true</IncludeSymbols>-->
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
 	</PropertyGroup>
 
 	<ItemGroup>

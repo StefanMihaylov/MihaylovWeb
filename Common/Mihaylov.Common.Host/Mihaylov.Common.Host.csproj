@@ -14,11 +14,11 @@
 
 	<PropertyGroup>
 		<DebugType>embedded</DebugType>
-		<GenerateDocumentationFile>true</GenerateDocumentationFile>
-		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
-		<IncludeSymbols>true</IncludeSymbols>
-		<EmbedUntrackedSources>true</EmbedUntrackedSources>
 		<PublishRepositoryUrl>true</PublishRepositoryUrl>
+		<EmbedUntrackedSources>true</EmbedUntrackedSources>
+		<!--<SymbolPackageFormat>snupkg</SymbolPackageFormat>-->
+		<!--<IncludeSymbols>true</IncludeSymbols>-->
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
 	</PropertyGroup>
 
 	<ItemGroup>
