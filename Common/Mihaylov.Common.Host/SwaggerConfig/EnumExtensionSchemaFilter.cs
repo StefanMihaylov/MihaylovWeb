@@ -2,16 +2,13 @@
 using System.Linq;
 using System.Text.Json;
 using Microsoft.OpenApi;
-using Microsoft.OpenApi.Interfaces;
-using Microsoft.OpenApi.Models;
-using Microsoft.OpenApi.Writers;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace Mihaylov.Common;
 
 internal class EnumExtensionSchemaFilter : ISchemaFilter
 {
-    public void Apply(OpenApiSchema model, SchemaFilterContext context)
+    public void Apply(IOpenApiSchema model, SchemaFilterContext context)
     {
         if (context.Type.IsEnum)
         {

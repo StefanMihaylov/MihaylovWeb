@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using System.Security.Claims;
 using System.Text;
@@ -9,8 +10,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi.Models;
-using Swashbuckle.AspNetCore.SwaggerGen;
+using Microsoft.OpenApi;
 
 namespace Mihaylov.Common;
 
@@ -18,7 +18,7 @@ namespace Mihaylov.Common;
 /// Provides extension methods to configure host services, including module information registration, client JWT
 /// authentication, and Swagger generation and UI.
 /// </summary>
-public static class _HostConfiguration
+public static class DependenciesExtensions
 {
     /// <summary>
     /// Registers module-related services and configures AssemblyWrapper with the specified assembly or the entry
@@ -123,13 +123,11 @@ public static class _HostConfiguration
             authBuilder.AddIdentityCookies(o => { });
         }
 
-        services.AddAuthorization(options =>
-        {
-            options.AddPolicy("Admim", policyBuilder =>
+        services.AddAuthorizationBuilder()
+            .AddPolicy("Admim", policyBuilder =>
             {
                 policyBuilder.RequireClaim(ClaimTypes.Role, UserConstants.AdminRole);
             });
-        });
 
         return services;
     }
@@ -157,11 +155,30 @@ public static class _HostConfiguration
 
             if (isPrivate)
             {
-                options.AddSwaggerAuthentication(UserConstants.AuthenticationScheme);
+                var authenticationScheme = UserConstants.AuthenticationScheme;
+
+                var message = new StringBuilder();
+                message.AppendLine($"JWT Authorization header using the {authenticationScheme} scheme.");
+                message.AppendLine($"Enter '{authenticationScheme}' [space] and then your token in the text input below.");
+                message.AppendLine($"Example: '{authenticationScheme} 12345abcdef'");
+
+                options.AddSecurityDefinition(authenticationScheme, new OpenApiSecurityScheme
+                {
+                    Name = "Authorization",
+                    Type = SecuritySchemeType.Http,  // ApiKey or Http
+                    Scheme = authenticationScheme,
+                    In = ParameterLocation.Header,
+                    BearerFormat = "JWT",
+                    Description = message.ToString(),
+                });
+
+                options.OperationFilter<AutorizeOperationFilter>(authenticationScheme);
             }
 
+            var assemblies = AppDomain.CurrentDomain.GetAssemblies().Where(x => x.FullName.StartsWith("Mihaylov")).ToList();
+
             options.SchemaFilter<EnumExtensionSchemaFilter>();
-            options.DocumentFilter<SwaggerEnumDocumentFilter>();
+            options.DocumentFilter<SwaggerEnumDocumentFilter>(assemblies);
             options.UseAllOfToExtendReferenceSchemas();
             options.EnableAnnotations();
         });
@@ -185,6 +202,7 @@ public static class _HostConfiguration
         string basePath = Config.GetEnvironmentVariable(pathPrefixKey, "/");
         basePath = $"/{basePath.Trim('/')}";
 
+        // app.MapOpenApi(); // Microsoft.AspNetCore.OpenApi, and 
         app.UseSwagger(c =>
         {
             c.PreSerializeFilters.Add((swaggerDoc, httpReq) =>
@@ -205,37 +223,5 @@ public static class _HostConfiguration
 
 
         return app;
-    }
-
-    private static void AddSwaggerAuthentication(this SwaggerGenOptions options, string authenticationScheme)
-    {
-        options.AddSecurityDefinition(authenticationScheme, new OpenApiSecurityScheme
-        {
-            Description = $@"JWT Authorization header using the {authenticationScheme} scheme.
-                      Enter '{authenticationScheme}' [space] and then your token in the text input below. 
-                      Example: '{authenticationScheme} 12345abcdef'",
-            Name = "Authorization",
-            In = ParameterLocation.Header,
-            Type = SecuritySchemeType.ApiKey,
-            Scheme = authenticationScheme
-        });
-
-        options.AddSecurityRequirement(new OpenApiSecurityRequirement()
-        {
-            {
-                new OpenApiSecurityScheme
-                {
-                    Reference = new OpenApiReference
-                    {
-                        Type = ReferenceType.SecurityScheme,
-                        Id = authenticationScheme
-                    },
-                    Scheme = "oauth2",
-                    Name = authenticationScheme,
-                    In = ParameterLocation.Header,
-                },
-                new List<string>()
-            }
-        });
     }
 }

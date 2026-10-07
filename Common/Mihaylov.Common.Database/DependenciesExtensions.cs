@@ -11,7 +11,7 @@ namespace Mihaylov.Common;
 /// Extension methods for IServiceCollection to register database-related services, add and configure a DbContext for
 /// SQL Server, and execute database migrations.
 /// </summary>
-public static class _HostConfigurations
+public static class DependenciesExtensions
 {
     /// <summary>
     /// Registers infrastructure services required for current-user and auditing functionality, including

@@ -1,47 +1,47 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.OpenApi.Any;
-using Microsoft.OpenApi.Models;
+using System.Reflection;
+using System.Text.Json.Nodes;
+using Microsoft.OpenApi;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace Mihaylov.Common;
 
-internal class SwaggerEnumDocumentFilter : IDocumentFilter
+internal class SwaggerEnumDocumentFilter(IEnumerable<Assembly> assemblies) : IDocumentFilter
 {
     public void Apply(OpenApiDocument swaggerDoc, DocumentFilterContext context)
     {
         // add enum descriptions to result models
         foreach (var property in swaggerDoc.Components.Schemas)
         {
-            IList<IOpenApiAny> propertyEnums = property.Value.Enum;
-            if (propertyEnums.Count > 0)
+            IList<JsonNode> enumProperties = property.Value.Enum;
+            if (enumProperties.Count > 0)
             {
-                property.Value.Description += DescribeEnum(propertyEnums, property.Key);
+                Type enumType = GetEnumTypeByName(property.Key);
+                property.Value.Description += DescribeEnum(enumType, enumProperties);
             }
         }
     }
 
-
-    private string DescribeEnum(IEnumerable<IOpenApiAny> enums, string propertyTypeName)
+    private static string DescribeEnum(Type enumType, IEnumerable<JsonNode> enumNodes)
     {
-        var enumType = GetEnumTypeByName(propertyTypeName);
-
         if (enumType == null)
         {
             return null;
         }
 
-        var parsedEnums = new List<OpenApiInteger>();
-        foreach (var @enum in enums)
+        var parsedEnums = new List<string>();
+        foreach (var enumNode in enumNodes)
         {
-            if (@enum is OpenApiInteger enumInt)
+            JsonValue enumValue = enumNode.AsValue();
+            if (enumValue.TryGetValue<int>(out int enumInt))
             {
-                parsedEnums.Add(enumInt);
+                parsedEnums.Add($"{enumInt} - {Enum.GetName(enumType, enumInt)}");
             }
         }
 
-        return string.Join(", ", parsedEnums.Select(x => $"{x.Value} - {Enum.GetName(enumType, x.Value)}"));
+        return string.Join(", ", parsedEnums);
     }
 
     private Type GetEnumTypeByName(string enumTypeName)
@@ -53,9 +53,6 @@ internal class SwaggerEnumDocumentFilter : IDocumentFilter
 
         try
         {
-            var assemblies = AppDomain.CurrentDomain.GetAssemblies()
-                                        .Where(x => x.FullName.StartsWith("Mihaylov"));
-
             var type = assemblies.SelectMany(x => x.GetTypes())
                                  .Single(x => x.FullName != null && x.Name == enumTypeName);
 
