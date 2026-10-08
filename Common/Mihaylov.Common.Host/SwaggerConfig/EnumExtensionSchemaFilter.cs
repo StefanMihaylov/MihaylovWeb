@@ -1,6 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
-using System.Text.Json;
+using System.Text.Json.Nodes;
 using Microsoft.OpenApi;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
@@ -10,65 +11,55 @@ internal class EnumExtensionSchemaFilter : ISchemaFilter
 {
     public void Apply(IOpenApiSchema model, SchemaFilterContext context)
     {
-        if (context.Type.IsEnum)
+        if (!context.Type.IsEnum)
         {
-            model.Extensions.Add("x-enumNames", new NSwagEnumFilterOpenApiExtension(context));
-            model.Extensions.Add("x-ms-enum", new EnumFilterOpenApiExtension(context));
+            return;
         }
+
+        var schema = model as OpenApiSchema;
+        if (schema == null)
+        {
+            return;
+        }
+
+        schema.Extensions ??= new Dictionary<string, IOpenApiExtension>();
+
+        schema.Extensions.Add("x-enumNames", new JsonNodeExtension(GetNSwagEnumFilter(context.Type)));
+        schema.Extensions.Add("x-ms-enum", new JsonNodeExtension(GetEnumFilter(context.Type)));
     }
 
-    private class NSwagEnumFilterOpenApiExtension : IOpenApiExtension
+    private static JsonNode GetNSwagEnumFilter(Type type)
     {
-        private readonly SchemaFilterContext _context;
-
-        public NSwagEnumFilterOpenApiExtension(SchemaFilterContext context)
+        var names = new JsonArray();
+        foreach (var name in Enum.GetNames(type))
         {
-            _context = context;
+            names.Add(name);
         }
 
-        public void Write(IOpenApiWriter writer, OpenApiSpecVersion specVersion)
-        {
-            var names = Enum.GetNames(_context.Type);
-
-            var options = new JsonSerializerOptions() { WriteIndented = true };
-            writer.WriteRaw(JsonSerializer.Serialize(names, options));
-        }
+        return names;
     }
 
-    private class EnumFilterOpenApiExtension : IOpenApiExtension
+    private static JsonNode GetEnumFilter(Type type)
     {
-        private readonly SchemaFilterContext _context;
-
-        public EnumFilterOpenApiExtension(SchemaFilterContext context)
+        var names = Enum.GetNames(type)
+        .Distinct()
+        .Select(value =>
         {
-            _context = context;
-        }
-
-        public void Write(IOpenApiWriter writer, OpenApiSpecVersion specVersion)
-        {
-            var enumType = _context.Type;
-
-            var names = Enum.GetNames(enumType)
-                    .Distinct()
-                    .Select(value =>
-                    {
-                        return new
-                        {
-                            value = Convert.ToInt32(Enum.Parse(enumType, value)),
-                            name = value
-                        };
-                    })
-                    .ToArray();
-
-            var model = new
+            return new JsonObject()
             {
-                name = enumType.Name,
-                modelAsString = false,
-                values = names
+                ["value"] = Convert.ToInt32(Enum.Parse(type, value)),
+                ["name"] = value
             };
+        })
+        .ToArray();
 
-            var options = new JsonSerializerOptions() { WriteIndented = true };
-            writer.WriteRaw(JsonSerializer.Serialize(model, options));
-        }
+        var result = new JsonObject()
+        {
+            ["name"] = type.Name,
+            ["modelAsString"] = false,
+            ["values"] = new JsonArray(names)
+        };
+
+        return result;
     }
 }

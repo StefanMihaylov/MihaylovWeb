@@ -15,8 +15,8 @@ internal class SwaggerEnumDocumentFilter(IEnumerable<Assembly> assemblies) : IDo
         // add enum descriptions to result models
         foreach (var property in swaggerDoc.Components.Schemas)
         {
-            IList<JsonNode> enumProperties = property.Value.Enum;
-            if (enumProperties.Count > 0)
+            IList<JsonNode> enumProperties = property.Value?.Enum;
+            if (enumProperties?.Count > 0)
             {
                 Type enumType = GetEnumTypeByName(property.Key);
                 property.Value.Description += DescribeEnum(enumType, enumProperties);
