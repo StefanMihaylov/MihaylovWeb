@@ -5,7 +5,7 @@ using Mihaylov.Api.Users.Client;
 
 namespace Mihaylov.Api
 {
-    public static class _HostConfiguration
+    public static class DependencyInjection
     {
         public static IServiceCollection AddUsersApiClient(this IServiceCollection services, string url)
         {

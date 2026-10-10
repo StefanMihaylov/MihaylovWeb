@@ -14,7 +14,7 @@ namespace Mihaylov.Users.Data.Interfaces
 
         Task<IEnumerable<UserModel>> GetUsersAsync();
 
-        Task<UserModel> GetUserAsync(string userId);
+        Task<UserModel> GetUserAsync(Guid userId);
 
         Task<GenericResponse> UpdateUserAsync(UpdateUserModel update);
 

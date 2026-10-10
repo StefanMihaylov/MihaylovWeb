@@ -16,13 +16,13 @@ namespace Mihaylov.Users.Data
     public class UsersRepository : IUsersRepository
     {
         private readonly UserManager<User> _userManager;
-        private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly RoleManager<IdentityRole<Guid>> _roleManager;
         private readonly SignInManager<User> _signManager;
         private readonly ITokenHelper _tokenHelper;
         private readonly ILogger _logger;
 
 
-        public UsersRepository(UserManager<User> userManager, RoleManager<IdentityRole> roleManager,
+        public UsersRepository(UserManager<User> userManager, RoleManager<IdentityRole<Guid>> roleManager,
             SignInManager<User> signManager, ITokenHelper tokenHelper, ILoggerFactory factory)
         {
             _userManager = userManager;
@@ -72,7 +72,7 @@ namespace Mihaylov.Users.Data
             return users;
         }
 
-        public async Task<UserModel> GetUserAsync(string userId)
+        public async Task<UserModel> GetUserAsync(Guid userId)
         {
             var user = await _userManager.Users
                                     .Where(u => u.Id == userId)
@@ -197,7 +197,7 @@ namespace Mihaylov.Users.Data
             try
             {
                 var role = await _roleManager.Roles
-                            .Where(r => r.Id == roleId.ToString())
+                            .Where(r => r.Id == roleId)
                             .Select(FromDbRole())
                             .FirstOrDefaultAsync()
                             .ConfigureAwait(false);
@@ -215,7 +215,7 @@ namespace Mihaylov.Users.Data
         {
             try
             {
-                var result = await _roleManager.CreateAsync(new IdentityRole(request.RoleName)).ConfigureAwait(false);
+                var result = await _roleManager.CreateAsync(new IdentityRole<Guid>(request.RoleName)).ConfigureAwait(false);
 
                 return GetGenericResponse(result);
             }
@@ -286,7 +286,7 @@ namespace Mihaylov.Users.Data
         {
             return u => new UserModel()
             {
-                Id = new Guid(u.Id),
+                Id = u.Id,
                 UserName = u.UserName,
                 Email = u.Email,
                 FirstName = u.Profile.FirstName,
@@ -295,11 +295,11 @@ namespace Mihaylov.Users.Data
             };
         }
 
-        private Expression<Func<IdentityRole, RoleModel>> FromDbRole()
+        private Expression<Func<IdentityRole<Guid>, RoleModel>> FromDbRole()
         {
             return r => new RoleModel()
             {
-                Id = new Guid(r.Id),
+                Id = r.Id,
                 Name = r.Name
             };
         }

@@ -1,6 +1,8 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Mihaylov.Common;
@@ -9,7 +11,7 @@ using Mihaylov.Users.Data.Database.Models;
 
 namespace Mihaylov.Users.Data.Database
 {
-    public class MihaylovUsersDbContext : IdentityDbContext<User>
+    public class MihaylovUsersDbContext : IdentityDbContext<User, IdentityRole<Guid>, Guid>
     {
         private readonly IAuditService _auditService;
 

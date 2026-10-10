@@ -43,7 +43,7 @@ namespace Mihaylov.Users.Server.Controllers
                 return Unauthorized($"Incorrect UserId {userId}");
             }
 
-            UserModel users = await this._usersRepository.GetUserAsync(userId.ToString()).ConfigureAwait(false);
+            UserModel users = await this._usersRepository.GetUserAsync(userId).ConfigureAwait(false);
             return Ok(users);
         }
 

@@ -2,26 +2,69 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
-	<ImplicitUsings>disable</ImplicitUsings>
 	<Nullable>disable</Nullable>
   </PropertyGroup>
 
+	<PropertyGroup>
+		<Version>0.3.0</Version>
+		<PackageId>Mihaylov.Api.Users.Client</PackageId>
+		<Description>Users API Client</Description>
+		<Authors>Mihaylov</Authors>
+	</PropertyGroup>
+
+	<PropertyGroup>
+		<DebugType>embedded</DebugType>
+		<PublishRepositoryUrl>true</PublishRepositoryUrl>
+		<EmbedUntrackedSources>true</EmbedUntrackedSources>
+		<Deterministic>true</Deterministic>
+		<!--<SymbolPackageFormat>snupkg</SymbolPackageFormat>-->
+		<!--<IncludeSymbols>true</IncludeSymbols>-->
+		<!--<GenerateDocumentationFile>true</GenerateDocumentationFile>-->
+	</PropertyGroup>
+
+	<PropertyGroup>
+		<NoWarn>$(NoWarn);IDE0130</NoWarn>
+	</PropertyGroup>
+
   <ItemGroup>
-	  <PackageReference Include="Mihaylov.Common.Generic" Version="0.1.0" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-    <PackageReference Include="NSwag.MSBuild" Version="14.5.0">
+	  <PackageReference Include="Mihaylov.Common.Generic" Version="0.2.0" />
+    <PackageReference Include="NSwag.MSBuild" Version="14.7.1">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
   </ItemGroup>
-	
-   <Target Name="NSwag" BeforeTargets="AfterBuild" Condition="'$(TF_BUILD)'!='True'">
-     <Exec ConsoleToMSBuild="true" ContinueOnError="true" Command="$(NSwagExe_Net80) run nswag.json /variables:Configuration=$(Configuration)">
-      <Output TaskParameter="ExitCode" PropertyName="NSwagExitCode" />
-      <Output TaskParameter="ConsoleOutput" PropertyName="NSwagOutput" />
-    </Exec>
-    <Message Text="$(NSwagOutput)" Condition="'$(NSwagExitCode)' == '0'" Importance="low" />
-    <Error Text="$(NSwagOutput)" Condition="'$(NSwagExitCode)' != '0'" />
-  </Target>
+
+	<Target Name="NSwag" BeforeTargets="AfterBuild" Condition="'$(TF_BUILD)'!='True'">
+		<PropertyGroup>
+			<NSwagClientName>UsersApiClient</NSwagClientName>
+		</PropertyGroup>
+		<ItemGroup>
+			<NSwagArg Include="/classname:$(NSwagClientName)" />
+			<NSwagArg Include="/output:&quot;Generated/$(NSwagClientName).g.cs&quot;" />
+			<NSwagArg Include="/contractsOutput:&quot;Generated/I$(NSwagClientName).g.cs&quot;" />
+			<NSwagArg Include="/namespace:$(RootNamespace)" />
+			<NSwagArg Include="/ContractsNamespace:$(RootNamespace)" />
+			<NSwagArg Include="/input:swagger.json" />
+			<NSwagArg Include="/generateClientInterfaces:true" />
+			<NSwagArg Include="/generateContractsOutput:true" />
+			<NSwagArg Include="/generateDataAnnotations:false" />
+			<NSwagArg Include="/exceptionClass:SwaggerException" />
+			<NSwagArg Include="/dateType:System.DateTime" />
+			<NSwagArg Include="/dateTimeType:System.DateTime" />
+			<NSwagArg Include="/arrayType:System.Collections.Generic.IEnumerable" />
+			<NSwagArg Include="/arrayBaseType:System.Collections.Generic.IEnumerable" />
+			<NSwagArg Include="/parameterArrayType:System.Collections.Generic.IEnumerable" />
+			<NSwagArg Include="/responseArrayType:System.Collections.Generic.IEnumerable" />
+			<NSwagArg Include="/parameterDictionaryType:System.Collections.Generic.IDictionary" />
+			<NSwagArg Include="/responseDictionaryType:System.Collections.Generic.IDictionary" />
+			<NSwagArg Include="/JsonLibrary:SystemTextJson" />
+		</ItemGroup>
+		<Exec ConsoleToMSBuild="true" Command="$(NSwagExe_Net80) openapi2csclient @(NSwagArg, ' ')" ContinueOnError="true">
+			<Output TaskParameter="ExitCode" PropertyName="NSwagExitCode" />
+			<Output TaskParameter="ConsoleOutput" PropertyName="NSwagOutput" />
+		</Exec>
+		<Message Text="$(NSwagOutput)" Condition="'$(NSwagExitCode)' == '0'" Importance="low" />
+		<Error Text="$(NSwagOutput)" Condition="'$(NSwagExitCode)' != '0'" />
+	</Target>
 
 </Project>

@@ -10,7 +10,7 @@ using Mihaylov.Users.Data.Interfaces;
 
 namespace Mihaylov.Users.Data
 {
-    public static class _HostConfigurations
+    public static class DependencyInjection
     {
         public static IServiceCollection AddUserDatabase(this IServiceCollection services, Action<ConnectionStringSettings> connectionString, Action<PasswordOptions> passwordOptions)
         {
@@ -31,7 +31,7 @@ namespace Mihaylov.Users.Data
             services.AddDbContext<MihaylovUsersDbContext>(options =>
                         options.UseSqlServer(connectionStringSettings.GetConnectionString()));
 
-            services.AddIdentity<User, IdentityRole>(options =>
+            services.AddIdentity<User, IdentityRole<Guid>>(options =>
                         {
                             options.User = new UserOptions()
                             {
@@ -53,7 +53,7 @@ namespace Mihaylov.Users.Data
                             };
                             options.Stores = new StoreOptions()
                             {
-                                MaxLengthForKeys = 10,
+                                MaxLengthForKeys = 256, // AspNetUserTokens (Name, LoginProvider), AspNetUserLogins (ProviderKey, LoginProvider)
                                 ProtectPersonalData = false,
                             };
                         })

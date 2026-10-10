@@ -21,7 +21,7 @@ namespace Mihaylov.Users.Server
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddSwaggerCustom("v1", "v1", "Users API", null, false);
+            services.AddSwaggerCustom("v1", "v1", "Users API", null, true);
 
             services.AddDatabaseDeveloperPageExceptionFilter();
             services.AddControllers();
@@ -32,6 +32,8 @@ namespace Mihaylov.Users.Server
                 Issuer = Config.GetEnvironmentVariable("JWT_ISSUER"),
                 Audience = Config.GetEnvironmentVariable("JWT_AUDIENCE"),
             };
+
+            // Add-Migration <Name> -V -Project Mihaylov.Users.Data -StartupProject Mihaylov.Users.Server
 
             services.AddUserDatabase(opt =>
                         {
@@ -57,7 +59,7 @@ namespace Mihaylov.Users.Server
                            opt.ClaimTypes = Config.GetEnvironmentVariable("JWT_Claims", int.TryParse, 0);
                        });
 
-            services.MigrateDatabase<MihaylovUsersDbContext>(c => c.Migrate());
+            services.MigrateDatabase<MihaylovUsersDbContext>(c => c.Migrate(), true);
             services.InitializeUsersDb(UserConstants.AdminRole);
             services.AddModuleInfo();
         }

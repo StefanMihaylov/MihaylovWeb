@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="ApiUsers/Mihaylov.Api.Users.Client/Mihaylov.Api.Users.Client.csproj" />
+  <Project Path="ApiUsers/Mihaylov.Users.Data/Mihaylov.Users.Data.csproj" />
+  <Project Path="ApiUsers/Mihaylov.Users.Models/Mihaylov.Users.Models.csproj" />
+  <Project Path="ApiUsers/Mihaylov.Users.Server/Mihaylov.Users.Server.csproj" />
+</Solution>

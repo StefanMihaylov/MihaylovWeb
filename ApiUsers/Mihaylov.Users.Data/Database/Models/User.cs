@@ -4,10 +4,11 @@ using Mihaylov.Common;
 
 namespace Mihaylov.Users.Data.Database.Models
 {
-    public class User : IdentityUser, IDeletableEntity
+    public class User : IdentityUser<Guid>, IDeletableEntity
     {
         public User()
         {
+            Profile = new UserProfile();
         }
 
         public User(string userName, string email)
