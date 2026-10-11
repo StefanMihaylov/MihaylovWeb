@@ -1,0 +1,27 @@
+<Solution>
+  <Folder Name="/ApiGear/">
+    <Project Path="ApiGear/Mihaylov.Api.Gear.Client/Mihaylov.Api.Gear.Client.csproj" />
+    <Project Path="ApiGear/Mihaylov.Api.Gear.Core/Mihaylov.Api.Gear.Core.csproj" />
+    <Project Path="ApiGear/Mihaylov.Api.Gear.Infrastructure/Mihaylov.Api.Gear.Infrastructure.csproj" />
+    <Project Path="ApiGear/Mihaylov.Api.Gear/Mihaylov.Api.Gear.csproj" />
+  </Folder>
+  <Folder Name="/ApiOther/">
+    <Project Path="ApiOther/Mihaylov.Api.Other.Client/Mihaylov.Api.Other.Client.csproj" />
+    <Project Path="ApiOther/Mihaylov.Api.Other.Contracts/Mihaylov.Api.Other.Contracts.csproj" />
+    <Project Path="ApiOther/Mihaylov.Api.Other.DAL/Mihaylov.Api.Other.DAL.csproj" />
+    <Project Path="ApiOther/Mihaylov.Api.Other.Data/Mihaylov.Api.Other.Data.csproj" />
+    <Project Path="ApiOther/Mihaylov.Api.Other.Database/Mihaylov.Api.Other.Database.csproj" />
+    <Project Path="ApiOther/Mihaylov.Api.Other/Mihaylov.Api.Other.csproj" />
+  </Folder>
+  <Folder Name="/ApiSite/">
+    <Project Path="ApiSite/Mihaylov.Api.Site.Client/Mihaylov.Api.Site.Client.csproj" />
+    <Project Path="ApiSite/Mihaylov.Api.Site.Contracts/Mihaylov.Api.Site.Contracts.csproj" />
+    <Project Path="ApiSite/Mihaylov.Api.Site.DAL/Mihaylov.Api.Site.DAL.csproj" />
+    <Project Path="ApiSite/Mihaylov.Api.Site.Data/Mihaylov.Api.Site.Data.csproj" />
+    <Project Path="ApiSite/Mihaylov.Api.Site.Database/Mihaylov.Api.Site.Database.csproj" />
+    <Project Path="ApiSite/Mihaylov.Api.Site/Mihaylov.Api.Site.csproj" />
+  </Folder>
+  <Folder Name="/Web/">
+    <Project Path="Web/Mihaylov.Web/Mihaylov.Web.csproj" />
+  </Folder>
+</Solution>

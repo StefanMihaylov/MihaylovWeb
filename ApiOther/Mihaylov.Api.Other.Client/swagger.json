@@ -49,7 +49,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       }
     },
     "/api/Cluster/Application": {
@@ -118,7 +123,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       }
     },
     "/api/Cluster/Pod": {
@@ -187,7 +197,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       }
     },
     "/api/Cluster/File": {
@@ -256,7 +271,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       }
     },
     "/api/Cluster/Versions": {
@@ -315,7 +335,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       }
     },
     "/api/Cluster/Version": {
@@ -384,7 +409,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       }
     },
     "/api/Cluster/ParserSettings": {
@@ -425,7 +455,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       }
     },
     "/api/Cluster/ParserSetting": {
@@ -494,7 +529,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       }
     },
     "/api/Cluster/LastVersion": {
@@ -549,7 +589,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       }
     },
     "/api/Concerts/Concerts": {
@@ -605,7 +650,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       }
     },
     "/api/Concerts/Concert": {
@@ -674,7 +724,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       }
     },
     "/api/Concerts/Bands": {
@@ -730,7 +785,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       }
     },
     "/api/Concerts/Band": {
@@ -799,7 +859,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       }
     },
     "/api/Concerts/Locations": {
@@ -855,7 +920,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       }
     },
     "/api/Concerts/Location": {
@@ -924,7 +994,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       }
     },
     "/api/Concerts/TicketProviders": {
@@ -980,7 +1055,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       }
     },
     "/api/Concerts/TicketProvider": {
@@ -1049,7 +1129,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       }
     },
     "/api/Concerts/Countries": {
@@ -1105,7 +1190,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       }
     },
     "/api/Concerts/Country": {
@@ -1174,7 +1264,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       }
     },
     "/api/Concerts/ConcertTypes": {
@@ -1215,7 +1310,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       }
     },
     "/api/Concerts/ConcertType": {
@@ -1284,7 +1384,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       }
     },
     "/api/Gallery/Images": {
@@ -1427,7 +1532,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       }
     },
     "/api/Nexus/ClearImages": {
@@ -1458,7 +1568,12 @@
           "200": {
             "description": "OK"
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       }
     },
     "/api/Nexus/Image": {
@@ -1498,7 +1613,12 @@
           "200": {
             "description": "OK"
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       }
     },
     "/api/Nexus/Blobs": {
@@ -1536,7 +1656,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       }
     },
     "/api/Nexus/RunTasks": {
@@ -1567,7 +1692,12 @@
           "200": {
             "description": "OK"
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       }
     },
     "/api/Velero/ExeVersion": {
@@ -1605,7 +1735,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       }
     },
     "/api/Velero/Schedules": {
@@ -1643,7 +1778,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       }
     },
     "/api/Velero/Backup": {
@@ -1713,7 +1853,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       }
     },
     "/api/Velero/DeleteBackup": {
@@ -1760,7 +1905,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       }
     },
     "/api/Velero/Snapshots": {
@@ -1798,7 +1948,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       }
     },
     "/api/Velero/DeleteSnapshot": {
@@ -1837,6 +1992,257 @@
           },
           "200": {
             "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
+      }
+    },
+    "/api/Weather/Current": {
+      "get": {
+        "tags": [
+          "Weather"
+        ],
+        "parameters": [
+          {
+            "name": "City",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "MetricUnits",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "Language",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CurrentWeatherModel"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Weather/Forecast": {
+      "get": {
+        "tags": [
+          "Weather"
+        ],
+        "parameters": [
+          {
+            "name": "City",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "MetricUnits",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "Language",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ForecastWeatherModel"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Weather/CurrentCached": {
+      "get": {
+        "tags": [
+          "Weather"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CurrentWeatherResponse"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Weather/CurrentByCity": {
+      "get": {
+        "tags": [
+          "Weather"
+        ],
+        "parameters": [
+          {
+            "name": "city",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CurrentWeatherResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Weather/ForecastCached": {
+      "get": {
+        "tags": [
+          "Weather"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ForecastWeatherResponse"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Weather/ForecastByCity": {
+      "get": {
+        "tags": [
+          "Weather"
+        ],
+        "parameters": [
+          {
+            "name": "city",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ForecastWeatherResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
           }
         }
       }
@@ -1979,28 +2385,28 @@
               }
             ],
             "x-enumNames": [
-  "Yaml",
-  "HelmChart",
-  "Command"
-],
+              "Yaml",
+              "HelmChart",
+              "Command"
+            ],
             "x-ms-enum": {
-  "name": "DeploymentType",
-  "modelAsString": false,
-  "values": [
-    {
-      "value": 1,
-      "name": "Yaml"
-    },
-    {
-      "value": 2,
-      "name": "HelmChart"
-    },
-    {
-      "value": 3,
-      "name": "Command"
-    }
-  ]
-}
+              "name": "DeploymentType",
+              "modelAsString": false,
+              "values": [
+                {
+                  "value": 1,
+                  "name": "Yaml"
+                },
+                {
+                  "value": 2,
+                  "name": "HelmChart"
+                },
+                {
+                  "value": 3,
+                  "name": "Command"
+                }
+              ]
+            }
           },
           "notes": {
             "type": "string",
@@ -2207,68 +2613,68 @@
         "description": "1 - New, 2 - FailedValidation, 3 - InProgress, 4 - WaitingForPluginOperations, 5 - WaitingForPluginOperationsPartiallyFailed, 6 - Finalizing, 7 - FinalizingPartiallyFailed, 8 - Completed, 9 - PartiallyFailed, 10 - Failed, 11 - Deleting",
         "format": "int32",
         "x-enumNames": [
-  "New",
-  "FailedValidation",
-  "InProgress",
-  "WaitingForPluginOperations",
-  "WaitingForPluginOperationsPartiallyFailed",
-  "Finalizing",
-  "FinalizingPartiallyFailed",
-  "Completed",
-  "PartiallyFailed",
-  "Failed",
-  "Deleting"
-],
+          "New",
+          "FailedValidation",
+          "InProgress",
+          "WaitingForPluginOperations",
+          "WaitingForPluginOperationsPartiallyFailed",
+          "Finalizing",
+          "FinalizingPartiallyFailed",
+          "Completed",
+          "PartiallyFailed",
+          "Failed",
+          "Deleting"
+        ],
         "x-ms-enum": {
-  "name": "BackupPhaseType",
-  "modelAsString": false,
-  "values": [
-    {
-      "value": 1,
-      "name": "New"
-    },
-    {
-      "value": 2,
-      "name": "FailedValidation"
-    },
-    {
-      "value": 3,
-      "name": "InProgress"
-    },
-    {
-      "value": 4,
-      "name": "WaitingForPluginOperations"
-    },
-    {
-      "value": 5,
-      "name": "WaitingForPluginOperationsPartiallyFailed"
-    },
-    {
-      "value": 6,
-      "name": "Finalizing"
-    },
-    {
-      "value": 7,
-      "name": "FinalizingPartiallyFailed"
-    },
-    {
-      "value": 8,
-      "name": "Completed"
-    },
-    {
-      "value": 9,
-      "name": "PartiallyFailed"
-    },
-    {
-      "value": 10,
-      "name": "Failed"
-    },
-    {
-      "value": 11,
-      "name": "Deleting"
-    }
-  ]
-}
+          "name": "BackupPhaseType",
+          "modelAsString": false,
+          "values": [
+            {
+              "value": 1,
+              "name": "New"
+            },
+            {
+              "value": 2,
+              "name": "FailedValidation"
+            },
+            {
+              "value": 3,
+              "name": "InProgress"
+            },
+            {
+              "value": 4,
+              "name": "WaitingForPluginOperations"
+            },
+            {
+              "value": 5,
+              "name": "WaitingForPluginOperationsPartiallyFailed"
+            },
+            {
+              "value": 6,
+              "name": "Finalizing"
+            },
+            {
+              "value": 7,
+              "name": "FinalizingPartiallyFailed"
+            },
+            {
+              "value": 8,
+              "name": "Completed"
+            },
+            {
+              "value": 9,
+              "name": "PartiallyFailed"
+            },
+            {
+              "value": 10,
+              "name": "Failed"
+            },
+            {
+              "value": 11,
+              "name": "Deleting"
+            }
+          ]
+        }
       },
       "Band": {
         "type": "object",
@@ -2395,23 +2801,23 @@
               }
             ],
             "x-enumNames": [
-  "BGN",
-  "EUR"
-],
+              "BGN",
+              "EUR"
+            ],
             "x-ms-enum": {
-  "name": "CurrencyType",
-  "modelAsString": false,
-  "values": [
-    {
-      "value": 1,
-      "name": "BGN"
-    },
-    {
-      "value": 2,
-      "name": "EUR"
-    }
-  ]
-}
+              "name": "CurrencyType",
+              "modelAsString": false,
+              "values": [
+                {
+                  "value": 1,
+                  "name": "BGN"
+                },
+                {
+                  "value": 2,
+                  "name": "EUR"
+                }
+              ]
+            }
           },
           "concertTypeId": {
             "type": "integer",
@@ -2668,23 +3074,110 @@
         "description": "1 - BGN, 2 - EUR",
         "format": "int32",
         "x-enumNames": [
-  "BGN",
-  "EUR"
-],
+          "BGN",
+          "EUR"
+        ],
         "x-ms-enum": {
-  "name": "CurrencyType",
-  "modelAsString": false,
-  "values": [
-    {
-      "value": 1,
-      "name": "BGN"
-    },
-    {
-      "value": 2,
-      "name": "EUR"
-    }
-  ]
-}
+          "name": "CurrencyType",
+          "modelAsString": false,
+          "values": [
+            {
+              "value": 1,
+              "name": "BGN"
+            },
+            {
+              "value": 2,
+              "name": "EUR"
+            }
+          ]
+        }
+      },
+      "CurrentWeatherModel": {
+        "type": "object",
+        "properties": {
+          "location": {
+            "type": "string",
+            "nullable": true
+          },
+          "country": {
+            "type": "string",
+            "nullable": true
+          },
+          "currentDate": {
+            "type": "string",
+            "nullable": true
+          },
+          "condition": {
+            "type": "string",
+            "nullable": true
+          },
+          "conditionIcon": {
+            "type": "string",
+            "nullable": true
+          },
+          "temperature": {
+            "type": "number",
+            "format": "double"
+          },
+          "feelsLike": {
+            "type": "number",
+            "format": "double"
+          },
+          "temperatureUnit": {
+            "type": "string",
+            "nullable": true
+          },
+          "wind": {
+            "type": "number",
+            "format": "double"
+          },
+          "windUnit": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "CurrentWeatherResponse": {
+        "type": "object",
+        "properties": {
+          "location": {
+            "type": "string",
+            "nullable": true,
+            "readOnly": true
+          },
+          "temperature": {
+            "type": "string",
+            "nullable": true,
+            "readOnly": true
+          },
+          "feelsLike": {
+            "type": "string",
+            "nullable": true,
+            "readOnly": true
+          },
+          "wind": {
+            "type": "string",
+            "nullable": true,
+            "readOnly": true
+          },
+          "currentDate": {
+            "type": "string",
+            "nullable": true,
+            "readOnly": true
+          },
+          "condition": {
+            "type": "string",
+            "nullable": true,
+            "readOnly": true
+          },
+          "conditionIcon": {
+            "type": "string",
+            "nullable": true,
+            "readOnly": true
+          }
+        },
+        "additionalProperties": false
       },
       "DataUpload": {
         "type": "object",
@@ -2755,53 +3248,53 @@
         "description": "1 - New, 2 - Accepted, 3 - Prepared, 4 - InProgress, 5 - Canceling, 6 - Canceled, 7 - Completed, 8 - Failed",
         "format": "int32",
         "x-enumNames": [
-  "New",
-  "Accepted",
-  "Prepared",
-  "InProgress",
-  "Canceling",
-  "Canceled",
-  "Completed",
-  "Failed"
-],
+          "New",
+          "Accepted",
+          "Prepared",
+          "InProgress",
+          "Canceling",
+          "Canceled",
+          "Completed",
+          "Failed"
+        ],
         "x-ms-enum": {
-  "name": "DataUploadPhaseType",
-  "modelAsString": false,
-  "values": [
-    {
-      "value": 1,
-      "name": "New"
-    },
-    {
-      "value": 2,
-      "name": "Accepted"
-    },
-    {
-      "value": 3,
-      "name": "Prepared"
-    },
-    {
-      "value": 4,
-      "name": "InProgress"
-    },
-    {
-      "value": 5,
-      "name": "Canceling"
-    },
-    {
-      "value": 6,
-      "name": "Canceled"
-    },
-    {
-      "value": 7,
-      "name": "Completed"
-    },
-    {
-      "value": 8,
-      "name": "Failed"
-    }
-  ]
-}
+          "name": "DataUploadPhaseType",
+          "modelAsString": false,
+          "values": [
+            {
+              "value": 1,
+              "name": "New"
+            },
+            {
+              "value": 2,
+              "name": "Accepted"
+            },
+            {
+              "value": 3,
+              "name": "Prepared"
+            },
+            {
+              "value": 4,
+              "name": "InProgress"
+            },
+            {
+              "value": 5,
+              "name": "Canceling"
+            },
+            {
+              "value": 6,
+              "name": "Canceled"
+            },
+            {
+              "value": 7,
+              "name": "Completed"
+            },
+            {
+              "value": 8,
+              "name": "Failed"
+            }
+          ]
+        }
       },
       "DeploymentFile": {
         "type": "object",
@@ -2851,28 +3344,137 @@
         "description": "1 - Yaml, 2 - HelmChart, 3 - Command",
         "format": "int32",
         "x-enumNames": [
-  "Yaml",
-  "HelmChart",
-  "Command"
-],
+          "Yaml",
+          "HelmChart",
+          "Command"
+        ],
         "x-ms-enum": {
-  "name": "DeploymentType",
-  "modelAsString": false,
-  "values": [
-    {
-      "value": 1,
-      "name": "Yaml"
-    },
-    {
-      "value": 2,
-      "name": "HelmChart"
-    },
-    {
-      "value": 3,
-      "name": "Command"
-    }
-  ]
-}
+          "name": "DeploymentType",
+          "modelAsString": false,
+          "values": [
+            {
+              "value": 1,
+              "name": "Yaml"
+            },
+            {
+              "value": 2,
+              "name": "HelmChart"
+            },
+            {
+              "value": 3,
+              "name": "Command"
+            }
+          ]
+        }
+      },
+      "ForecastDayModel": {
+        "type": "object",
+        "properties": {
+          "date": {
+            "type": "string",
+            "nullable": true
+          },
+          "condition": {
+            "type": "string",
+            "nullable": true
+          },
+          "conditionIcon": {
+            "type": "string",
+            "nullable": true
+          },
+          "maxTemp": {
+            "type": "number",
+            "format": "double"
+          },
+          "minTemp": {
+            "type": "number",
+            "format": "double"
+          },
+          "dailyChanceOfRain": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "dailyChanceOfSnow": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ForecastWeatherDataModel": {
+        "type": "object",
+        "properties": {
+          "location": {
+            "type": "string",
+            "nullable": true,
+            "readOnly": true
+          },
+          "date": {
+            "type": "string",
+            "nullable": true
+          },
+          "temperatures": {
+            "type": "string",
+            "nullable": true
+          },
+          "rains": {
+            "type": "string",
+            "nullable": true
+          },
+          "condition": {
+            "type": "string",
+            "nullable": true,
+            "readOnly": true
+          },
+          "conditionIcon": {
+            "type": "string",
+            "nullable": true,
+            "readOnly": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ForecastWeatherModel": {
+        "type": "object",
+        "properties": {
+          "current": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CurrentWeatherModel"
+              }
+            ],
+            "nullable": true
+          },
+          "forecast": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ForecastDayModel"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ForecastWeatherResponse": {
+        "type": "object",
+        "properties": {
+          "current": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CurrentWeatherResponse"
+              }
+            ],
+            "nullable": true
+          },
+          "forecast": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ForecastWeatherDataModel"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
       },
       "KopiaSnapshot": {
         "type": "object",
@@ -3192,33 +3794,33 @@
               }
             ],
             "x-enumNames": [
-  "SiteUrl",
-  "ReleaseUrl",
-  "GithubVersionUrl",
-  "ResourceUrl"
-],
+              "SiteUrl",
+              "ReleaseUrl",
+              "GithubVersionUrl",
+              "ResourceUrl"
+            ],
             "x-ms-enum": {
-  "name": "VersionUrlType",
-  "modelAsString": false,
-  "values": [
-    {
-      "value": 1,
-      "name": "SiteUrl"
-    },
-    {
-      "value": 2,
-      "name": "ReleaseUrl"
-    },
-    {
-      "value": 3,
-      "name": "GithubVersionUrl"
-    },
-    {
-      "value": 4,
-      "name": "ResourceUrl"
-    }
-  ]
-}
+              "name": "VersionUrlType",
+              "modelAsString": false,
+              "values": [
+                {
+                  "value": 1,
+                  "name": "SiteUrl"
+                },
+                {
+                  "value": 2,
+                  "name": "ReleaseUrl"
+                },
+                {
+                  "value": 3,
+                  "name": "GithubVersionUrl"
+                },
+                {
+                  "value": 4,
+                  "name": "ResourceUrl"
+                }
+              ]
+            }
           },
           "versionSelector": {
             "type": "string",
@@ -3437,28 +4039,28 @@
         "description": "1 - New, 2 - Enabled, 3 - FailedValidation",
         "format": "int32",
         "x-enumNames": [
-  "New",
-  "Enabled",
-  "FailedValidation"
-],
+          "New",
+          "Enabled",
+          "FailedValidation"
+        ],
         "x-ms-enum": {
-  "name": "SchedulePhaseType",
-  "modelAsString": false,
-  "values": [
-    {
-      "value": 1,
-      "name": "New"
-    },
-    {
-      "value": 2,
-      "name": "Enabled"
-    },
-    {
-      "value": 3,
-      "name": "FailedValidation"
-    }
-  ]
-}
+          "name": "SchedulePhaseType",
+          "modelAsString": false,
+          "values": [
+            {
+              "value": 1,
+              "name": "New"
+            },
+            {
+              "value": 2,
+              "name": "Enabled"
+            },
+            {
+              "value": 3,
+              "name": "FailedValidation"
+            }
+          ]
+        }
       },
       "ScheduleResponse": {
         "type": "object",
@@ -3660,34 +4262,65 @@
         "description": "1 - SiteUrl, 2 - ReleaseUrl, 3 - GithubVersionUrl, 4 - ResourceUrl",
         "format": "int32",
         "x-enumNames": [
-  "SiteUrl",
-  "ReleaseUrl",
-  "GithubVersionUrl",
-  "ResourceUrl"
-],
+          "SiteUrl",
+          "ReleaseUrl",
+          "GithubVersionUrl",
+          "ResourceUrl"
+        ],
         "x-ms-enum": {
-  "name": "VersionUrlType",
-  "modelAsString": false,
-  "values": [
-    {
-      "value": 1,
-      "name": "SiteUrl"
+          "name": "VersionUrlType",
+          "modelAsString": false,
+          "values": [
+            {
+              "value": 1,
+              "name": "SiteUrl"
+            },
+            {
+              "value": 2,
+              "name": "ReleaseUrl"
+            },
+            {
+              "value": 3,
+              "name": "GithubVersionUrl"
+            },
+            {
+              "value": 4,
+              "name": "ResourceUrl"
+            }
+          ]
+        }
+      }
     },
-    {
-      "value": 2,
-      "name": "ReleaseUrl"
-    },
-    {
-      "value": 3,
-      "name": "GithubVersionUrl"
-    },
-    {
-      "value": 4,
-      "name": "ResourceUrl"
-    }
-  ]
-}
+    "securitySchemes": {
+      "Bearer": {
+        "type": "http",
+        "description": "JWT Authorization header using the Bearer scheme.\r\nEnter 'Bearer' [space] and then your token in the text input below.\r\nExample: 'Bearer 12345abcdef'\r\n",
+        "scheme": "Bearer",
+        "bearerFormat": "JWT"
       }
     }
-  }
+  },
+  "tags": [
+    {
+      "name": "Cluster"
+    },
+    {
+      "name": "Concerts"
+    },
+    {
+      "name": "Gallery"
+    },
+    {
+      "name": "Module"
+    },
+    {
+      "name": "Nexus"
+    },
+    {
+      "name": "Velero"
+    },
+    {
+      "name": "Weather"
+    }
+  ]
 }

@@ -61,7 +61,7 @@ namespace Mihaylov.Api.Site
                         opt.SiteUrl = Config.GetEnvironmentVariable("Site_SourceUrl");
                     });
 
-            // Add-Migration <name>
+            // Add-Migration <name> -V -Project Mihaylov.Api.Site.Database -StartupProject Mihaylov.Api.Site
 
             services.AddSignalR();
             services.AddScoped<IProgressReporterFactory, ProgressReporterFactory>();
@@ -89,10 +89,7 @@ namespace Mihaylov.Api.Site
             app.UseAuthentication();
             app.UseAuthorization();
 
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllers();
-            });
+            app.MapControllers();
 
             app.MapHub<UpdateProgressHub>("/UpdateProgressHub");            
         }

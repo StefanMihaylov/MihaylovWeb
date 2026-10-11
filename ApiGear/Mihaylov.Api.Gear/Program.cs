@@ -24,7 +24,7 @@ namespace Mihaylov.Api.Gear
 
         private static IServiceCollection AddServices(IServiceCollection services)
         {
-            services.AddSwaggerCustom("v1", "v1", "Gear API", "Gear API", false);
+            services.AddSwaggerCustom("v1", "v1", "Gear API", "Gear API", true);
 
             services.AddControllers();
             services.Configure<ApiBehaviorOptions>(options =>
@@ -40,10 +40,10 @@ namespace Mihaylov.Api.Gear
 
             services.AddGearDatabase(opt =>
             {
-                opt.ServerAddress = Config.GetEnvironmentVariable("DB_Gear_Address", "192.168.1.100");
+                opt.ServerAddress = Config.GetEnvironmentVariable("DB_Gear_Address", "");
                 opt.DatabaseName = Config.GetEnvironmentVariable("DB_Gear_Name", "Mihaylov_GearDb");
-                opt.UserName = Config.GetEnvironmentVariable("DB_Gear_UserName", "sa");
-                opt.Password = Config.GetEnvironmentVariable("DB_Gear_Password", "Anubis12_4");
+                opt.UserName = Config.GetEnvironmentVariable("DB_Gear_UserName", "");
+                opt.Password = Config.GetEnvironmentVariable("DB_Gear_Password", "");
             })
             .MigrateDatabase<MihaylovGearDbContext>(c => c.Migrate(), true)
             .AddGearCqrs(opt =>
@@ -59,6 +59,8 @@ namespace Mihaylov.Api.Gear
             });
 
             return services;
+
+            // Add-Migration <Name> -V -Project Mihaylov.Api.Gear.Infrastructure -StartupProject Mihaylov.Api.Gear
         }
 
         private static void Configure(IApplicationBuilder app)

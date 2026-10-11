@@ -19,8 +19,8 @@ public class ErrorFilter : IExceptionFilter
     {
         var exception = context.Exception;
 
-        string action = context.RouteData.Values["action"].ToString();
-        string controller = context.RouteData.Values["controller"].ToString();
+        string action = context.RouteData.Values["action"]?.ToString() ?? "Unknown";
+        string controller = context.RouteData.Values["controller"]?.ToString() ?? "Unknown";
 
         var logger = _loggerFactory.CreateLogger($"{controller}Controller");
         logger.LogError(exception, "Error in {controller}/{action}. Error: {Message}", controller, action, exception.Message);
@@ -31,7 +31,10 @@ public class ErrorFilter : IExceptionFilter
         if (exception is ArgumentException || exception is ArgumentNullException)
         {
             var argException = exception as ArgumentException;
-            modelState.AddModelError(argException.ParamName, argException.Message);
+            if (argException != null)
+            {
+                modelState.AddModelError(argException.ParamName ?? "Unknown", argException.Message);
+            }            
         }
         else
         {

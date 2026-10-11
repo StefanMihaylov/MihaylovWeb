@@ -10,8 +10,8 @@ namespace Mihaylov.Api.Other.Data.Cluster;
 
 public sealed class PlaywrightManager : IPlaywrightManager, IAsyncDisposable
 {
-    private IPlaywright? _playwright;
-    private IBrowser? _browser;
+    private IPlaywright _playwright;
+    private IBrowser _browser;
 
     private readonly PlaywrightSettings _config;
     private readonly SemaphoreSlim _semaphoreLock;
@@ -22,7 +22,7 @@ public sealed class PlaywrightManager : IPlaywrightManager, IAsyncDisposable
         _semaphoreLock = new(1, 1);
     }
 
-    public async Task<IBrowserContext> NewContextAsync(BrowserNewContextOptions? contextOptions = null)
+    public async Task<IBrowserContext> NewContextAsync(BrowserNewContextOptions contextOptions = null)
     {
         if (contextOptions == null)
         {

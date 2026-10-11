@@ -1,3 +1,4 @@
+using System;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -25,7 +26,7 @@ namespace Mihaylov.Api.Other
 
         private static void AddServices(IServiceCollection services)
         {
-            services.AddSwaggerCustom("v1", "v1", "Other API", "Miscellaneous Endpoints API", false);
+            services.AddSwaggerCustom("v1", "v1", "Other API", "Miscellaneous Endpoints API", true);
 
             services.AddControllers();
             services.Configure<ApiBehaviorOptions>(options =>
@@ -39,6 +40,9 @@ namespace Mihaylov.Api.Other
             services.AddModuleInfo();
             services.AddEndpointsApiExplorer();
             services.AddMemoryCache();
+
+            // Add-Migration <name> -Context MihaylovOtherShowDbContext -V -Project Mihaylov.Api.Other.Database -StartupProject Mihaylov.Api.Other
+            // Add-Migration <name> -Context MihaylovOtherClusterDbContext -V -Project Mihaylov.Api.Other.Database -StartupProject Mihaylov.Api.Other
 
             services.AddOtherDatabase(opt =>
                 {
@@ -87,10 +91,18 @@ namespace Mihaylov.Api.Other
                 playwright =>
                 {
                     playwright.ServerUrl = Config.GetEnvironmentVariable("Playwright_Url");
-                });
+                },
+                weather =>
+                {
+                    var cities = Config.GetEnvironmentVariable("Weather_Api_Cities", "Sofia");
+                    var cityList = cities.Split(new char[] { ';', ',', ' ' }, StringSplitOptions.RemoveEmptyEntries);
 
-            // Add-Migration <name> -Context MihaylovOtherShowDbContext
-            // Add-Migration <name> -Context MihaylovOtherClusterDbContext
+                    weather.BaseUrl = Config.GetEnvironmentVariable("WeatherApi_Url");
+                    weather.AppId = Config.GetEnvironmentVariable("WeatherApi_AppId");
+                    weather.Cities = cityList;
+                    weather.MetricUnits = Config.GetEnvironmentVariable<bool>("Weather_Api_MetricUnits", bool.TryParse, true);
+                    weather.Language = Config.GetEnvironmentVariable("Weather_Api_Language", "bg");
+                });
 
             services.AddClientJwtAuthentication(null, opt =>
             {
@@ -117,7 +129,7 @@ namespace Mihaylov.Api.Other
                 endpoints.MapControllers();
             });
 
-            // app.InitializeOtherDependencies<Program>();
+            //app.InitializeOtherDependencies<Program>();
         }
     }
 }

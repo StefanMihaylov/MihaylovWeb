@@ -49,7 +49,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       }
     },
     "/api/Collections/Category": {
@@ -118,7 +123,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       }
     },
     "/api/Collections/Currencies": {
@@ -159,7 +169,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       }
     },
     "/api/Collections/Brands": {
@@ -200,7 +215,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       }
     },
     "/api/Collections/Brand": {
@@ -269,7 +289,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       }
     },
     "/api/Collections/Groups": {
@@ -310,7 +335,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       }
     },
     "/api/Collections/Group": {
@@ -379,7 +409,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       }
     },
     "/api/Collections/Shops": {
@@ -420,7 +455,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       }
     },
     "/api/Collections/Shop": {
@@ -489,7 +529,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       }
     },
     "/api/Inventory/List": {
@@ -540,7 +585,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       }
     },
     "/api/Inventory/Add": {
@@ -611,7 +661,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       }
     },
     "/api/Module/GetInfo": {
@@ -673,7 +728,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       }
     },
     "/api/Trip/Get": {
@@ -729,7 +789,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       }
     },
     "/api/Trip/Add": {
@@ -799,7 +864,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       }
     },
     "/api/Trip/Node": {
@@ -870,7 +940,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       }
     },
     "/api/Trip/NodePacked": {
@@ -912,7 +987,12 @@
           "200": {
             "description": "OK"
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       }
     },
     "/api/Trip/Clone": {
@@ -962,7 +1042,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       }
     },
     "/api/Trip/Delete": {
@@ -1004,7 +1089,12 @@
           "200": {
             "description": "OK"
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       }
     },
     "/api/Trip/Parents": {
@@ -1056,7 +1146,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       }
     }
   },
@@ -1295,28 +1390,28 @@
               }
             ],
             "x-enumNames": [
-  "Group",
-  "Category",
-  "Item"
-],
+              "Group",
+              "Category",
+              "Item"
+            ],
             "x-ms-enum": {
-  "name": "NodeType",
-  "modelAsString": false,
-  "values": [
-    {
-      "value": 1,
-      "name": "Group"
-    },
-    {
-      "value": 2,
-      "name": "Category"
-    },
-    {
-      "value": 3,
-      "name": "Item"
-    }
-  ]
-}
+              "name": "NodeType",
+              "modelAsString": false,
+              "values": [
+                {
+                  "value": 1,
+                  "name": "Group"
+                },
+                {
+                  "value": 2,
+                  "name": "Category"
+                },
+                {
+                  "value": 3,
+                  "name": "Item"
+                }
+              ]
+            }
           },
           "groupId": {
             "type": "integer",
@@ -1475,38 +1570,38 @@
               }
             ],
             "x-enumNames": [
-  "Active",
-  "Broken",
-  "Lost",
-  "Retired",
-  "Ignored"
-],
+              "Active",
+              "Broken",
+              "Lost",
+              "Retired",
+              "Ignored"
+            ],
             "x-ms-enum": {
-  "name": "ItemStatus",
-  "modelAsString": false,
-  "values": [
-    {
-      "value": 1,
-      "name": "Active"
-    },
-    {
-      "value": 2,
-      "name": "Broken"
-    },
-    {
-      "value": 3,
-      "name": "Lost"
-    },
-    {
-      "value": 4,
-      "name": "Retired"
-    },
-    {
-      "value": 5,
-      "name": "Ignored"
-    }
-  ]
-}
+              "name": "ItemStatus",
+              "modelAsString": false,
+              "values": [
+                {
+                  "value": 1,
+                  "name": "Active"
+                },
+                {
+                  "value": 2,
+                  "name": "Broken"
+                },
+                {
+                  "value": 3,
+                  "name": "Lost"
+                },
+                {
+                  "value": 4,
+                  "name": "Retired"
+                },
+                {
+                  "value": 5,
+                  "name": "Ignored"
+                }
+              ]
+            }
           },
           "kitContents": {
             "type": "array",
@@ -1530,38 +1625,38 @@
         "description": "1 - Active, 2 - Broken, 3 - Lost, 4 - Retired, 5 - Ignored",
         "format": "int32",
         "x-enumNames": [
-  "Active",
-  "Broken",
-  "Lost",
-  "Retired",
-  "Ignored"
-],
+          "Active",
+          "Broken",
+          "Lost",
+          "Retired",
+          "Ignored"
+        ],
         "x-ms-enum": {
-  "name": "ItemStatus",
-  "modelAsString": false,
-  "values": [
-    {
-      "value": 1,
-      "name": "Active"
-    },
-    {
-      "value": 2,
-      "name": "Broken"
-    },
-    {
-      "value": 3,
-      "name": "Lost"
-    },
-    {
-      "value": 4,
-      "name": "Retired"
-    },
-    {
-      "value": 5,
-      "name": "Ignored"
-    }
-  ]
-}
+          "name": "ItemStatus",
+          "modelAsString": false,
+          "values": [
+            {
+              "value": 1,
+              "name": "Active"
+            },
+            {
+              "value": 2,
+              "name": "Broken"
+            },
+            {
+              "value": 3,
+              "name": "Lost"
+            },
+            {
+              "value": 4,
+              "name": "Retired"
+            },
+            {
+              "value": 5,
+              "name": "Ignored"
+            }
+          ]
+        }
       },
       "KitContentItem": {
         "type": "object",
@@ -1613,28 +1708,28 @@
         "description": "1 - Group, 2 - Category, 3 - Item",
         "format": "int32",
         "x-enumNames": [
-  "Group",
-  "Category",
-  "Item"
-],
+          "Group",
+          "Category",
+          "Item"
+        ],
         "x-ms-enum": {
-  "name": "NodeType",
-  "modelAsString": false,
-  "values": [
-    {
-      "value": 1,
-      "name": "Group"
-    },
-    {
-      "value": 2,
-      "name": "Category"
-    },
-    {
-      "value": 3,
-      "name": "Item"
-    }
-  ]
-}
+          "name": "NodeType",
+          "modelAsString": false,
+          "values": [
+            {
+              "value": 1,
+              "name": "Group"
+            },
+            {
+              "value": 2,
+              "name": "Category"
+            },
+            {
+              "value": 3,
+              "name": "Item"
+            }
+          ]
+        }
       },
       "Shop": {
         "type": "object",
@@ -1709,6 +1804,28 @@
         },
         "additionalProperties": false
       }
+    },
+    "securitySchemes": {
+      "Bearer": {
+        "type": "http",
+        "description": "JWT Authorization header using the Bearer scheme.\r\nEnter 'Bearer' [space] and then your token in the text input below.\r\nExample: 'Bearer 12345abcdef'\r\n",
+        "scheme": "Bearer",
+        "bearerFormat": "JWT"
+      }
     }
-  }
+  },
+  "tags": [
+    {
+      "name": "Collections"
+    },
+    {
+      "name": "Inventory"
+    },
+    {
+      "name": "Module"
+    },
+    {
+      "name": "Trip"
+    }
+  ]
 }

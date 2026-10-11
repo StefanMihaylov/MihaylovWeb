@@ -7,7 +7,6 @@ using Mihaylov.Api.Gear.Client;
 using Mihaylov.Api.Other.Client;
 using Mihaylov.Api.Site.Client;
 using Mihaylov.Api.Users.Client;
-using Mihaylov.Api.Weather.Client;
 using Mihaylov.Common;
 
 namespace Mihaylov.Web.Services
@@ -17,20 +16,18 @@ namespace Mihaylov.Web.Services
         private readonly ILogger _logger;
         private readonly IModuleAssemblyService _module;
         private readonly IUsersApiClient _usersApiClient;
-        private readonly IWeatherApiClient _weatherApiClient;
         private readonly IOtherApiClient _otherApiClient;
         private readonly ISiteApiClient _siteApiClient;
         private readonly IGearApiClient _gearApiClient;
 
         public ModuleService(ILoggerFactory loggerFactory, IModuleAssemblyService module, IUsersApiClient usersApiClient,
-           IWeatherApiClient weatherApiClient, IOtherApiClient otherApiClient, ISiteApiClient siteApiClient,
+           IOtherApiClient otherApiClient, ISiteApiClient siteApiClient,
            IGearApiClient gearApiClient)
         {
             _logger = loggerFactory.CreateLogger(this.GetType());
             _module = module;
 
             _usersApiClient = usersApiClient;
-            _weatherApiClient = weatherApiClient;
             _otherApiClient = otherApiClient;
             _siteApiClient = siteApiClient;
             _gearApiClient = gearApiClient;
@@ -41,7 +38,6 @@ namespace Mihaylov.Web.Services
             var modules = new List<IModuleInfo>()
             {
                 await TryActionAsync(_usersApiClient.ModuleGetInfoAsync,"Users").ConfigureAwait(false),
-                await TryActionAsync(_weatherApiClient.ModuleGetInfoAsync,"Weather").ConfigureAwait(false),
                 await TryActionAsync(_otherApiClient.ModuleGetInfoAsync,"Other").ConfigureAwait(false),
                 await TryActionAsync(_siteApiClient.ModuleGetInfoAsync,"Site").ConfigureAwait(false),
                 await TryActionAsync(_gearApiClient.ModuleGetInfoAsync,"Gear").ConfigureAwait(false),

@@ -1,23 +1,28 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using System;
+using System.Net.Http;
+using Microsoft.Extensions.DependencyInjection;
+using Mihaylov.Api.Gear.Client;
 
-namespace Mihaylov.Api.Gear.Client;
-public static class DependencyInjection
+namespace Mihaylov.Api
 {
-    public static IServiceCollection AddGearApiClient(this IServiceCollection services, string url)
+    public static class DependencyInjection
     {
-        services.AddHttpClient(GearApiClient.GEAR_API_CLIENT_NAME, c =>
+        public static IServiceCollection AddGearApiClient(this IServiceCollection services, string url)
         {
-            c.BaseAddress = new Uri(url);
-            c.Timeout = TimeSpan.FromSeconds(60);
-        });
+            services.AddHttpClient(GearApiClient.GEAR_API_CLIENT_NAME, c =>
+            {
+                c.BaseAddress = new Uri(url);
+                c.Timeout = TimeSpan.FromSeconds(60);
+            });
 
-        services.AddScoped<IGearApiClient>(provider =>
-        {
-            var dependency = provider.GetRequiredService<IHttpClientFactory>();
+            services.AddScoped<IGearApiClient>(provider =>
+            {
+                var dependency = provider.GetRequiredService<IHttpClientFactory>();
 
-            return new GearApiClient(dependency);
-        });
+                return new GearApiClient(dependency);
+            });
 
-        return services;
+            return services;
+        }
     }
 }

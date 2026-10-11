@@ -1,48 +1,40 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Mihaylov.Api.Weather.Client;
+using Mihaylov.Api.Other.Client;
 using Mihaylov.Web.Models;
 
-namespace Mihaylov.Web.Controllers
+namespace Mihaylov.Web.Controllers;
+
+public class WeatherController(IOtherApiClient client) : Controller
 {
-    public class WeatherController : Controller
+    [HttpGet]
+    public async Task<IActionResult> Index()
     {
-        private readonly IWeatherApiClient _client;
+        var weather = await client.ForecastCachedAsync().ConfigureAwait(false);
 
-        public WeatherController(IWeatherApiClient client)
+        var result = new WeatherModel()
         {
-            _client = client;
-        }
+            Current = weather.Select(w => w.Current),
+            Forecast = weather,
+        };
 
-        [HttpGet]
-        public async Task<IActionResult> Index()
-        {
-            var weather = await _client.ForecastCachedAsync().ConfigureAwait(false);
+        return View(result);
+    }
 
-            var result = new WeatherModel()
-            {
-                Current = weather.Select(w => w.Current),
-                Forecast = weather,
-            };
+    [HttpPost]
+    public async Task<IActionResult> AddNewCurrentCity(string city)
+    {
+        var response = await client.CurrentByCityAsync(city).ConfigureAwait(false);
 
-            return View(result);
-        }
+        return PartialView("_CurrentWeatherRow", response);
+    }
 
-        [HttpPost]
-        public async Task<IActionResult> AddNewCurrentCity(string city)
-        {
-            var response = await _client.CurrentByCityAsync(city).ConfigureAwait(false);
+    [HttpPost]
+    public async Task<IActionResult> AddNewForecastCity(string city)
+    {
+        var response = await client.ForecastByCityAsync(city).ConfigureAwait(false);
 
-            return PartialView("_CurrentWeatherRow", response);
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> AddNewForecastCity(string city)
-        {
-            var response = await _client.ForecastByCityAsync(city).ConfigureAwait(false);
-
-            return PartialView("_ForecastWeatherRow", response);
-        }
+        return PartialView("_ForecastWeatherRow", response);
     }
 }

@@ -5,6 +5,6 @@ namespace Mihaylov.Api.Other.Contracts.Cluster.Interfaces
 {
     public interface IPlaywrightManager
     {
-        Task<IBrowserContext> NewContextAsync(BrowserNewContextOptions? contextOptions = null);
+        Task<IBrowserContext> NewContextAsync(BrowserNewContextOptions contextOptions = null);
     }
 }

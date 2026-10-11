@@ -31,7 +31,7 @@ public class GetTripQueryHandler : IRequestHandler<GetTripQuery, TripFull>
         var nodeQuery = _context.GearNodes.AsNoTracking()
                                 .Include(n => n.Category)
                                 .Include(n => n.Group)
-                                .Include(n => n.InventoryItem).ThenInclude(a => a.Brand)
+                                .Include(n => n.InventoryItem).ThenInclude(a => a!.Brand)
                                 .Include(n => n.Children).ThenInclude(c => c.Children)
                             .Where(x => x.TripId == request.Id)
                             .AsQueryable();
