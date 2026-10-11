@@ -40,7 +40,7 @@
 			<NSwagArg Include="/JsonLibrary:SystemTextJson" />
 			<!--<NSwagArg Include="/generateJsonMethods:true" />-->
 		</ItemGroup>
-		<Exec ConsoleToMSBuild="true" Command="$(NSwagExe_Net80) openapi2csclient @(NSwagArg, ' ')" ContinueOnError="true">
+		<Exec ConsoleToMSBuild="true" Command="$(NSwagExe_Net80) openapi2csclient @(NSwagArg, ' ')" ContinueOnError="true" EnvironmentVariables="DOTNET_ROLL_FORWARD=Major">
 			<Output TaskParameter="ExitCode" PropertyName="NSwagExitCode" />
 			<Output TaskParameter="ConsoleOutput" PropertyName="NSwagOutput" />
 		</Exec>
