@@ -161,7 +161,6 @@ $RECYCLE.BIN/
 .gitattributes
 .gitignore
 
-Kendo/
 **/wwwroot/lib/
 **/Properties/launchSettings.json
-/ApiWeather/Mihaylov.Api.Weather/Properties/launchSettings.json
+*.lic
