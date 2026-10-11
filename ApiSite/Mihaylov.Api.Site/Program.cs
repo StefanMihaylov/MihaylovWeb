@@ -25,7 +25,7 @@ namespace Mihaylov.Api.Site
 
         private static void AddServices(IServiceCollection services)
         {
-            services.AddSwaggerCustom("v1", "v1", "Site API", "Site Endpoints API", false);
+            services.AddSwaggerCustom("v1", "v1", "Site API", "Site Endpoints API", true);
 
             services.AddControllers();
             services.Configure<ApiBehaviorOptions>(options =>

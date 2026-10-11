@@ -49,7 +49,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       }
     },
     "/api/Collection/Country": {
@@ -96,7 +101,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       }
     },
     "/api/Collection/CountryStates": {
@@ -147,7 +157,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       }
     },
     "/api/Collection/Ethnicities": {
@@ -188,7 +203,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       }
     },
     "/api/Collection/Orientations": {
@@ -229,7 +249,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       }
     },
     "/api/Collection/AccountTypes": {
@@ -270,7 +295,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       }
     },
     "/api/Collection/AccountType": {
@@ -340,7 +370,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       }
     },
     "/api/Collection/AccountStates": {
@@ -381,7 +416,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       }
     },
     "/api/Config/DefaultFilters": {
@@ -422,7 +462,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       }
     },
     "/api/Config/DefaultFilter": {
@@ -460,7 +505,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       },
       "post": {
         "tags": [
@@ -528,7 +578,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       }
     },
     "/api/Module/GetInfo": {
@@ -641,7 +696,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       }
     },
     "/api/Person/Person": {
@@ -689,7 +749,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       },
       "post": {
         "tags": [
@@ -757,7 +822,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       }
     },
     "/api/Person/NewPerson": {
@@ -826,7 +896,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       }
     },
     "/api/Person/MergePerson": {
@@ -895,7 +970,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       }
     },
     "/api/Person/Account": {
@@ -943,7 +1023,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       },
       "post": {
         "tags": [
@@ -1011,7 +1096,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       }
     },
     "/api/Person/Accounts": {
@@ -1062,7 +1152,12 @@
           "200": {
             "description": "OK"
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       }
     },
     "/api/Person/Statistics": {
@@ -1100,7 +1195,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       }
     },
     "/api/Person/FormatedStatistics": {
@@ -1138,7 +1238,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       }
     },
     "/api/Quiz/Questions": {
@@ -1179,7 +1284,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       }
     },
     "/api/Quiz/Question": {
@@ -1227,7 +1337,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       },
       "post": {
         "tags": [
@@ -1295,7 +1410,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       }
     },
     "/api/Quiz/Phrases": {
@@ -1336,7 +1456,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       }
     },
     "/api/Quiz/Phrase": {
@@ -1406,7 +1531,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       }
     },
     "/api/Quiz/HalfTypes": {
@@ -1447,7 +1577,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       }
     },
     "/api/Quiz/Units": {
@@ -1488,7 +1623,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       }
     },
     "/api/Quiz/Answers": {
@@ -1539,7 +1679,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       }
     },
     "/api/Quiz/Answer": {
@@ -1587,7 +1732,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       },
       "post": {
         "tags": [
@@ -1655,7 +1805,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       }
     },
     "/api/Quiz/DeleteAnswer": {
@@ -1697,7 +1852,12 @@
           "200": {
             "description": "OK"
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       }
     }
   },
@@ -2938,6 +3098,14 @@
           }
         },
         "additionalProperties": false
+      }
+    },
+    "securitySchemes": {
+      "Bearer": {
+        "type": "http",
+        "description": "JWT Authorization header using the Bearer scheme.\r\nEnter 'Bearer' [space] and then your token in the text input below.\r\nExample: 'Bearer 12345abcdef'\r\n",
+        "scheme": "Bearer",
+        "bearerFormat": "JWT"
       }
     }
   },
