@@ -200,8 +200,13 @@ namespace Mihaylov.Common
             }
         }
 
-
-        private async Task<BaseHttpResponse> GetResposeAsync(HttpRequestMessage request)
+        /// <summary>
+        /// Sends the specified HTTP request, reads the response content, and returns a BaseHttpResponse containing the
+        /// response content and the HTTP response message.
+        /// </summary>
+        /// <param name="request">The HTTP request to send. The request is disposed after the response content is read.</param>
+        /// <returns>A BaseHttpResponse containing the response content and the associated HttpResponseMessage.</returns>
+        protected async Task<BaseHttpResponse> GetResposeAsync(HttpRequestMessage request)
         {
             using HttpResponseMessage responseMessage = await GetHttpResponseAsync(request).ConfigureAwait(false);
             string response = await responseMessage.Content.ReadAsStringAsync().ConfigureAwait(false);
@@ -211,7 +216,12 @@ namespace Mihaylov.Common
             return new BaseHttpResponse(response, responseMessage);
         }
 
-        private async Task<HttpResponseMessage> GetHttpResponseAsync(HttpRequestMessage request)
+        /// <summary>
+        /// Asynchronously sends the specified HTTP request using a named HttpClient and returns the response message.
+        /// </summary>
+        /// <param name="request">The HTTP request message to send.</param>
+        /// <returns>A task that represents the asynchronous operation. The task result contains the HTTP response message.</returns>
+        protected async Task<HttpResponseMessage> GetHttpResponseAsync(HttpRequestMessage request)
         {
             using HttpClient httpClient = _httpClientFactory.CreateClient(_httpClientName);
             HttpResponseMessage responseMessage = await httpClient.SendAsync(request).ConfigureAwait(false);
@@ -219,7 +229,14 @@ namespace Mihaylov.Common
             return responseMessage;
         }
 
-        private string GetQueryString<T>(T request) where T : class
+        /// <summary>
+        /// Builds a URL-encoded query string from the request object's public instance properties.
+        /// </summary>
+        /// <typeparam name="T">The request type; constrained to a reference type.</typeparam>
+        /// <param name="request">The request instance whose public instance properties are converted to query parameters.</param>
+        /// <returns>A URL-encoded query string of key=value pairs with keys in camelCase separated by '&'. Returns an empty
+        /// string if no parameters are present.</returns>
+        protected string GetQueryString<T>(T request) where T : class
         {
             var queries = new List<string>();
 
