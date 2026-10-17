@@ -46,5 +46,16 @@ namespace Mihaylov.Web.Controllers
 
             return RedirectToAction(nameof(Index));
         }
+
+        [HttpGet]
+        public async Task<IActionResult> DeleteImage(string imageId)
+        {
+            _client.AddToken(Request.GetToken());
+
+            await _client.DeleteImageAsync(imageId).ConfigureAwait(false);
+            await _client.RunTasksAsync().ConfigureAwait(false);
+
+            return RedirectToAction(nameof(Index));
+        }
     }
 }

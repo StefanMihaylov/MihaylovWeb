@@ -263,12 +263,12 @@ namespace Mihaylov.Api.Other.Client
 
         /// <returns>OK</returns>
         /// <exception cref="SwaggerException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task ImageAsync(string imageId);
+        System.Threading.Tasks.Task DeleteImageAsync(string imageId);
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>OK</returns>
         /// <exception cref="SwaggerException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task ImageAsync(string imageId, System.Threading.CancellationToken cancellationToken);
+        System.Threading.Tasks.Task DeleteImageAsync(string imageId, System.Threading.CancellationToken cancellationToken);
 
         /// <returns>OK</returns>
         /// <exception cref="SwaggerException">A server side error occurred.</exception>
@@ -1316,6 +1316,12 @@ namespace Mihaylov.Api.Other.Client
 
         [System.Text.Json.Serialization.JsonPropertyName("sha256")]
         public string Sha256 { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("size")]
+        public long Size { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("layersCount")]
+        public int LayersCount { get; set; }
 
     }
 

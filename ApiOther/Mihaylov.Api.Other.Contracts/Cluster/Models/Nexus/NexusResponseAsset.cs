@@ -7,7 +7,7 @@ namespace Mihaylov.Api.Other.Contracts.Cluster.Models.Nexus
     {
         // public string Id { get; set; }
 
-        // public string DownloadUrl { get; set; }
+        public string DownloadUrl { get; set; }
 
         public DateTime LastModified { get; set; }
 

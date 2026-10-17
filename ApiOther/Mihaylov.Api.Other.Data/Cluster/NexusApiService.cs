@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Mihaylov.Api.Other.Contracts.Cluster.Interfaces;
 using Mihaylov.Api.Other.Contracts.Cluster.Models.Nexus;
+using Mihaylov.Api.Other.Data.Cluster.Models;
 using Mihaylov.Common;
 
 namespace Mihaylov.Api.Other.Data.Cluster
@@ -17,8 +19,7 @@ namespace Mihaylov.Api.Other.Data.Cluster
 
         private readonly NexusConfiguration _conifg;
 
-        public NexusApiService(IHttpClientFactory httpFactory, ILoggerFactory loggerFactory,
-            IOptions<NexusConfiguration> settings)
+        public NexusApiService(IHttpClientFactory httpFactory, ILoggerFactory loggerFactory, IOptions<NexusConfiguration> settings)
             : base(httpFactory, loggerFactory, NEXUS_CLIENT_NAME,
                   new ApiConfig(settings.Value.BaseUrl, settings.Value.Username, settings.Value.Password, null))
         {
@@ -35,15 +36,23 @@ namespace Mihaylov.Api.Other.Data.Cluster
                 var response = await GetDockerImagesAsync(nextPage).ConfigureAwait(false);
 
                 var data = response.GetResponse();
-                images.AddRange(data.Items.Select(a => new NexusImage()
+                images.AddRange(data.Items.Select(a =>
                 {
-                    Id = a.Id,
-                    Name = a.Name,
-                    Version = a.Version,
-                    LastModified = a.Assets.FirstOrDefault()?.LastModified,
-                    IsLocked = true,
-                    Sha256 = a.Assets.FirstOrDefault()?.Checksum != null && a.Assets.FirstOrDefault().Checksum.ContainsKey("sha256") ?
-                                a.Assets.FirstOrDefault().Checksum["sha256"] : null
+                    var manifestUrl = a.Assets.FirstOrDefault()?.DownloadUrl;
+                    var layers = GetDockerImageLayersAsync(manifestUrl).GetAwaiter().GetResult();
+
+                    return new NexusImage()
+                    {
+                        Id = a.Id,
+                        Name = a.Name,
+                        Version = a.Version,
+                        LastModified = a.Assets.FirstOrDefault()?.LastModified,
+                        IsLocked = true,
+                        Sha256 = a.Assets.FirstOrDefault()?.Checksum != null && a.Assets.FirstOrDefault().Checksum.ContainsKey("sha256") ?
+                                a.Assets.FirstOrDefault().Checksum["sha256"] : null,
+                        Size = layers?.Sum(l => l.Size) ?? 0,
+                        LayersCount = layers?.Count() ?? 0
+                    };
                 }));
 
                 nextPage = response.Data.ContinuationToken;
@@ -78,12 +87,14 @@ namespace Mihaylov.Api.Other.Data.Cluster
             var result = images.GroupBy(a => new { a.Name, a.Sha256 })
                    .Select(g => new NexusImage()
                    {
-                       Id = g.OrderByDescending(a => a.LastModified).First().Id,
+                       Id = g.First().Id,
                        Name = g.Key.Name,
                        Version = string.Join(" / ", g.Select(a => a.Version).OrderBy(a => a)),
                        LastModified = g.First().LastModified,
                        IsLocked = g.First().IsLocked,
-                       Sha256 = g.First().Sha256
+                       Sha256 = g.First().Sha256,
+                       Size = g.First().Size,
+                       LayersCount = g.First().LayersCount,                       
                    })
                    .GroupBy(a => a.Name)
                    .Select(g => new
@@ -177,6 +188,23 @@ namespace Mihaylov.Api.Other.Data.Cluster
                                 x => x, e => e).ConfigureAwait(false);
 
             return response;
+        }
+
+        private async Task<IEnumerable<NexusImageLayer>> GetDockerImageLayersAsync(string manifestUrl)
+        {
+            var request = new HttpRequestMessage(HttpMethod.Get, manifestUrl);
+            var responseMessage = await base.GetResposeAsync(request).ConfigureAwait(false);
+
+            if (responseMessage.IsSuccessStatusCode)
+            {
+                var data = responseMessage.Body;
+                var response =JsonSerializer.Deserialize<ManifestResponse>(responseMessage.Body, base._jsonOptions);
+                var result = response.Layers.Select(a => new NexusImageLayer(a.Size, a.Digest)).ToList();
+
+                return result;
+            }
+
+            return new List<NexusImageLayer>();
         }
     }
 }

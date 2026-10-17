@@ -15,5 +15,9 @@ namespace Mihaylov.Api.Other.Contracts.Cluster.Models.Nexus
         public bool IsLocked { get; set; }
 
         public string Sha256 { get; set; }
+
+        public long Size { get; set; }
+
+        public int LayersCount { get; set; }
     }
 }

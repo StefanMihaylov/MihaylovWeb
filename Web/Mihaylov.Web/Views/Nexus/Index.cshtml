@@ -48,7 +48,10 @@
     <tr>
         <th>Name</th>
         <th>Version</th>
+        <th>Size</th>
+        <th>Layers</th>
         <th>LastModified</th>
+        <th>Action</th>
     </tr>
 
     @foreach (var imageKV in Model.Images.Images)
@@ -80,7 +83,16 @@
 
                     @image.Version
                 </td>
+                <td>@image.Size.FormatBytes()</td>
+                <td>@image.LayersCount</td>
                 <td>@image.LastModified?.ToString(ViewConstants.DateTimeFormatSimple)</td>
+                <td>
+@*                  <a href="/Nexus/DeleteImage?imageId=@image.Id">
+                        <span style="color:red">
+                            <i class="bi @ViewConstants.CloseCircleButton"></i>
+                        </span>
+                    </a> *@
+                </td>
             </tr>
 
             isFirst = false;

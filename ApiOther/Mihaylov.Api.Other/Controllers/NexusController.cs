@@ -6,6 +6,7 @@ using Mihaylov.Api.Other.Contracts.Cluster.Interfaces;
 using Mihaylov.Api.Other.Contracts.Cluster.Models.Nexus;
 using Mihaylov.Api.Other.Extensions;
 using Mihaylov.Common;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace Mihaylov.Api.Other.Controllers
 {
@@ -45,6 +46,7 @@ namespace Mihaylov.Api.Other.Controllers
 
         [HttpDelete]
         [ProducesResponseType(typeof(void), StatusCodes.Status200OK)]
+        [SwaggerOperation(OperationId = "DeleteImage")]
         public async Task<IActionResult> Image(string imageId)
         {
             var result = await _service.DeleteDockerImageAsync(imageId).ConfigureAwait(false);

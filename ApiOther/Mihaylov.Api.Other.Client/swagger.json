@@ -1581,6 +1581,7 @@
         "tags": [
           "Nexus"
         ],
+        "operationId": "DeleteImage",
         "parameters": [
           {
             "name": "imageId",
@@ -3718,6 +3719,14 @@
           "sha256": {
             "type": "string",
             "nullable": true
+          },
+          "size": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "layersCount": {
+            "type": "integer",
+            "format": "int32"
           }
         },
         "additionalProperties": false
