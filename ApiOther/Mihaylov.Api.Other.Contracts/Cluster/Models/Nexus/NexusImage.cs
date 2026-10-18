@@ -12,12 +12,15 @@ namespace Mihaylov.Api.Other.Contracts.Cluster.Models.Nexus
 
         public DateTime? LastModified { get; set; }
 
-        public bool IsLocked { get; set; }
-
         public string Sha256 { get; set; }
 
         public long Size { get; set; }
 
-        public int LayersCount { get; set; }
+        public int? LayersCount { get; set; }
+
+
+        public bool IsLocked { get; set; }
+
+        public bool IsFirst { get; set; }
     }
 }

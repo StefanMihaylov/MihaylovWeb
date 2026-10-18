@@ -3713,9 +3713,6 @@
             "format": "date-time",
             "nullable": true
           },
-          "isLocked": {
-            "type": "boolean"
-          },
           "sha256": {
             "type": "string",
             "nullable": true
@@ -3726,7 +3723,14 @@
           },
           "layersCount": {
             "type": "integer",
-            "format": "int32"
+            "format": "int32",
+            "nullable": true
+          },
+          "isLocked": {
+            "type": "boolean"
+          },
+          "isFirst": {
+            "type": "boolean"
           }
         },
         "additionalProperties": false
@@ -3735,13 +3739,16 @@
         "type": "object",
         "properties": {
           "images": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "array",
-              "items": {
-                "$ref": "#/components/schemas/NexusImage"
-              },
-              "nullable": true
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/NexusImage"
+            },
+            "nullable": true
+          },
+          "nugets": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/NexusImage"
             },
             "nullable": true
           }

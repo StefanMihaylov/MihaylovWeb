@@ -12,7 +12,6 @@
 		<PackageReference Include="KubernetesClient" Version="21.0.8" />
 		<PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.3.13" />
 		<PackageReference Include="Microsoft.Extensions.Caching.Abstractions" Version="10.0.13" />		
-		<PackageReference Include="System.Drawing.Common" Version="10.0.13" />
 	</ItemGroup>
 
 	<ItemGroup>

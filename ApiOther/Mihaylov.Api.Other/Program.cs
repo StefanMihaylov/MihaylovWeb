@@ -60,7 +60,8 @@ namespace Mihaylov.Api.Other
                     nexus.BaseUrl = Config.GetEnvironmentVariable("Nexus_Base_Url");
                     nexus.Username = Config.GetEnvironmentVariable("Nexus_Username");
                     nexus.Password = Config.GetEnvironmentVariable("Nexus_Password");
-                    nexus.RepositoryName = Config.GetEnvironmentVariable("Nexus_Repository", "docker-hosted");
+                    nexus.DockerRepositoryName = Config.GetEnvironmentVariable("Nexus_DockerRepository", "docker-hosted");
+                    nexus.NugetRepositoryName = Config.GetEnvironmentVariable("Nexus_NexusRepository", "Nuget-hosted");
                     nexus.SkippedVersionCount = Config.GetEnvironmentVariable("Nexus_Skipped_Version_Count", int.TryParse, 3);
                     nexus.SkippedVersionMonthsAge = Config.GetEnvironmentVariable<int>("Nexus_Skipped_Version_Months_Age", int.TryParse, 6);
                 },

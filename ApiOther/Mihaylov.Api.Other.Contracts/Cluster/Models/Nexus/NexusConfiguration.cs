@@ -8,7 +8,9 @@
 
         public string Password { get; set; }
 
-        public string RepositoryName { get; set; }
+        public string DockerRepositoryName { get; set; }
+
+        public string NugetRepositoryName { get; set; }
 
         public int SkippedVersionCount { get; set; }
 

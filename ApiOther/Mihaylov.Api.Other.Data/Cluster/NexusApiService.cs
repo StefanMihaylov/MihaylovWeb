@@ -28,98 +28,25 @@ namespace Mihaylov.Api.Other.Data.Cluster
 
         public async Task<NexusImages> GetDockerImagesAsync()
         {
-            var images = new List<NexusImage>();
+            var images = await GetAllDockerImagesAsync(_conifg.DockerRepositoryName, (asset, image) => CustomImageUpdates(asset, image)).ConfigureAwait(false);
+            MarkLockedImages(images);
 
-            string nextPage = null;
-            do
+            var nugets = await GetAllDockerImagesAsync(_conifg.NugetRepositoryName, null).ConfigureAwait(false);
+
+            var result = new NexusImages()
             {
-                var response = await GetDockerImagesAsync(nextPage).ConfigureAwait(false);
-
-                var data = response.GetResponse();
-                images.AddRange(data.Items.Select(a =>
-                {
-                    var manifestUrl = a.Assets.FirstOrDefault()?.DownloadUrl;
-                    var layers = GetDockerImageLayersAsync(manifestUrl).GetAwaiter().GetResult();
-
-                    return new NexusImage()
-                    {
-                        Id = a.Id,
-                        Name = a.Name,
-                        Version = a.Version,
-                        LastModified = a.Assets.FirstOrDefault()?.LastModified,
-                        IsLocked = true,
-                        Sha256 = a.Assets.FirstOrDefault()?.Checksum != null && a.Assets.FirstOrDefault().Checksum.ContainsKey("sha256") ?
-                                a.Assets.FirstOrDefault().Checksum["sha256"] : null,
-                        Size = layers?.Sum(l => l.Size) ?? 0,
-                        LayersCount = layers?.Count() ?? 0
-                    };
-                }));
-
-                nextPage = response.Data.ContinuationToken;
-
-            } while (!string.IsNullOrEmpty(nextPage));
-
-
-            var imageDict = images.ToDictionary(a => a.Id, a => a);
-
-            var skippedAge = DateTime.Now.Date.AddMonths(-_conifg.SkippedVersionMonthsAge);
-            var ImagesForDeletion = images.GroupBy(a => a.Name)
-                               .Select(g => new
-                               {
-                                   g.Key,
-                                   Value = g.Where(a => a.Version != "latest")
-                                            .OrderByDescending(a => a.LastModified)
-                                            .ThenByDescending(a => a.Version)
-                                            .Skip(_conifg.SkippedVersionCount)
-                                            .Where(a => a.LastModified < skippedAge)
-                               })
-                               .SelectMany(g => g.Value);
-
-
-            foreach (var image in ImagesForDeletion)
-            {
-                if (imageDict.ContainsKey(image.Id))
-                {
-                    imageDict[image.Id].IsLocked = false;
-                }
-            }
-
-            var result = images.GroupBy(a => new { a.Name, a.Sha256 })
-                   .Select(g => new NexusImage()
-                   {
-                       Id = g.First().Id,
-                       Name = g.Key.Name,
-                       Version = string.Join(" / ", g.Select(a => a.Version).OrderBy(a => a)),
-                       LastModified = g.First().LastModified,
-                       IsLocked = g.First().IsLocked,
-                       Sha256 = g.First().Sha256,
-                       Size = g.First().Size,
-                       LayersCount = g.First().LayersCount,                       
-                   })
-                   .GroupBy(a => a.Name)
-                   .Select(g => new
-                   {
-                       Name = g.Key,
-                       Value = g.OrderByDescending(a => a.LastModified)
-                                .ThenByDescending(a => a.Version)
-                                .AsEnumerable(),
-                       LastModified = g.Max(a => a.LastModified)
-                   })
-                   .OrderByDescending(g => g.LastModified)
-                   .ToDictionary(a => a.Name, a => a.Value);
-
-            return new NexusImages()
-            {
-                Images = result
+                Images = GroupNexusItems(images),
+                Nugets = GroupNexusItems(nugets),
             };
+
+            return result;
         }
 
         public async Task ClearImages()
         {
             var imageResponse = await GetDockerImagesAsync().ConfigureAwait(false);
 
-            var images = imageResponse.Images.SelectMany(a => a.Value)
-                                             .Where(a => a.IsLocked == false)
+            var images = imageResponse.Images.Where(a => a.IsLocked == false)
                                              .ToList();
 
             foreach (var image in images)
@@ -161,6 +88,126 @@ namespace Mihaylov.Api.Other.Data.Cluster
         }
 
 
+        private async Task<IEnumerable<NexusImage>> GetAllDockerImagesAsync(string repository, Action<NexusResponseAsset, NexusImage> customUpdateAction)
+        {
+            var images = new List<NexusImage>();
+
+            string nextPage = null;
+            do
+            {
+                var response = await GetDockerImagesAsync(repository, nextPage).ConfigureAwait(false);
+
+                var data = response.GetResponse();
+                images.AddRange(data.Items.Select(a =>
+                {
+                    var asset = a.Assets.FirstOrDefault();
+                    var checksum = asset?.Checksum != null && asset.Checksum.ContainsKey("sha256") ? asset.Checksum["sha256"] : null;
+
+                    var image = new NexusImage()
+                    {
+                        Id = a.Id,
+                        Name = a.Name,
+                        Version = a.Version,
+                        LastModified = asset?.LastModified,
+                        Sha256 = checksum,
+                        Size = asset?.FileSize ?? 0,
+                        LayersCount = null,
+
+                        IsLocked = true,
+                        IsFirst = false,
+                    };
+
+                    if (asset != null && customUpdateAction != null)
+                    {
+                        customUpdateAction(asset, image);
+                    }
+
+                    return image;
+                }));
+
+                nextPage = response.Data.ContinuationToken;
+
+            } while (!string.IsNullOrEmpty(nextPage));
+
+            return images;
+        }
+
+        private void CustomImageUpdates(NexusResponseAsset asset, NexusImage image)
+        {
+            var manifestUrl = asset.DownloadUrl;
+            var layers = GetDockerImageLayersAsync(manifestUrl).GetAwaiter().GetResult();
+
+            image.Size = layers.Sum(a => a.Size);
+            image.LayersCount = layers.Count();
+        }
+
+        private void MarkLockedImages(IEnumerable<NexusImage> images)
+        {
+            var imageDict = images.ToDictionary(a => a.Id, a => a);
+
+            var skippedAge = DateTime.Now.Date.AddMonths(-_conifg.SkippedVersionMonthsAge);
+            var ImagesForDeletion = images.GroupBy(a => a.Name)
+                               .Select(g => new
+                               {
+                                   g.Key,
+                                   Value = g.Where(a => a.Version != "latest")
+                                            .OrderByDescending(a => a.LastModified)
+                                            .ThenByDescending(a => a.Version)
+                                            .Skip(_conifg.SkippedVersionCount)
+                                            .Where(a => a.LastModified < skippedAge)
+                               })
+                               .SelectMany(g => g.Value);
+
+
+            foreach (var image in ImagesForDeletion)
+            {
+                if (imageDict.ContainsKey(image.Id))
+                {
+                    imageDict[image.Id].IsLocked = false;
+                }
+            }
+        }
+
+        private static IEnumerable<NexusImage> GroupNexusItems(IEnumerable<NexusImage> images)
+        {
+            var dictionary = images.GroupBy(a => new { a.Name, a.Sha256 })
+                   .Select(g => new NexusImage()
+                   {
+                       Id = g.First().Id,
+                       Name = g.Key.Name,
+                       Version = string.Join(" / ", g.Select(a => a.Version).OrderBy(a => a)),
+                       LastModified = g.First().LastModified,
+                       IsLocked = g.First().IsLocked,
+                       Sha256 = g.First().Sha256,
+                       Size = g.First().Size,
+                       LayersCount = g.First().LayersCount,
+                   })
+                   .GroupBy(a => a.Name)
+                   .Select(g => new
+                   {
+                       Name = g.Key,
+                       Value = g.OrderByDescending(a => a.LastModified)
+                                .ThenByDescending(a => a.Version)
+                                .AsEnumerable(),
+                       LastModified = g.Max(a => a.LastModified)
+                   })
+                   .OrderByDescending(g => g.LastModified)
+                   .ToDictionary(a => a.Name, a => a.Value);
+
+
+            var result = new List<NexusImage>();
+
+            foreach (var itemKey in dictionary.Keys)
+            {
+                var values = dictionary[itemKey];
+                values.First().IsFirst = true;
+
+                result.AddRange(values);
+            }            
+
+            return result;
+        }
+
         private async Task<NexusTasksWrapper> GetTasksAsync(string type)
         {
             var response = await GetResponse<string, NexusTasksWrapper, string, NexusTasksWrapper>(
@@ -179,9 +226,9 @@ namespace Mihaylov.Api.Other.Data.Cluster
             return response.IsSuccessful;
         }
 
-        private async Task<Response<NexusResponseWrapper>> GetDockerImagesAsync(string nextPage)
+        private async Task<Response<NexusResponseWrapper>> GetDockerImagesAsync(string repository, string nextPage)
         {
-            var request = new DockerImagesRequest(_conifg.RepositoryName, nextPage);
+            var request = new DockerImagesRequest(repository, nextPage);
 
             var response = await GetResponse<DockerImagesRequest, NexusResponseWrapper, string, NexusResponseWrapper>(
                     HttpMethod.Get, $"/service/rest/v1/components", request, "GetDockerImages",
@@ -198,7 +245,7 @@ namespace Mihaylov.Api.Other.Data.Cluster
             if (responseMessage.IsSuccessStatusCode)
             {
                 var data = responseMessage.Body;
-                var response =JsonSerializer.Deserialize<ManifestResponse>(responseMessage.Body, base._jsonOptions);
+                var response = JsonSerializer.Deserialize<ManifestResponse>(responseMessage.Body, base._jsonOptions);
                 var result = response.Layers.Select(a => new NexusImageLayer(a.Size, a.Digest)).ToList();
 
                 return result;

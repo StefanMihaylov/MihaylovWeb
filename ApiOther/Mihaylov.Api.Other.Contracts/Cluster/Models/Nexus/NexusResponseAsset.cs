@@ -9,6 +9,8 @@ namespace Mihaylov.Api.Other.Contracts.Cluster.Models.Nexus
 
         public string DownloadUrl { get; set; }
 
+        public long FileSize { get; set; }
+
         public DateTime LastModified { get; set; }
 
         public Dictionary<string, string> Checksum { get; set; }
