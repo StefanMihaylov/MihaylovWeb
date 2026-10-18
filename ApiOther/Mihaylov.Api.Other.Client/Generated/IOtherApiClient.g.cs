@@ -1314,11 +1314,20 @@ namespace Mihaylov.Api.Other.Client
         [System.Text.Json.Serialization.JsonPropertyName("sha256")]
         public string Sha256 { get; set; }
 
+        [System.Text.Json.Serialization.JsonPropertyName("runtime")]
+        public string Runtime { get; set; }
+
         [System.Text.Json.Serialization.JsonPropertyName("size")]
         public long Size { get; set; }
 
         [System.Text.Json.Serialization.JsonPropertyName("layersCount")]
         public int? LayersCount { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("appSize")]
+        public long? AppSize { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("appLayersCount")]
+        public int? AppLayersCount { get; set; }
 
         [System.Text.Json.Serialization.JsonPropertyName("isLocked")]
         public bool IsLocked { get; set; }

@@ -41,15 +41,20 @@
 
 </table>
 
-<h3>Nexus Images</h3>
+@{
+    var runtimeCount = @Model.Images.Images.Select(s => s.Runtime).Where(s => !string.IsNullOrWhiteSpace(s)).Distinct().Count();
+}
+
+<h3>Nexus Images - @Model.Images.Images.Count() бр, Runtimes: @runtimeCount бр</h3>
 <a href="/Nexus/Clear" class="btn btn-info">Изчисти</a>
 
 <table class="table table-bordered table-striped" id="images-grid">
     <tr>
         <th>Name</th>
         <th>Version</th>
-        <th>Size</th>
-        <th>Layers</th>
+        <th>Runtime</th>
+        <th>Size - Layers</th>
+        <th>App Size  - Layers</th>
         <th>LastModified</th>
         <th>Action</th>
     </tr>
@@ -80,8 +85,14 @@
 
                 @image.Version
             </td>
-            <td>@image.Size.FormatBytes()</td>
-            <td>@image.LayersCount</td>
+            <td>@image.Runtime </td>
+            <td>@($"{image.Size.FormatBytes()} - {image.LayersCount}")</td>
+            <td>
+                @if (image.AppSize.HasValue)
+                {
+                    @($"{image.AppSize.Value.FormatBytes()} - {image.AppLayersCount}")
+                }
+            </td>
             <td>@image.LastModified?.ToString(ViewConstants.DateTimeFormatSimple)</td>
             <td>
                 @*                  <a href="/Nexus/DeleteImage?imageId=@image.Id">
@@ -95,7 +106,7 @@
 
 </table>
 
-<h3>Nexus Nugets</h3>
+<h3>Nexus Nugets - @Model.Images.Nugets.Count() бр, Types: @Model.Images.Nugets.Where(n => n.IsFirst).Count() бр</h3>
 
 <table class="table table-bordered table-striped" id="nugets-grid">
     <tr>

@@ -3717,11 +3717,25 @@
             "type": "string",
             "nullable": true
           },
+          "runtime": {
+            "type": "string",
+            "nullable": true
+          },
           "size": {
             "type": "integer",
             "format": "int64"
           },
           "layersCount": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "appSize": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          },
+          "appLayersCount": {
             "type": "integer",
             "format": "int32",
             "nullable": true
