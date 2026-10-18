@@ -1,14 +1,8 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Mihaylov.Api.Gear.Core.Application.Commands.CreateBrand;
-using Mihaylov.Api.Gear.Core.Application.Commands.CreateCategory;
-using Mihaylov.Api.Gear.Core.Application.Commands.CreateGroup;
-using Mihaylov.Api.Gear.Core.Application.Commands.CreateShop;
-using Mihaylov.Api.Gear.Core.Application.Queries.GetBrands;
-using Mihaylov.Api.Gear.Core.Application.Queries.GetCategories;
-using Mihaylov.Api.Gear.Core.Application.Queries.GetCurrencies;
-using Mihaylov.Api.Gear.Core.Application.Queries.GetGroups;
-using Mihaylov.Api.Gear.Core.Application.Queries.GetShops;
+using Mihaylov.Api.Gear.Core.Application.Commands;
+using Mihaylov.Api.Gear.Core.Application.Models;
+using Mihaylov.Api.Gear.Core.Application.Queries;
 using Mihaylov.Api.Gear.Extensions;
 using Mihaylov.Common;
 

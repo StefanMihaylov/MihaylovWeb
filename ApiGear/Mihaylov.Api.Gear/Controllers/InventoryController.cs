@@ -1,7 +1,8 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Mihaylov.Api.Gear.Core.Application.Commands.CreateInventory;
-using Mihaylov.Api.Gear.Core.Application.Queries.GetInventory;
+using Mihaylov.Api.Gear.Core.Application.Commands;
+using Mihaylov.Api.Gear.Core.Application.Models;
+using Mihaylov.Api.Gear.Core.Application.Queries;
 using Mihaylov.Api.Gear.Core.Domain.Enums;
 using Mihaylov.Api.Gear.Extensions;
 using Mihaylov.Api.Gear.Models;

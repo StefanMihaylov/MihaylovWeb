@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using Mihaylov.Api.Gear.Core.Application.Queries.GetInventory;
+using Mihaylov.Api.Gear.Core.Application.Models;
 using Mihaylov.Api.Gear.Core.Domain.Enums;
 
 namespace Mihaylov.Api.Gear.Models

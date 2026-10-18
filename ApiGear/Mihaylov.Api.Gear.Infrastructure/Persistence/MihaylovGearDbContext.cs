@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Mihaylov.Api.Gear.Core.Application.Interfaces;
 using Mihaylov.Api.Gear.Core.Domain.Entities;
 using Mihaylov.Api.Gear.Core.Domain.Enums;
 using Mihaylov.Api.Gear.Core.Domain.Lookups;
@@ -8,7 +7,7 @@ using Mihaylov.Common;
 
 namespace Mihaylov.Api.Gear.Infrastructure.Persistence;
 
-public class MihaylovGearDbContext : BaseDbContext<MihaylovGearDbContext>, IGearDbContext
+public class MihaylovGearDbContext : BaseDbContext<MihaylovGearDbContext>
 {
     public MihaylovGearDbContext(DbContextOptions<MihaylovGearDbContext> options, IAuditService auditService)
         : base(options, auditService)

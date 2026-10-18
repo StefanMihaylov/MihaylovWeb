@@ -1,13 +1,6 @@
 ﻿using Mapster;
 using Microsoft.Extensions.DependencyInjection;
-using Mihaylov.Api.Gear.Core.Application.Queries.GetBrands;
-using Mihaylov.Api.Gear.Core.Application.Queries.GetCategories;
-using Mihaylov.Api.Gear.Core.Application.Queries.GetCurrencies;
-using Mihaylov.Api.Gear.Core.Application.Queries.GetGroups;
-using Mihaylov.Api.Gear.Core.Application.Queries.GetInventory;
-using Mihaylov.Api.Gear.Core.Application.Queries.GetParentGearNodes;
-using Mihaylov.Api.Gear.Core.Application.Queries.GetShops;
-using Mihaylov.Api.Gear.Core.Application.Queries.GetTrips;
+using Mihaylov.Api.Gear.Core.Application.Models;
 using Mihaylov.Api.Gear.Core.Domain.Enums;
 using DbC = Mihaylov.Api.Gear.Core.Domain.Lookups;
 using DbCe = Mihaylov.Api.Gear.Core.Domain.Entities;

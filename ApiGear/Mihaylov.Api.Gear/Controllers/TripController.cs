@@ -1,11 +1,8 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Mihaylov.Api.Gear.Core.Application.Commands.CloneTrip;
-using Mihaylov.Api.Gear.Core.Application.Commands.CreateGearNode;
-using Mihaylov.Api.Gear.Core.Application.Commands.CreateTrip;
-using Mihaylov.Api.Gear.Core.Application.Commands.DeleteGearNode;
-using Mihaylov.Api.Gear.Core.Application.Queries.GetParentGearNodes;
-using Mihaylov.Api.Gear.Core.Application.Queries.GetTrips;
+using Mihaylov.Api.Gear.Core.Application.Commands;
+using Mihaylov.Api.Gear.Core.Application.Models;
+using Mihaylov.Api.Gear.Core.Application.Queries;
 using Mihaylov.Api.Gear.Core.Domain.Enums;
 using Mihaylov.Api.Gear.Extensions;
 using Mihaylov.Api.Gear.Models;
