@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using FFMpegCore;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Mihaylov.Api.Site.Contracts.Helpers.Models;
 using Mihaylov.Api.Site.Data.Media.Interfaces;
@@ -13,36 +14,34 @@ namespace Mihaylov.Api.Site.Data.Media.Services
 {
     public class VideoMediaService : BaseMediaService, IVideoMediaService, IBaseMediaService
     {
-        protected override string ThumbnailExtension => "png";
+        private readonly IFileWrapper _fileWrapper;
+        private readonly ILogger _logger;
+        private readonly string _tempPath;
 
-        public VideoMediaService(IFileWrapper fileWrapper, IOptions<PathConfig> settings)
-            : base(fileWrapper, settings)
+        public VideoMediaService(IFileWrapper fileWrapper, ILogger<VideoMediaService> logger, IOptions<FFMpegPathConfig> settings)
         {
+            _fileWrapper = fileWrapper;
+            _logger = logger;
+
+            _tempPath = fileWrapper.CreateDirectory(Path.GetTempPath(), "MihaylovMedia");
+
             GlobalFFOptions.Configure(options =>
             {
-                options.BinaryFolder = _config.FFMpegPath;
-                options.TemporaryFilesFolder = _config.TempPath;
+                options.BinaryFolder = settings.Value.FFMpegPath;
+                options.TemporaryFilesFolder = _tempPath;
             });
         }
 
         public override MediaInfoSizeModel GetSize(string filePath, bool calculateChecksum, Action<int> progress)
         {
-            var result = new MediaInfoSizeModel();
+            var videoSize = GetVideoSize(filePath);
 
-            try
+            var result = new MediaInfoSizeModel
             {
-                var videoaInfo = FFProbe.Analyse(filePath);
-
-                var width = videoaInfo.PrimaryVideoStream?.Height ?? 0;
-                var height = videoaInfo.PrimaryVideoStream?.Width ?? 0;
-
-                result.Size = new SizeModel(width, height);
-                result.Lenght = videoaInfo.Duration;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"File {filePath} Length failed, Error: {ex.Message}.");
-            }
+                Size = videoSize?.Size,
+                Lenght = videoSize?.Duration,
+                PerceptualHash = null,
+            };
 
             if (calculateChecksum)
             {
@@ -50,13 +49,12 @@ namespace Mihaylov.Api.Site.Data.Media.Services
                 {
                     using var stream = _fileWrapper.GetStreamFile(filePath);
                     var checksum = GetCheckSum(stream, p => progress(p));
-                    result.Checksum = checksum;
 
-                    result.PerceptualHash = null;
+                    result.Checksum = checksum;
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"File {filePath} checksum failed, Error: {ex.Message}.");
+                    _logger.LogWarning(ex, "File {FilePath} checksum failed, Error: {Message}.", filePath, ex.Message);
                 }
             }
             else
@@ -67,29 +65,61 @@ namespace Mihaylov.Api.Site.Data.Media.Services
             return result;
         }
 
-        protected override MemoryStream GetThumbnail(string filePath, SizeModel size, string outputFile)
+        protected override byte[] GetThumbnail(string filePath, SizeModel size)
         {
+            const string ThumbnailExtension = "png";
+            var outputFile = $"{_tempPath}/{Guid.NewGuid()}.{ThumbnailExtension}";
+
             try
             {
-                FFMpeg.Snapshot(filePath, outputFile, size.Convert(), null);
+                var newSize = new System.Drawing.Size(size.Width, size.Height);
+                FFMpeg.Snapshot(filePath, outputFile, newSize, null);
 
-               using var stream = _fileWrapper.GetStreamFile(outputFile);
-
-                var outStream = new MemoryStream();
+                using var stream = _fileWrapper.GetStreamFile(outputFile);
+                using var outStream = new MemoryStream();
                 stream.CopyTo(outStream);
                 outStream.Seek(0, SeekOrigin.Begin);
 
-                return outStream;
+                var bytes = outStream.ToArray();
+                return bytes;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                _logger.LogWarning(ex, "Get video Thumbnail failed. Message: {Message}", ex.Message);
+
                 using var resultImage = new Image<Rgba32>(size.Width, size.Height);
 
-                var outStream = new MemoryStream();
+                using var outStream = new MemoryStream();
                 resultImage.Save(outStream, new BmpEncoder());
                 outStream.Seek(0, SeekOrigin.Begin);
 
-                return outStream;
+                var bytes = outStream.ToArray();
+
+                return bytes;
+            }
+            finally
+            {
+                _fileWrapper.DeleteFile(outputFile);
+            }
+        }
+
+        private VideoSizeModel GetVideoSize(string filePath)
+        {
+            try
+            {
+                var videoaInfo = FFProbe.Analyse(filePath);
+
+                var width = videoaInfo.PrimaryVideoStream?.Height ?? 0;
+                var height = videoaInfo.PrimaryVideoStream?.Width ?? 0;
+
+                var result = new VideoSizeModel(new SizeModel(width, height), videoaInfo.Duration);
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"File {filePath} Length failed, Error: {ex.Message}.");
+                return null;
             }
         }
     }

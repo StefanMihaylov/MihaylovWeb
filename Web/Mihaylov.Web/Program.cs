@@ -129,7 +129,13 @@ namespace Mihaylov.Web
             services.AddSiteApiClient(Config.GetEnvironmentVariable("Site_Api_Client"));
             services.AddGearApiClient(Config.GetEnvironmentVariable("Gear_Api_Client"));
 
-            services.AddMediaServices();
+            services.AddMediaServices(ffMpeg =>
+            {
+                // https://ffmpeg.org/download.html, https://github.com/jrottenberg/ffmpeg/tree/main, https://hub.docker.com/r/jrottenberg/ffmpeg
+                ffMpeg.FFMpegPath = Config.GetEnvironmentVariable("Media_FFMpegPath", string.Empty);
+            });
+
+
             services.Configure<MediaConfig>(opt =>
             {
                 opt.DuplicatePathLocked = Config.GetEnvironmentVariable("Media_Dub_Path_Lock", string.Empty);

@@ -11,10 +11,5 @@
             Width = width;
             Height = height;
         }
-
-        public System.Drawing.Size Convert()
-        {
-            return new System.Drawing.Size(Width, Height);
-        }
     }
 }

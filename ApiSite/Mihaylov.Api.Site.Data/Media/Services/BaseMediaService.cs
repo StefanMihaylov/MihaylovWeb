@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Security.Cryptography;
-using Microsoft.Extensions.Options;
 using Mihaylov.Api.Site.Contracts.Helpers.Models;
 using Mihaylov.Api.Site.Data.Media.Interfaces;
 using Mihaylov.Common;
@@ -10,39 +9,18 @@ namespace Mihaylov.Api.Site.Data.Media.Services
 {
     public abstract class BaseMediaService : IBaseMediaService
     {
-        protected readonly PathConfig _config;
-        protected readonly IFileWrapper _fileWrapper;
-
-        public BaseMediaService(IFileWrapper fileWrapper, IOptions<PathConfig> settings)
-        {
-            _config = settings.Value;
-            _fileWrapper = fileWrapper;
-
-            if (!Directory.Exists(_config.TempPath))
-            {
-                Directory.CreateDirectory(_config.TempPath);
-            }
-        }
-
         public abstract MediaInfoSizeModel GetSize(string filePath, bool calculateChecksum, Action<int> progress);
-
-        protected abstract MemoryStream GetThumbnail(string filePath, SizeModel size, string outputFile);
-
-        protected abstract string ThumbnailExtension { get; }
-
 
         public byte[] GetThumbnail(string filePath, SizeModel inputSize, int thumbnailWidth)
         {
-            var outputFile = $"{_config.TempPath}/{Guid.NewGuid()}.{ThumbnailExtension}";
             SizeModel size = CalculateSize(inputSize, thumbnailWidth);
-
-            using var imageStream = GetThumbnail(filePath, size, outputFile);
-            var bytes = imageStream.ToArray();
-
-            _fileWrapper.DeleteFile(outputFile);
+            var bytes = GetThumbnail(filePath, size);
 
             return bytes;
         }
+
+
+        protected abstract byte[] GetThumbnail(string filePath, SizeModel inputSize);
 
         protected SizeModel CalculateSize(SizeModel size, int thumbnailWidth)
         {
@@ -81,14 +59,7 @@ namespace Mihaylov.Api.Site.Data.Media.Services
             } while (bytesRead != 0);
 
             hasher.TransformFinalBlock(buffer, 0, 0);
-            var hash = MakeHashString(hasher.Hash);
-
-            return hash;
-        }
-
-        private string MakeHashString(byte[] bytes)
-        {
-            var hash = BitConverter.ToString(bytes).Replace("-", string.Empty).ToLower();
+            var hash = BitConverter.ToString(hasher.Hash).Replace("-", string.Empty).ToLower();
 
             return hash;
         }

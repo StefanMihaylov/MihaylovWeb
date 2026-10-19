@@ -17,6 +17,7 @@ namespace Mihaylov.Api.Site.Contracts.Helpers
 
         T GetReportData<T>(string fileName, string basePath) where T : class;
 
+
         string GetBasePath();
     }
 }

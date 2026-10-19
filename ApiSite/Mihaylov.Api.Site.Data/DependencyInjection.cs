@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Net.Http;
-using System.Reflection;
 using CoenM.ImageHash;
 using CoenM.ImageHash.HashAlgorithms;
 using Microsoft.Extensions.DependencyInjection;
@@ -50,21 +49,12 @@ namespace Mihaylov.Api
             return services;
         }
 
-        public static IServiceCollection AddMediaServices(this IServiceCollection services, Assembly assembly = null)
+        public static IServiceCollection AddMediaServices(this IServiceCollection services, Action<FFMpegPathConfig> ffMpegConfig)
         {
-            assembly = assembly ?? Assembly.GetExecutingAssembly();
-
-            var fileInfo = new FileInfo(assembly.Location);
-            var directory = fileInfo.DirectoryName;
-
-            services.Configure<PathConfig>(opt =>
-            {
-                opt.BasePath = directory;
-                opt.FFMpegPath = Path.Combine(directory, "Media/binaries");
-                opt.TempPath = Path.Combine(directory, "temp");
-            });
+            services.Configure<FFMpegPathConfig>(ffMpegConfig);
 
             services.TryAddScoped<IFileWrapper, FileWrapper>();
+            services.AddScoped<IAlglibHelper, AlglibHelper>();
             services.AddScoped<IImageMediaService, ImageMediaService>();
             services.AddScoped<IVideoMediaService, VideoMediaService>();
             services.AddScoped<IMediaService, MediaService>();

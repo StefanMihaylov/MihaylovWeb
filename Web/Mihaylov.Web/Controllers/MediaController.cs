@@ -198,8 +198,7 @@ namespace Mihaylov.Web.Controllers
             var files = _mediaService.GetAllFiles(_config.SoftPath, false, false, false, progressReporter.Report);
 
             var content = _mediaService.GetSorted(files);
-
-            content.LastProcessed = new DateTime(2025, 03, 01);
+            content.LastProcessed = new DateTime(2026, 10, 01);
 
             var result = JsonSerializer.Serialize(content);
             _file.SaveFile(_sortReportPath, result);

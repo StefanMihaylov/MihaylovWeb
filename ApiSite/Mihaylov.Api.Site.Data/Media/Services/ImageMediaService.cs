@@ -3,14 +3,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using CoenM.ImageHash;
-using Microsoft.Extensions.Options;
 using Mihaylov.Api.Site.Contracts.Helpers.Models;
 using Mihaylov.Api.Site.Data.Media.Interfaces;
-using Mihaylov.Common;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats;
-using SixLabors.ImageSharp.Formats.Bmp;
-using SixLabors.ImageSharp.Formats.Png;
 using SixLabors.ImageSharp.Formats.Webp;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
@@ -19,20 +15,18 @@ namespace Mihaylov.Api.Site.Data.Media.Services
 {
     public class ImageMediaService : BaseMediaService, IImageMediaService, IBaseMediaService
     {
-        private const string BMP = "bmp";
-        private const string WEBP = "webp";
-        private const string PNG = "png";
+        //private const string BMP = "bmp";
+        //private const string WEBP = "webp";
+        //private const string PNG = "png";
 
-        private readonly IEnumerable<string> _imageExtensions;
         private readonly IImageHash _hashAlgorithm;
+        private readonly IEnumerable<string> _imageExtensions;
 
-        protected override string ThumbnailExtension => WEBP;
-
-        public ImageMediaService(IFileWrapper fileWrapper, IImageHash hashAlgorithm, IOptions<PathConfig> settings)
-            : base(fileWrapper, settings)
+        public ImageMediaService(IImageHash hashAlgorithm)
         {
-            _imageExtensions = GetImageExtensions();
             _hashAlgorithm = hashAlgorithm;
+
+            _imageExtensions = GetImageExtensions();
         }
 
         public bool IsImageFile(string fileExtension)
@@ -60,7 +54,12 @@ namespace Mihaylov.Api.Site.Data.Media.Services
                 if (calculateChecksum)
                 {
                     using var image = Image.Load<Rgba32>(filePath);
-                    var checksum = GetImageChecksum(image, progress);
+
+                    using var stream = new MemoryStream();
+                    image.Save(stream, image.Metadata.DecodedImageFormat);
+                    stream.Seek(0, SeekOrigin.Begin);
+
+                    var checksum = base.GetCheckSum(stream, p => progress(p));
                     result.Checksum = checksum;
 
                     var hash = _hashAlgorithm.Hash(image);
@@ -81,61 +80,53 @@ namespace Mihaylov.Api.Site.Data.Media.Services
             return null;
         }
 
-        protected override MemoryStream GetThumbnail(string filePath, SizeModel size, string outputFile)
+        protected override byte[] GetThumbnail(string filePath, SizeModel size)
         {
-            IImageEncoder imageEncoder;
+            IImageEncoder imageEncoder = new WebpEncoder();
 
-            switch (ThumbnailExtension)
-            {
-                case BMP:
-                    {
-                        imageEncoder = new BmpEncoder();
-                        break;
-                    }
+            //const string ThumbnailExtension = WEBP;
+            //switch (ThumbnailExtension)
+            //{
+            //    case BMP:
+            //        {
+            //            imageEncoder = new BmpEncoder();
+            //            break;
+            //        }
 
-                case WEBP:
-                    {
-                        imageEncoder = new WebpEncoder();
-                        break;
-                    }
+            //    case WEBP:
+            //        {
+            //            imageEncoder = new WebpEncoder();
+            //            break;
+            //        }
 
-                case PNG:
-                    {
-                        imageEncoder = new PngEncoder();
-                        break;
-                    }
+            //    case PNG:
+            //        {
+            //            imageEncoder = new PngEncoder();
+            //            break;
+            //        }
 
-                default:
-                    throw new Exception($"The extension {ThumbnailExtension} is not supported");
-            }
+            //    default:
+            //        throw new Exception($"The extension {ThumbnailExtension} is not supported");
+            //}
 
             using var image = Image.Load(filePath);
             image.Mutate(x => x.Resize(size.Width, size.Height));
 
-            var outStream = new MemoryStream();
+            using var outStream = new MemoryStream();
             image.Save(outStream, imageEncoder);
             outStream.Seek(0, SeekOrigin.Begin);
 
-            return outStream;
-        }
+            var bytes = outStream.ToArray();
 
-        private string GetImageChecksum(Image image, Action<int> progress)
-        {
-            using var stream = new MemoryStream();
-            image.Save(stream, image.Metadata.DecodedImageFormat);
-            stream.Seek(0, SeekOrigin.Begin);
-
-            var hash = base.GetCheckSum(stream, progress);
-
-            return hash;
+            return bytes;
         }
 
         private IEnumerable<string> GetImageExtensions()
         {
-           var extensions = Configuration.Default
-                                .ImageFormats
-                                .SelectMany(x => x.FileExtensions)
-                                .ToList();
+            var extensions = Configuration.Default
+                                 .ImageFormats
+                                 .SelectMany(x => x.FileExtensions)
+                                 .ToList();
 
             return extensions;
         }
