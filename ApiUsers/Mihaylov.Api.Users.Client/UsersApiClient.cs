@@ -1,27 +1,23 @@
-﻿using System.Net.Http;
-using System.Net.Http.Headers;
+﻿using System;
+using System.Net.Http;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using Mihaylov.Common;
 
 namespace Mihaylov.Api.Users.Client
 {
     public partial interface IUsersApiClient
     {
-        public void AddToken (string token);
     }
 
     public partial class UsersApiClient : IUsersApiClient
     {
-        public const string USERS_API_CLIENT_NAME = "UsersApiClient";
+        public const string API_CLIENT = "UsersApiClient";
 
         public UsersApiClient(IHttpClientFactory httpClientFactory)
-            : this(httpClientFactory.CreateClient(USERS_API_CLIENT_NAME))
+            : this(httpClientFactory.CreateClient(API_CLIENT))
         {
             BaseUrl = _httpClient.BaseAddress.AbsoluteUri;
-        }
-
-        public void AddToken(string token)
-        {
-            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
         }
     }
 
@@ -41,6 +37,20 @@ namespace Mihaylov.Api.Users.Client
             {
                 this.ClaimTypes = (int?)value;
             }
+        }
+    }
+
+    public class UsersSettings : BaseApiSettings, IBaseApiSettings
+    {
+    }
+
+    public static class DependencyInjection
+    {
+        public static IServiceCollection AddUsersApiClient(this IServiceCollection services, Action<OptionsBuilder<UsersSettings>> bindSettings)
+        {
+            services.AddApiClient<IUsersApiClient, UsersApiClient, UsersSettings>(UsersApiClient.API_CLIENT, bindSettings);
+
+            return services;
         }
     }
 }

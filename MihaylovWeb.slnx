@@ -12,7 +12,7 @@
     <Project Path="ApiOther/Mihaylov.Api.Other.Data/Mihaylov.Api.Other.Data.csproj" />
     <Project Path="ApiOther/Mihaylov.Api.Other.Database/Mihaylov.Api.Other.Database.csproj" />
     <Project Path="ApiOther/Mihaylov.Api.Other/Mihaylov.Api.Other.csproj" />
-    <Project Path="ApiOther/Mihaylov.UI.Other/Mihaylov.UI.Other.csproj" Id="83d8316c-98a8-47a1-902c-7d75bba136d6" />
+    <Project Path="ApiOther/Mihaylov.UI.Mvc.Other/Mihaylov.UI.Mvc.Other.csproj" Id="6ced5d7d-4c26-42bb-9e82-affd36f92bb7" />
   </Folder>
   <Folder Name="/ApiSite/">
     <Project Path="ApiSite/Mihaylov.Api.Site.Client/Mihaylov.Api.Site.Client.csproj" />
@@ -23,6 +23,7 @@
     <Project Path="ApiSite/Mihaylov.Api.Site/Mihaylov.Api.Site.csproj" />
   </Folder>
   <Folder Name="/Web/">
+    <Project Path="Common/Mihaylov.Web.Mvc.Contracts/Mihaylov.Web.Mvc.Contracts.csproj" Id="a28a48fb-ddae-4ed6-bb25-ac9eab49746d" />
     <Project Path="Web/Mihaylov.Web/Mihaylov.Web.csproj" />
   </Folder>
 </Solution>

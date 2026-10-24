@@ -1,10 +1,9 @@
 ﻿using System;
-using System.IO;
-using System.Linq;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Mihaylov.Api.Other.Contracts.Cluster.Interfaces;
 using Mihaylov.Api.Other.Contracts.Cluster.Models.Configs;
+using Mihaylov.Common;
 
 namespace Mihaylov.Api.Other.Data.Cluster
 {
@@ -12,12 +11,14 @@ namespace Mihaylov.Api.Other.Data.Cluster
     {
         private readonly ILogger _logger;
         private readonly IProcessHelper _processHelper;
+        private readonly IFileWrapper _file;
         private readonly VeleroSettings _config;
 
-        public VeleroClient(ILoggerFactory loggerFactory, IProcessHelper processHelper, IOptions<VeleroSettings> settings)
+        public VeleroClient(ILoggerFactory loggerFactory, IProcessHelper processHelper, IFileWrapper file, IOptions<VeleroSettings> settings)
         {
             _logger = loggerFactory.CreateLogger(this.GetType());
             _processHelper = processHelper;
+            _file = file;
             _config = settings.Value;
 
             _config.VeleroPath = _config.VeleroPath.TrimEnd('/').TrimEnd('\\');
@@ -62,7 +63,7 @@ namespace Mihaylov.Api.Other.Data.Cluster
         {
             _logger.LogInformation("Start velero exe command 'command'");
 
-            var veleroPath = VeleroExePath();
+            var veleroPath = _file.GetFilePath(_config.VeleroPath, "velero*");
             if (string.IsNullOrWhiteSpace(veleroPath))
             {
                 throw new Exception("velero.exe not found");
@@ -75,18 +76,6 @@ namespace Mihaylov.Api.Other.Data.Cluster
             _logger.LogInformation($"'{command}' command response: {result}");
 
             return result;
-        }
-
-        private string VeleroExePath()
-        {
-            var veleroDir = new DirectoryInfo(_config.VeleroPath);
-            var valeroFile = veleroDir.GetFiles("velero*").FirstOrDefault();
-            if (valeroFile == null)
-            {
-                return null;
-            }
-
-            return valeroFile.FullName;
         }
     }
 }

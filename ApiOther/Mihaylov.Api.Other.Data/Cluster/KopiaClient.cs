@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Text.Json;
 using Microsoft.Extensions.Logging;
@@ -9,6 +8,7 @@ using Mihaylov.Api.Other.Contracts.Cluster.Interfaces;
 using Mihaylov.Api.Other.Contracts.Cluster.Models.Configs;
 using Mihaylov.Api.Other.Contracts.Cluster.Models.Kubernetes;
 using Mihaylov.Api.Other.Data.Cluster.Models;
+using Mihaylov.Common;
 
 namespace Mihaylov.Api.Other.Data.Cluster;
 
@@ -16,13 +16,15 @@ public class KopiaClient : IKopiaClient
 {
     private readonly ILogger _logger;
     private readonly IProcessHelper _processHelper;
+    private readonly IFileWrapper _file;
     private readonly KopiaSettings _config;
     private readonly JsonSerializerOptions _jsonOptions;
 
-    public KopiaClient(ILoggerFactory loggerFactory, IProcessHelper processHelper, IOptions<KopiaSettings> settings)
+    public KopiaClient(ILoggerFactory loggerFactory, IProcessHelper processHelper, IFileWrapper file, IOptions<KopiaSettings> settings)
     {
         _logger = loggerFactory.CreateLogger(this.GetType());
         _processHelper = processHelper;
+        _file = file;
         _config = settings.Value;
 
         _jsonOptions = new JsonSerializerOptions
@@ -111,7 +113,7 @@ public class KopiaClient : IKopiaClient
     {
         _logger.LogInformation("Start Kopia exe command 'command'");
 
-        var kopiaPath = KopiaExePath();
+        var kopiaPath = _file.GetFilePath(_config.KopiaPath, "kopia*");
 
         _logger.LogInformation($"Kopia path: '{kopiaPath}'");
         var result = _processHelper.ExecuteCommand(kopiaPath, command);
@@ -119,17 +121,5 @@ public class KopiaClient : IKopiaClient
         _logger.LogInformation($"Kopia '{command}' command response: {(hideResponse == false ? result : $"<lenght:{result.Length}>")}");
 
         return result;
-    }
-
-    private string KopiaExePath()
-    {
-        var kopiaDir = new DirectoryInfo(_config.KopiaPath);
-        var kopiaFile = kopiaDir.GetFiles("kopia*").FirstOrDefault();
-        if (kopiaFile == null)
-        {
-            return null;
-        }
-
-        return kopiaFile.FullName;
     }
 }

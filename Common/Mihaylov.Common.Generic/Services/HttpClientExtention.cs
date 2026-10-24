@@ -234,7 +234,7 @@ namespace Mihaylov.Common
         /// </summary>
         /// <typeparam name="T">The request type; constrained to a reference type.</typeparam>
         /// <param name="request">The request instance whose public instance properties are converted to query parameters.</param>
-        /// <returns>A URL-encoded query string of key=value pairs with keys in camelCase separated by '&'. Returns an empty
+        /// <returns>A URL-encoded query string of key=value pairs with keys in camelCase separated by <![CDATA['&']]>. Returns an empty
         /// string if no parameters are present.</returns>
         protected string GetQueryString<T>(T request) where T : class
         {

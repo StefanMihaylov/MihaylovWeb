@@ -7,7 +7,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Mihaylov.Common.Generic" Version="0.2.1" />
+		<PackageReference Include="Mihaylov.Common.Generic" Version="0.2.2" />
 		<PackageReference Include="AngleSharp" Version="1.8.5" />
 		<PackageReference Include="KubernetesClient" Version="21.0.8" />
 		<PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.3.13" />
