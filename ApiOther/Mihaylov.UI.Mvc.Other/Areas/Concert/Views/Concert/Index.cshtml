@@ -1,0 +1,51 @@
+﻿@model ConcertMainModel
+
+<div class="row form-distance">
+    <div class="col-md-12">
+        <ul class="nav nav-tabs" id="concertTabs" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link @(Model.ActiveTab == ConcertController.CONCERTS_TAB ? "active" : "")" data-toggle="tab" href="#concerts-tab">Концерти</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link @(Model.ActiveTab == ConcertController.BANDS_TAB ? "active" : "")" data-toggle="tab" href="#bands-tab">Банди</a>
+            </li>
+            <li class="nav-item" role="presentation">
+                <a class="nav-link @(Model.ActiveTab == ConcertController.LOCATIONS_TAB ? "active" : "")" data-toggle="tab" href="#locations-tab">Зали</a>
+            </li>
+            <li class="nav-item" role="presentation">
+                <a class="nav-link @(Model.ActiveTab == ConcertController.PROVIDERS_TAB ? "active" : "")" data-toggle="tab" href="#providers-tab">Билети</a>
+            </li>
+            <li class="nav-item" role="presentation">
+                <a class="nav-link @(Model.ActiveTab == ConcertController.COUNTRIES_TAB ? "active" : "")" data-toggle="tab" href="#countries-tab">Държави</a>
+            </li>
+            <li class="nav-item" role="presentation">
+                <a class="nav-link @(Model.ActiveTab == ConcertController.CONCERT_TYPES_TAB ? "active" : "")" data-toggle="tab" href="#concert-type-tab">Жанрове</a>
+            </li>
+        </ul>
+
+        <div class="tab-content" id="concertTabsContent">
+            <div class="tab-pane fade @(Model.ActiveTab == ConcertController.CONCERTS_TAB ? "show active" : "")" id="concerts-tab">
+                @await Html.PartialAsync("_ConcertsGrid", new ConcertViewModel(Model.Concerts, Model.Input))
+            </div>
+            <div class="tab-pane fade @(Model.ActiveTab == ConcertController.BANDS_TAB ? "show active" : "")" id="bands-tab">
+                @await Html.PartialAsync("_BandsGrid", Model.Bands)
+            </div>
+            <div class="tab-pane fade @(Model.ActiveTab == ConcertController.LOCATIONS_TAB ? "show active" : "")" id="locations-tab">
+                @await Html.PartialAsync("_LocationsGrid", Model.Locations)
+            </div>
+            <div class="tab-pane fade @(Model.ActiveTab == ConcertController.PROVIDERS_TAB ? "show active" : "")" id="providers-tab">
+                @await Html.PartialAsync("_TicketProvidersGrid", Model.TicketProviders)
+            </div>
+            <div class="tab-pane fade @(Model.ActiveTab == ConcertController.COUNTRIES_TAB ? "show active" : "")" id="countries-tab">
+                @await Html.PartialAsync("_CountriesGrid", Model.Countries)
+            </div>
+            <div class="tab-pane fade @(Model.ActiveTab == ConcertController.CONCERT_TYPES_TAB ? "show active" : "")" id="concert-type-tab">
+                @await Html.PartialAsync("_ConcertTypeGrid", Model.ConcertTypes)
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="/_content/mihaylov.ui.mvc.other/js/concerts.js"></script>
+}

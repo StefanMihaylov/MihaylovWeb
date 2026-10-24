@@ -1,0 +1,44 @@
+﻿@model ClusterMainModel
+
+<table class="table table-bordered table-striped" id="parser-settings-grid">
+    <thead>
+        <tr>
+            <th>@Html.LabelFor(m => m.ParserSettings.First().Name, "Name")</th>
+@*             <th>@Html.LabelFor(m => m.ParserSettings.First().ApplicationName, "Application")</th> *@
+            <th>@Html.LabelFor(m => m.ParserSettings.First().VersionUrlType, "Version")</th>
+            <th>@Html.LabelFor(m => m.ParserSettings.First().VersionSelector, "Selector")</th>
+            <th>@Html.LabelFor(m => m.ParserSettings.First().VersionCommand, "Command")</th>
+            <th>@Html.LabelFor(m => m.ParserSettings.First().ReleaseDateUrlType, "ReleaseDate")</th>
+            <th>@Html.LabelFor(m => m.ParserSettings.First().ReleaseDateSelector, "Selector")</th>
+            <th>@Html.LabelFor(m => m.ParserSettings.First().ReleaseDateCommand, "Command")</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @await Html.PartialAsync("_AddParserSetting", Model.ParserSetting)
+
+        <tr style="border-bottom: 2pt solid black;"></tr>
+        <tr></tr>
+
+        @foreach (var setting in Model.ParserSettings)
+        {
+            <tr>
+                <td><my-value>@setting.Name</my-value></td>
+@*                 <td><my-value>@setting.ApplicationName</my-value></td> *@
+                <td><my-value>@setting.VersionUrlType.ToString()</my-value></td>
+                <td><my-value>@setting.VersionSelector</my-value></td>
+                <td><my-value>@setting.VersionCommand</my-value></td>
+                <td><my-value>@setting.ReleaseDateUrlType.ToString()</my-value></td>
+                <td><my-value>@setting.ReleaseDateSelector</my-value></td>
+                <td><my-value>@setting.ReleaseDateCommand</my-value></td>
+                <td>
+                    <a href="@($"{Url.Href(new MenuRoute<ClusterController>(c => c.Index(null, null)))}?settingId={setting.Id}")" class="btn btn-primary">
+                        <i class="bi @ViewConstants.EditButton"></i>
+                    </a>
+                </td>
+            </tr>
+        }
+
+    </tbody>
+</table>
+<span> Легенда: command § command; (command): type ^ parameter 1 | parameter 2 </span>

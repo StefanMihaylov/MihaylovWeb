@@ -1,0 +1,38 @@
+﻿@model AddVersionModel
+
+<form action="@Url.Href(new MenuRoute<ClusterController>(c => c.AddVersion(null)))" method="post">
+    <tr>
+        <td></td>
+        <td>
+            @Html.DropDownListFor(m => m.ApplicationId, Model.Applications, ViewConstants.DefaultDropDownValue, new { @class = "short-width", style = "min-width: 200px;" })
+            @Html.ValidationMessageFor(m => m.ApplicationId)
+        </td>
+        <td>
+            @Html.TextBoxFor(m => m.ReleaseDate, "{0:yyyy.MM.dd}", new { aria_autocomplete = "none", autocomplete = "off", @class = "short-width", style="max-width: 150px;" })
+            @Html.ValidationMessageFor(m => m.ReleaseDate)
+        </td>
+        <td>
+            @Html.TextBoxFor(m => m.Version, new { aria_autocomplete = "none", autocomplete = "off", @class = "tiny-width", style = "min-width: 100px;" })
+            @Html.ValidationMessageFor(m => m.Version)
+        </td>
+        <td>
+            @Html.TextBoxFor(m => m.HelmVersion, new { aria_autocomplete = "none", autocomplete = "off", @class = "tiny-width" })
+            @Html.ValidationMessageFor(m => m.HelmVersion)
+        </td>
+        <td style="display: none;">
+            @Html.TextBoxFor(m => m.HelmAppVersion, new { aria_autocomplete = "none", autocomplete = "off", @class = "tiny-width" })
+            @Html.ValidationMessageFor(m => m.HelmAppVersion)
+        </td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td>
+            <button type="submit" class="btn btn-success">
+                <i class="bi @ViewConstants.NewButton"></i>
+            </button>
+        </td>
+    </tr>
+</form>

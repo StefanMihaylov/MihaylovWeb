@@ -12,6 +12,7 @@
     <Project Path="ApiOther/Mihaylov.Api.Other.Data/Mihaylov.Api.Other.Data.csproj" />
     <Project Path="ApiOther/Mihaylov.Api.Other.Database/Mihaylov.Api.Other.Database.csproj" />
     <Project Path="ApiOther/Mihaylov.Api.Other/Mihaylov.Api.Other.csproj" />
+    <Project Path="ApiOther/Mihaylov.UI.Other/Mihaylov.UI.Other.csproj" Id="83d8316c-98a8-47a1-902c-7d75bba136d6" />
   </Folder>
   <Folder Name="/ApiSite/">
     <Project Path="ApiSite/Mihaylov.Api.Site.Client/Mihaylov.Api.Site.Client.csproj" />

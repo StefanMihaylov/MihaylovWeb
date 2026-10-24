@@ -10,8 +10,11 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Mihaylov.Api;
 using Mihaylov.Common;
+using Mihaylov.UI.Mvc.Other;
 using Mihaylov.Web.Areas;
 using Mihaylov.Web.Areas.Identity.Pages.Account;
+using Mihaylov.Web.Common;
+using Mihaylov.Web.Controllers;
 using Mihaylov.Web.Hubs;
 using Mihaylov.Web.Models.Configs;
 using Mihaylov.Web.Services;
@@ -44,7 +47,8 @@ namespace Mihaylov.Web
                 app.UseHsts();
             }
 
-            app.Use(async (context, next) => {
+            app.Use(async (context, next) =>
+            {
                 if (context.Request.Path.StartsWithSegments("/robots.txt"))
                 {
                     string output = "User-agent: * \nAllow: /$ \nDisallow: /";
@@ -70,9 +74,13 @@ namespace Mihaylov.Web
                        response.Redirect(LOGIN_URL);
                    }
 
-                  await Task.CompletedTask;
+                   await Task.CompletedTask;
                })
                .UseAuthorization();
+
+            app.MapControllerRoute(
+                name: "areas",
+                pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
 
             app.MapControllerRoute(
                 name: "default",
@@ -124,8 +132,18 @@ namespace Mihaylov.Web
                 opt.SiteApiBaseUrl = Config.GetEnvironmentVariable("Site_Api_Client");
             });
 
+            services.AddHttpContextAccessor();
+            services.AddScoped<IAccessTokenProvider, CookieTokenProvider>();
+
+            // https://fontawesome.com/v4/icons/, https://icons.getbootstrap.com/
+            var homeMenu = new MenuItem(0, "", new MenuRoute<HomeController>(c => c.Index()), null, "fa-home"); // "bi-house-door-fill"
+            var login = new MenuItem(1, "", null, null, null);
+            services.RegisterModules(homeMenu, login, c =>
+            {
+                c.Add(new OtherUiModule());
+            });
+
             services.AddUsersApiClient(Config.GetEnvironmentVariable("Users_Api_Client"));
-            services.AddOtherApiClient(Config.GetEnvironmentVariable("Other_Api_Client"));
             services.AddSiteApiClient(Config.GetEnvironmentVariable("Site_Api_Client"));
             services.AddGearApiClient(Config.GetEnvironmentVariable("Gear_Api_Client"));
 
@@ -134,7 +152,6 @@ namespace Mihaylov.Web
                 // https://ffmpeg.org/download.html, https://github.com/jrottenberg/ffmpeg/tree/main, https://hub.docker.com/r/jrottenberg/ffmpeg
                 ffMpeg.FFMpegPath = Config.GetEnvironmentVariable("Media_FFMpegPath", string.Empty);
             });
-
 
             services.Configure<MediaConfig>(opt =>
             {

@@ -1,0 +1,13 @@
+@model string
+
+@if (Model != null)
+{
+    if (Model.StartsWith("bi"))
+    {
+        <i class="bi @Model"></i>
+    }
+    else if (Model.StartsWith("fa"))
+    {
+        <i class="fa @Model" aria-hidden="true"></i>
+    }
+}

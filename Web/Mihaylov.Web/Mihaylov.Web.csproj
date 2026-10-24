@@ -35,8 +35,8 @@
 	
 	<ItemGroup>
 	  <ProjectReference Include="..\..\ApiGear\Mihaylov.Api.Gear.Client\Mihaylov.Api.Gear.Client.csproj" />
+	  <ProjectReference Include="..\..\ApiOther\Mihaylov.UI.Mvc.Other\Mihaylov.UI.Mvc.Other.csproj" />
 	  <ProjectReference Include="..\..\ApiSite\Mihaylov.Api.Site.Data\Mihaylov.Api.Site.Data.csproj" />
-	  <ProjectReference Include="..\..\ApiOther\Mihaylov.Api.Other.Client\Mihaylov.Api.Other.Client.csproj" />
 	  <ProjectReference Include="..\..\ApiSite\Mihaylov.Api.Site.Client\Mihaylov.Api.Site.Client.csproj" />
 	</ItemGroup>
 

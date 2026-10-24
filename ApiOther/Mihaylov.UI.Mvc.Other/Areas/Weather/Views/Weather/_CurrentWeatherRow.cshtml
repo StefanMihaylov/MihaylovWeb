@@ -1,0 +1,18 @@
+﻿@model CurrentWeatherResponse
+
+<tr>
+    <td><my-value>@Model.Location</my-value></td>
+    <td><my-value>@Model.CurrentDate</my-value></td>
+    <td><my-value>@Model.Condition</my-value></td>
+    <td>
+        <my-value>
+        @if (!string.IsNullOrEmpty(Model.ConditionIcon))
+        {
+            <img src=@Model.ConditionIcon width="40" height="40" />
+        }
+        </my-value>
+    </td>
+    <td><my-value>@Model.Temperature</my-value></td>
+    <td><my-value>@Model.FeelsLike</my-value></td>
+    <td><my-value>@Model.Wind</my-value></td>
+</tr>

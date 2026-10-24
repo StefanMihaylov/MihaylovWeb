@@ -11,8 +11,8 @@ using Mihaylov.Api.Site.Contracts.Helpers;
 using Mihaylov.Api.Site.Contracts.Helpers.Models;
 using Mihaylov.Common;
 using Mihaylov.Web.Hubs;
-using Mihaylov.Web.Models;
 using Mihaylov.Web.Models.Configs;
+using Mihaylov.Web.Models.Media;
 
 namespace Mihaylov.Web.Controllers
 {
