@@ -44,7 +44,7 @@ namespace Mihaylov.Api.Site.Data.Managers
 
         public async Task<PersonStatistics> GetStaticticsAsync()
         {
-            var stats = await GetDataAsync(_repository.GetStaticticsAsync, typeof(PersonStatistics).Name).ConfigureAwait(false);
+            var stats = await GetDataAsync(_repository.GetStatisticsAsync, typeof(PersonStatistics).Name).ConfigureAwait(false);
 
             return stats;
         }

@@ -8,7 +8,7 @@ using Mihaylov.Common;
 
 namespace Mihaylov.Api.Gear.Controllers
 {
-    [JwtAuthorize(Roles = UserConstants.AdminRole)]
+    [AdminAuthorize]
     [Route("api/[controller]/[action]")]
     [ApiController]
     [TypeFilter(typeof(ErrorFilter))]

@@ -84,7 +84,7 @@ namespace Mihaylov.Api.Site.Data.Helpers
                 var currentDate = personInfo.CreateDate == new DateTime() ? DateTime.UtcNow : personInfo.CreateDate;
 
                 person.DateOfBirthType = DateOfBirthType.YearCalculated;
-                person.DateOfBirth = person.DateOfBirth.GetBirthDate(personInfo.Age, true, true, currentDate);
+                person.DateOfBirth = person.DateOfBirth.GetBirthDate(personInfo.Age, true, true, currentDate, 6);
             }
 
             if (!string.IsNullOrEmpty(personInfo.City))
@@ -126,9 +126,9 @@ namespace Mihaylov.Api.Site.Data.Helpers
             foreach (var account in accounts.Accounts)
             {
                 count++;
-                var countPers = count.GetPersentage(totalCount);
+                var countPers = count.GetPercentage(totalCount);
 
-                var personInfo = await GetPersonInfoAsync(account.Username, (p) => progress(new UpdateProgressBarModel(p.GetPersentage(TOTAL_STEPS), countPers, totalCount))).ConfigureAwait(false);
+                var personInfo = await GetPersonInfoAsync(account.Username, (p) => progress(new UpdateProgressBarModel(p.GetPercentage(TOTAL_STEPS), countPers, totalCount))).ConfigureAwait(false);
 
                 if (personInfo.IsDeleted)
                 {
@@ -150,14 +150,14 @@ namespace Mihaylov.Api.Site.Data.Helpers
                 var single = SUB_STEPS;
 
                 await _personsWriter.AddOrUpdateAccountAsync(account, null).ConfigureAwait(false);
-                progress(new UpdateProgressBarModel((++single).GetPersentage(TOTAL_STEPS), countPers, totalCount));
+                progress(new UpdateProgressBarModel((++single).GetPercentage(TOTAL_STEPS), countPers, totalCount));
 
                 if (delay > 0)
                 {
                     Thread.Sleep(delay);
                 }
 
-                progress(new UpdateProgressBarModel((++single).GetPersentage(TOTAL_STEPS), countPers, totalCount));
+                progress(new UpdateProgressBarModel((++single).GetPercentage(TOTAL_STEPS), countPers, totalCount));
             }
         }
 

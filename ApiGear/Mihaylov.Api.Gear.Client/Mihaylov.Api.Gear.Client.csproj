@@ -5,8 +5,23 @@
     <Nullable>disable</Nullable>
   </PropertyGroup>
 
+	<PropertyGroup>
+		<Version>0.4.0</Version>
+		<PackageId>Mihaylov.Api.Gear.Client</PackageId>
+		<Description>Gear API Client</Description>
+		<Authors>Mihaylov</Authors>
+	</PropertyGroup>
+
+	<PropertyGroup>
+		<DebugType>embedded</DebugType>
+		<PublishRepositoryUrl>true</PublishRepositoryUrl>
+		<EmbedUntrackedSources>true</EmbedUntrackedSources>
+		<Deterministic>true</Deterministic>
+	</PropertyGroup>
+
 	<ItemGroup>
-		<PackageReference Include="Mihaylov.Common.Generic" Version="0.2.1" /> 
+		<PackageReference Include="Mihaylov.Common.Core" Version="0.2.0" /> 
+		<PackageReference Include="Mihaylov.Common.Http" Version="0.2.0" /> 
 		<PackageReference Include="NSwag.MSBuild" Version="14.7.1">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

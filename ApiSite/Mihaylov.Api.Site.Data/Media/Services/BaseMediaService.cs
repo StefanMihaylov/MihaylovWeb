@@ -54,7 +54,7 @@ namespace Mihaylov.Api.Site.Data.Media.Services
 
                 hasher.TransformBlock(buffer, 0, bytesRead, null, 0);
 
-                progress(totalBytesRead.GetPersentage(size));
+                progress(totalBytesRead.GetPercentage(size));
 
             } while (bytesRead != 0);
 

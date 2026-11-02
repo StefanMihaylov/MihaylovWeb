@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Mihaylov.Api.Site.Contracts.Hubs;
 using Mihaylov.Api.Site.Database;
 using Mihaylov.Api.Site.Hubs;
 using Mihaylov.Common;
@@ -25,7 +26,7 @@ namespace Mihaylov.Api.Site
 
         private static void AddServices(IServiceCollection services)
         {
-            services.AddSwaggerCustom("v1", "v1", "Site API", "Site Endpoints API", true);
+            services.AddSwaggerCustom("v1", "v1", "Site API", "Site Endpoints API", true, UserConstants.AuthenticationScheme);
 
             services.AddControllers();
             services.Configure<ApiBehaviorOptions>(options =>
@@ -40,21 +41,24 @@ namespace Mihaylov.Api.Site
             services.AddEndpointsApiExplorer();
             services.AddMemoryCache();
 
-            services.AddClientJwtAuthentication(null, opt =>
+            services.AddClientJwtAuthentication(UserConstants.AuthenticationScheme,
+                AuthorizationExtensions.GetAuthorizationOptions, null, opt =>
             {
                 opt.Secret = Config.GetEnvironmentVariable("JWT_AUTHENTICATION_SECRET", "abc");
                 opt.Issuer = Config.GetEnvironmentVariable("JWT_ISSUER", string.Empty);
                 opt.Audience = Config.GetEnvironmentVariable("JWT_AUDIENCE", string.Empty);
+                opt.NameClaimType = ClaimMap.GetClaim(Config.GetEnvironmentVariable("JWT_NameClaim", string.Empty));
             });
 
-            services.AddDatabase<SiteDbContext>(opt =>
+            services.AddHttpContextAccessor();
+            services.AddDatabase<SiteDbContext>(sp => sp.GetUser()?.GetName(), opt =>
                     {
                         opt.ServerAddress = Config.GetEnvironmentVariable("DB_Site_Address", "192.168.1.100");
                         opt.DatabaseName = Config.GetEnvironmentVariable("DB_Site_Name", "Mihaylov_SiteDb");
                         opt.UserName = Config.GetEnvironmentVariable("DB_Site_UserName", "");
                         opt.Password = Config.GetEnvironmentVariable("DB_Site_Password", "");
                     })
-                    .MigrateDatabase<SiteDbContext>(c => c.Migrate(), true)
+                    .MigrateDatabase<SiteDbContext>(true)
                     .AddSiteRepositories()
                     .AddSiteServices(opt =>
                     {
@@ -64,7 +68,8 @@ namespace Mihaylov.Api.Site
             // Add-Migration <name> -V -Project Mihaylov.Api.Site.Database -StartupProject Mihaylov.Api.Site
 
             services.AddSignalR();
-            services.AddScoped<IProgressReporterFactory, ProgressReporterFactory>();
+            services.AddProgressBar<UpdateProgressHub, UpdateProgressBarModel>();
+            
             services.AddCors(options =>
             {
                 options.AddPolicy("_SignalR_AllowSpecificOrigins",
@@ -91,7 +96,7 @@ namespace Mihaylov.Api.Site
 
             app.MapControllers();
 
-            app.MapHub<UpdateProgressHub>("/UpdateProgressHub");            
+            app.MapHub<UpdateProgressHub>("/UpdateProgressHub");
         }
     }
 }

@@ -5,7 +5,7 @@ using Mihaylov.Api.Site.DAL.Repositories;
 
 namespace Mihaylov.Api
 {
-    public static class DependencyInjection
+    public static class SiteDalServiceExtensions
     {
         public static IServiceCollection AddSiteRepositories(this IServiceCollection services)
         {

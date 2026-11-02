@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Mihaylov.Api.Site.Database.Models;
+using Mihaylov.Common;
 using DTO = Mihaylov.Api.Site.Contracts.Models;
 
 namespace Mihaylov.Api.Site.Database.DbConfigurations

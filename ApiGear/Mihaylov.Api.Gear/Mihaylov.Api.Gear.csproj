@@ -16,12 +16,13 @@
 	</PropertyGroup>
 
 	<PropertyGroup>
-		<Version>0.3.0</Version>
+		<Version>0.4.0</Version>
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Mihaylov.Common.Host" Version="0.2.1" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.13">
+		<PackageReference Include="Mihaylov.Common.Auth" Version="0.2.0" />
+		<PackageReference Include="Mihaylov.Common.Host" Version="0.2.2" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.14">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>

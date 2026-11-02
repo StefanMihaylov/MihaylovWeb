@@ -12,7 +12,7 @@ using Swashbuckle.AspNetCore.Annotations;
 
 namespace Mihaylov.Api.Site.Controllers
 {
-    [JwtAuthorize(Roles = UserConstants.AdminRole)]
+    [AdminAuthorize]
     [Route("api/[controller]/[action]")]
     [ApiController]
     [TypeFilter(typeof(ErrorFilter))]

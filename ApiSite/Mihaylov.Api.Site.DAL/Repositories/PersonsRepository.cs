@@ -9,6 +9,7 @@ using Mihaylov.Api.Site.Contracts.Models;
 using Mihaylov.Api.Site.Contracts.Models.Base;
 using Mihaylov.Api.Site.Contracts.Repositories;
 using Mihaylov.Api.Site.Database;
+using Mihaylov.Common;
 using DB = Mihaylov.Api.Site.Database.Models;
 
 namespace Mihaylov.Api.Site.DAL.Repositories
@@ -63,34 +64,29 @@ namespace Mihaylov.Api.Site.DAL.Repositories
                 }
 
                 // temp filters
-                var hasAnyFilter = request.StatusId.HasValue || request.AccountTypeId.HasValue ||
-                        !string.IsNullOrWhiteSpace(request.Name) || !string.IsNullOrWhiteSpace(request.AccountName) ||
-                        !string.IsNullOrWhiteSpace(request.AccountNameExact);
+                //var hasAnyFilter = request.StatusId.HasValue || request.AccountTypeId.HasValue ||
+                //        !string.IsNullOrWhiteSpace(request.Name) || !string.IsNullOrWhiteSpace(request.AccountName) ||
+                //        !string.IsNullOrWhiteSpace(request.AccountNameExact);
 
-                if (!hasAnyFilter)
-                {
+                //if (!hasAnyFilter)
+                //{
                     // query = query.Where(p => !string.IsNullOrEmpty(p.Person.Comments));
                     // query = query.Where(p => p.Person.PersonId == 5511 || p.Person.PersonId == 5486 || p.Person.PersonId == 5475);
                     // query = query.Where(p => !p.Person.Accounts.Any(a => a.StatusId == 3 && a.ModifiedOn > DateTime.Now.AddMonths(-1)));
                     // query = query.Where(p => p.Person.Accounts.Any(a => a.CreatedOn > new DateTime(2018, 1, 7)));
                     // query = query.Where(p => p.Person.Answers.Any(a => a.QuestionId == 1));
                     // query = query.Where(p => p.Person.Answers.Any(a => a.AskDate > new DateTime(2024, 1, 7)));
-                }
+                //}
 
-                var count = await query.CountAsync().ConfigureAwait(false);
-
-                (query, request.Page) = GetPage(query, request.PageSize, request.Page, count);
-
-                var persons = await query.Select(p => p.Person)
-                                         .ProjectToType<Person>()
-                                         .ToListAsync()
-                                         .ConfigureAwait(false);
+                var gridData = await query.Select(p => p.Person)
+                                          .GetPageAsync(request, q => q.ProjectToType<Person>())
+                                          .ConfigureAwait(false);
 
                 var result = new Grid<Person>()
                 {
                     Request = request,
-                    Data = persons,
-                    Pager = new Pager(request.Page, request.PageSize, count),
+                    Data = gridData.Data,
+                    Pager = gridData.Pager,
                 };
 
                 return result;
@@ -293,7 +289,7 @@ namespace Mihaylov.Api.Site.DAL.Repositories
             }
         }
 
-        public async Task<PersonStatistics> GetStaticticsAsync()
+        public async Task<PersonStatistics> GetStatisticsAsync()
         {
             var mainQuestionId = 2;
             var activeStates = new List<int> { 1, 2, 6 };
@@ -406,7 +402,6 @@ namespace Mihaylov.Api.Site.DAL.Repositories
         }
 
 
-
         private IQueryable<DB.Person> GetPersonBaseQuery()
         {
             var query = _context.Persons.AsNoTracking()
@@ -423,32 +418,6 @@ namespace Mihaylov.Api.Site.DAL.Repositories
                                         .AsQueryable();
 
             return query;
-        }
-
-        private static (IQueryable<T>, int?) GetPage<T>(IQueryable<T> query, int? pageSize, int? page, int count)
-        {
-            if (!pageSize.HasValue)
-            {
-                return (query, page);
-            }
-
-            if (!page.HasValue || page <= 0)
-            {
-                page = 1;
-            }
-
-            var pageMax = Pager.GetMaxPage(pageSize, count);
-
-            if (pageMax > 0 && page > pageMax)
-            {
-                page = pageMax;
-            }
-
-            query = query.Skip((page.Value - 1) * pageSize.Value)
-                     .Take(pageSize.Value)
-                     .AsQueryable();
-
-            return (query, page);
         }
     }
 }

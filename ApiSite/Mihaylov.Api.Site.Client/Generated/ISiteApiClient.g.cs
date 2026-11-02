@@ -731,6 +731,12 @@ namespace Mihaylov.Api.Site.Client
     public partial class GridRequest
     {
 
+        [System.Text.Json.Serialization.JsonPropertyName("page")]
+        public int? Page { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("pageSize")]
+        public int? PageSize { get; set; }
+
         [System.Text.Json.Serialization.JsonPropertyName("accountTypeId")]
         public int? AccountTypeId { get; set; }
 
@@ -745,12 +751,6 @@ namespace Mihaylov.Api.Site.Client
 
         [System.Text.Json.Serialization.JsonPropertyName("accountNameExact")]
         public string AccountNameExact { get; set; }
-
-        [System.Text.Json.Serialization.JsonPropertyName("page")]
-        public int? Page { get; set; }
-
-        [System.Text.Json.Serialization.JsonPropertyName("pageSize")]
-        public int? PageSize { get; set; }
 
     }
 
@@ -825,16 +825,13 @@ namespace Mihaylov.Api.Site.Client
     {
 
         [System.Text.Json.Serialization.JsonPropertyName("page")]
-        public int? Page { get; set; }
+        public int Page { get; set; }
 
         [System.Text.Json.Serialization.JsonPropertyName("pageSize")]
         public int? PageSize { get; set; }
 
         [System.Text.Json.Serialization.JsonPropertyName("count")]
         public int Count { get; set; }
-
-        [System.Text.Json.Serialization.JsonPropertyName("pageMax")]
-        public int? PageMax { get; set; }
 
     }
 
@@ -938,14 +935,14 @@ namespace Mihaylov.Api.Site.Client
     public partial class PersonGrid
     {
 
-        [System.Text.Json.Serialization.JsonPropertyName("request")]
-        public GridRequest Request { get; set; }
-
         [System.Text.Json.Serialization.JsonPropertyName("data")]
         public System.Collections.Generic.IEnumerable<Person> Data { get; set; }
 
         [System.Text.Json.Serialization.JsonPropertyName("pager")]
         public Pager Pager { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("request")]
+        public GridRequest Request { get; set; }
 
     }
 

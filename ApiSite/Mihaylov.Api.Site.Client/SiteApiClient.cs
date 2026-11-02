@@ -1,30 +1,30 @@
-﻿using System.Net.Http;
-using System.Net.Http.Headers;
+﻿using System;
+using System.Net.Http;
 using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using Mihaylov.Common;
 
 namespace Mihaylov.Api.Site.Client
 {
-    public partial interface ISiteApiClient
+    public partial interface ISiteApiClient : IModuleInfoService
     {
-        public void AddToken(string token);
-
         Task<PersonGrid> PersonsAsync(IGridRequest request, int? pageSize);
     }
 
     public partial class SiteApiClient : ISiteApiClient
     {
-        public const string SITE_API_CLIENT_NAME = "SiteApiClient";
+        public const string API_CLIENT = "SiteApiClient";
 
         public SiteApiClient(IHttpClientFactory httpClientFactory)
-            : this(httpClientFactory.CreateClient(SITE_API_CLIENT_NAME))
+            : this(httpClientFactory.CreateClient(API_CLIENT))
         {
             BaseUrl = _httpClient.BaseAddress.AbsoluteUri;
         }
 
-        public void AddToken(string token)
+        public async Task<IModuleInfo> GetInfoAsync()
         {
-            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            return await this.ModuleGetInfoAsync();
         }
 
         public Task<PersonGrid> PersonsAsync(IGridRequest request, int? pageSize)
@@ -38,15 +38,18 @@ namespace Mihaylov.Api.Site.Client
     {
     }
 
+    public partial class Pager : IPager
+    {
+    }
 
-    public partial class GridRequest : IGridRequest
+    public partial class GridRequest : IGridRequest, IPagerRequest
     {
         public long? PersonId => null;
 
         public bool? IsNewPerson => null;
     }
 
-    public interface IGridRequest
+    public interface IGridRequest : IQueryRequest
     {
         public int? AccountTypeId { get; }
 
@@ -58,10 +61,24 @@ namespace Mihaylov.Api.Site.Client
 
         public string AccountNameExact { get; }
 
-        public int? Page { get; set; }
+        public int? Page { get; }
 
         public long? PersonId { get; }
 
         public bool? IsNewPerson { get; }
+    }
+
+    public class SiteSettings : BaseApiSettings, IBaseApiSettings
+    {
+    }
+
+    public static class SiteApiClientExtensions
+    {
+        public static IServiceCollection AddSiteApiClient(this IServiceCollection services, Action<OptionsBuilder<SiteSettings>> bindSettings)
+        {
+            services.AddApiClient<ISiteApiClient, SiteApiClient, SiteSettings>(SiteApiClient.API_CLIENT, bindSettings);
+
+            return services;
+        }
     }
 }

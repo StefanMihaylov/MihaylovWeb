@@ -28,7 +28,7 @@ namespace Mihaylov.Api.Site.Data.Writers
             var currentDate = input.CreatedOn == new DateTime() ? DateTime.UtcNow : input.CreatedOn;
 
             input.DateOfBirthType = input.DateOfBirth.IsBirthDateTypeValid(age, isCalculating) ? type : null;
-            input.DateOfBirth = input.DateOfBirth.GetBirthDate(age, type.HasValue, isCalculating, currentDate);
+            input.DateOfBirth = input.DateOfBirth.GetBirthDate(age, type.HasValue, isCalculating, currentDate, 6);
 
             return _repository.AddOrUpdatePersonAsync(input);
         }

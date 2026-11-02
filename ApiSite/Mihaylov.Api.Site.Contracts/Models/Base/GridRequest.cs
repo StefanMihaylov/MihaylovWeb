@@ -1,6 +1,8 @@
-﻿namespace Mihaylov.Api.Site.Contracts.Models.Base
+﻿using Mihaylov.Common;
+
+namespace Mihaylov.Api.Site.Contracts.Models.Base
 {
-    public class GridRequest
+    public class GridRequest : BaseGridRequest
     {
         public int? AccountTypeId { get; set; }
 
@@ -11,10 +13,5 @@
         public string AccountName { get; set; }
 
         public string AccountNameExact { get; set; }
-
-
-        public int? Page { get; set; }
-
-        public int? PageSize { get; set; }
     }
 }

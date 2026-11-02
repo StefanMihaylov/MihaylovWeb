@@ -24,7 +24,7 @@ namespace Mihaylov.Api.Gear
 
         private static IServiceCollection AddServices(IServiceCollection services)
         {
-            services.AddSwaggerCustom("v1", "v1", "Gear API", "Gear API", true);
+            services.AddSwaggerCustom("v1", "v1", "Gear API", "Gear API", true, UserConstants.AuthenticationScheme);
 
             services.AddControllers();
             services.Configure<ApiBehaviorOptions>(options =>
@@ -38,24 +38,27 @@ namespace Mihaylov.Api.Gear
             services.AddModuleInfo();
             services.AddEndpointsApiExplorer();
 
-            services.AddGearDatabase(opt =>
+            services.AddHttpContextAccessor();
+            services.AddGearDatabase(sp => sp.GetUser()?.GetName(), opt =>
             {
                 opt.ServerAddress = Config.GetEnvironmentVariable("DB_Gear_Address", "");
                 opt.DatabaseName = Config.GetEnvironmentVariable("DB_Gear_Name", "Mihaylov_GearDb");
                 opt.UserName = Config.GetEnvironmentVariable("DB_Gear_UserName", "");
                 opt.Password = Config.GetEnvironmentVariable("DB_Gear_Password", "");
             })
-            .MigrateDatabase<MihaylovGearDbContext>(c => c.Migrate(), true)
+            .MigrateDatabase<MihaylovGearDbContext>(true)
             .AddGearCqrs(opt =>
             {
                 opt.MediatRLicenseKey = Config.GetEnvironmentVariable("MediatR_LicenseKey", string.Empty);
             });
 
-            services.AddClientJwtAuthentication(null, opt =>
+            services.AddClientJwtAuthentication(UserConstants.AuthenticationScheme, 
+                AuthorizationExtensions.GetAuthorizationOptions, null, opt =>
             {
                 opt.Secret = Config.GetEnvironmentVariable("JWT_AUTHENTICATION_SECRET", "abc");
                 opt.Issuer = Config.GetEnvironmentVariable("JWT_ISSUER", string.Empty);
                 opt.Audience = Config.GetEnvironmentVariable("JWT_AUDIENCE", string.Empty);
+                opt.NameClaimType = ClaimMap.GetClaim(Config.GetEnvironmentVariable("JWT_NameClaim", string.Empty));
             });
 
             return services;

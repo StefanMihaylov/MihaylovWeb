@@ -6,12 +6,12 @@ using Mihaylov.Common;
 
 namespace Mihaylov.Api.Gear.Infrastructure;
 
-public static class DependencyInjection
+public static class GearInfraServiceExtensions
 {
     public static IServiceCollection AddGearDatabase(this IServiceCollection services,
-        Action<ConnectionStringSettings> connectionString)
+        Func<IServiceProvider, string?> userNameFunc, Action<ConnectionStringSettings> connectionString)
     {
-        services.AddDatabase<MihaylovGearDbContext>(connectionString);
+        services.AddDatabase<MihaylovGearDbContext>(userNameFunc, connectionString);
 
         services.AddScoped<ITripRepository, TripRepository>();
         services.AddScoped<IGearNodeRepository, GearNodeRepository>();

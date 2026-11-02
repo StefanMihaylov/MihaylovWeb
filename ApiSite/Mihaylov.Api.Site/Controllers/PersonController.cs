@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Mihaylov.Api.Site.Contracts.Helpers;
+using Mihaylov.Api.Site.Contracts.Hubs;
 using Mihaylov.Api.Site.Contracts.Managers;
 using Mihaylov.Api.Site.Contracts.Models;
 using Mihaylov.Api.Site.Contracts.Models.Base;
@@ -17,7 +18,7 @@ using Swashbuckle.AspNetCore.Annotations;
 
 namespace Mihaylov.Api.Site.Controllers
 {
-    [JwtAuthorize(Roles = UserConstants.AdminRole)]
+    [AdminAuthorize]
     [Route("api/[controller]/[action]")]
     [ApiController]
     [TypeFilter(typeof(ErrorFilter))]
@@ -30,10 +31,10 @@ namespace Mihaylov.Api.Site.Controllers
         private readonly IPersonsWriter _writer;
         private readonly ICollectionManager _collectionManager;
         private readonly ISiteHelper _siteHelper;
-        private readonly IProgressReporterFactory _progressReporter;
+        private readonly IProgressReporterFactory<UpdateProgressHub, UpdateProgressBarModel> _progressReporter;
 
         public PersonController(IPersonsManager manager, IPersonsWriter writer, ICollectionManager collectionManager,
-            ISiteHelper siteHelper, IProgressReporterFactory progressReporter)
+            ISiteHelper siteHelper, IProgressReporterFactory<UpdateProgressHub, UpdateProgressBarModel> progressReporter)
         {
             _manager = manager;
             _writer = writer;
@@ -214,7 +215,7 @@ namespace Mihaylov.Api.Site.Controllers
         [ProducesResponseType(typeof(void), StatusCodes.Status200OK)]
         public IActionResult Accounts([FromForm] string connectionId)
         {
-            var progressReporter = _progressReporter.GetLoadingBarReporter(connectionId, "updateAccountsLoadingBar");
+            var progressReporter = _progressReporter.GetLoadingBarReporter(connectionId, UpdateProgressHub.JS_FUNC_NAME);
 
             _siteHelper.UpdateAccountsAsync(null, 500, progressReporter.Report).GetAwaiter().GetResult();
 

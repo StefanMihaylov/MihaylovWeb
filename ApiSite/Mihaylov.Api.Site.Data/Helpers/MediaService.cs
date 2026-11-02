@@ -53,7 +53,7 @@ namespace Mihaylov.Api.Site.Data.Helpers
             foreach (var fileInfo in fileInfos)
             {
                 count++;
-                var fileProcessed = count.GetPersentage(totalCount);
+                var fileProcessed = count.GetPercentage(totalCount);
 
                 if (fileInfo.Length == 0 && fileInfo.Extension == ".nomedia")
                 {

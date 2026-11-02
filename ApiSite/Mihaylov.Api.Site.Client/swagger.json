@@ -2453,6 +2453,16 @@
       "GridRequest": {
         "type": "object",
         "properties": {
+          "page": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
           "accountTypeId": {
             "type": "integer",
             "format": "int32",
@@ -2473,16 +2483,6 @@
           },
           "accountNameExact": {
             "type": "string",
-            "nullable": true
-          },
-          "page": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
-          },
-          "pageSize": {
-            "type": "integer",
-            "format": "int32",
             "nullable": true
           }
         },
@@ -2507,27 +2507,33 @@
         "properties": {
           "moduleName": {
             "type": "string",
-            "nullable": true
+            "nullable": true,
+            "readOnly": true
           },
           "version": {
             "type": "string",
-            "nullable": true
+            "nullable": true,
+            "readOnly": true
           },
           "framework": {
             "type": "string",
-            "nullable": true
+            "nullable": true,
+            "readOnly": true
           },
           "buildDate": {
             "type": "string",
-            "nullable": true
+            "nullable": true,
+            "readOnly": true
           },
           "gitCommit": {
             "type": "string",
-            "nullable": true
+            "nullable": true,
+            "readOnly": true
           },
           "jenkinsBuildNumber": {
             "type": "string",
-            "nullable": true
+            "nullable": true,
+            "readOnly": true
           }
         },
         "additionalProperties": false
@@ -2576,21 +2582,17 @@
           "page": {
             "type": "integer",
             "format": "int32",
-            "nullable": true
+            "readOnly": true
           },
           "pageSize": {
             "type": "integer",
             "format": "int32",
-            "nullable": true
+            "nullable": true,
+            "readOnly": true
           },
           "count": {
             "type": "integer",
-            "format": "int32"
-          },
-          "pageMax": {
-            "type": "integer",
             "format": "int32",
-            "nullable": true,
             "readOnly": true
           }
         },
@@ -2758,14 +2760,6 @@
       "PersonGrid": {
         "type": "object",
         "properties": {
-          "request": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/GridRequest"
-              }
-            ],
-            "nullable": true
-          },
           "data": {
             "type": "array",
             "items": {
@@ -2777,6 +2771,14 @@
             "allOf": [
               {
                 "$ref": "#/components/schemas/Pager"
+              }
+            ],
+            "nullable": true
+          },
+          "request": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/GridRequest"
               }
             ],
             "nullable": true

@@ -18,7 +18,7 @@ using Mihaylov.Common;
 
 namespace Mihaylov.Api
 {
-    public static class DependencyInjection
+    public static class SiteDataServiceExtensions
     {
         public static IServiceCollection AddSiteServices(this IServiceCollection services, Action<SiteOptions> siteOption)
         {

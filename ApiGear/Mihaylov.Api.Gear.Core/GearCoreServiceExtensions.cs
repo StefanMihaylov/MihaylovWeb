@@ -8,7 +8,7 @@ public class GearCoreConfig()
     public string MediatRLicenseKey { get; set; } = string.Empty;
 };
 
-public static class DependencyInjection
+public static class GearCoreServiceExtensions
 {
     public static IServiceCollection AddGearCqrs(this IServiceCollection services, Action<GearCoreConfig> configAction)
     {
@@ -17,7 +17,7 @@ public static class DependencyInjection
 
         services.AddMediatR(cfg => {
             cfg.LicenseKey = config.MediatRLicenseKey;
-            cfg.RegisterServicesFromAssembly(typeof(DependencyInjection).Assembly);
+            cfg.RegisterServicesFromAssembly(typeof(GearCoreServiceExtensions).Assembly);
         });
 
         services.RegisterDbMapping();

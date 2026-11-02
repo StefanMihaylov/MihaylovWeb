@@ -1,27 +1,29 @@
-﻿using System.Net.Http;
-using System.Net.Http.Headers;
+﻿using System;
+using System.Net.Http;
+using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using Mihaylov.Common;
 
 namespace Mihaylov.Api.Gear.Client
 {
-    public partial interface IGearApiClient
+    public partial interface IGearApiClient : IModuleInfoService
     {
-        public void AddToken(string token);
     }
 
     public partial class GearApiClient : IGearApiClient
     {
-        public const string GEAR_API_CLIENT_NAME = "GearApiClient";
+        public const string API_CLIENT = "GearApiClient";
 
         public GearApiClient(IHttpClientFactory httpClientFactory)
-            : this(httpClientFactory.CreateClient(GEAR_API_CLIENT_NAME))
+            : this(httpClientFactory.CreateClient(API_CLIENT))
         {
             BaseUrl = _httpClient.BaseAddress?.AbsoluteUri;
         }
 
-        public void AddToken(string token)
+        public async Task<IModuleInfo> GetInfoAsync()
         {
-            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            return await this.ModuleGetInfoAsync();
         }
     }
 
@@ -49,5 +51,20 @@ namespace Mihaylov.Api.Gear.Client
 
     public partial class Category : ISmallItem
     {
+    }
+
+
+    public class GearSettings : BaseApiSettings, IBaseApiSettings
+    {
+    }
+
+    public static class GearApiClientExtensions
+    {
+        public static IServiceCollection AddGearApiClient(this IServiceCollection services, Action<OptionsBuilder<GearSettings>> bindSettings)
+        {
+            services.AddApiClient<IGearApiClient, GearApiClient, GearSettings>(GearApiClient.API_CLIENT, bindSettings);
+
+            return services;
+        }
     }
 }

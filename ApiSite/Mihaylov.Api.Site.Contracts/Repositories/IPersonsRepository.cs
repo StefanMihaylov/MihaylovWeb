@@ -16,7 +16,7 @@ namespace Mihaylov.Api.Site.Contracts.Repositories
 
         Task DeletePersonAsync(long id);
 
-        Task<PersonStatistics> GetStaticticsAsync();
+        Task<PersonStatistics> GetStatisticsAsync();
 
         Task<Account> GetAccountAsync(long id);
 

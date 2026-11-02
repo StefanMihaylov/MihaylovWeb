@@ -1,13 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using Mihaylov.Common;
 
 namespace Mihaylov.Api.Site.Contracts.Models.Base
 {
-    public class Grid<T> where T : class
+    public class Grid<T> : BaseGrid<T> where T : class
     {
         public GridRequest Request { get; set; }
-
-        public IEnumerable<T> Data { get; set; }
-
-        public Pager Pager { get; set; }        
     }
 }
