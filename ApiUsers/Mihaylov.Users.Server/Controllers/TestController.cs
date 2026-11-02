@@ -16,14 +16,14 @@ namespace Mihaylov.Users.Server.Controllers
         }
 
         [HttpGet]
-        [JwtAuthorize()]
+        [UserAuthorize()]
         public IActionResult Test2()
         {
             return Ok("Works with authorization");
         }
 
         [HttpGet]
-        [JwtAuthorize(Roles = UserConstants.AdminRole)]
+        [AdminAuthorize]
         public IActionResult Test3()
         {
             return Ok("Works with authorization, Admin");

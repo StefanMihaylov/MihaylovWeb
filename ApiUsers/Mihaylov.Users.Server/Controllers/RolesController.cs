@@ -13,7 +13,7 @@ namespace Mihaylov.Users.Server.Controllers
     [ApiController]
     [Route("api/[controller]/[action]")]
     [Produces("application/json")]
-    [JwtAuthorize(Roles = UserConstants.AdminRole)]
+    [AdminAuthorize]
     public class RolesController : ControllerBase
     {
         private readonly IUsersRepository _usersRepository;

@@ -12,14 +12,9 @@ using Mihaylov.Users.Data.Interfaces;
 
 namespace Mihaylov.Users.Data.Helpers
 {
-    public class TokenHelper : ITokenHelper
+    public class TokenHelper(IOptions<TokenIssuerSettings> appSettings) : ITokenHelper
     {
-        private readonly TokenSettings _appSettings;
-
-        public TokenHelper(IOptions<TokenSettings> appSettings)
-        {
-            this._appSettings = appSettings.Value;
-        }
+        private readonly TokenIssuerSettings _appSettings = appSettings.Value;
 
         public string GetToken(User user, IEnumerable<string> roles, int? customClaimTypes)
         {

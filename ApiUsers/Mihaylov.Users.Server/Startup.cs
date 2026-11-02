@@ -21,21 +21,23 @@ namespace Mihaylov.Users.Server
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddSwaggerCustom("v1", "v1", "Users API", null, true);
+            services.AddSwaggerCustom("v1", "v1", "Users API", null, true, UserConstants.AuthenticationScheme);
 
             services.AddDatabaseDeveloperPageExceptionFilter();
             services.AddControllers();
 
-            var jwtConfig = new JwtTokenSettings()
+            var tokenConfig = new TokenSettings()
             {
                 Secret = Config.GetEnvironmentVariable("JWT_AUTHENTICATION_SECRET"),
                 Issuer = Config.GetEnvironmentVariable("JWT_ISSUER"),
                 Audience = Config.GetEnvironmentVariable("JWT_AUDIENCE"),
+                NameClaimType = ClaimMap.GetClaim(Config.GetEnvironmentVariable("JWT_NameClaim", string.Empty)),
             };
 
             // Add-Migration <Name> -V -Project Mihaylov.Users.Data -StartupProject Mihaylov.Users.Server
 
-            services.AddUserDatabase(opt =>
+            services.AddHttpContextAccessor();
+            services.AddUserDatabase(sp => sp.GetUser()?.GetName(), opt =>
                         {
                             opt.ServerAddress = Config.GetEnvironmentVariable("DB_Users_Address");
                             opt.DatabaseName = Config.GetEnvironmentVariable("DB_Users_Name");
@@ -49,17 +51,24 @@ namespace Mihaylov.Users.Server
                             password.RequireDigit = Config.GetEnvironmentVariable("Password_RequireDigit", bool.TryParse, false);
                             password.RequiredLength = Config.GetEnvironmentVariable("Password_RequiredLength", int.TryParse, 6);
                         })
-                    .AddClientJwtAuthentication(null, opt => opt.Copy(jwtConfig))
+                    .AddClientJwtAuthentication(UserConstants.AuthenticationScheme,
+                            AuthorizationExtensions.GetAuthorizationOptions, null, opt =>
+                            {
+                                opt.Secret = tokenConfig.Secret;
+                                opt.Issuer = tokenConfig.Issuer;
+                                opt.Audience = tokenConfig.Audience;
+                                opt.NameClaimType = tokenConfig.NameClaimType;
+                            })
                     .AddJwtTokenGenerator(opt =>
                        {
-                           opt.Secret = jwtConfig.Secret;
-                           opt.Issuer = jwtConfig.Issuer;
-                           opt.Audience = jwtConfig.Audience;
+                           opt.Secret = tokenConfig.Secret;
+                           opt.Issuer = tokenConfig.Issuer;
+                           opt.Audience = tokenConfig.Audience;
                            opt.ExpiresIn = Config.GetEnvironmentVariable("JWT_ExpiresIn", int.TryParse, 14);
                            opt.ClaimTypes = Config.GetEnvironmentVariable("JWT_Claims", int.TryParse, 0);
                        });
 
-            services.MigrateDatabase<MihaylovUsersDbContext>(c => c.Migrate(), true);
+            services.MigrateDatabase<MihaylovUsersDbContext>(true);
             services.InitializeUsersDb(UserConstants.AdminRole);
             services.AddModuleInfo();
         }

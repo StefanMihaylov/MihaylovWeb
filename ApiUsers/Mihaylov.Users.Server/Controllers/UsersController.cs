@@ -13,7 +13,7 @@ namespace Mihaylov.Users.Server.Controllers
     [ApiController]
     [Route("api/[controller]/[action]")]
     [Produces("application/json")]
-    [JwtAuthorize()]
+    [UserAuthorize()]
     public class UsersController : ControllerBase
     {
         private readonly IUsersRepository _usersRepository;
@@ -24,7 +24,7 @@ namespace Mihaylov.Users.Server.Controllers
         }
 
         [HttpGet(Name = "UsersGetUsers")]
-        [JwtAuthorize(Roles = UserConstants.AdminRole)]
+        [AdminAuthorize]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<UserModel>))]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> GetUsers()

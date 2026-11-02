@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Net.Http;
+using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Mihaylov.Common;
 
 namespace Mihaylov.Api.Users.Client
 {
-    public partial interface IUsersApiClient
+    public partial interface IUsersApiClient : IModuleInfoService
     {
     }
 
@@ -18,6 +19,11 @@ namespace Mihaylov.Api.Users.Client
             : this(httpClientFactory.CreateClient(API_CLIENT))
         {
             BaseUrl = _httpClient.BaseAddress.AbsoluteUri;
+        }
+
+        public async Task<IModuleInfo> GetInfoAsync()
+        {
+            return await this.ModuleGetInfoAsync();
         }
     }
 
@@ -44,7 +50,7 @@ namespace Mihaylov.Api.Users.Client
     {
     }
 
-    public static class DependencyInjection
+    public static class UsersApiClientExtensions
     {
         public static IServiceCollection AddUsersApiClient(this IServiceCollection services, Action<OptionsBuilder<UsersSettings>> bindSettings)
         {

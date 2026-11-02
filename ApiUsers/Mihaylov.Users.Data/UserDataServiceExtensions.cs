@@ -10,20 +10,18 @@ using Mihaylov.Users.Data.Interfaces;
 
 namespace Mihaylov.Users.Data
 {
-    public static class DependencyInjection
+    public static class UserDataServiceExtensions
     {
-        public static IServiceCollection AddUserDatabase(this IServiceCollection services, Action<ConnectionStringSettings> connectionString, Action<PasswordOptions> passwordOptions)
+        public static IServiceCollection AddUserDatabase(this IServiceCollection services, Func<IServiceProvider, string> userNameFunc, 
+            Action<ConnectionStringSettings> connectionString, Action<PasswordOptions> passwordOptions)
         {
             var connectionStringSettings = new ConnectionStringSettings();
             connectionString(connectionStringSettings);
 
             var password = new PasswordOptions();
-            if (passwordOptions != null)
-            {
-                passwordOptions(password);
-            }
+            passwordOptions?.Invoke(password);
 
-            services.SetDatabase();
+            services.SetDatabase(userNameFunc);
 
             services.AddScoped<IUsersRepository, UsersRepository>();
             services.AddScoped<IExternalRepository, ExternalRepository>();
@@ -63,9 +61,9 @@ namespace Mihaylov.Users.Data
             return services;
         }
 
-        public static IServiceCollection AddJwtTokenGenerator(this IServiceCollection services, Action<TokenSettings> settings)
+        public static IServiceCollection AddJwtTokenGenerator(this IServiceCollection services, Action<TokenIssuerSettings> settings)
         {
-            services.Configure<TokenSettings>(settings);
+            services.Configure<TokenIssuerSettings>(settings);
             services.AddScoped<ITokenHelper, TokenHelper>();
 
             return services;
