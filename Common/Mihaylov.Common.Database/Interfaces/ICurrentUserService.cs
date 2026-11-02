@@ -1,19 +1,13 @@
 ﻿namespace Mihaylov.Common;
 
 /// <summary>
-/// Provides access to the current authenticated user's identifier and username.
+/// Provides the name of the user that is recorded in the audit fields (created by, modified by).
 /// </summary>
 public interface ICurrentUserService
 {
     /// <summary>
-    /// Gets the identifier for the current instance.
+    /// Gets the name of the current user.
     /// </summary>
-    /// <returns>The identifier string.</returns>
-    string GetId();
-
-    /// <summary>
-    /// Gets the current user's user name.
-    /// </summary>
-    /// <returns>The user name.</returns>
+    /// <returns>The user name, or <c>"System"</c> when there is no current user (startup, migrations, background work).</returns>
     string GetUserName();
 }

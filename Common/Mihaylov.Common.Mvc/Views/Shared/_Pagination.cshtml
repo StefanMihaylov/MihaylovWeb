@@ -1,0 +1,39 @@
+﻿@model Mihaylov.Common.PagerModel
+
+@if (Model.PageSize.HasValue)
+{
+    <nav aria-label="Pagination">
+        <ul class="pagination">
+            @if (Model.Count > Model.PageSize)
+            {
+                <li class="page-item @(Model.HasPrevious ? "" : "disabled")">
+                    <a class="page-link" href="@(Model.HasPrevious ? Model.PageUrl(Model.Page - 1) : "#")">&laquo; Prev</a>
+                </li>
+
+                @foreach (var number in Model.Numbers())
+                {
+                    if (number is null)
+                    {
+                        <li class="page-item disabled"><span class="page-link">&hellip;</span></li>
+                    }
+                    else if (number == Model.Page)
+                    {
+                        <li class="page-item active" aria-current="page"><span class="page-link">@number</span></li>
+                    }
+                    else
+                    {
+                        <li class="page-item"><a class="page-link" href="@Model.PageUrl(number.Value)">@number</a></li>
+                    }
+                }
+
+                <li class="page-item @(Model.HasNext ? "" : "disabled")">
+                    <a class="page-link" href="@(Model.HasNext ? Model.PageUrl(Model.Page + 1) : "#")">Next &raquo;</a>
+                </li>
+            }
+
+            <li class="page-item disabled">
+                <span class="page-link">@Model.PageSize per page &middot; @Model.Count @Model.ItemLabel</span>
+            </li>
+        </ul>
+    </nav>
+}

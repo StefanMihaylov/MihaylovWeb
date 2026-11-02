@@ -1,0 +1,28 @@
+<Project>
+
+  <PropertyGroup>
+    <Authors>Mihaylov</Authors>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <DebugType>embedded</DebugType>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <Deterministic>true</Deterministic>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>  
+  </PropertyGroup>
+
+  <PropertyGroup>
+		<NoWarn>$(NoWarn);IDE0130</NoWarn>  <!--Folder structure in namespaces-->
+  </PropertyGroup>
+
+	<PropertyGroup>
+		<EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+	</PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\_Tools\Mihaylov.Common.Analyzers\Mihaylov.Common.Analyzers.csproj"
+                      OutputItemType="Analyzer" ReferenceOutputAssembly="false" PrivateAssets="all" /> 
+  </ItemGroup>
+
+</Project>

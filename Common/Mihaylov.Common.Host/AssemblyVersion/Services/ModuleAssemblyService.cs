@@ -1,7 +1,4 @@
-﻿using System;
-using System.IO;
-using System.Reflection;
-using System.Runtime.Versioning;
+﻿using System.Reflection;
 using Microsoft.Extensions.Options;
 
 namespace Mihaylov.Common;
@@ -33,28 +30,19 @@ public class ModuleAssemblyService : IModuleAssemblyService
     /// 'yyyy.MM.dd HH:mm', git commit, and build number.</returns>
     public IModuleInfo GetModuleInfo()
     {
-        var assemblyName = _rootAssembly.GetName();
+        var versionInfo = VersionHelper.GetVersionInfo(_rootAssembly);
 
         var framework = _systemConfig.GetVersion();
-        if (string.IsNullOrEmpty(framework))
+        if (string.IsNullOrWhiteSpace(framework))
         {
-            framework = _rootAssembly.GetCustomAttribute<TargetFrameworkAttribute>()?.FrameworkDisplayName;
-            if (string.IsNullOrEmpty(framework))
-            {
-                framework = assemblyName.Name;
-            }
+            framework = versionInfo.Framework;
         }
-
-        var name = _rootAssembly.GetCustomAttribute<AssemblyProductAttribute>()?.Product ?? assemblyName.Name;
-        var version = _rootAssembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion ?? assemblyName.Version.ToString();
-
-        DateTime buildDate = new FileInfo(_rootAssembly.Location).LastWriteTimeUtc;
 
         var gitCommit = _systemConfig.GetGitCommit();
         var buildNumber = _systemConfig.GetJenkinsBuildNumber();
 
-        var result = new ModuleInfo(name, version, framework, buildDate.ToString("yyyy.MM.dd HH:mm"), gitCommit, buildNumber);
-        
+        var result = new ModuleInfo(versionInfo.ModuleName, versionInfo.Version, framework, versionInfo.BuildDate, gitCommit, buildNumber);
+
         return result;
     }
 }

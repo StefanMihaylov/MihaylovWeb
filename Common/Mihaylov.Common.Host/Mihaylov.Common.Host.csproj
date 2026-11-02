@@ -6,30 +6,19 @@
 	</PropertyGroup>
 
 	<PropertyGroup>
-		<Version>0.2.1</Version>
+		<Version>0.2.2</Version>
 		<PackageId>Mihaylov.Common.Host</PackageId>
 		<Description>Shared Host utilities.</Description>
-		<Authors>Mihaylov</Authors>
-	</PropertyGroup>
-
-	<PropertyGroup>
-		<DebugType>embedded</DebugType>
-		<PublishRepositoryUrl>true</PublishRepositoryUrl>
-		<EmbedUntrackedSources>true</EmbedUntrackedSources>
-		<Deterministic>true</Deterministic>
-		<!--<SymbolPackageFormat>snupkg</SymbolPackageFormat>-->
-		<!--<IncludeSymbols>true</IncludeSymbols>-->
-		<GenerateDocumentationFile>true</GenerateDocumentationFile>
-	</PropertyGroup>
-
-	<PropertyGroup>
-		<NoWarn>$(NoWarn);IDE0130</NoWarn>
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Mihaylov.Common.Generic" Version="0.2.0" />
-		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.12" />		
-		<PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="10.3.0" />
-		<PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="10.3.0" />
+		<!--<PackageReference Include="Mihaylov.Common.Core" Version="0.2.0" />-->
+		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.14" />		
+		<PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="10.3.1" />
+		<PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="10.3.1" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\Mihaylov.Common.Core\Mihaylov.Common.Core.csproj" />
 	</ItemGroup>	
 </Project>

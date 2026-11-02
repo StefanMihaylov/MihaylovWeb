@@ -1,9 +1,9 @@
 ﻿using System.Threading.Tasks;
 using System.Threading;
 using System.Linq;
-using Mihaylov.Common;
+using Microsoft.EntityFrameworkCore;
 
-namespace Microsoft.EntityFrameworkCore;
+namespace Mihaylov.Common;
 
 /// <summary>
 /// Generic DbContext base that applies audit metadata from an IAuditService to tracked entities before persisting

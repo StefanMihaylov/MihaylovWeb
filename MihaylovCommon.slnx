@@ -1,5 +1,11 @@
 <Solution>
+  <Folder Name="/Solution Items/">
+    <File Path="Common/Directory.Build.props" />
+  </Folder>
+  <Project Path="Common/Mihaylov.Common.Auth/Mihaylov.Common.Auth.csproj" Id="9dcd0a1e-1553-43eb-846c-1389abc0547b" />
+  <Project Path="Common/Mihaylov.Common.Core/Mihaylov.Common.Core.csproj" Id="173cdca7-11cc-4c54-881f-be3a09f83db3" />
   <Project Path="Common/Mihaylov.Common.Database/Mihaylov.Common.Database.csproj" />
-  <Project Path="Common/Mihaylov.Common.Generic/Mihaylov.Common.Generic.csproj" />
   <Project Path="Common/Mihaylov.Common.Host/Mihaylov.Common.Host.csproj" />
+  <Project Path="Common/Mihaylov.Common.Http/Mihaylov.Common.Http.csproj" Id="97b8aeb9-ed15-4cf6-8731-43055b074f74" />
+  <Project Path="Common/Mihaylov.Common.Mvc/Mihaylov.Common.Mvc.csproj" Id="246ccd07-a808-4002-afef-a6544a17de60" />
 </Solution>

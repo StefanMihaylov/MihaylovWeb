@@ -1,0 +1,14 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+	  <Nullable>disable</Nullable>
+  </PropertyGroup>
+
+	<PropertyGroup>
+		<Version>0.2.0</Version>
+		<PackageId>Mihaylov.Common.Core</PackageId>
+		<Description>Shared Common utilities.</Description>
+	</PropertyGroup>
+
+</Project>

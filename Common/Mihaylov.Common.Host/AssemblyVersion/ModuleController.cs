@@ -15,7 +15,7 @@ public class ModuleController(IModuleAssemblyService moduleService) : Controller
     /// Gets information about the module.
     /// </summary>
     /// <returns>An HTTP 200 (OK) response containing a ModuleInfo instance.</returns>
-    [HttpGet(Name = "ModuleGetInfo")]
+    [HttpGet(Name = IModuleInfoService.ACTION_NAME)]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ModuleInfo))]
     public IActionResult GetInfo()
     {

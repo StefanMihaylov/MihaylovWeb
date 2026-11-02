@@ -9,18 +9,12 @@ namespace Mihaylov.Common;
 /// Applies audit metadata to EntityEntry instances by setting CreatedOn/CreatedBy for additions, ModifiedOn/ModifiedBy
 /// for modifications, and converting deletions of IDeletableEntity into soft deletes (DeletedOn, DeletedBy, IsDeleted).
 /// </summary>
-public class AuditService : IAuditService
+/// <remarks>
+/// Initializes a new instance of AuditService with the provided current user service.
+/// </remarks>
+/// <param name="currentUser">Service that provides information about the current user.</param>
+public class AuditService(ICurrentUserService currentUser) : IAuditService
 {
-    private readonly ICurrentUserService _currentUser;
-
-    /// <summary>
-    /// Initializes a new instance of AuditService with the provided current user service.
-    /// </summary>
-    /// <param name="currentUser">Service that provides information about the current user.</param>
-    public AuditService(ICurrentUserService currentUser)
-    {
-        this._currentUser = currentUser;
-    }
 
     /// <summary>
     /// Apply audit information to the specified EntityEntry objects: set CreatedOn/CreatedBy for added entities,
@@ -29,7 +23,7 @@ public class AuditService : IAuditService
     /// </summary>
     public void ApplyAuditInformation(List<EntityEntry> entities)
     {
-        var userName = this._currentUser.GetUserName();
+        var userName = currentUser.GetUserName();
 
         entities.ForEach(entry =>
         {

@@ -9,9 +9,6 @@ public class WebHostSettings
     /// <summary> Gets or sets the name of the cookie. </summary>
     public string CookieName { get; set; }
 
-    /// <summary> Gets or sets the claim type that contains the username. </summary>
-    public ClaimType? UsernameClaimType { get; set; }
-
     /// <summary> Gets or sets the URL used to initiate user authentication. </summary>
     public string LoginUrl { get; set; }
 }
