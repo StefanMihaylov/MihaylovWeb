@@ -9,7 +9,7 @@
 	<ItemGroup>
 		<PackageReference Include="Mihaylov.Common.Auth" Version="0.2.0" />
 		<PackageReference Include="Mihaylov.Common.Core" Version="0.2.0" />
-		<PackageReference Include="Mihaylov.Common.Database" Version="0.2.1" />
+		<PackageReference Include="Mihaylov.Common.Database" Version="0.2.2" />
 		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.14" />
 		<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="10.0.14" />
 	</ItemGroup>

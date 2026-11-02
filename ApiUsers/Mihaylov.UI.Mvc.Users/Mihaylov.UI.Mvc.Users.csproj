@@ -1,0 +1,32 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
+	<PropertyGroup>
+		<TargetFramework>net10.0</TargetFramework>
+		<Nullable>disable</Nullable>
+		<ImplicitUsings>disable</ImplicitUsings>
+		<AddRazorSupportForMvc>true</AddRazorSupportForMvc>
+	</PropertyGroup>
+
+	<PropertyGroup>
+		<Version>0.4.0</Version>
+		<PackageId>Mihaylov.UI.Mvc.Users</PackageId>
+		<Description>Users Mvc UI</Description>
+		<Authors>Mihaylov</Authors>
+	</PropertyGroup>
+
+	<PropertyGroup>
+		<DebugType>embedded</DebugType>
+		<PublishRepositoryUrl>true</PublishRepositoryUrl>
+		<EmbedUntrackedSources>true</EmbedUntrackedSources>
+		<Deterministic>true</Deterministic>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<FrameworkReference Include="Microsoft.AspNetCore.App" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Mihaylov.Common.Mvc" Version="0.2.0" />
+		<PackageReference Include="Mihaylov.Api.Users.Client" Version="0.4.0" />
+		<PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="10.0.14" />
+	</ItemGroup>
+</Project>

@@ -2,8 +2,9 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
+using Mihaylov.Common;
 
-namespace Mihaylov.Web.Areas.Identity.Pages.Account
+namespace Mihaylov.UI.Mvc.Users.Areas.Identity.Pages.Account
 {
     public class LogoutModel : PageModel
     {
@@ -35,7 +36,7 @@ namespace Mihaylov.Web.Areas.Identity.Pages.Account
 
         public static void Logout(HttpResponse response)
         {
-            response.Cookies.Delete(LoginModel.COOKIE_NAME);
+            response.Cookies.Delete(IAccessTokenProvider.COOKIE_NAME);
         }
     }
 }

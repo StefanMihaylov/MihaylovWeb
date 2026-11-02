@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Mihaylov.Common;
 
-namespace Mihaylov.Web.Common;
+namespace Mihaylov.UI.Mvc.Users;
 
 public class CookieTokenProvider(IHttpContextAccessor accessor) : IAccessTokenProvider
 {

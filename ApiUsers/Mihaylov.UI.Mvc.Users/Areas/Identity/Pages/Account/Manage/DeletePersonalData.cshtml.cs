@@ -11,7 +11,7 @@ using Microsoft.Extensions.Logging;
 using Mihaylov.Api.Users.Client;
 using Mihaylov.Common;
 
-namespace Mihaylov.Web.Areas.Identity.Pages.Account.Manage
+namespace Mihaylov.UI.Mvc.Users.Areas.Identity.Pages.Account.Manage
 {
     public class DeletePersonalDataModel : PageModel
     {
@@ -80,7 +80,6 @@ namespace Mihaylov.Web.Areas.Identity.Pages.Account.Manage
                 }
             }
 
-            _usersApiClient.AddToken(Request.GetToken());
             var result = await _usersApiClient.UsersDeleteUserAsync(User.GetId()).ConfigureAwait(false);
             if (!result.Succeeded)
             {

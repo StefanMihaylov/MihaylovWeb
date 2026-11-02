@@ -10,7 +10,7 @@ using Microsoft.Extensions.Logging;
 using Mihaylov.Api.Users.Client;
 using Mihaylov.Common;
 
-namespace Mihaylov.Web.Areas.Identity.Pages.Account.Manage
+namespace Mihaylov.UI.Mvc.Users.Areas.Identity.Pages.Account.Manage
 {
     public class ChangePasswordModel : PageModel
     {
@@ -91,7 +91,6 @@ namespace Mihaylov.Web.Areas.Identity.Pages.Account.Manage
                 NewPassword = Input.NewPassword,
             };
 
-            _usersApiClient.AddToken(Request.GetToken());
             var response = await _usersApiClient.UsersChangePasswordAsync(request).ConfigureAwait(false);
 
             if (!response.Succeeded)

@@ -11,12 +11,10 @@ using Microsoft.Extensions.Logging;
 using Mihaylov.Api.Users.Client;
 using Mihaylov.Common;
 
-namespace Mihaylov.Web.Areas.Identity.Pages.Account
+namespace Mihaylov.UI.Mvc.Users.Areas.Identity.Pages.Account
 {
     public class LoginModel : PageModel
     {
-        public const string COOKIE_NAME = "X-Access-Token";
-
         // private readonly SignInManager<IdentityUser> _signInManager;
         private readonly ILogger _logger;
         private readonly IUsersApiClient _usersApiClient;
@@ -118,7 +116,7 @@ namespace Mihaylov.Web.Areas.Identity.Pages.Account
                 {
                     UserName = Input.UserName,
                     Password = Input.Password,
-                    ClaimTypesEnum = ClaimType.Username,
+                   // ClaimTypesEnum = ClaimType.Username,  TODO
                     LockoutOnFailure = true,
                 };
 
@@ -144,7 +142,7 @@ namespace Mihaylov.Web.Areas.Identity.Pages.Account
                     SameSite = SameSiteMode.Lax
                 };
 
-                Response.Cookies.Append(COOKIE_NAME, response.Token, cookieOptions);
+                Response.Cookies.Append(IAccessTokenProvider.COOKIE_NAME, response.Token, cookieOptions);
 
                 _logger.LogInformation($"User '{Input.UserName}' logged in.");
                 return LocalRedirect(returnUrl);

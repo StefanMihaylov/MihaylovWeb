@@ -1,12 +1,32 @@
-﻿using Microsoft.AspNetCore.Mvc.ApplicationParts;
-using Microsoft.AspNetCore.Mvc.Razor.Compilation;
+﻿using System;
 using System.Collections.Generic;
-using System.Reflection;
-using System;
 using System.Linq;
+using System.Reflection;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.ApplicationParts;
+using Microsoft.AspNetCore.Mvc.Razor.Compilation;
 
-namespace Mihaylov.Web.Areas
+namespace Mihaylov.UI.Mvc.Users
 {
+    public static class ApplicationPartManagerExtension
+    {
+        public static ApplicationPartManager AddUsersIdentityPages(this ApplicationPartManager manager)
+        {
+            var assembly = typeof(IdentityBuilderUIExtensions).Assembly;
+            var factory = new ConsolidatedAssemblyApplicationPartFactory();
+            var parts = factory.GetApplicationParts(assembly).ToList();
+
+            foreach (var part in parts)
+            {
+                manager.ApplicationParts.Add(part);
+            }
+
+            manager.FeatureProviders.Add(new ViewVersionFeatureProvider(assembly));
+
+            return manager;
+        }
+    }
+
     public class ViewVersionFeatureProvider : IApplicationFeatureProvider<ViewsFeature>
     {
         private readonly Assembly _assembly;

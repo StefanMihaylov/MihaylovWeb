@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Mihaylov.Api.Users.Client;
 using Mihaylov.Common;
 
-namespace Mihaylov.Web.Areas.Identity.Pages.Account.Manage
+namespace Mihaylov.UI.Mvc.Users.Areas.Identity.Pages.Account.Manage
 {
     public class IndexModel : PageModel
     {
@@ -88,7 +88,6 @@ namespace Mihaylov.Web.Areas.Identity.Pages.Account.Manage
                 LastName = this.Input.LastName,
             };
 
-            _usersApiClient.AddToken(Request.GetToken());
             var response = await _usersApiClient.UsersUpdateUserAsync(request).ConfigureAwait(false);
             if (!response.Succeeded)
             {
@@ -104,7 +103,6 @@ namespace Mihaylov.Web.Areas.Identity.Pages.Account.Manage
 
         private async Task LoadAsync()
         {
-            _usersApiClient.AddToken(Request.GetToken());
             var userData = await _usersApiClient.UsersGetUserByIdAsync(User.GetId()).ConfigureAwait(false);
 
             Username = userData.UserName;

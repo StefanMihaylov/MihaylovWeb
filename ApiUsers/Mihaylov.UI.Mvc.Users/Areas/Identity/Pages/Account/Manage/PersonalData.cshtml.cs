@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using Mihaylov.Api.Users.Client;
 
-namespace Mihaylov.Web.Areas.Identity.Pages.Account.Manage
+namespace Mihaylov.UI.Mvc.Users.Areas.Identity.Pages.Account.Manage
 {
     public class PersonalDataModel : PageModel
     {
