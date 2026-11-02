@@ -18,8 +18,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\Mihaylov.Common.Auth\Mihaylov.Common.Auth.csproj" />
-	  <ProjectReference Include="..\Mihaylov.Common.Core\Mihaylov.Common.Core.csproj" />
+	  <PackageReference Include="Mihaylov.Common.Auth" Version="0.2.0" />
+	  <PackageReference Include="Mihaylov.Common.Core" Version="0.2.0" />
 	</ItemGroup>
 
 </Project>

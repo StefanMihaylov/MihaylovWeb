@@ -13,13 +13,12 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<PackageReference Include="Mihaylov.Common.Core" Version="0.2.0" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.14" />
+	</ItemGroup>
+	
+	<ItemGroup>
 		<!--Overrides the Pkcs 9.0.11 package from SqlServer package because it has vulnerabilities-->
 		<PackageReference Include="System.Security.Cryptography.Pkcs" Version="10.0.14" />
 	</ItemGroup>
-
-	<ItemGroup>
-	  <ProjectReference Include="..\Mihaylov.Common.Core\Mihaylov.Common.Core.csproj" />
-	</ItemGroup>
-
 </Project>
