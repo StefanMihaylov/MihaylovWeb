@@ -1,16 +1,15 @@
-﻿@model LocationGrid
+﻿@model LocationViewModel
 
 <div class="col-md-6 location-grid">
-    <h5>Зали - @Model.Pager.Count</h5>
     <table class="table table-bordered table-striped">
         <thead>
             <tr>
-                <th>@Html.LabelFor(m => m.Data.First().Name)</th>
+                <th>@Html.LabelFor(m => m.Locations.Data.First().Name)</th>
                 <th>Action</th>
             </tr>
         </thead>
         <tbody>
-            @foreach (var location in Model.Data)
+            @foreach (var location in Model.Locations.Data)
             {
                 <tr>
                     <td><my-value>@location.Name</my-value></td>
@@ -38,5 +37,5 @@
         </tbody>
     </table>
 
-    @await Html.PartialAsync("_Pager", new PagerExtended(Model.Pager, ConcertController.LOCATIONS_TAB))
+    @await Html.PartialAsync("_Pagination", new PagerExtended(Model.Locations.Pager, Model.Request, Url.Href(new MenuRoute<ConcertController>(c => c.Index(null))), "locations"))
 </div>

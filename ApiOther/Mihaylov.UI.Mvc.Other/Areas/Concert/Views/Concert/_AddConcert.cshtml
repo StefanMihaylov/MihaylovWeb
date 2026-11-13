@@ -16,12 +16,12 @@
         <td>
             @for (int i = 0; i < 6; i++)
             {
-                @Html.DropDownList($"BandIds[{i}]", Model.Bands.Select(a => new SelectListItem(a.Name, a.Id.ToString())), "---", new { id = $"concert-band-{i}", style = "min-width: 200px" })
+                @Html.DropDownList($"BandIds[{i}]", Model.Bands.GetListItems(a => a.Id, a => a.Name), "---", new { id = $"concert-band-{i}", style = "min-width: 200px" })
                 @Html.ValidationMessage($"BandIds[{i}]")
             }
         </td>
         <td>
-            @Html.DropDownListFor(m => m.ConcertTypeId, Model.ConcertTypes.Select(a => new SelectListItem(a.Name, a.Id.ToString())), "---", new { id = "concert-type-input" })
+            @Html.DropDownListFor(m => m.ConcertTypeId, Model.ConcertTypes.GetListItems(a => a.Id, a => a.Name), "---", new { id = "concert-type-input" })
             @Html.ValidationMessageFor(m => m.ConcertTypeId)
         </td>
         <td>
@@ -33,11 +33,11 @@
             @Html.ValidationMessageFor(m => m.Currency)
         </td>
         <td>
-            @Html.DropDownListFor(m => m.Location, Model.Locations.Select(a => new SelectListItem(a.Name, a.Id.ToString())), "---", new { id = "concert-location-input" })
+            @Html.DropDownListFor(m => m.Location, Model.Locations.GetListItems(a => a.Id, a => a.Name), "---", new { id = "concert-location-input" })
             @Html.ValidationMessageFor(m => m.Location)
         </td>
         <td>
-            @Html.DropDownListFor(m => m.TicketProvider, Model.TicketProviders.Select(a => new SelectListItem(a.Name, a.Id.ToString())), "---", new { id = "concert-ticket-provider-input" })
+            @Html.DropDownListFor(m => m.TicketProvider, Model.TicketProviders.GetListItems(a => a.Id, a => a.Name), "---", new { id = "concert-ticket-provider-input" })
             @Html.ValidationMessageFor(m => m.TicketProvider)
         </td>
         <td>

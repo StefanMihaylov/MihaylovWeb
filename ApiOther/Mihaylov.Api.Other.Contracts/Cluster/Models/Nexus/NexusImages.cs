@@ -4,8 +4,8 @@ namespace Mihaylov.Api.Other.Contracts.Cluster.Models.Nexus
 {
     public class NexusImages
     {
-        public IEnumerable<NexusImage> Images { get; set; }
+        public IEnumerable<NexusDockerImage> Images { get; set; }
 
-        public IEnumerable<NexusImage> Nugets { get; set; }
+        public IEnumerable<MicrosoftRuntime> Runtimes { get; set; }
     }
 }

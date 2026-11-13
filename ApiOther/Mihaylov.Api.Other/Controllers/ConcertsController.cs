@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Mihaylov.Api.Other.Contracts.Base.Models;
 using Mihaylov.Api.Other.Contracts.Show.Interfaces;
 using Mihaylov.Api.Other.Contracts.Show.Models;
 using Mihaylov.Api.Other.Extensions;
@@ -13,7 +12,7 @@ using Mihaylov.Common;
 
 namespace Mihaylov.Api.Other.Controllers
 {
-    [JwtAuthorize(Roles = UserConstants.AdminRole)]
+    [AdminAuthorize]
     [Route("api/[controller]/[action]")]
     [ApiController]
     [TypeFilter(typeof(ErrorFilter))]
@@ -32,10 +31,10 @@ namespace Mihaylov.Api.Other.Controllers
         }
 
         [HttpGet]
-        [ProducesResponseType(typeof(Grid<ConcertExtended>), StatusCodes.Status200OK)]
-        public async Task<IActionResult> Concerts([FromQuery]GridRequest request)
+        [ProducesResponseType(typeof(BaseGrid<ConcertExtended>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> Concerts([FromQuery]BaseGridRequest request)
         {
-            Grid<ConcertExtended> concerts = await _service.GetConcertsAsync(request).ConfigureAwait(false);
+            BaseGrid<ConcertExtended> concerts = await _service.GetConcertsAsync(request).ConfigureAwait(false);
 
             return Ok(concerts);
         }
@@ -63,10 +62,10 @@ namespace Mihaylov.Api.Other.Controllers
         }
 
         [HttpGet]
-        [ProducesResponseType(typeof(Grid<BandExtended>), StatusCodes.Status200OK)]
-        public async Task<IActionResult> Bands([FromQuery] GridRequest request)
+        [ProducesResponseType(typeof(BaseGrid<BandExtended>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> Bands([FromQuery] BaseGridRequest request)
         {
-            Grid<BandExtended> bands = await _service.GetBandsAsync(request).ConfigureAwait(false);
+            BaseGrid<BandExtended> bands = await _service.GetBandsAsync(request).ConfigureAwait(false);
 
             return Ok(bands);
         }
@@ -88,10 +87,10 @@ namespace Mihaylov.Api.Other.Controllers
         }
 
         [HttpGet]
-        [ProducesResponseType(typeof(Grid<Location>), StatusCodes.Status200OK)]
-        public async Task<IActionResult> Locations([FromQuery] GridRequest request)
+        [ProducesResponseType(typeof(BaseGrid<Location>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> Locations([FromQuery] BaseGridRequest request)
         {
-            Grid<Location> locations = await _service.GetLocationsAsync(request).ConfigureAwait(false);
+            BaseGrid<Location> locations = await _service.GetLocationsAsync(request).ConfigureAwait(false);
 
             return Ok(locations);
         }
@@ -112,10 +111,10 @@ namespace Mihaylov.Api.Other.Controllers
         }
 
         [HttpGet]
-        [ProducesResponseType(typeof(Grid<TicketProvider>), StatusCodes.Status200OK)]
-        public async Task<IActionResult> TicketProviders([FromQuery] GridRequest request)
+        [ProducesResponseType(typeof(BaseGrid<TicketProvider>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> TicketProviders([FromQuery] BaseGridRequest request)
         {
-            Grid<TicketProvider> providers = await _service.GetTicketProvidersAsync(request).ConfigureAwait(false);
+            BaseGrid<TicketProvider> providers = await _service.GetTicketProvidersAsync(request).ConfigureAwait(false);
 
             return Ok(providers);
         }
@@ -138,10 +137,10 @@ namespace Mihaylov.Api.Other.Controllers
         }
 
         [HttpGet]
-        [ProducesResponseType(typeof(Grid<CountryExtended>), StatusCodes.Status200OK)]
-        public async Task<IActionResult> Countries([FromQuery] GridRequest request)
+        [ProducesResponseType(typeof(BaseGrid<CountryExtended>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> Countries([FromQuery] BaseGridRequest request)
         {
-            Grid<CountryExtended> countries = await _service.GetCountriesAsync(request).ConfigureAwait(false);
+            BaseGrid<CountryExtended> countries = await _service.GetCountriesAsync(request).ConfigureAwait(false);
 
             return Ok(countries);
         }

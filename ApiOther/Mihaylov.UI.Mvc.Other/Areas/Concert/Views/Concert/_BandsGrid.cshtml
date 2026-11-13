@@ -1,7 +1,6 @@
 ﻿@model BandViewModel
 
 <div class="col-md-6 band-grid">
-    <h5>Банди - @Model.Bands.Pager.Count</h5>
     <table class="table table-bordered table-striped">
         <thead>
             <tr>
@@ -27,26 +26,26 @@
             }
 
             <form action="@Url.Href(new MenuRoute<ConcertController>(c => c.Band(null)))" method="post">
-            <tr>
-                <td>
-                    <input type="hidden" name="Page" value="@Model.Bands.Pager.Page" />
-                    <input type="hidden" id="band-id-input" name="Id" value="" />
-                    <input type="text" id="new-band-input" name="Name" placeholder="Добави нов" role="presentation" aria-autocomplete="none" autocomplete="false" />
-                    @Html.ValidationMessage("Name")
-                </td>
-                <td>
-                    @Html.DropDownList("CountryId", Model.Countries.Select(a => new SelectListItem(a.Name, a.Id.ToString())), "---", new { id = "new-band-country-id-input" })
-                    @Html.ValidationMessage("CountryId")
-                </td>
-                <td></td>
-                <td>
-                    <input type="submit" class="btn btn-primary" value="Добави" />
-                    <span class="btn btn-secondary band-cancel-btn">Отказ</span>
-                </td>
-            </tr>
+                <tr>
+                    <td>
+                        <input type="hidden" name="Page" value="@Model.Bands.Pager.Page" />
+                        <input type="hidden" id="band-id-input" name="Id" value="" />
+                        <input type="text" id="new-band-input" name="Name" placeholder="Добави нов" role="presentation" aria-autocomplete="none" autocomplete="false" />
+                        @Html.ValidationMessage("Name")
+                    </td>
+                    <td>
+                        @Html.DropDownList("CountryId", Model.Countries.GetListItems(a => a.Id, a => a.Name), "---", new { id = "new-band-country-id-input" })
+                        @Html.ValidationMessage("CountryId")
+                    </td>
+                    <td></td>
+                    <td>
+                        <input type="submit" class="btn btn-primary" value="Добави" />
+                        <span class="btn btn-secondary band-cancel-btn">Отказ</span>
+                    </td>
+                </tr>
             </form>
         </tbody>
     </table>
 
-    @await Html.PartialAsync("_Pager", new PagerExtended(Model.Bands.Pager, ConcertController.BANDS_TAB))
+    @await Html.PartialAsync("_Pagination", new PagerExtended(Model.Bands.Pager, Model.Request, Url.Href(new MenuRoute<ConcertController>(c => c.Index(null))), "bands"))
 </div>

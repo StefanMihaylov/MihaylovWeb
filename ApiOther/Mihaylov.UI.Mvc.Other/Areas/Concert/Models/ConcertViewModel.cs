@@ -2,4 +2,4 @@
 
 namespace Mihaylov.UI.Mvc.Other.Areas.Concert.Models;
 
-public record ConcertViewModel(ConcertExtendedGrid Concerts, AddConcertVewModel Input);
+public record ConcertViewModel(ConcertExtendedBaseGrid Concerts, AddConcertVewModel Input, ConcertQueryRequest Request);

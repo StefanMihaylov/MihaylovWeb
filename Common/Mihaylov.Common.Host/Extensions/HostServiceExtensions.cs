@@ -37,19 +37,32 @@ public static class HostServiceExtensions
     }
 
     /// <summary>
-    /// Adds and configures JWT bearer authentication and an authorization policy using TokenSettings and optional WebHostSettings.
+    /// Adds JWT bearer authentication and authorization, using <see cref="TokenSettings"/> and optional <see cref="WebHostSettings"/>.
     /// </summary>
     /// <param name="services">The service collection to which authentication and authorization services are added.</param>
-    /// <param name="defaultScheme"></param>
-    /// <param name="authorizationOptions"></param>
-    /// <param name="webSettings">Optional configuration action for WebHostSettings used for cookie-based token retrieval, username claim mapping,
-    /// and login redirection in web scenarios.</param>
-    /// <param name="settings">Configuration action for TokenSettings that supplies secret, issuer, and audience values used to validate JWTs.</param>
-    /// <returns>The IServiceCollection with authentication and authorization configured.</returns>
+    /// <param name="defaultScheme">
+    /// The authentication scheme used to authenticate and challenge by default. It must match the scheme the
+    /// authorize attributes use (<c>UserConstants.AuthenticationScheme</c> in <c>Mihaylov.Common.Auth</c>).
+    /// </param>
+    /// <param name="authorizationOptions">
+    /// Configures the authorization policies and is passed to <c>AddAuthorization</c>. Hosts pass
+    /// <c>AuthorizationExtensions.GetAuthorizationOptions</c> from <c>Mihaylov.Common.Auth</c>. It must not be <c>null</c>.
+    /// </param>
+    /// <param name="webSettings">
+    /// Optional configuration action for <see cref="WebHostSettings"/>. When set, the token is read from the configured
+    /// cookie and a failed authentication deletes the cookie and redirects to the login URL. When <c>null</c>, a failed
+    /// authentication returns 401 (API hosts).
+    /// </param>
+    /// <param name="settings">Configuration action for <see cref="TokenSettings"/> with the secret, issuer, audience and name claim type used to validate tokens.</param>
+    /// <returns>The <see cref="IServiceCollection"/> with authentication and authorization configured.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="authorizationOptions"/> or <paramref name="settings"/> is <c>null</c>.</exception>
     public static IServiceCollection AddClientJwtAuthentication(this IServiceCollection services,
         string defaultScheme, Action<AuthorizationOptions> authorizationOptions,
         Action<WebHostSettings> webSettings, Action<TokenSettings> settings)
     {
+        ArgumentNullException.ThrowIfNull(authorizationOptions);
+        ArgumentNullException.ThrowIfNull(settings);
+
         WebHostSettings webConfig = null;
         if (webSettings != null)
         {

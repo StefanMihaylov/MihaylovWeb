@@ -1,18 +1,17 @@
-﻿@model CountryExtendedGrid
+﻿@model CountriesViewModel
 
 <div class="col-md-6 country-grid">
-    <h5>Държави - @Model.Pager.Count</h5>
     <table class="table table-bordered table-striped">
         <thead>
             <tr>
-                <th>@Html.LabelFor(m => m.Data.First().Name)</th>
-                <th>@Html.LabelFor(m => m.Data.First().Code)</th>
-                <th>@Html.LabelFor(m => m.Data.First().BandCount)</th>
+                <th>@Html.LabelFor(m => m.Countries.Data.First().Name)</th>
+                <th>@Html.LabelFor(m => m.Countries.Data.First().Code)</th>
+                <th>@Html.LabelFor(m => m.Countries.Data.First().BandCount)</th>
                 <th>Action</th>
             </tr>
         </thead>
         <tbody>
-            @foreach (var country in Model.Data)
+            @foreach (var country in Model.Countries.Data)
             {
                 <tr>
                     <td><my-value>@country.Name</my-value></td>
@@ -45,5 +44,5 @@
         </tbody>
     </table>
 
-    @await Html.PartialAsync("_Pager", new PagerExtended(Model.Pager, ConcertController.COUNTRIES_TAB))
+    @await Html.PartialAsync("_Pagination", new PagerExtended(Model.Countries.Pager, Model.Request, Url.Href(new MenuRoute<ConcertController>(c => c.Index(null))), "countries"))
 </div>

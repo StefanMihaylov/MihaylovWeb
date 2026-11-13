@@ -4,10 +4,10 @@ using System.Threading.Tasks;
 using Mapster;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Mihaylov.Api.Other.Contracts.Base.Models;
 using Mihaylov.Api.Other.Contracts.Show.Interfaces;
 using Mihaylov.Api.Other.Contracts.Show.Models;
 using Mihaylov.Api.Other.Database.Shows;
+using Mihaylov.Common;
 using DB = Mihaylov.Api.Other.Database.Shows.Models;
 
 namespace Mihaylov.Api.Other.DAL.Show
@@ -19,7 +19,7 @@ namespace Mihaylov.Api.Other.DAL.Show
         {
         }
 
-        public async Task<Grid<Location>> GetAllAsync(GridRequest request)
+        public async Task<BaseGrid<Location>> GetAllAsync(BaseGridRequest request)
         {
             try
             {
@@ -49,22 +49,7 @@ namespace Mihaylov.Api.Other.DAL.Show
                                         .Select(gl => gl.Location)
                                         .AsQueryable();
 
-                if (request.Page.HasValue && request.PageSize.HasValue)
-                {
-                    query = query.Skip((request.Page.Value - 1) * request.PageSize.Value)
-                                 .Take(request.PageSize.Value)
-                                 .AsQueryable();
-                }
-
-                var locations = await query.ProjectToType<Location>()
-                                        .ToListAsync()
-                                        .ConfigureAwait(false);
-
-                var result = new Grid<Location>()
-                {
-                    Data = locations,
-                    Pager = new Pager(request, _dbContext.Locations.Count()),
-                };
+                var result = await query.GetPageAsync(request, q => q.ProjectToType<Location>()).ConfigureAwait(false);
 
                 return result;
             }

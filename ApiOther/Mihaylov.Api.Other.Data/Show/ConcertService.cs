@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
-using Mihaylov.Api.Other.Contracts.Base.Models;
 using Mihaylov.Api.Other.Contracts.Show.Interfaces;
 using Mihaylov.Api.Other.Contracts.Show.Models;
+using Mihaylov.Common;
 
 namespace Mihaylov.Api.Other.Data.Show
 {
@@ -42,7 +42,7 @@ namespace Mihaylov.Api.Other.Data.Show
             _memoryCache = memoryCache;
         }
 
-        public async Task<Grid<ConcertExtended>> GetConcertsAsync(GridRequest request)
+        public async Task<BaseGrid<ConcertExtended>> GetConcertsAsync(BaseGridRequest request)
         {
             var concerts = await _concerts.GetAllAsync(request).ConfigureAwait(false);
 
@@ -59,10 +59,10 @@ namespace Mihaylov.Api.Other.Data.Show
             return concert;
         }
 
-        public async Task<Grid<BandExtended>> GetBandsAsync(GridRequest request)
+        public async Task<BaseGrid<BandExtended>> GetBandsAsync(BaseGridRequest request)
         {
-            var key = $"{SHOW_ALL_BANDS}_{request.Page}";
-            if (!_memoryCache.TryGetValue(key, out Grid<BandExtended> bands))
+            var key = $"{SHOW_ALL_BANDS}_{request?.Page}";
+            if (!_memoryCache.TryGetValue(key, out BaseGrid<BandExtended> bands))
             {
                 bands = await _bands.GetAllAsync(request).ConfigureAwait(false);
 
@@ -83,10 +83,10 @@ namespace Mihaylov.Api.Other.Data.Show
             return band;
         }
 
-        public async Task<Grid<Location>> GetLocationsAsync(GridRequest request)
+        public async Task<BaseGrid<Location>> GetLocationsAsync(BaseGridRequest request)
         {
-            var key = $"{SHOW_ALL_LOCATION}_{request.Page}";
-            if (!_memoryCache.TryGetValue(key, out Grid<Location> locations))
+            var key = $"{SHOW_ALL_LOCATION}_{request?.Page}";
+            if (!_memoryCache.TryGetValue(key, out BaseGrid<Location> locations))
             {
                 locations = await _locations.GetAllAsync(request).ConfigureAwait(false);
 
@@ -105,10 +105,10 @@ namespace Mihaylov.Api.Other.Data.Show
             return location;
         }
 
-        public async Task<Grid<TicketProvider>> GetTicketProvidersAsync(GridRequest request)
+        public async Task<BaseGrid<TicketProvider>> GetTicketProvidersAsync(BaseGridRequest request)
         {
-            var key = $"{SHOW_ALL_TICKETPROVIDER}_{request.Page}";
-            if (!_memoryCache.TryGetValue(key, out Grid<TicketProvider> providers))
+            var key = $"{SHOW_ALL_TICKETPROVIDER}_{request?.Page}";
+            if (!_memoryCache.TryGetValue(key, out BaseGrid<TicketProvider> providers))
             {
                 providers = await _provider.GetAllAsync(request).ConfigureAwait(false);
 
@@ -127,10 +127,10 @@ namespace Mihaylov.Api.Other.Data.Show
             return provider;
         }
 
-        public async Task<Grid<CountryExtended>> GetCountriesAsync(GridRequest request)
+        public async Task<BaseGrid<CountryExtended>> GetCountriesAsync(BaseGridRequest request)
         {
-            var key = $"{SHOW_ALL_COUNTRIES}_{request.Page}";
-            if (!_memoryCache.TryGetValue(key, out Grid<CountryExtended> countries))
+            var key = $"{SHOW_ALL_COUNTRIES}_{request?.Page}";
+            if (!_memoryCache.TryGetValue(key, out BaseGrid<CountryExtended> countries))
             {
                 countries = await _countries.GetAllAsync(request).ConfigureAwait(false);
 

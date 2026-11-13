@@ -13,7 +13,7 @@ using Mihaylov.Common;
 
 namespace Mihaylov.Api.Other.Data.Gallery
 {
-    public class ImmichService : HttpClientExtention, IImmichService
+    public class ImmichService : BaseHttpClient, IImmichService
     {
         // documentation https://api.immich.app/introduction
         public const string IMMICH_CLIENT_NAME = "ImmichHttpClientName";

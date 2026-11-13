@@ -10,7 +10,7 @@ using Swashbuckle.AspNetCore.Annotations;
 
 namespace Mihaylov.Api.Other.Controllers
 {
-    [JwtAuthorize(Roles = UserConstants.AdminRole)]
+    [AdminAuthorize]
     [Route("api/[controller]/[action]")]
     [ApiController]
     [TypeFilter(typeof(ErrorFilter))]
@@ -34,6 +34,25 @@ namespace Mihaylov.Api.Other.Controllers
 
             return Ok(images);
         }
+
+        [HttpGet]
+        [ProducesResponseType(typeof(NugetPackages), StatusCodes.Status200OK)]
+        public async Task<IActionResult> Nugets()
+        {
+            NugetPackages nugets = await _service.GetNugetPackagesAsync().ConfigureAwait(false);
+
+            return Ok(nugets);
+        }
+
+        [HttpGet]
+        [ProducesResponseType(typeof(NugetPackage), StatusCodes.Status200OK)]
+        public async Task<IActionResult> Nuget([FromQuery] string packageName, [FromQuery] string version)
+        {
+            NugetPackage nuget = await _service.GetNugetPackageAsync(packageName, version).ConfigureAwait(false);
+
+            return Ok(nuget);
+        }
+
 
         [HttpDelete]
         [ProducesResponseType(typeof(void), StatusCodes.Status200OK)]

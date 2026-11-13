@@ -2,7 +2,7 @@
 
 namespace Mihaylov.Api.Other.Contracts.Cluster.Models.Nexus
 {
-    public class NexusImage
+    public class NexusBaseImage
     {
         public string Id { get; set; }
 
@@ -17,12 +17,6 @@ namespace Mihaylov.Api.Other.Contracts.Cluster.Models.Nexus
         public string Runtime { get; set; }
 
         public long Size { get; set; }
-
-        public int? LayersCount { get; set; }
-
-        public long? AppSize { get; set; }
-
-        public int? AppLayersCount { get; set; }
 
 
         public bool IsLocked { get; set; }

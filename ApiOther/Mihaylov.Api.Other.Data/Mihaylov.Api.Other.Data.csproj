@@ -7,11 +7,13 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Mihaylov.Common.Generic" Version="0.2.2" />
-		<PackageReference Include="AngleSharp" Version="1.8.5" />
+		<PackageReference Include="Mihaylov.Common.Core" Version="0.2.0" />
+		<PackageReference Include="Mihaylov.Common.Http" Version="0.2.0" />
+		<PackageReference Include="AngleSharp" Version="1.9.1" />
 		<PackageReference Include="KubernetesClient" Version="21.0.8" />
-		<PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.3.13" />
-		<PackageReference Include="Microsoft.Extensions.Caching.Abstractions" Version="10.0.13" />		
+		<PackageReference Include="Microsoft.Extensions.Caching.Abstractions" Version="10.0.14" />
+		<PackageReference Include="NuGet.Protocol" Version="7.9.0" />
+		<PackageReference Include="System.Security.Cryptography.Pkcs" Version="10.0.14" />
 	</ItemGroup>
 
 	<ItemGroup>

@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Mihaylov.Api.Other.Database.Shows.Models;
 using Mihaylov.Api.Other.Contracts.Base;
+using Mihaylov.Common;
 
 namespace Mihaylov.Api.Other.Database.Shows.DbConfigurations
 {

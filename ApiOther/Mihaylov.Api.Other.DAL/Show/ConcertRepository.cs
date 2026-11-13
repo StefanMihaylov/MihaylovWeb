@@ -4,10 +4,10 @@ using System.Threading.Tasks;
 using Mapster;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Mihaylov.Api.Other.Contracts.Base.Models;
 using Mihaylov.Api.Other.Contracts.Show.Interfaces;
 using Mihaylov.Api.Other.Contracts.Show.Models;
 using Mihaylov.Api.Other.Database.Shows;
+using Mihaylov.Common;
 using DB = Mihaylov.Api.Other.Database.Shows.Models;
 
 namespace Mihaylov.Api.Other.DAL.Show
@@ -19,7 +19,7 @@ namespace Mihaylov.Api.Other.DAL.Show
         {
         }
 
-        public async Task<Grid<ConcertExtended>> GetAllAsync(GridRequest request)
+        public async Task<BaseGrid<ConcertExtended>> GetAllAsync(BaseGridRequest request)
         {
             try
             {
@@ -31,22 +31,7 @@ namespace Mihaylov.Api.Other.DAL.Show
                                         .OrderByDescending(c => c.Date)
                                         .AsQueryable();
 
-                if (request.Page.HasValue && request.PageSize.HasValue)
-                {
-                    query = query.Skip((request.Page.Value - 1) * request.PageSize.Value)
-                                 .Take(request.PageSize.Value)
-                                 .AsQueryable();
-                }
-
-                var concerts = await query.ProjectToType<ConcertExtended>()
-                                        .ToListAsync()
-                                        .ConfigureAwait(false);
-
-                var result = new Grid<ConcertExtended>()
-                {
-                    Data = concerts,
-                    Pager = new Pager(request, _dbContext.Concerts.Count()),
-                };
+                var result = await query.GetPageAsync(request, q => q.ProjectToType<ConcertExtended>()).ConfigureAwait(false);
 
                 return result;
             }

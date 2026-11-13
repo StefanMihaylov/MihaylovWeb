@@ -12,13 +12,13 @@ using Mihaylov.Common;
 
 namespace Mihaylov.Api
 {
-    public static class DependencyInjection
+    public static class OtherDalServiceExtensions
     {
         public static IServiceCollection AddOtherDatabase(this IServiceCollection services,
-                Action<ConnectionStringSettings> connectionString)
+                Func<IServiceProvider, string> userNameFunc, Action<ConnectionStringSettings> connectionString)
         {
-            services.AddDatabase<MihaylovOtherShowDbContext>(connectionString, MihaylovOtherShowDbContext.SCHEMA_NAME);
-            services.AddDatabase<MihaylovOtherClusterDbContext>(connectionString, MihaylovOtherClusterDbContext.SCHEMA_NAME);
+            services.AddDatabase<MihaylovOtherShowDbContext>(userNameFunc, connectionString, MihaylovOtherShowDbContext.SCHEMA_NAME);
+            services.AddDatabase<MihaylovOtherClusterDbContext>(userNameFunc, connectionString, MihaylovOtherClusterDbContext.SCHEMA_NAME);
 
             return services;
         }

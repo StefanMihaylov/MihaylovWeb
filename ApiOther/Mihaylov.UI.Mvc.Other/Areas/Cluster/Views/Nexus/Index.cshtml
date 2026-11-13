@@ -6,9 +6,9 @@
         <th>Name</th>
         <th>Type</th>
         <th>Available</th>
-        <th>BlobCount</th>
-        <th>TotalSize</th>
-        <th>AvailableSpace</th>
+        <th>Blob Count</th>
+        <th>Total Size</th>
+        <th>Available Space</th>
     </tr>
 
     @foreach (var blob in Model.Blobs.Blobs)
@@ -16,20 +16,7 @@
         <tr>
             <td>@blob.Name</td>
             <td>@blob.Type</td>
-            <td>
-                @if (blob.Unavailable)
-                {
-                    <span style="color:red">
-                        <i class="bi bi-shift-fill"></i>
-                    </span>
-                }
-                else
-                {
-                    <span style="color:green">
-                        <i class="bi bi-check-circle-fill"></i>
-                    </span>
-                }
-            </td>
+            <td><icon type="(blob.Unavailable ? IconType.Up : IconType.Success)" /></td>
             <td>@blob.BlobCount</td>
             <td>@blob.TotalSizeInBytes.FormatBytes()</td>
             <td>@blob.AvailableSpaceInBytes.FormatBytes()</td>
@@ -51,7 +38,7 @@
         <th>Runtime</th>
         <th>Size - Layers</th>
         <th>App Size  - Layers</th>
-        <th>LastModified</th>
+        <th>Last Modified</th>
         <th>Action</th>
     </tr>
 
@@ -63,22 +50,9 @@
                 {
                     @image.Name
                 }
-
             </td>
             <td>
-                @if (!@image.IsLocked)
-                {
-                    <span style="color:red">
-                        <i class="bi bi-shift-fill"></i>
-                    </span>
-                }
-                else
-                {
-                    <span style="color:green">
-                        <i class="bi bi-check-circle-fill"></i>
-                    </span>
-                }
-
+                <icon type="(image.IsLocked ? IconType.Success : IconType.Up)" />
                 @image.Version
             </td>
             <td>@image.Runtime </td>
@@ -91,10 +65,8 @@
             </td>
             <td>@image.LastModified?.ToString(ViewConstants.DateTimeFormatSimple)</td>
             <td>
-@*                 <a href="@($"{Url.Href(new MenuRoute<NexusController>(c => c.DeleteImage("")))}?imageId={image.Id}")">
-                    <span style="color:red">
-                        <i class="bi @ViewConstants.CloseCircleButton"></i>
-                    </span>
+                @*                 <a href="@($"{Url.Href(new MenuRoute<NexusController>(c => c.DeleteImage("")))}?imageId={image.Id}")">
+                    <icon type="IconType.DeleteFill" />
                 </a> *@
             </td>
         </tr>
@@ -107,8 +79,11 @@
     <tr>
         <th>Name</th>
         <th>Version</th>
+        <th>Framework</th>
         <th>Size</th>
-        <th>LastModified</th>
+        <th>Local <icon type="IconType.Download" /></th>
+        <th>External <icon type="IconType.Download" /></th>
+        <th>Last Modified</th>
         <th>Action</th>
     </tr>
 
@@ -123,24 +98,61 @@
 
             </td>
             <td>
-                @if (!@nuget.IsLocked)
-                {
-                    <span style="color:red">
-                        <i class="bi bi-shift-fill"></i>
-                    </span>
-                }
-                else
-                {
-                    <span style="color:green">
-                        <i class="bi bi-check-circle-fill"></i>
-                    </span>
-                }
-
+                <icon type="(nuget.IsLocked ? IconType.Success : IconType.Up)" />
                 @nuget.Version
             </td>
+            <td>@nuget.Runtime</td>
             <td>@nuget.Size.FormatBytes()</td>
+            <td>@(nuget.LocalDependenciesCount > 0 ? nuget.LocalDependenciesCount : string.Empty)</td>
+            <td>@(nuget.ExternalDependenciesCount > 0 ? nuget.ExternalDependenciesCount : string.Empty)</td>
             <td>@nuget.LastModified?.ToString(ViewConstants.DateTimeFormatSimple)</td>
-            <td> </td>
+            <td>
+                @*                 <a href="@($"{Url.Href(new MenuRoute<NexusController>(c => c.DeleteImage("")))}?imageId={nuget.Id}")">
+                    <icon type="IconType.DeleteFill" />
+                </a> *@
+            </td>
         </tr>
     }
+</table>
+
+@{
+    string GetFootprintIncrease(MicrosoftRuntime runtime)
+    {
+        if (!runtime.FootprintIncrease.HasValue)
+        {
+            return string.Empty;
+        }
+
+        if (runtime.FootprintIncrease.Value == runtime.Size)
+        {
+            return "Full";
+        }
+
+        return runtime.FootprintIncrease.Value.FormatBytes();
+    }
+}
+
+<h3> Runtimes: @Model.Images.Runtimes.Count() бр </h3>
+<table class="table table-bordered table-striped" id="runtimes-grid">
+    <tr>
+        <th>Name</th>
+        <th>Release Date</th>
+        <th>Size</th>
+        <th>Layers Count</th>
+        <th>Size Increase</th>
+        <th>Footprint Increase</th>
+    </tr>
+
+    @foreach (var runtime in Model.Images.Runtimes)
+    {
+        <tr>
+            <td>@runtime.Runtime</td>
+            <td>@runtime.ReleaseDate?.ToString(ViewConstants.DateFormatSimple)</td>
+            <td>@runtime.Size.FormatBytes()</td>
+            <td>@runtime.LayersCount</td>
+            <td>@(runtime.SizeIncrease.HasValue ? runtime.SizeIncrease.Value.FormatBytes() : string.Empty)</td>
+            <td>@GetFootprintIncrease(runtime)</td>
+        </tr>
+    }
+
 </table>

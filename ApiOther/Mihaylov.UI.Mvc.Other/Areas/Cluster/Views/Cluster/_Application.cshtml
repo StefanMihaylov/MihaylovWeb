@@ -10,27 +10,19 @@
                 @switch (Model.Icon)
                 {
                     case VersionIconType.OK:
-                        <span style="color:green">
-                            <i class="bi bi-check-circle-fill"></i>
-                        </span>
+                        <icon type="IconType.Success" />
                         break;
 
                     case VersionIconType.New:
-                        <span style="color:red">
-                            <i class="bi bi-shift-fill"></i>
-                        </span>
+                        <icon type="IconType.Up" />
                         break;
 
                     case VersionIconType.Error:
-                        <span style="color:red">
-                            <i class="bi bi-exclamation-triangle-fill"></i>
-                        </span>
+                        <icon type="IconType.Warning2" color=@Colour.Red />
                         break;
 
                     case VersionIconType.Unknown:
-                        <span style="color:orange">
-                            <i class="bi bi-question-circle-fill"></i>
-                        </span>
+                        <icon type="IconType.Question" color=@Colour.Orange />
                         break;
 
                     case VersionIconType.None:
@@ -48,12 +40,9 @@
             {
                 var interval = DateTime.UtcNow.Date.Subtract(Model.Main.Version.ReleaseDate);
                 var days = $"{interval.TotalDays} дни";
-
                 @days
 
-                <span style="color:blue" class="reload">
-                    <i class="bi bi-repeat"></i>
-                </span>
+                <icon type="IconType.Repeat" color=@Colour.Blue class="reload" />
             }
 
             @if (Model.IsNew)
@@ -80,8 +69,8 @@
             @if (Model.Main.Versions?.Any() == true)
             {
                 var content = $"<ul class='custom-popover'><li>{string.Join("</li><li>", Model.Main.Versions.Select(b => $"{b.Version} ({b.ReleaseDate.ToString("dd.MM.yyyy")}) - {b.CreatedOn.ToString("yyyy.MM.dd")}"))}</li></ul>";
-                <span style="color:blue" class="version-history" data-container="body" data-toggle="version-popover" data-id="@Model.Main.Id" data-placement="top" data-content="@content" data-html="true">
-                    <i class="bi @ViewConstants.ListButton"></i>
+                <span class="version-history" data-container="body" data-toggle="version-popover" data-id="@Model.Main.Id" data-placement="top" data-content="@content" data-html="true">
+                    <icon type="IconType.List" color=@Colour.Blue />
                 </span>
             }
 
@@ -106,22 +95,22 @@
                 @if (!string.IsNullOrEmpty(Model.Main.SiteUrl))
                 {
                     <a href="@Model.Main.SiteUrl" target="_blank">
-                        <i class="bi bi-globe"></i>
+                        <icon Name="bi-globe" />
                     </a>
                 }
                 <a href="@Model.Main.ReleaseUrl" target="_blank">
-                    <i class="bi bi-shift-fill"></i>
+                    <icon type="IconType.Up" color=@Colour.Disabled />
                 </a>
                 @if (!string.IsNullOrEmpty(Model.Main.ResourceUrl))
                 {
                     <a href="@Model.Main.ResourceUrl" target="_blank">
-                        <i class="bi bi-download"></i>
+                        <icon type="IconType.Download" />
                     </a>
                 }
                 @if (!string.IsNullOrEmpty(Model.Main.GithubVersionUrl))
                 {
                     <a href="@Model.Main.GithubVersionUrl" target="_blank">
-                        <i class="bi bi-github"></i>
+                        <icon Name="bi-github" />
                     </a>
                 }
             </span>
@@ -136,7 +125,7 @@
                 {
                     var content = $"<ul class='custom-popover'><li>{string.Join("</li><li>", Model.Main.Files?.Select(b => b?.Name))}</li></ul>";
                     <button type="button" class="btn btn-secondary" data-container="body" data-toggle="popover" data-placement="top" data-content="@content" data-html="true">
-                        <i class="bi @ViewConstants.ListButton"></i>
+                        <icon type="IconType.List" />
                     </button>
                 }
                 else
@@ -153,7 +142,7 @@
             {
                 var content = $"<ul class='custom-popover'><li>{string.Join("</li><li>", Model.Main.Pods?.Select(b => b?.Name))}</li></ul>";
                 <button type="button" class="btn btn-secondary" data-container="body" data-toggle="popover" data-placement="top" data-content="@content" data-html="true">
-                    <i class="bi @ViewConstants.ListButton"></i>
+                    <icon type="IconType.List" />
                 </button>
             }
         </my-value>
@@ -162,7 +151,7 @@
     <td><my-value>@Model.Main.ParserSettingName</my-value></td>
     <td>
         <a href="@($"{Url.Href(new MenuRoute<ClusterController>(c => c.Index(null, null)))}/{Model.Main.Id}")" class="btn btn-primary">
-            <i class="bi @ViewConstants.EditButton"></i>
+            <icon type="IconType.Edit" />
         </a>
     </td>
 </tr>

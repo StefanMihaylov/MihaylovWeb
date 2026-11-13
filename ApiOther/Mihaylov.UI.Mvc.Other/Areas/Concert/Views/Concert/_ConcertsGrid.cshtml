@@ -2,7 +2,6 @@
 
 <div class="col-md-12 concert-grid">
     @Html.ValidationSummary()
-    <h5>Концерти - @Model.Concerts.Pager.Count</h5>
     <table class="table table-bordered table-striped">
         <thead>
             <tr>
@@ -41,6 +40,5 @@
         </tbody>
     </table>
 
-    @await Html.PartialAsync("_Pager", new PagerExtended(Model.Concerts.Pager, ConcertController.CONCERTS_TAB))
-
+    @await Html.PartialAsync("_Pagination", new PagerExtended(Model.Concerts.Pager, Model.Request, Url.Href(new MenuRoute<ConcertController>(c => c.Index(null))), "concerts"))
 </div>

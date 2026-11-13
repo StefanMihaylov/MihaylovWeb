@@ -645,7 +645,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ConcertExtendedGrid"
+                  "$ref": "#/components/schemas/ConcertExtendedBaseGrid"
                 }
               }
             }
@@ -780,7 +780,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/BandExtendedGrid"
+                  "$ref": "#/components/schemas/BandExtendedBaseGrid"
                 }
               }
             }
@@ -915,7 +915,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/LocationGrid"
+                  "$ref": "#/components/schemas/LocationBaseGrid"
                 }
               }
             }
@@ -1050,7 +1050,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/TicketProviderGrid"
+                  "$ref": "#/components/schemas/TicketProviderBaseGrid"
                 }
               }
             }
@@ -1185,7 +1185,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/CountryExtendedGrid"
+                  "$ref": "#/components/schemas/CountryExtendedBaseGrid"
                 }
               }
             }
@@ -2727,7 +2727,7 @@
         },
         "additionalProperties": false
       },
-      "BandExtendedGrid": {
+      "BandExtendedBaseGrid": {
         "type": "object",
         "properties": {
           "data": {
@@ -2851,7 +2851,7 @@
         },
         "additionalProperties": false
       },
-      "ConcertExtendedGrid": {
+      "ConcertExtendedBaseGrid": {
         "type": "object",
         "properties": {
           "data": {
@@ -3008,7 +3008,7 @@
         },
         "additionalProperties": false
       },
-      "CountryExtendedGrid": {
+      "CountryExtendedBaseGrid": {
         "type": "object",
         "properties": {
           "data": {
@@ -3581,7 +3581,7 @@
         },
         "additionalProperties": false
       },
-      "LocationGrid": {
+      "LocationBaseGrid": {
         "type": "object",
         "properties": {
           "data": {
@@ -3621,32 +3621,71 @@
         },
         "additionalProperties": false
       },
+      "MicrosoftRuntime": {
+        "type": "object",
+        "properties": {
+          "runtime": {
+            "type": "string",
+            "nullable": true
+          },
+          "releaseDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "size": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "layersCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "sizeIncrease": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          },
+          "footprintIncrease": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "ModuleInfo": {
         "type": "object",
         "properties": {
           "moduleName": {
             "type": "string",
-            "nullable": true
+            "nullable": true,
+            "readOnly": true
           },
           "version": {
             "type": "string",
-            "nullable": true
+            "nullable": true,
+            "readOnly": true
           },
           "framework": {
             "type": "string",
-            "nullable": true
+            "nullable": true,
+            "readOnly": true
           },
           "buildDate": {
             "type": "string",
-            "nullable": true
+            "nullable": true,
+            "readOnly": true
           },
           "gitCommit": {
             "type": "string",
-            "nullable": true
+            "nullable": true,
+            "readOnly": true
           },
           "jenkinsBuildNumber": {
             "type": "string",
-            "nullable": true
+            "nullable": true,
+            "readOnly": true
           }
         },
         "additionalProperties": false
@@ -3693,7 +3732,7 @@
         },
         "additionalProperties": false
       },
-      "NexusImage": {
+      "NexusDockerImage": {
         "type": "object",
         "properties": {
           "id": {
@@ -3725,6 +3764,12 @@
             "type": "integer",
             "format": "int64"
           },
+          "isLocked": {
+            "type": "boolean"
+          },
+          "isFirst": {
+            "type": "boolean"
+          },
           "layersCount": {
             "type": "integer",
             "format": "int32",
@@ -3739,12 +3784,6 @@
             "type": "integer",
             "format": "int32",
             "nullable": true
-          },
-          "isLocked": {
-            "type": "boolean"
-          },
-          "isFirst": {
-            "type": "boolean"
           }
         },
         "additionalProperties": false
@@ -3755,16 +3794,72 @@
           "images": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/NexusImage"
+              "$ref": "#/components/schemas/NexusDockerImage"
             },
             "nullable": true
           },
           "nugets": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/NexusImage"
+              "$ref": "#/components/schemas/NexusNugetImage"
             },
             "nullable": true
+          },
+          "runtimes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MicrosoftRuntime"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "NexusNugetImage": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "nullable": true
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "version": {
+            "type": "string",
+            "nullable": true
+          },
+          "lastModified": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "sha256": {
+            "type": "string",
+            "nullable": true
+          },
+          "runtime": {
+            "type": "string",
+            "nullable": true
+          },
+          "size": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "isLocked": {
+            "type": "boolean"
+          },
+          "isFirst": {
+            "type": "boolean"
+          },
+          "localDependenciesCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "externalDependenciesCount": {
+            "type": "integer",
+            "format": "int32"
           }
         },
         "additionalProperties": false
@@ -3775,7 +3870,6 @@
           "page": {
             "type": "integer",
             "format": "int32",
-            "nullable": true,
             "readOnly": true
           },
           "pageSize": {
@@ -3786,12 +3880,7 @@
           },
           "count": {
             "type": "integer",
-            "format": "int32"
-          },
-          "pageMax": {
-            "type": "integer",
             "format": "int32",
-            "nullable": true,
             "readOnly": true
           }
         },
@@ -4214,7 +4303,7 @@
         },
         "additionalProperties": false
       },
-      "TicketProviderGrid": {
+      "TicketProviderBaseGrid": {
         "type": "object",
         "properties": {
           "data": {

@@ -1,29 +1,29 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Mihaylov.Api.Other.Contracts.Base.Models;
 using Mihaylov.Api.Other.Contracts.Show.Models;
+using Mihaylov.Common;
 
 namespace Mihaylov.Api.Other.Contracts.Show.Interfaces
 {
     public interface IConcertService
     {
-        Task<Grid<ConcertExtended>> GetConcertsAsync(GridRequest request);
+        Task<BaseGrid<ConcertExtended>> GetConcertsAsync(BaseGridRequest request);
 
         Task<ConcertExtended> AddOrUpdateConcertAsync(Concert model);
 
-        Task<Grid<BandExtended>> GetBandsAsync(GridRequest request);
+        Task<BaseGrid<BandExtended>> GetBandsAsync(BaseGridRequest request);
 
         Task<Band> AddOrUpdateBandAsync(Band model);
 
-        Task<Grid<Location>> GetLocationsAsync(GridRequest request);
+        Task<BaseGrid<Location>> GetLocationsAsync(BaseGridRequest request);
 
         Task<Location> AddOrUpdateLocationAsync(Location model);
 
-        Task<Grid<TicketProvider>> GetTicketProvidersAsync(GridRequest request);
+        Task<BaseGrid<TicketProvider>> GetTicketProvidersAsync(BaseGridRequest request);
 
         Task<TicketProvider> AddOrUpdateTicketProviderAsync(TicketProvider model);
 
-        Task<Grid<CountryExtended>> GetCountriesAsync(GridRequest request);
+        Task<BaseGrid<CountryExtended>> GetCountriesAsync(BaseGridRequest request);
 
         Task<Country> AddOrUpdateCountryAsync(Country model);
 

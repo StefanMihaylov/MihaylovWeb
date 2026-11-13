@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
-using Mihaylov.Api.Other.Contracts.Base.Models;
 using Mihaylov.Api.Other.Contracts.Show.Models;
+using Mihaylov.Common;
 
 namespace Mihaylov.Api.Other.Contracts.Show.Interfaces
 {
@@ -8,6 +8,6 @@ namespace Mihaylov.Api.Other.Contracts.Show.Interfaces
     {
         Task<Country> AddOrUpdateAsync(Country model);
 
-        Task<Grid<CountryExtended>> GetAllAsync(GridRequest request);
+        Task<BaseGrid<CountryExtended>> GetAllAsync(BaseGridRequest request);
     }
 }

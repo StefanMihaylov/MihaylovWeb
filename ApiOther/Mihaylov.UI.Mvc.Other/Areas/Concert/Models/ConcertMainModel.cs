@@ -3,6 +3,6 @@ using Mihaylov.Api.Other.Client;
 
 namespace Mihaylov.UI.Mvc.Other.Areas.Concert.Models;
 
-public record ConcertMainModel(ConcertExtendedGrid Concerts, BandViewModel Bands,
-    LocationGrid Locations, TicketProviderGrid TicketProviders, CountryExtendedGrid Countries,
-    IEnumerable<ConcertType> ConcertTypes, AddConcertVewModel Input, string ActiveTab);
+public record ConcertMainModel(ConcertQueryRequest Request, ConcertViewModel Concerts, BandViewModel Bands,
+    LocationViewModel Locations, TicketProviderViewModel TicketProviders, CountriesViewModel Countries,
+    IEnumerable<ConcertType> ConcertTypes);

@@ -1,12 +1,12 @@
 ﻿using System.Threading.Tasks;
-using Mihaylov.Api.Other.Contracts.Base.Models;
 using Mihaylov.Api.Other.Contracts.Show.Models;
+using Mihaylov.Common;
 
 namespace Mihaylov.Api.Other.Contracts.Show.Interfaces
 {
     public interface ITicketProviderRepository
     {
-        Task<Grid<TicketProvider>> GetAllAsync(GridRequest request);
+        Task<BaseGrid<TicketProvider>> GetAllAsync(BaseGridRequest request);
 
         Task<TicketProvider> AddOrUpdateAsync(TicketProvider model);
     }

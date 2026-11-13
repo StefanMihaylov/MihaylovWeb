@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Mihaylov.Api.Other.Contracts.Cluster.Interfaces;
 using Mihaylov.Api.Other.Contracts.Cluster.Models.Configs;
 using Mihaylov.Api.Other.Contracts.Cluster.Models.Nexus;
@@ -16,7 +17,7 @@ using Mihaylov.Common;
 
 namespace Mihaylov.Api
 {
-    public static class DependencyInjection
+    public static class OtherDataServiceExtensions
     {
         public static IServiceCollection AddOtherServices(this IServiceCollection services,
             Action<NexusConfiguration> nexusConfig, Action<KubernetesSettings> kubeConfig,
@@ -32,6 +33,7 @@ namespace Mihaylov.Api
             services.Configure<PlaywrightSettings>(playwrightSettings);
             services.AddSingleton<IPlaywrightManager, PlaywrightManager>();
 
+            services.TryAddScoped<IFileWrapper, FileWrapper>();
             services.Configure<ProcessSettings>(processConfig);
             services.AddScoped<IProcessHelper, ProcessHelper>();
             services.Configure<KubernetesSettings>(kubeConfig);
@@ -45,6 +47,7 @@ namespace Mihaylov.Api
             services.AddHttpClient(NexusApiService.NEXUS_CLIENT_NAME).IgnoreCertificate();
             services.Configure<NexusConfiguration>(nexusConfig);
             services.AddScoped<INexusApiService, NexusApiService>();
+            services.AddScoped<INugetClient, NugetClient>();
 
             services.AddHttpClient(ImmichService.IMMICH_CLIENT_NAME).IgnoreCertificate();
             services.Configure<ImmichConfig>(immichConfig);

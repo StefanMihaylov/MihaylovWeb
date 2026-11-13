@@ -11,17 +11,30 @@ namespace Mihaylov.Common
         /// <summary>
         /// Maps a claim type name to the matching claim type string from <see cref="System.Security.Claims.ClaimTypes"/>.
         /// </summary>
-        /// <param name="value">The name of a <see cref="ClaimType"/> value, for example <c>"Email"</c>. <c>null</c>, empty or unknown values select <c>Username</c>.</param>
+        /// <param name="value">
+        /// The name of a <see cref="ClaimType"/> value, for example <c>"Email"</c> (the case does not matter).
+        /// <c>null</c>, empty or white space selects <c>Username</c>.
+        /// </param>
         /// <returns>The corresponding claim type string from <see cref="System.Security.Claims.ClaimTypes"/>.</returns>
         /// <exception cref="System.ArgumentException">
-        /// Thrown when <paramref name="value"/> is a number outside the defined <see cref="ClaimType"/> values, for example <c>"99"</c>.
+        /// Thrown when <paramref name="value"/> is not the name of a <see cref="ClaimType"/> value (for example a typo),
+        /// or is a number or a list that is not a single defined value, for example <c>"99"</c> or <c>"Username,Email"</c>.
         /// </exception>
         public static string GetClaim(string value)
         {
-            var config = Enum.TryParse(value, true, out ClaimType enumResult) ? enumResult : ClaimType.Username;
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                return ClaimType.Username.GetClaim();
+            }
 
-            var result = config.GetClaim();
-            return result;
+            if (!Enum.TryParse(value, true, out ClaimType type))
+            {
+                throw new ArgumentException(
+                    $"Unknown claim type '{value}'. Use one of: {string.Join(", ", Enum.GetNames(typeof(ClaimType)))}.",
+                    nameof(value));
+            }
+
+            return type.GetClaim();
         }
 
         /// <summary>

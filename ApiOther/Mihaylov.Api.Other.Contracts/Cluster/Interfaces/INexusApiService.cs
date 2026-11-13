@@ -7,6 +7,10 @@ namespace Mihaylov.Api.Other.Contracts.Cluster.Interfaces
     {
         Task<NexusImages> GetDockerImagesAsync();
 
+        Task<NugetPackages> GetNugetPackagesAsync();
+
+        Task<NugetPackage> GetNugetPackageAsync(string packageName, string version);
+
         Task ClearImages();
 
         Task<bool> DeleteDockerImageAsync(string imageId);

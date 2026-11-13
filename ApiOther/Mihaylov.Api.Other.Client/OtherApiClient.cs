@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Net.Http;
+using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Mihaylov.Common;
 
 namespace Mihaylov.Api.Other.Client
 {
-    public partial interface IOtherApiClient
+    public partial interface IOtherApiClient : IModuleInfoService
     {
     }
 
@@ -19,9 +20,18 @@ namespace Mihaylov.Api.Other.Client
         {
             BaseUrl = _httpClient.BaseAddress.AbsoluteUri;
         }
+
+        public async Task<IModuleInfo> GetInfoAsync()
+        {
+            return await this.ModuleGetInfoAsync();
+        }
     }
 
     public partial class ModuleInfo : IModuleInfo
+    {
+    }
+
+    public partial class Pager : IPager
     {
     }
 
@@ -29,7 +39,7 @@ namespace Mihaylov.Api.Other.Client
     {
     }
 
-    public static class DependencyInjection
+    public static class OtherApiClientExtensions
     {
         public static IServiceCollection AddOtherApiClient(this IServiceCollection services, Action<OptionsBuilder<OrdersSettings>> bindSettings)
         {

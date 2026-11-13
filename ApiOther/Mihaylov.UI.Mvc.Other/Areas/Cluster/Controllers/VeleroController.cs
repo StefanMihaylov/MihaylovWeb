@@ -8,7 +8,7 @@ using Mihaylov.UI.Mvc.Other.Areas.Cluster.Models.Velero;
 
 namespace Mihaylov.UI.Mvc.Other.Areas.Cluster.Controllers
 {
-    [JwtAuthorize(Roles = UserConstants.AdminRole)]
+    [AdminAuthorize]
     [Area("Cluster")]
     public class VeleroController(IOtherApiClient client) : Controller
     {

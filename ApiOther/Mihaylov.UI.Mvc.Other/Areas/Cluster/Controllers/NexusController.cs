@@ -7,7 +7,7 @@ using Mihaylov.UI.Mvc.Other.Areas.Cluster.Models.Nexus;
 
 namespace Mihaylov.UI.Mvc.Other.Areas.Cluster.Controllers
 {
-    [JwtAuthorize(Roles = UserConstants.AdminRole)]
+    [AdminAuthorize]
     [Area("Cluster")]
     public class NexusController : Controller
     {

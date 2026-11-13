@@ -8,10 +8,6 @@
 
         public string Password { get; set; }
 
-        public string DockerRepositoryName { get; set; }
-
-        public string NugetRepositoryName { get; set; }
-
         public int SkippedVersionCount { get; set; }
 
         public int SkippedVersionMonthsAge { get; set; }

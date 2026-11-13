@@ -26,7 +26,7 @@ namespace Mihaylov.Api.Other
 
         private static void AddServices(IServiceCollection services)
         {
-            services.AddSwaggerCustom("v1", "v1", "Other API", "Miscellaneous Endpoints API", true);
+            services.AddSwaggerCustom("v1", "v1", "Other API", "Miscellaneous Endpoints API", true, UserConstants.AuthenticationScheme);
 
             services.AddControllers();
             services.Configure<ApiBehaviorOptions>(options =>
@@ -44,15 +44,16 @@ namespace Mihaylov.Api.Other
             // Add-Migration <name> -Context MihaylovOtherShowDbContext -V -Project Mihaylov.Api.Other.Database -StartupProject Mihaylov.Api.Other
             // Add-Migration <name> -Context MihaylovOtherClusterDbContext -V -Project Mihaylov.Api.Other.Database -StartupProject Mihaylov.Api.Other
 
-            services.AddOtherDatabase(opt =>
+            services.AddHttpContextAccessor();
+            services.AddOtherDatabase(sp => sp.GetUser()?.GetName(), opt =>
                 {
                     opt.ServerAddress = Config.GetEnvironmentVariable("DB_Other_Address", "192.168.1.100");
                     opt.DatabaseName = Config.GetEnvironmentVariable("DB_Other_Name", "Mihaylov_OtherDb");
                     opt.UserName = Config.GetEnvironmentVariable("DB_Other_UserName", "");
                     opt.Password = Config.GetEnvironmentVariable("DB_Other_Password", "");
                 })
-                .MigrateDatabase<MihaylovOtherShowDbContext>(c => c.Migrate(), true)
-                .MigrateDatabase<MihaylovOtherClusterDbContext>(c => c.Migrate(), true)
+                .MigrateDatabase<MihaylovOtherShowDbContext>(true)
+                .MigrateDatabase<MihaylovOtherClusterDbContext>(true)
                 .AddOtherRepositories()
                 .AddOtherServices(
                 nexus =>
@@ -60,8 +61,6 @@ namespace Mihaylov.Api.Other
                     nexus.BaseUrl = Config.GetEnvironmentVariable("Nexus_Base_Url");
                     nexus.Username = Config.GetEnvironmentVariable("Nexus_Username");
                     nexus.Password = Config.GetEnvironmentVariable("Nexus_Password");
-                    nexus.DockerRepositoryName = Config.GetEnvironmentVariable("Nexus_DockerRepository", "docker-hosted");
-                    nexus.NugetRepositoryName = Config.GetEnvironmentVariable("Nexus_NexusRepository", "Nuget-hosted");
                     nexus.SkippedVersionCount = Config.GetEnvironmentVariable("Nexus_Skipped_Version_Count", int.TryParse, 3);
                     nexus.SkippedVersionMonthsAge = Config.GetEnvironmentVariable<int>("Nexus_Skipped_Version_Months_Age", int.TryParse, 6);
                 },
@@ -96,7 +95,7 @@ namespace Mihaylov.Api.Other
                 weather =>
                 {
                     var cities = Config.GetEnvironmentVariable("Weather_Api_Cities", "Sofia");
-                    var cityList = cities.Split(new char[] { ';', ',', ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                    var cityList = cities.Split([';', ',', ' '], StringSplitOptions.RemoveEmptyEntries);
 
                     weather.BaseUrl = Config.GetEnvironmentVariable("WeatherApi_Url");
                     weather.AppId = Config.GetEnvironmentVariable("WeatherApi_AppId");
@@ -105,11 +104,13 @@ namespace Mihaylov.Api.Other
                     weather.Language = Config.GetEnvironmentVariable("Weather_Api_Language", "bg");
                 });
 
-            services.AddClientJwtAuthentication(null, opt =>
+            services.AddClientJwtAuthentication(UserConstants.AuthenticationScheme, 
+                AuthorizationExtensions.GetAuthorizationOptions, null, opt =>
             {
                 opt.Secret = Config.GetEnvironmentVariable("JWT_AUTHENTICATION_SECRET", "abc");
                 opt.Issuer = Config.GetEnvironmentVariable("JWT_ISSUER", string.Empty);
                 opt.Audience = Config.GetEnvironmentVariable("JWT_AUDIENCE", string.Empty);
+                opt.NameClaimType = ClaimMap.GetClaim(Config.GetEnvironmentVariable("JWT_NameClaim", string.Empty));
             });
         }
 

@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Razor">
+﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 
 	<PropertyGroup>
 		<TargetFramework>net10.0</TargetFramework>
@@ -7,16 +7,30 @@
 		<AddRazorSupportForMvc>true</AddRazorSupportForMvc>
 	</PropertyGroup>
 
-	<ItemGroup>
-		<PackageReference Include="Mihaylov.Common.Host" Version="0.2.1" />
-	</ItemGroup>
+	<PropertyGroup>
+		<Version>0.4.0</Version>
+		<PackageId>Mihaylov.UI.Mvc.Other</PackageId>
+		<Description>Other Mvc UI</Description>
+		<Authors>Mihaylov</Authors>
+	</PropertyGroup>
 
+	<PropertyGroup>
+		<DebugType>embedded</DebugType>
+		<PublishRepositoryUrl>true</PublishRepositoryUrl>
+		<EmbedUntrackedSources>true</EmbedUntrackedSources>
+		<Deterministic>true</Deterministic>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Mihaylov.Common.Auth" Version="0.2.0" />
+		<PackageReference Include="Mihaylov.Common.Mvc" Version="0.2.0" />
+	</ItemGroup>	
+	
 	<ItemGroup>
 		<FrameworkReference Include="Microsoft.AspNetCore.App" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\..\Common\Mihaylov.Web.Mvc.Contracts\Mihaylov.Web.Mvc.Contracts.csproj" />
 		<ProjectReference Include="..\Mihaylov.Api.Other.Client\Mihaylov.Api.Other.Client.csproj" />
 	</ItemGroup>
 

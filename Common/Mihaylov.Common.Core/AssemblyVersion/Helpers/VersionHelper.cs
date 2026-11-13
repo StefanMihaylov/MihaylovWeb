@@ -15,6 +15,10 @@ namespace Mihaylov.Common
         /// </summary>
         /// <param name="assembly">The assembly to inspect.</param>
         /// <returns>
+        /// A <see cref="IModuleInfo"/> with the product name (or the assembly name), the informational version without
+        /// the <c>+</c> build suffix (or the assembly version), the target framework (or the assembly name), and the build
+        /// date as <c>yyyy.MM.dd HH:mm</c> in UTC, taken from the last write time of the assembly file.
+        /// <c>GitCommit</c> and <c>JenkinsBuildNumber</c> are <c>null</c>.
         /// </returns>
         public static IModuleInfo GetVersionInfo(Assembly assembly)
         {

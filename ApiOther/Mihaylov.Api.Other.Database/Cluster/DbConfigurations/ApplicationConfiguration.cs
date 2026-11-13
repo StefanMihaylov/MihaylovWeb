@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Mihaylov.Api.Other.Contracts.Base;
 using Mihaylov.Api.Other.Database.Cluster.Models;
+using Mihaylov.Common;
 
 namespace Mihaylov.Api.Other.Database.Cluster.DbConfigurations
 {

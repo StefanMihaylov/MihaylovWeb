@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
@@ -14,36 +15,69 @@ using Mihaylov.Common;
 
 namespace Mihaylov.Api.Other.Data.Cluster
 {
-    public class NexusApiService : HttpClientExtention, INexusApiService
+    public class NexusApiService : BaseHttpClient, INexusApiService
     {
         public const string NEXUS_CLIENT_NAME = "NexusHttpClientName";
 
-        private readonly NexusConfiguration _conifg;
+        private readonly NexusConfiguration _config;
         private readonly IMemoryCache _cache;
+        private readonly INugetClient _nugetClient;
 
-        public NexusApiService(IHttpClientFactory httpFactory, ILoggerFactory loggerFactory, IOptions<NexusConfiguration> settings, IMemoryCache cache)
+        public NexusApiService(IHttpClientFactory httpFactory, ILoggerFactory loggerFactory, IOptions<NexusConfiguration> settings,
+            IMemoryCache cache, INugetClient nugetClient)
             : base(httpFactory, loggerFactory, NEXUS_CLIENT_NAME,
                   new ApiConfig(settings.Value.BaseUrl, settings.Value.Username, settings.Value.Password, null))
         {
-            _conifg = settings.Value;
+            _config = settings.Value;
             _cache = cache;
+            _nugetClient = nugetClient;
         }
 
         public async Task<NexusImages> GetDockerImagesAsync()
         {
-            var images = await GetAllDockerImagesAsync(_conifg.DockerRepositoryName, (asset, image) => CustomImageUpdates(asset, image)).ConfigureAwait(false);
-            await CalculateAppSizeAsync(images).ConfigureAwait(false);
-            MarkLockedImages(images);
+            var docker = await GetHostedRepositoryAsync("docker").ConfigureAwait(false);
+            var dockerImages = await GetNexusItemsAsync(docker.Name, EnrichDockerImageAsync).ConfigureAwait(false);
 
-            var nugets = await GetAllDockerImagesAsync(_conifg.NugetRepositoryName, null).ConfigureAwait(false);
+            var runtimeData = await CalculateAppSizeAsync(dockerImages).ConfigureAwait(false);
+            MarkLockedImages(dockerImages);
 
             var result = new NexusImages()
             {
-                Images = GroupNexusItems(images),
-                Nugets = GroupNexusItems(nugets),
+                Images = GroupNexusItems(dockerImages),
+                Runtimes = GetRuntimes(runtimeData),
             };
 
             return result;
+        }
+
+        public async Task<NugetPackages> GetNugetPackagesAsync()
+        {
+            var nuget = await GetHostedRepositoryAsync("nuget").ConfigureAwait(false);
+
+            var packageMetadataDict = await GetNugetPackagesMetadataAsync(nuget.Url).ConfigureAwait(false);
+            var nugetPackages = await GetNexusItemsAsync(nuget.Name, (image, _) => Task.FromResult(EnrichNugetImage(image, packageMetadataDict))).ConfigureAwait(false);
+
+            var result = new NugetPackages()
+            {
+                LocalPackagePrefix = NugetClient.LOCAL_PACKAGE_PREFIX,
+                Nugets = GroupNexusItems(nugetPackages),
+            };
+
+            return result;
+        }
+
+        public async Task<NugetPackage> GetNugetPackageAsync(string packageName, string version)
+        {
+            var repoUrl = NugetClient.NUGET_URL;
+            if (_nugetClient.IsNugetLocal(packageName))
+            {
+                var nugetRepo = await GetHostedRepositoryAsync("nuget").ConfigureAwait(false);
+                repoUrl = nugetRepo.Url;
+            }
+
+            var nuget = await _nugetClient.GetMetadataByIdAsync(repoUrl, packageName, version, CancellationToken.None).ConfigureAwait(false);
+
+            return nuget;
         }
 
         public async Task ClearImages()
@@ -66,7 +100,7 @@ namespace Mihaylov.Api.Other.Data.Cluster
         public async Task<bool> DeleteDockerImageAsync(string imageId)
         {
             var response = await GetResponse<string, string, string, string>(
-                    HttpMethod.Delete, $"/service/rest/v1/components/{imageId}", null, "DeleteDockerImages",
+                    HttpMethod.Delete, $"/service/rest/v1/components/{imageId}", null, "DeleteComponent",
                     x => x, e => e).ConfigureAwait(false);
 
             return response.IsSuccessful;
@@ -92,60 +126,83 @@ namespace Mihaylov.Api.Other.Data.Cluster
         }
 
 
-        private async Task<IEnumerable<NexusImage>> GetAllDockerImagesAsync(string repository, Action<NexusResponseAsset, NexusImage> customUpdateAction)
+        /// <summary>Pages through all components of a Nexus repository.</summary>
+        private async Task<IEnumerable<NexusResponseItem>> GetComponentsAsync(string repository)
         {
-            var images = new List<NexusImage>();
+            var result = new List<NexusResponseItem>();
 
             string nextPage = null;
             do
             {
-                var response = await GetDockerImagesAsync(repository, nextPage).ConfigureAwait(false);
-
+                var response = await GetComponentsPageAsync(repository, nextPage).ConfigureAwait(false);
                 var data = response.GetResponse();
-                images.AddRange(data.Items.Select(a =>
-                {
-                    var asset = a.Assets.FirstOrDefault();
-                    var checksum = asset?.Checksum != null && asset.Checksum.ContainsKey("sha256") ? asset.Checksum["sha256"] : null;
 
-                    var image = new NexusImage()
-                    {
-                        Id = a.Id,
-                        Name = a.Name,
-                        Version = a.Version,
-                        LastModified = asset?.LastModified,
-                        Sha256 = checksum,
-                        Runtime = null,
-                        Size = asset?.FileSize ?? 0,
-                        LayersCount = null,
-                        AppSize = null,
-                        AppLayersCount = null,
+                result.AddRange(data.Items);
 
-                        IsLocked = true,
-                        IsFirst = false,
-                    };
+                nextPage = data.ContinuationToken;
+            }
+            while (!string.IsNullOrEmpty(nextPage));
 
-                    if (asset != null && customUpdateAction != null)
-                    {
-                        customUpdateAction(asset, image);
-                    }
-
-                    return image;
-                }));
-
-                nextPage = response.Data.ContinuationToken;
-
-            } while (!string.IsNullOrEmpty(nextPage));
-
-            return images;
+            return result;
         }
 
-        private void CustomImageUpdates(NexusResponseAsset asset, NexusImage image)
+        /// <summary>
+        /// Get Docker images and Nuget packages info
+        /// </summary>
+        /// <param name="repository">Nexus repository name</param>
+        /// <param name="customUpdateAction">Custom Update Action</param>
+        /// <returns></returns>
+        private async Task<IEnumerable<T>> GetNexusItemsAsync<T>(string repository, Func<NexusBaseImage, NexusResponseAsset, Task<T>> enrich) where T : NexusBaseImage
         {
+            var result = new List<T>();
+
+            var components = await GetComponentsAsync(repository).ConfigureAwait(false);
+
+            foreach (var component in components)
+            {
+                var asset = component.Assets?.FirstOrDefault();
+                var baseImage = CreateBaseImage(component, asset);
+                var image = await enrich(baseImage, asset).ConfigureAwait(false);
+
+                result.Add(image);
+            }
+
+            return result;
+        }
+
+        private static NexusBaseImage CreateBaseImage(NexusResponseItem item, NexusResponseAsset asset)
+        {
+            var checksum = asset?.Checksum != null && asset.Checksum.ContainsKey("sha256") ? asset.Checksum["sha256"] : null;
+
+            return new NexusBaseImage
+            {
+                Id = item.Id,
+                Name = item.Name,
+                Version = item.Version,
+                LastModified = asset?.LastModified,
+                Sha256 = checksum,
+                Runtime = null,
+                Size = asset?.FileSize ?? 0,
+
+                IsLocked = true,
+                IsFirst = false,
+            };
+        }
+
+        /// <summary>
+        /// Get additional data for Docker image
+        /// </summary>
+        /// <param name="asset">Nexus response asset</param>
+        /// <param name="image">Docker image metadata</param>
+        private async Task<NexusDockerImage> EnrichDockerImageAsync(NexusBaseImage inputImage, NexusResponseAsset asset)
+        {
+            var image = new NexusDockerImage(inputImage);
+
             var manifestUrl = asset.DownloadUrl;
-            var manifest = GetDockerManifestDataAsync(manifestUrl).GetAwaiter().GetResult();
+            var manifest = await GetDockerManifestDataAsync(manifestUrl).ConfigureAwait(false);
             if (manifest == null)
             {
-                return;
+                return image;
             }
 
             image.Size = manifest.Layers.Sum(a => a.Size);
@@ -172,7 +229,7 @@ namespace Mihaylov.Api.Other.Data.Cluster
                     blobUrl = $"{blobUrl[..slashIndex]}/{blobDigest}";
                 }
 
-                var blobManifest = GetDockerBlobDataAsync(blobUrl).GetAwaiter().GetResult();
+                var blobManifest = await GetDockerBlobDataAsync(blobUrl).ConfigureAwait(false);
                 var envVariablesFromBlob = blobManifest?.Config?.Env?.ToList();
                 if (envVariablesFromBlob?.Count > 0)
                 {
@@ -185,13 +242,32 @@ namespace Mihaylov.Api.Other.Data.Cluster
                     }
                 }
             }
+
+            return image;
         }
 
-        private async Task CalculateAppSizeAsync(IEnumerable<NexusImage> images)
+        private NexusNugetImage EnrichNugetImage(NexusBaseImage inputImage, IDictionary<string, NugetPackage> packageMetadataDict)
         {
-            string keypPrefix = "Nexus_Runtime_Data_";
+            var image = new NexusNugetImage(inputImage);
 
-            var runtimes = images.Select(i => i.Runtime).Where(r => !string.IsNullOrWhiteSpace(r)).Distinct().ToList();
+            var key = $"{image.Name}_{image.Version}";
+            if (packageMetadataDict.TryGetValue(key, out var packageMetadata))
+            {
+                image.Runtime = packageMetadata.Framework;
+                image.Dependencies = packageMetadata.Dependencies;
+            }
+
+            return image;
+        }
+
+        /// <summary>
+        /// Get Additional data - Application Size and Image layers count
+        /// </summary>
+        /// <param name="images">list of Nexus images</param>
+        /// <returns>Runtime data list</returns>
+        private async Task<IEnumerable<MicrosoftRuntimeData>> CalculateAppSizeAsync(IEnumerable<NexusDockerImage> images)
+        {
+            const string keyPrefix = "Nexus_Runtime_Data_";
 
             foreach (var image in images)
             {
@@ -201,8 +277,8 @@ namespace Mihaylov.Api.Other.Data.Cluster
                     continue;
                 }
 
-                var key = $"{keypPrefix}{runtime}";
-                if (!_cache.TryGetValue(key, out RuntimeData data))
+                var key = $"{keyPrefix}{runtime}";
+                if (!_cache.TryGetValue(key, out MicrosoftRuntimeData runtimeData))
                 {
                     var manifestResponse = await GetMicrosoftManifestAsync(runtime).ConfigureAwait(false);
                     if (manifestResponse?.Manifests?.Any() != true)
@@ -217,24 +293,43 @@ namespace Mihaylov.Api.Other.Data.Cluster
                     }
 
                     var digestResponse = await GetMicrosoftManifestAsync(digest).ConfigureAwait(false);
+                    var releaseDate = await GetRuntimeReleaseDateAsync(runtime).ConfigureAwait(false);
 
-                    var size = digestResponse.Layers?.Sum(l => l.Size) ?? 0;
-                    var layerCount = digestResponse.Layers?.Count() ?? 0;
+                    runtimeData = new MicrosoftRuntimeData()
+                    {
+                        Runtime = runtime,
+                        ReleaseDate = releaseDate,
+                        Layers = digestResponse.Layers ?? [],
+                        Size = digestResponse.Layers?.Sum(l => l.Size) ?? 0,
+                        LayersCount = digestResponse.Layers?.Count() ?? 0
+                    };
 
-                    data = new RuntimeData(size, layerCount);
-                    _cache.Set(key, data, TimeSpan.FromHours(12));
+                    _cache.Set(key, runtimeData, TimeSpan.FromHours(12));
                 }
 
-                image.AppSize = image.Size - data.Size;
-                image.AppLayersCount = image.LayersCount - data.LayersCount;
+                image.AppSize = image.Size - runtimeData.Size;
+                image.AppLayersCount = image.LayersCount - runtimeData.LayersCount;
             }
+
+            var runtimes = images.Select(i => i.Runtime).Where(r => !string.IsNullOrWhiteSpace(r)).Distinct().ToList();
+            var runtimeList = new List<MicrosoftRuntimeData>();
+
+            foreach (var runtime in runtimes)
+            {
+                if (_cache.TryGetValue($"{keyPrefix}{runtime}", out MicrosoftRuntimeData data))
+                {
+                    runtimeList.Add(data);
+                }
+            }
+
+            return runtimeList;
         }
 
-        private void MarkLockedImages(IEnumerable<NexusImage> images)
+        private void MarkLockedImages(IEnumerable<NexusBaseImage> images)
         {
             var imageDict = images.ToDictionary(a => a.Id, a => a);
 
-            var skippedAge = DateTime.Now.Date.AddMonths(-_conifg.SkippedVersionMonthsAge);
+            var skippedAge = DateTime.Now.Date.AddMonths(-_config.SkippedVersionMonthsAge);
             var ImagesForDeletion = images.GroupBy(a => a.Name)
                                .Select(g => new
                                {
@@ -242,7 +337,7 @@ namespace Mihaylov.Api.Other.Data.Cluster
                                    Value = g.Where(a => a.Version != "latest")
                                             .OrderByDescending(a => a.LastModified)
                                             .ThenByDescending(a => a.Version)
-                                            .Skip(_conifg.SkippedVersionCount)
+                                            .Skip(_config.SkippedVersionCount)
                                             .Where(a => a.LastModified < skippedAge)
                                })
                                .SelectMany(g => g.Value);
@@ -257,47 +352,81 @@ namespace Mihaylov.Api.Other.Data.Cluster
             }
         }
 
-        private static IEnumerable<NexusImage> GroupNexusItems(IEnumerable<NexusImage> images)
+        private static IEnumerable<MicrosoftRuntime> GetRuntimes(IEnumerable<MicrosoftRuntimeData> runtimeData)
         {
-            var dictionary = images.GroupBy(a => new { a.Name, a.Sha256 })
-                   .Select(g => new NexusImage()
-                   {
-                       Id = g.First().Id,
-                       Name = g.Key.Name,
-                       Version = string.Join(" / ", g.Select(a => a.Version).OrderBy(a => a)),
-                       LastModified = g.First().LastModified,
-                       IsLocked = g.First().IsLocked,
-                       Sha256 = g.First().Sha256,
-                       Runtime = g.First().Runtime,
-                       Size = g.First().Size,
-                       LayersCount = g.First().LayersCount,
-                       AppSize = g.First().AppSize,
-                       AppLayersCount = g.First().AppLayersCount,
-                   })
-                   .GroupBy(a => a.Name)
-                   .Select(g => new
-                   {
-                       Name = g.Key,
-                       Value = g.OrderByDescending(a => a.LastModified)
-                                .ThenByDescending(a => a.Version)
-                                .AsEnumerable(),
-                       LastModified = g.Max(a => a.LastModified)
-                   })
-                   .OrderByDescending(g => g.LastModified)
-                   .ToDictionary(a => a.Name, a => a.Value);
+            var result = new List<MicrosoftRuntime>();
+            runtimeData = runtimeData.OrderBy(r => Version.Parse(r.Runtime)).ToList();
 
-
-            var result = new List<NexusImage>();
-
-            foreach (var itemKey in dictionary.Keys)
+            MicrosoftRuntimeData previous = null;
+            foreach (var runtimeItem in runtimeData)
             {
-                var values = dictionary[itemKey];
-                values.First().IsFirst = true;
+                var runtime = new MicrosoftRuntime()
+                {
+                    Runtime = runtimeItem.Runtime,
+                    ReleaseDate = runtimeItem.ReleaseDate,
+                    Size = runtimeItem.Size,
+                    LayersCount = runtimeItem.LayersCount,
+                    SizeIncrease = previous != null ? (runtimeItem.Size - previous.Size) : null,
+                    FootprintIncrease = GetFootprintIncrease(runtimeItem, previous)
+                };
 
-                result.AddRange(values);
+                result.Add(runtime);
+                previous = runtimeItem;
+            }
+
+            return result.OrderByDescending(r => Version.Parse(r.Runtime)).ToList();
+
+            static long? GetFootprintIncrease(MicrosoftRuntimeData runtimeItem, MicrosoftRuntimeData previous)
+            {
+                if (previous == null)
+                {
+                    return null;
+                }
+
+                var preciousLayers = new HashSet<string>(previous.Layers.Select(a => a.Digest), StringComparer.OrdinalIgnoreCase);
+                var layers = runtimeItem.Layers.Select(a => new LayerExtended(a.Digest, a.Size, false));
+                foreach (var layer in layers)
+                {
+                    if (preciousLayers.Contains(layer.Digest))
+                    {
+                        layer.IsReused = true;
+                    }
+                }
+
+                return layers.Where(a => !a.IsReused).Sum(a => a.Size);
+            }
+        }
+
+        private static IEnumerable<T> GroupNexusItems<T>(IEnumerable<T> images) where T : NexusBaseImage
+        {
+            var groups = images.GroupBy(i => i.Name)
+                               .Select(byName => byName.GroupBy(i => i.Sha256 ?? i.Id)
+                                                       .Select(MergeTags)
+                                                       .OrderByDescending(i => i.LastModified)
+                                                       .ThenByDescending(i => i.Version)
+                                                       .ToList())
+                               .OrderByDescending(g => g[0].LastModified)
+                               .ToList();
+
+            var result = new List<T>();
+            foreach (var group in groups)
+            {
+                group[0].IsFirst = true;
+                result.AddRange(group);
             }
 
             return result;
+        }
+
+        /// <summary>Keeps the newest item (so derived data survives) and joins the versions into it.</summary>
+        private static T MergeTags<T>(IGrouping<string, T> sameContent) where T : NexusBaseImage
+        {
+            var main = sameContent.OrderByDescending(i => i.LastModified).First();
+
+            main.Version = string.Join(" / ", sameContent.Select(i => i.Version).OrderBy(v => v, StringComparer.Ordinal));
+            main.IsLocked = sameContent.Any(i => i.IsLocked);
+
+            return main;
         }
 
         private async Task<NexusTasksWrapper> GetTasksAsync(string type)
@@ -318,7 +447,7 @@ namespace Mihaylov.Api.Other.Data.Cluster
             return response.IsSuccessful;
         }
 
-        private async Task<Response<NexusComponentsResponse>> GetDockerImagesAsync(string repository, string nextPage)
+        private async Task<Response<NexusComponentsResponse>> GetComponentsPageAsync(string repository, string nextPage)
         {
             var request = new DockerImagesRequest(repository, nextPage);
 
@@ -332,7 +461,7 @@ namespace Mihaylov.Api.Other.Data.Cluster
         private async Task<NexusManifestResponse> GetDockerManifestDataAsync(string manifestUrl)
         {
             using var request = new HttpRequestMessage(HttpMethod.Get, manifestUrl);
-            var responseMessage = await base.GetResposeAsync(request).ConfigureAwait(false);
+            var responseMessage = await base.GetResponseAsync(request).ConfigureAwait(false);
 
             if (responseMessage.IsSuccessStatusCode)
             {
@@ -346,7 +475,7 @@ namespace Mihaylov.Api.Other.Data.Cluster
         private async Task<NexusBlobManifestResponse> GetDockerBlobDataAsync(string blobUrl)
         {
             using var request = new HttpRequestMessage(HttpMethod.Get, blobUrl);
-            var responseMessage = await base.GetResposeAsync(request).ConfigureAwait(false);
+            var responseMessage = await base.GetResponseAsync(request).ConfigureAwait(false);
 
             if (responseMessage.IsSuccessStatusCode)
             {
@@ -371,7 +500,7 @@ namespace Mihaylov.Api.Other.Data.Cluster
             using var manifestRequest = new HttpRequestMessage(HttpMethod.Get, manifestUrl);
             manifestRequest.Headers.Add("Accept", string.Join(',', headerList));
 
-            var responseMessage = await base.GetResposeAsync(manifestRequest).ConfigureAwait(false);
+            var responseMessage = await base.GetResponseAsync(manifestRequest).ConfigureAwait(false);
             if (!responseMessage.IsSuccessStatusCode)
             {
                 return null;
@@ -381,6 +510,99 @@ namespace Mihaylov.Api.Other.Data.Cluster
             return manifestResponse;
         }
 
-        private record RuntimeData(long Size, int LayersCount);
+        private async Task<NexusRepositoryResponse> GetHostedRepositoryAsync(string repositoryType)
+        {
+            var repositories = await GetRepositoriesAsync().ConfigureAwait(false);
+
+            var repository = repositories.FirstOrDefault(r => r.Type.Equals("hosted", StringComparison.OrdinalIgnoreCase)
+                                                            && r.Format.Equals(repositoryType, StringComparison.OrdinalIgnoreCase));
+            return repository;
+        }
+
+        private async Task<IEnumerable<NexusRepositoryResponse>> GetRepositoriesAsync()
+        {
+            const string key = "Nexus_Repository";
+            if (!_cache.TryGetValue(key, out IEnumerable<NexusRepositoryResponse> repositories))
+            {
+                var response = await GetResponse<string, IEnumerable<NexusRepositoryResponse>, string, IEnumerable<NexusRepositoryResponse>>(
+                        HttpMethod.Get, $"/service/rest/v1/repositories", null, "GetRepositories",
+                        x => x, e => e).ConfigureAwait(false);
+
+                repositories = response.GetResponse().Where(r => r.Online).ToList();
+
+                _cache.Set(key, repositories, TimeSpan.FromHours(12));
+            }
+
+            return repositories;
+        }
+
+        private async Task<IDictionary<string, NugetPackage>> GetNugetPackagesMetadataAsync(string nugetBaseUrl)
+        {
+            var packagesMetadata = await _nugetClient.GetMetadataAsync(nugetBaseUrl, CancellationToken.None);
+
+            var packageMetadataDict = new Dictionary<string, NugetPackage>(StringComparer.OrdinalIgnoreCase);
+            foreach (var package in packagesMetadata)
+            {
+                var key = $"{package.Title}_{package.Version}";
+                if (!packageMetadataDict.ContainsKey(key))
+                {
+                    packageMetadataDict.Add(key, package);
+                }
+            }
+
+            return packageMetadataDict;
+        }
+
+        private async Task<DateTime?> GetRuntimeReleaseDateAsync(string runtime)
+        {
+            var parts = runtime.Split('.');
+            if (parts.Length < 2)
+            {
+                return null;
+            }
+
+            var channel = $"{parts[0]}.{parts[1]}";    // "6.0"
+            var key = $"Nexus_Runtime_Release_Dates_{channel}";
+
+            if (!_cache.TryGetValue(key, out Dictionary<string, DateTime> dates))
+            {
+                using var request = new HttpRequestMessage(HttpMethod.Get,
+                    $"https://builds.dotnet.microsoft.com/dotnet/release-metadata/{channel}/releases.json");
+
+                var response = await base.GetResponseAsync(request).ConfigureAwait(false);
+                if (!response.IsSuccessStatusCode)
+                {
+                    return null;
+                }
+
+                var data = JsonSerializer.Deserialize<DotnetReleasesResponse>(response.Body, base._jsonOptions);
+
+                dates = new Dictionary<string, DateTime>();
+                foreach (var release in data?.Releases ?? new List<DotnetRelease>())
+                {
+                    dates.TryAdd(release.ReleaseVersion, release.ReleaseDate.ToDateTime(TimeOnly.MinValue));
+                }
+
+                _cache.Set(key, dates, TimeSpan.FromHours(12));
+            }
+
+            return dates.TryGetValue(runtime, out var date) ? date : null;
+        }
+    }
+
+    internal class LayerExtended
+    {
+        public string Digest { get; }
+
+        public long Size { get; }
+
+        public bool IsReused { get; set; }
+
+        public LayerExtended(string digest, long size, bool isReused)
+        {
+            Digest = digest;
+            Size = size;
+            IsReused = isReused;
+        }
     }
 }

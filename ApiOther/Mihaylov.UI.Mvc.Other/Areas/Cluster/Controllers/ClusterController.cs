@@ -9,7 +9,7 @@ using Mihaylov.UI.Mvc.Other.Areas.Cluster.Models.Cluster;
 
 namespace Mihaylov.UI.Mvc.Other.Areas.Cluster.Controllers
 {
-    [JwtAuthorize(Roles = UserConstants.AdminRole)]
+    [AdminAuthorize]
     [Area("Cluster")]
     public class ClusterController(IOtherApiClient client) : Controller
     {
@@ -196,18 +196,10 @@ namespace Mihaylov.UI.Mvc.Other.Areas.Cluster.Controllers
             AddAdditionalModel additional, AddVersionModel version, AddParserSettingModel parserSetting)
         {
             var applications = await client.ApplicationsAsync().ConfigureAwait(false);
+            var applicationDropDown = applications.GetListItems(v => v.Id, v => v.Name);
 
-            var deploymentTypes = Enum.GetValues(typeof(DeploymentType))
-                      .Cast<DeploymentType>()
-                      .Select(v => new SelectListItem(v.ToString(), ((int)v).ToString()))
-                      .ToList();
-
-            var applicationDropDown = applications.Select(v => new SelectListItem(v.Name, v.Id.ToString())).ToList();
-
-            var UrlTypes = Enum.GetValues(typeof(VersionUrlType))
-                      .Cast<VersionUrlType>()
-                      .Select(v => new SelectListItem(v.ToString(), ((int)v).ToString()))
-                      .ToList();
+            var deploymentTypes = EnumExtensions.GetDropdown<DeploymentType>();
+            var UrlTypes = EnumExtensions.GetDropdown<VersionUrlType>();
 
             var parserSettings = await client.ParserSettingsAsync().ConfigureAwait(false);
             var parserSettingsDropDown = parserSettings.Where(p => !string.IsNullOrWhiteSpace(p.Name))

@@ -4,10 +4,10 @@ using System.Threading.Tasks;
 using Mapster;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Mihaylov.Api.Other.Contracts.Base.Models;
 using Mihaylov.Api.Other.Contracts.Show.Interfaces;
 using Mihaylov.Api.Other.Contracts.Show.Models;
 using Mihaylov.Api.Other.Database.Shows;
+using Mihaylov.Common;
 using DB = Mihaylov.Api.Other.Database.Shows.Models;
 
 namespace Mihaylov.Api.Other.DAL.Show
@@ -19,7 +19,7 @@ namespace Mihaylov.Api.Other.DAL.Show
         {
         }
 
-        public async Task<Grid<TicketProvider>> GetAllAsync(GridRequest request)
+        public async Task<BaseGrid<TicketProvider>> GetAllAsync(BaseGridRequest request)
         {
             try
             {
@@ -27,22 +27,7 @@ namespace Mihaylov.Api.Other.DAL.Show
                                         .OrderBy(t => t.Name)
                                         .AsQueryable();
 
-                if (request.Page.HasValue && request.PageSize.HasValue)
-                {
-                    query = query.Skip((request.Page.Value - 1) * request.PageSize.Value)
-                                 .Take(request.PageSize.Value)
-                                 .AsQueryable();
-                }
-
-                var providers = await query.ProjectToType<TicketProvider>()
-                                           .ToListAsync()
-                                           .ConfigureAwait(false);
-
-                var result = new Grid<TicketProvider>()
-                {
-                    Data = providers,
-                    Pager = new Pager(request, _dbContext.TicketProviders.Count()),
-                };
+                var result = await query.GetPageAsync(request, q => q.ProjectToType<TicketProvider>()).ConfigureAwait(false);
 
                 return result;
             }

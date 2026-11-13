@@ -110,12 +110,12 @@ namespace Mihaylov.Api.Other.Client
 
         /// <returns>OK</returns>
         /// <exception cref="SwaggerException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task<ConcertExtendedGrid> ConcertsAsync(int? page, int? pageSize);
+        System.Threading.Tasks.Task<ConcertExtendedBaseGrid> ConcertsAsync(int? page, int? pageSize);
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>OK</returns>
         /// <exception cref="SwaggerException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task<ConcertExtendedGrid> ConcertsAsync(int? page, int? pageSize, System.Threading.CancellationToken cancellationToken);
+        System.Threading.Tasks.Task<ConcertExtendedBaseGrid> ConcertsAsync(int? page, int? pageSize, System.Threading.CancellationToken cancellationToken);
 
         /// <returns>OK</returns>
         /// <exception cref="SwaggerException">A server side error occurred.</exception>
@@ -128,12 +128,12 @@ namespace Mihaylov.Api.Other.Client
 
         /// <returns>OK</returns>
         /// <exception cref="SwaggerException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task<BandExtendedGrid> BandsAsync(int? page, int? pageSize);
+        System.Threading.Tasks.Task<BandExtendedBaseGrid> BandsAsync(int? page, int? pageSize);
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>OK</returns>
         /// <exception cref="SwaggerException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task<BandExtendedGrid> BandsAsync(int? page, int? pageSize, System.Threading.CancellationToken cancellationToken);
+        System.Threading.Tasks.Task<BandExtendedBaseGrid> BandsAsync(int? page, int? pageSize, System.Threading.CancellationToken cancellationToken);
 
         /// <returns>OK</returns>
         /// <exception cref="SwaggerException">A server side error occurred.</exception>
@@ -146,12 +146,12 @@ namespace Mihaylov.Api.Other.Client
 
         /// <returns>OK</returns>
         /// <exception cref="SwaggerException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task<LocationGrid> LocationsAsync(int? page, int? pageSize);
+        System.Threading.Tasks.Task<LocationBaseGrid> LocationsAsync(int? page, int? pageSize);
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>OK</returns>
         /// <exception cref="SwaggerException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task<LocationGrid> LocationsAsync(int? page, int? pageSize, System.Threading.CancellationToken cancellationToken);
+        System.Threading.Tasks.Task<LocationBaseGrid> LocationsAsync(int? page, int? pageSize, System.Threading.CancellationToken cancellationToken);
 
         /// <returns>OK</returns>
         /// <exception cref="SwaggerException">A server side error occurred.</exception>
@@ -164,12 +164,12 @@ namespace Mihaylov.Api.Other.Client
 
         /// <returns>OK</returns>
         /// <exception cref="SwaggerException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task<TicketProviderGrid> TicketProvidersAsync(int? page, int? pageSize);
+        System.Threading.Tasks.Task<TicketProviderBaseGrid> TicketProvidersAsync(int? page, int? pageSize);
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>OK</returns>
         /// <exception cref="SwaggerException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task<TicketProviderGrid> TicketProvidersAsync(int? page, int? pageSize, System.Threading.CancellationToken cancellationToken);
+        System.Threading.Tasks.Task<TicketProviderBaseGrid> TicketProvidersAsync(int? page, int? pageSize, System.Threading.CancellationToken cancellationToken);
 
         /// <returns>OK</returns>
         /// <exception cref="SwaggerException">A server side error occurred.</exception>
@@ -182,12 +182,12 @@ namespace Mihaylov.Api.Other.Client
 
         /// <returns>OK</returns>
         /// <exception cref="SwaggerException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task<CountryExtendedGrid> CountriesAsync(int? page, int? pageSize);
+        System.Threading.Tasks.Task<CountryExtendedBaseGrid> CountriesAsync(int? page, int? pageSize);
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>OK</returns>
         /// <exception cref="SwaggerException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task<CountryExtendedGrid> CountriesAsync(int? page, int? pageSize, System.Threading.CancellationToken cancellationToken);
+        System.Threading.Tasks.Task<CountryExtendedBaseGrid> CountriesAsync(int? page, int? pageSize, System.Threading.CancellationToken cancellationToken);
 
         /// <returns>OK</returns>
         /// <exception cref="SwaggerException">A server side error occurred.</exception>
@@ -670,7 +670,7 @@ namespace Mihaylov.Api.Other.Client
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class BandExtendedGrid
+    public partial class BandExtendedBaseGrid
     {
 
         [System.Text.Json.Serialization.JsonPropertyName("data")]
@@ -739,7 +739,7 @@ namespace Mihaylov.Api.Other.Client
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class ConcertExtendedGrid
+    public partial class ConcertExtendedBaseGrid
     {
 
         [System.Text.Json.Serialization.JsonPropertyName("data")]
@@ -844,7 +844,7 @@ namespace Mihaylov.Api.Other.Client
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class CountryExtendedGrid
+    public partial class CountryExtendedBaseGrid
     {
 
         [System.Text.Json.Serialization.JsonPropertyName("data")]
@@ -1215,7 +1215,7 @@ namespace Mihaylov.Api.Other.Client
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class LocationGrid
+    public partial class LocationBaseGrid
     {
 
         [System.Text.Json.Serialization.JsonPropertyName("data")]
@@ -1235,6 +1235,30 @@ namespace Mihaylov.Api.Other.Client
 
         [System.Text.Json.Serialization.JsonPropertyName("name")]
         public string Name { get; set; }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class MicrosoftRuntime
+    {
+
+        [System.Text.Json.Serialization.JsonPropertyName("runtime")]
+        public string Runtime { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("releaseDate")]
+        public System.DateTime? ReleaseDate { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("size")]
+        public long Size { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("layersCount")]
+        public int LayersCount { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("sizeIncrease")]
+        public long? SizeIncrease { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("footprintIncrease")]
+        public long? FootprintIncrease { get; set; }
 
     }
 
@@ -1296,7 +1320,7 @@ namespace Mihaylov.Api.Other.Client
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class NexusImage
+    public partial class NexusDockerImage
     {
 
         [System.Text.Json.Serialization.JsonPropertyName("id")]
@@ -1320,6 +1344,12 @@ namespace Mihaylov.Api.Other.Client
         [System.Text.Json.Serialization.JsonPropertyName("size")]
         public long Size { get; set; }
 
+        [System.Text.Json.Serialization.JsonPropertyName("isLocked")]
+        public bool IsLocked { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("isFirst")]
+        public bool IsFirst { get; set; }
+
         [System.Text.Json.Serialization.JsonPropertyName("layersCount")]
         public int? LayersCount { get; set; }
 
@@ -1329,12 +1359,6 @@ namespace Mihaylov.Api.Other.Client
         [System.Text.Json.Serialization.JsonPropertyName("appLayersCount")]
         public int? AppLayersCount { get; set; }
 
-        [System.Text.Json.Serialization.JsonPropertyName("isLocked")]
-        public bool IsLocked { get; set; }
-
-        [System.Text.Json.Serialization.JsonPropertyName("isFirst")]
-        public bool IsFirst { get; set; }
-
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
@@ -1342,10 +1366,52 @@ namespace Mihaylov.Api.Other.Client
     {
 
         [System.Text.Json.Serialization.JsonPropertyName("images")]
-        public System.Collections.Generic.IEnumerable<NexusImage> Images { get; set; }
+        public System.Collections.Generic.IEnumerable<NexusDockerImage> Images { get; set; }
 
         [System.Text.Json.Serialization.JsonPropertyName("nugets")]
-        public System.Collections.Generic.IEnumerable<NexusImage> Nugets { get; set; }
+        public System.Collections.Generic.IEnumerable<NexusNugetImage> Nugets { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("runtimes")]
+        public System.Collections.Generic.IEnumerable<MicrosoftRuntime> Runtimes { get; set; }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class NexusNugetImage
+    {
+
+        [System.Text.Json.Serialization.JsonPropertyName("id")]
+        public string Id { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("name")]
+        public string Name { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("version")]
+        public string Version { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("lastModified")]
+        public System.DateTime? LastModified { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("sha256")]
+        public string Sha256 { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("runtime")]
+        public string Runtime { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("size")]
+        public long Size { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("isLocked")]
+        public bool IsLocked { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("isFirst")]
+        public bool IsFirst { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("localDependenciesCount")]
+        public int LocalDependenciesCount { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("externalDependenciesCount")]
+        public int ExternalDependenciesCount { get; set; }
 
     }
 
@@ -1354,16 +1420,13 @@ namespace Mihaylov.Api.Other.Client
     {
 
         [System.Text.Json.Serialization.JsonPropertyName("page")]
-        public int? Page { get; set; }
+        public int Page { get; set; }
 
         [System.Text.Json.Serialization.JsonPropertyName("pageSize")]
         public int? PageSize { get; set; }
 
         [System.Text.Json.Serialization.JsonPropertyName("count")]
         public int Count { get; set; }
-
-        [System.Text.Json.Serialization.JsonPropertyName("pageMax")]
-        public int? PageMax { get; set; }
 
     }
 
@@ -1617,7 +1680,7 @@ namespace Mihaylov.Api.Other.Client
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class TicketProviderGrid
+    public partial class TicketProviderBaseGrid
     {
 
         [System.Text.Json.Serialization.JsonPropertyName("data")]

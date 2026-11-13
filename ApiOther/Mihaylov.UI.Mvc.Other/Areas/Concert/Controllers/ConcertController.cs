@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Logging;
 using Mihaylov.Api.Other.Client;
 using Mihaylov.Common;
@@ -12,7 +11,7 @@ using Mihaylov.UI.Mvc.Other.Areas.Concert.Models;
 
 namespace Mihaylov.UI.Mvc.Other.Areas.Concert.Controllers
 {
-    [JwtAuthorize(Roles = UserConstants.AdminRole)]
+    [AdminAuthorize]
     [Area("Concert")]
     public class ConcertController : Controller
     {
@@ -33,27 +32,24 @@ namespace Mihaylov.UI.Mvc.Other.Areas.Concert.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Index(int? page, string activeTab)
+        public async Task<IActionResult> Index(ConcertQueryRequest request)
         {
-            if (string.IsNullOrWhiteSpace(activeTab))
+            if (request == null)
             {
-                activeTab = CONCERTS_TAB;
+                request = new ConcertQueryRequest();
             }
 
-            if (!page.HasValue || (page <= 0))
+            if (string.IsNullOrWhiteSpace(request.ActiveTab))
             {
-                return Redirect($"{Url.Href(new MenuRoute<ConcertController>(c => c.Index(null, null)))}?page={1}&activeTab={activeTab}");
+                request.ActiveTab = CONCERTS_TAB;
             }
 
-            ConcertMainModel viewModel = await FillModel(null, page, activeTab).ConfigureAwait(false);
-
-            var maxPage = Math.Max(viewModel.Concerts.Pager.PageMax ?? 0, viewModel.Bands.Bands.Pager.PageMax ?? 0);
-            maxPage = Math.Max(maxPage, viewModel.Locations.Pager.PageMax ?? 0);
-
-            if (maxPage > 0 && page > maxPage)
+            if (!request.Page.HasValue || (request.Page <= 0))
             {
-                return Redirect($"{Url.Href(new MenuRoute<ConcertController>(c => c.Index(null, null)))}?page={maxPage}&activeTab={activeTab}");
+                request.Page = 1;
             }
+
+            ConcertMainModel viewModel = await FillModel(null, request).ConfigureAwait(false);
 
             return View(viewModel);
         }
@@ -71,7 +67,7 @@ namespace Mihaylov.UI.Mvc.Other.Areas.Concert.Controllers
                 };
             }
 
-            ConcertMainModel viewModel = await FillModel(inputModel, 1, CONCERTS_TAB).ConfigureAwait(false);
+            ConcertMainModel viewModel = await FillModel(inputModel, new ConcertQueryRequest(1, CONCERTS_TAB)).ConfigureAwait(false);
 
             return View(viewModel);
         }
@@ -81,7 +77,7 @@ namespace Mihaylov.UI.Mvc.Other.Areas.Concert.Controllers
         {
             if (!ModelState.IsValid)
             {
-                ConcertMainModel viewModel = await FillModel(inputModel, 1, CONCERTS_TAB).ConfigureAwait(false);
+                ConcertMainModel viewModel = await FillModel(inputModel, new ConcertQueryRequest(1, CONCERTS_TAB)).ConfigureAwait(false);
                 return RedirectToAction(nameof(IndexRedirect), viewModel);
             }
 
@@ -120,7 +116,7 @@ namespace Mihaylov.UI.Mvc.Other.Areas.Concert.Controllers
 
                 _logger.LogError(ex, "Error in Add/update band. Error: {message}", builder.ToString());
 
-                ConcertMainModel viewModel = await FillModel(null, 1, CONCERTS_TAB).ConfigureAwait(false);
+                ConcertMainModel viewModel = await FillModel(null, new ConcertQueryRequest(1, CONCERTS_TAB)).ConfigureAwait(false);
                 return RedirectToAction(nameof(IndexRedirect), viewModel);
             }
             catch (SwaggerException ex)
@@ -165,7 +161,7 @@ namespace Mihaylov.UI.Mvc.Other.Areas.Concert.Controllers
 
                     _logger.LogError(ex, "Error in Add/update band. Error: {message}", builder.ToString());
 
-                    ConcertMainModel viewModel = await FillModel(null, 1, BANDS_TAB).ConfigureAwait(false);
+                    ConcertMainModel viewModel = await FillModel(null, new ConcertQueryRequest(1, BANDS_TAB)).ConfigureAwait(false);
 
                     return RedirectToAction(nameof(IndexRedirect), viewModel);
                 }
@@ -237,7 +233,7 @@ namespace Mihaylov.UI.Mvc.Other.Areas.Concert.Controllers
         }
 
 
-        private async Task<ConcertMainModel> FillModel(AddConcertVewModel inputModel, int? page, string activeTab)
+        private async Task<ConcertMainModel> FillModel(AddConcertVewModel inputModel, ConcertQueryRequest request)
         {
             if (inputModel == null)
             {
@@ -247,65 +243,74 @@ namespace Mihaylov.UI.Mvc.Other.Areas.Concert.Controllers
                 };
             }
 
-            if (string.IsNullOrWhiteSpace(activeTab))
+            if (request == null)
             {
-                activeTab = CONCERTS_TAB;
+                request = new ConcertQueryRequest();
             }
 
-            int? concertsPage = 1;
-            int? bandsPage = 1;
-            int? locationsPage = 1;
-            int? ticketsPage = 1;
-            int? countriesPage = 1;
-
-            if (page.HasValue && page > 0)
+            if (string.IsNullOrWhiteSpace(request.ActiveTab))
             {
-                switch (activeTab)
+                request.ActiveTab = CONCERTS_TAB;
+            }
+
+            var concertsRequest = new ConcertQueryRequest(1, CONCERTS_TAB);
+            var bandsRequest = new ConcertQueryRequest(1, BANDS_TAB);
+            var locationsRequest = new ConcertQueryRequest(1, LOCATIONS_TAB);
+            var ticketsRequest = new ConcertQueryRequest(1, PROVIDERS_TAB);
+            var countriesRequest = new ConcertQueryRequest(1, COUNTRIES_TAB);
+
+            if (request.Page.HasValue && request.Page > 0)
+            {
+                switch (request.ActiveTab)
                 {
                     case CONCERTS_TAB:
-                        concertsPage = page;
+                        concertsRequest.Page = request.Page;
                         break;
                     case BANDS_TAB:
-                        bandsPage = page;
+                        bandsRequest.Page = request.Page;
                         break;
                     case LOCATIONS_TAB:
-                        locationsPage = page;
+                        locationsRequest.Page = request.Page;
                         break;
                     case PROVIDERS_TAB:
-                        ticketsPage = page;
+                        ticketsRequest.Page = request.Page;
                         break;
                     case COUNTRIES_TAB:
-                        countriesPage = page;
+                        countriesRequest.Page = request.Page;
                         break;
                 }
             }
 
-            var concerts = await _client.ConcertsAsync(concertsPage, 20).ConfigureAwait(false);
+            var concerts = await _client.ConcertsAsync(concertsRequest.Page, 20).ConfigureAwait(false);
+
             var allBands = await _client.BandsAsync(null, null).ConfigureAwait(false);
-            var bands = await _client.BandsAsync(bandsPage, 20).ConfigureAwait(false);
+            var bands = await _client.BandsAsync(bandsRequest.Page, 20).ConfigureAwait(false);
+
             var allLocations = await _client.LocationsAsync(null, null).ConfigureAwait(false);
-            var locations = await _client.LocationsAsync(locationsPage, 20).ConfigureAwait(false);
+            var locations = await _client.LocationsAsync(locationsRequest.Page, 20).ConfigureAwait(false);
+
             var allTicketProviders = await _client.TicketProvidersAsync(null, null).ConfigureAwait(false);
-            var ticketProviders = await _client.TicketProvidersAsync(ticketsPage, 20).ConfigureAwait(false);
+            var ticketProviders = await _client.TicketProvidersAsync(ticketsRequest.Page, 20).ConfigureAwait(false);
+
             var allCountries = await _client.CountriesAsync(null, null).ConfigureAwait(false);
-            var countries = await _client.CountriesAsync(countriesPage, 20).ConfigureAwait(false);
+            var countries = await _client.CountriesAsync(countriesRequest.Page, 20).ConfigureAwait(false);
+
             var concertTypes = await _client.ConcertTypesAsync().ConfigureAwait(false);
 
-            var currencies = Enum.GetValues(typeof(CurrencyType))
-                                  .Cast<CurrencyType>()
-                                  .Select(v => new SelectListItem(v.ToString(), ((int)v).ToString()))
-                                  .OrderByDescending(c => c.Value)
-                                  .ToList();
-
-            inputModel.Currencies = currencies;
+            inputModel.Currencies = EnumExtensions.GetDropdown<CurrencyType>().OrderByDescending(c => c.Value);
             inputModel.ConcertTypes = concertTypes;
             inputModel.Bands = allBands.Data;
             inputModel.Locations = allLocations.Data;
             inputModel.TicketProviders = allTicketProviders.Data.Where(tp => tp.IsActive).ToList();
-            inputModel.Page = concertsPage ?? 1;
+            inputModel.Page = concertsRequest.Page ?? 1;
 
-            var viewModel = new ConcertMainModel(concerts, new BandViewModel(bands, allCountries.Data), locations,
-                ticketProviders, countries, concertTypes, inputModel, activeTab);
+            var viewModel = new ConcertMainModel(request,
+                new ConcertViewModel(concerts, inputModel, concertsRequest),
+                new BandViewModel(bands, allCountries.Data, bandsRequest),
+                new LocationViewModel(locations, locationsRequest),
+                new TicketProviderViewModel(ticketProviders, ticketsRequest),
+                new CountriesViewModel(countries, countriesRequest),
+                concertTypes);
 
             return viewModel;
         }

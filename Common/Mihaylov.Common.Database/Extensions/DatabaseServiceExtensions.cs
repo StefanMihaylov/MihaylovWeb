@@ -13,7 +13,7 @@ namespace Mihaylov.Common;
 public static class DatabaseServiceExtensions
 {
     /// <summary>
-    /// Registers the current-user service and the audit service/>.
+    /// Registers the current-user service and the audit service.
     /// </summary>
     /// <param name="services">The service collection to add the services to.</param>
     /// <param name="userNameFunc">
@@ -71,24 +71,24 @@ public static class DatabaseServiceExtensions
     }
 
     /// <summary>
-    /// Performs database initialization by resolving a DbContext of type T and invoking the provided migrate action
-    /// when enabled.
+    /// Applies the pending migrations of the DbContext <typeparamref name="T"/> when <paramref name="enable"/> is <c>true</c>.
+    /// It builds a temporary service provider from <paramref name="services"/> to resolve the context.
     /// </summary>
-    /// <typeparam name="T">The DbContext type used to resolve an instance from the service provider.</typeparam>
-    /// <param name="serviceProvider">The service collection used to build a temporary ServiceProvider to resolve the DbContext.</param>
-    /// <param name="enable">If true, the migrate action is invoked; otherwise no migration is performed.</param>
-    /// <returns>The original IServiceCollection to allow method chaining.</returns>
-    public static IServiceCollection MigrateDatabase<T>(this IServiceCollection serviceProvider, bool enable = true) where T : DbContext
+    /// <typeparam name="T">The DbContext type to migrate.</typeparam>
+    /// <param name="services">The service collection used to build the temporary service provider.</param>
+    /// <param name="enable">If <c>true</c>, the migrations are applied; otherwise nothing happens.</param>
+    /// <returns>The same <paramref name="services"/> instance, so calls can be chained.</returns>
+    public static IServiceCollection MigrateDatabase<T>(this IServiceCollection services, bool enable = true) where T : DbContext
     {
         if (enable)
         {
-            using var provider = serviceProvider.BuildServiceProvider();
+            using var provider = services.BuildServiceProvider();
             using var dbContext = provider.GetRequiredService<T>();
 
             dbContext.Database.Migrate();
         }
 
-        return serviceProvider;
+        return services;
     }
 
     //public static IServiceCollection SeedDatabase<T>(this IServiceCollection serviceProvider, string tableName, Action<T> seed) where T : DbContext

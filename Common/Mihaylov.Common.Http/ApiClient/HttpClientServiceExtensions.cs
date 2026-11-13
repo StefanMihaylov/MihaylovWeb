@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net.Http;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
@@ -17,25 +18,18 @@ namespace Mihaylov.Common
         /// through <see cref="BearerTokenHandler"/>.
         /// </summary>
         /// <typeparam name="TClient">The interface or base type of the API client.</typeparam>
-        /// <typeparam name="TImpl">The concrete implementation of the API client.</typeparam>
+        /// <typeparam name="T">The concrete implementation of the API client.</typeparam>
         /// <typeparam name="TOptions">The options type containing API settings, implementing IBaseApiSettings.</typeparam>
         /// <param name="services">The service collection to add the client to.</param>
         /// <param name="clientName">The logical name of the HTTP client.</param>
-        /// <param name="bindSettings">Binds and validates <typeparamref name="TOptions"/>, 
-        /// for example <c>builder =&gt; builder.BindSettings("Other")</c>. If it is <c>null</c>, the options are registered empty 
-        /// and must be configured elsewhere.</param>
+        /// <param name="moduleName">The module name, used as the last part of the section path.</param>
         /// <returns>The IHttpClientBuilder for further client configuration.</returns>
-        public static IHttpClientBuilder AddApiClient<TClient, TImpl, TOptions>(this IServiceCollection services, string clientName,
-            Action<OptionsBuilder<TOptions>> bindSettings)
-            where TClient : class where TImpl : class, TClient where TOptions : class, IBaseApiSettings
+        public static IHttpClientBuilder AddApiClient<TClient, T, TOptions>(this IServiceCollection services, string clientName, string moduleName)
+            where TClient : class where T : class, TClient where TOptions : class, IBaseApiSettings
         {
             services.TryAddTransient<BearerTokenHandler>();
 
-            var optionsBuilder = services.AddOptions<TOptions>();
-            if (bindSettings != null)
-            {
-                bindSettings(optionsBuilder);
-            }
+            services.AddOptions<TOptions>().BindSettings(moduleName);
 
             var builder = services.AddHttpClient(clientName, (provider, http) =>
             {
@@ -49,10 +43,31 @@ namespace Mihaylov.Common
 
             services.AddTransient<TClient>(provider =>
             {
-                return ActivatorUtilities.CreateInstance<TImpl>(provider, provider.GetRequiredService<IHttpClientFactory>());
+                return ActivatorUtilities.CreateInstance<T>(provider, provider.GetRequiredService<IHttpClientFactory>());
             });
 
             return builder;
+        }
+
+        /// <summary>
+        /// Binds <typeparamref name="TOptions"/> to the <c>Modules:{moduleName}</c> section of the configuration,
+        /// validates it with data annotations, and validates it when the host starts.
+        /// </summary>
+        /// <typeparam name="TOptions">The options type to bind.</typeparam>
+        /// <param name="optionBuilder">The options builder to configure.</param>
+        /// <param name="moduleName">The module name, used as the last part of the section path.</param>
+        /// <remarks>
+        /// Invalid or missing settings stop the application at startup with an <c>OptionsValidationException</c>
+        /// instead of failing on the first request.
+        /// </remarks>
+        public static void BindSettings<TOptions>(this OptionsBuilder<TOptions> optionBuilder, string moduleName) where TOptions : class
+        {
+            optionBuilder.Configure<IConfiguration>((model, config) =>
+            {
+                config.GetSection($"Modules:{moduleName}").Bind(model);
+            })
+            .ValidateDataAnnotations()
+            .ValidateOnStart();
         }
     }
 }

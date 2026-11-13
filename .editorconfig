@@ -1,0 +1,3 @@
+[*.cs]
+spelling_languages = en-us,en-gb,bg-bg
+dotnet_diagnostic.CA1859.severity = none

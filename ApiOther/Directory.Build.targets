@@ -1,0 +1,24 @@
+<Project>
+
+	<ItemGroup>
+		<_DeclaredProjectReference Include="@(ProjectReference)" />
+	</ItemGroup>
+
+	<Target Name="EmbedPackageReferences" BeforeTargets="GetAssemblyAttributes">
+		<ItemGroup>
+			<_PublicPackage Include="@(PackageReference)" />
+			<_PublicPackage Remove="@(PackageReference)"
+							Condition="'%(PackageReference.PrivateAssets)' == 'all'" />
+		</ItemGroup>
+		<ItemGroup>
+			<AssemblyAttribute Include="System.Reflection.AssemblyMetadataAttribute">
+				<_Parameter1>PackageReferences</_Parameter1>
+				<_Parameter2>@(_PublicPackage->'%(Identity)|%(Version)', ';')</_Parameter2>
+			</AssemblyAttribute>
+			<AssemblyAttribute Include="System.Reflection.AssemblyMetadataAttribute">
+				<_Parameter1>ProjectReferences</_Parameter1>
+				<_Parameter2>@(_DeclaredProjectReference->'%(Filename)', ';')</_Parameter2>
+			</AssemblyAttribute>
+		</ItemGroup>
+	</Target>
+</Project>

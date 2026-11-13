@@ -19,18 +19,22 @@ namespace Mihaylov.Common
         /// <typeparam name="Tin">The entity type of the query.</typeparam>
         /// <typeparam name="Tout">The type of the returned rows.</typeparam>
         /// <param name="query">The query to page. It should already be ordered.</param>
-        /// <param name="pagerRequest">The requested page and page size. When null or without a page size, all rows are returned.</param>
+        /// <param name="pagerRequest"> The requested page and page size. When it is null, or has no page size or a page size of 0 or less,
+        /// all rows are returned and the pager has no page size. </param>
         /// <param name="project">Maps the paged query to the returned rows.</param>
         /// <param name="ct">The token to cancel the operation.</param>
         /// <returns>
         /// The rows of the page and the <see cref="Pager"/>. A page number outside the range is moved to the nearest valid page.
         /// An empty query gives an empty grid on page 1.
         /// </returns>
-        /// <exception cref="ArgumentNullException">Thrown when <paramref name="project"/> is null and the query has rows.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="query"/> or <paramref name="project"/> is null.</exception>
         public static async Task<BaseGrid<Tout>> GetPageAsync<Tin, Tout>(this IQueryable<Tin> query, IPagerRequest pagerRequest,
                 Func<IQueryable<Tin>, IQueryable<Tout>> project, CancellationToken ct = default) where Tin : class where Tout : class
         {
-            int? pageSize = pagerRequest?.PageSize;
+            ArgumentNullException.ThrowIfNull(query);
+            ArgumentNullException.ThrowIfNull(project);
+
+            int? pageSize = pagerRequest?.PageSize > 0 ? pagerRequest.PageSize : null;
 
             int count = await query.CountAsync(ct).ConfigureAwait(false);
             if (count == 0)
@@ -46,17 +50,12 @@ namespace Mihaylov.Common
 
             if (pageSize.HasValue)
             {
-                int lastPage = (count + pageSize.Value - 1) / pageSize.Value;
+                var lastPage = (int)(((decimal)count + pageSize.Value - 1) / pageSize.Value);
                 currentPage = Math.Clamp(currentPage, 1, lastPage);
 
                 query = query.Skip((currentPage - 1) * pageSize.Value)
                              .Take(pageSize.Value)
                              .AsQueryable();
-            }
-
-            if (project == null)
-            {
-                throw new ArgumentNullException("Project cannot be null");
             }
 
             var rows = await project(query).ToListAsync(ct).ConfigureAwait(false);

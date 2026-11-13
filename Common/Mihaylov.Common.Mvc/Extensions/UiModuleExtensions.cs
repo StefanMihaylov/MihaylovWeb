@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -38,6 +39,8 @@ namespace Mihaylov.Common
 
             var assembly = module.GetType().Assembly;
             var uiInfo = VersionHelper.GetVersionInfo(assembly);
+
+            var orders = module.Menus.Select(m => m.Order).ToList();
 
             return new ComponentModuleInfo(serverData, uiInfo);
         }

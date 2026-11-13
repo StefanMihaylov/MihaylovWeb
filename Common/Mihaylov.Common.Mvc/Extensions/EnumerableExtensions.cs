@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Mihaylov.Common;
 
@@ -9,6 +11,39 @@ namespace Mihaylov.Common;
 /// </summary>
 public static class EnumerableExtensions
 {
+    /// <summary>
+    /// Projects each element of the source sequence into a <see cref="SelectListItem"/> using the specified value and text selectors.
+    /// </summary>
+    /// <typeparam name="Tin">The type of elements in the source sequence.</typeparam>
+    /// <param name="collection">The source sequence of elements to project.</param>
+    /// <param name="valueFunc">A function that gets the value int from a source element.</param>
+    /// <param name="textFunc">A function that gets the text string from a source element.</param>
+    /// <returns>A list of <see cref="SelectListItem"/> with one item for each source element, in the same order.</returns>
+    public static IEnumerable<SelectListItem> GetListItems<Tin>(this IEnumerable<Tin> collection, Func<Tin, int> valueFunc, Func<Tin, string> textFunc)
+    {
+        ArgumentNullException.ThrowIfNull(collection, nameof(collection));
+
+        return collection.GetListItems(a => valueFunc(a).ToString(), textFunc);
+    }
+
+    /// <summary>
+    /// Projects each element of the source sequence into a <see cref="SelectListItem"/> using the specified value and text selectors.
+    /// </summary>
+    /// <typeparam name="Tin">The type of elements in the source sequence.</typeparam>
+    /// <param name="collection">The source sequence of elements to project.</param>
+    /// <param name="valueFunc">A function that gets the value string from a source element.</param>
+    /// <param name="textFunc">A function that gets the text string from a source element.</param>
+    /// <returns>A list of <see cref="SelectListItem"/> with one item for each source element, in the same order.</returns>
+    public static IEnumerable<SelectListItem> GetListItems<Tin>(this IEnumerable<Tin> collection, Func<Tin, string> valueFunc, Func<Tin, string> textFunc)
+    {
+        ArgumentNullException.ThrowIfNull(collection, nameof(collection));
+        ArgumentNullException.ThrowIfNull(valueFunc, nameof(valueFunc));
+        ArgumentNullException.ThrowIfNull(textFunc, nameof(textFunc));
+
+        var list = collection.Select(item => new SelectListItem { Value = valueFunc(item), Text = textFunc(item) }).ToList();
+        return list;
+    }
+
     /// <summary>
     /// Projects each element of the source sequence into a result object that represents a list item using the
     /// specified value and text selectors.
@@ -24,6 +59,8 @@ public static class EnumerableExtensions
         Expression<Func<string, string, Tout>> resultSelect,
         Expression<Func<Tin, object>> valueExpression, Expression<Func<Tin, object>> textExpression)
     {
+        ArgumentNullException.ThrowIfNull(collection);
+
         return collection.GetListItems<Tin, Tout>(resultSelect, valueExpression, "{0}", textExpression);
     }
 
@@ -46,6 +83,12 @@ public static class EnumerableExtensions
         Expression<Func<string, string, Tout>> resultSelect, Expression<Func<Tin, object>> valueExpression,
         string formatText, params Expression<Func<Tin, object>>[] textExpressions)
     {
+        ArgumentNullException.ThrowIfNull(collection);
+        ArgumentNullException.ThrowIfNull(resultSelect);
+        ArgumentNullException.ThrowIfNull(valueExpression);
+        ArgumentNullException.ThrowIfNull(formatText);
+        ArgumentNullException.ThrowIfNull(textExpressions);
+
         var list = new List<Tout>();
 
         Func<string, string, Tout> resultMethod = resultSelect.Compile();
@@ -56,8 +99,8 @@ public static class EnumerableExtensions
             var textParams = new List<object>();
             foreach (var textExpression in textExpressions)
             {
-                Func<Tin, object> textMetod = textExpression.Compile();
-                textParams.Add(textMetod(item));
+                Func<Tin, object> textMethod = textExpression.Compile();
+                textParams.Add(textMethod(item));
             }
 
             var text = string.Format(formatText, textParams.ToArray());

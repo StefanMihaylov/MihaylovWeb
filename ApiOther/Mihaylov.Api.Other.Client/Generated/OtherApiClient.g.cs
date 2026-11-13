@@ -962,7 +962,7 @@ namespace Mihaylov.Api.Other.Client
 
         /// <returns>OK</returns>
         /// <exception cref="SwaggerException">A server side error occurred.</exception>
-        public virtual System.Threading.Tasks.Task<ConcertExtendedGrid> ConcertsAsync(int? page, int? pageSize)
+        public virtual System.Threading.Tasks.Task<ConcertExtendedBaseGrid> ConcertsAsync(int? page, int? pageSize)
         {
             return ConcertsAsync(page, pageSize, System.Threading.CancellationToken.None);
         }
@@ -970,7 +970,7 @@ namespace Mihaylov.Api.Other.Client
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>OK</returns>
         /// <exception cref="SwaggerException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<ConcertExtendedGrid> ConcertsAsync(int? page, int? pageSize, System.Threading.CancellationToken cancellationToken)
+        public virtual async System.Threading.Tasks.Task<ConcertExtendedBaseGrid> ConcertsAsync(int? page, int? pageSize, System.Threading.CancellationToken cancellationToken)
         {
             var client_ = _httpClient;
             var disposeClient_ = false;
@@ -1021,7 +1021,7 @@ namespace Mihaylov.Api.Other.Client
                         var status_ = (int)response_.StatusCode;
                         if (status_ == 200)
                         {
-                            var objectResponse_ = await ReadObjectResponseAsync<ConcertExtendedGrid>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                            var objectResponse_ = await ReadObjectResponseAsync<ConcertExtendedBaseGrid>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
                                 throw new SwaggerException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
@@ -1164,7 +1164,7 @@ namespace Mihaylov.Api.Other.Client
 
         /// <returns>OK</returns>
         /// <exception cref="SwaggerException">A server side error occurred.</exception>
-        public virtual System.Threading.Tasks.Task<BandExtendedGrid> BandsAsync(int? page, int? pageSize)
+        public virtual System.Threading.Tasks.Task<BandExtendedBaseGrid> BandsAsync(int? page, int? pageSize)
         {
             return BandsAsync(page, pageSize, System.Threading.CancellationToken.None);
         }
@@ -1172,7 +1172,7 @@ namespace Mihaylov.Api.Other.Client
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>OK</returns>
         /// <exception cref="SwaggerException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<BandExtendedGrid> BandsAsync(int? page, int? pageSize, System.Threading.CancellationToken cancellationToken)
+        public virtual async System.Threading.Tasks.Task<BandExtendedBaseGrid> BandsAsync(int? page, int? pageSize, System.Threading.CancellationToken cancellationToken)
         {
             var client_ = _httpClient;
             var disposeClient_ = false;
@@ -1223,7 +1223,7 @@ namespace Mihaylov.Api.Other.Client
                         var status_ = (int)response_.StatusCode;
                         if (status_ == 200)
                         {
-                            var objectResponse_ = await ReadObjectResponseAsync<BandExtendedGrid>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                            var objectResponse_ = await ReadObjectResponseAsync<BandExtendedBaseGrid>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
                                 throw new SwaggerException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
@@ -1366,7 +1366,7 @@ namespace Mihaylov.Api.Other.Client
 
         /// <returns>OK</returns>
         /// <exception cref="SwaggerException">A server side error occurred.</exception>
-        public virtual System.Threading.Tasks.Task<LocationGrid> LocationsAsync(int? page, int? pageSize)
+        public virtual System.Threading.Tasks.Task<LocationBaseGrid> LocationsAsync(int? page, int? pageSize)
         {
             return LocationsAsync(page, pageSize, System.Threading.CancellationToken.None);
         }
@@ -1374,7 +1374,7 @@ namespace Mihaylov.Api.Other.Client
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>OK</returns>
         /// <exception cref="SwaggerException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<LocationGrid> LocationsAsync(int? page, int? pageSize, System.Threading.CancellationToken cancellationToken)
+        public virtual async System.Threading.Tasks.Task<LocationBaseGrid> LocationsAsync(int? page, int? pageSize, System.Threading.CancellationToken cancellationToken)
         {
             var client_ = _httpClient;
             var disposeClient_ = false;
@@ -1425,7 +1425,7 @@ namespace Mihaylov.Api.Other.Client
                         var status_ = (int)response_.StatusCode;
                         if (status_ == 200)
                         {
-                            var objectResponse_ = await ReadObjectResponseAsync<LocationGrid>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                            var objectResponse_ = await ReadObjectResponseAsync<LocationBaseGrid>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
                                 throw new SwaggerException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
@@ -1568,7 +1568,7 @@ namespace Mihaylov.Api.Other.Client
 
         /// <returns>OK</returns>
         /// <exception cref="SwaggerException">A server side error occurred.</exception>
-        public virtual System.Threading.Tasks.Task<TicketProviderGrid> TicketProvidersAsync(int? page, int? pageSize)
+        public virtual System.Threading.Tasks.Task<TicketProviderBaseGrid> TicketProvidersAsync(int? page, int? pageSize)
         {
             return TicketProvidersAsync(page, pageSize, System.Threading.CancellationToken.None);
         }
@@ -1576,7 +1576,7 @@ namespace Mihaylov.Api.Other.Client
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>OK</returns>
         /// <exception cref="SwaggerException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<TicketProviderGrid> TicketProvidersAsync(int? page, int? pageSize, System.Threading.CancellationToken cancellationToken)
+        public virtual async System.Threading.Tasks.Task<TicketProviderBaseGrid> TicketProvidersAsync(int? page, int? pageSize, System.Threading.CancellationToken cancellationToken)
         {
             var client_ = _httpClient;
             var disposeClient_ = false;
@@ -1627,7 +1627,7 @@ namespace Mihaylov.Api.Other.Client
                         var status_ = (int)response_.StatusCode;
                         if (status_ == 200)
                         {
-                            var objectResponse_ = await ReadObjectResponseAsync<TicketProviderGrid>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                            var objectResponse_ = await ReadObjectResponseAsync<TicketProviderBaseGrid>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
                                 throw new SwaggerException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
@@ -1770,7 +1770,7 @@ namespace Mihaylov.Api.Other.Client
 
         /// <returns>OK</returns>
         /// <exception cref="SwaggerException">A server side error occurred.</exception>
-        public virtual System.Threading.Tasks.Task<CountryExtendedGrid> CountriesAsync(int? page, int? pageSize)
+        public virtual System.Threading.Tasks.Task<CountryExtendedBaseGrid> CountriesAsync(int? page, int? pageSize)
         {
             return CountriesAsync(page, pageSize, System.Threading.CancellationToken.None);
         }
@@ -1778,7 +1778,7 @@ namespace Mihaylov.Api.Other.Client
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>OK</returns>
         /// <exception cref="SwaggerException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<CountryExtendedGrid> CountriesAsync(int? page, int? pageSize, System.Threading.CancellationToken cancellationToken)
+        public virtual async System.Threading.Tasks.Task<CountryExtendedBaseGrid> CountriesAsync(int? page, int? pageSize, System.Threading.CancellationToken cancellationToken)
         {
             var client_ = _httpClient;
             var disposeClient_ = false;
@@ -1829,7 +1829,7 @@ namespace Mihaylov.Api.Other.Client
                         var status_ = (int)response_.StatusCode;
                         if (status_ == 200)
                         {
-                            var objectResponse_ = await ReadObjectResponseAsync<CountryExtendedGrid>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                            var objectResponse_ = await ReadObjectResponseAsync<CountryExtendedBaseGrid>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
                                 throw new SwaggerException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
