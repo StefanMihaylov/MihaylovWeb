@@ -24,7 +24,7 @@ namespace Mihaylov.Api.Gear
 
         private static IServiceCollection AddServices(IServiceCollection services)
         {
-            services.AddSwaggerCustom("v1", "v1", "Gear API", "Gear API", true, UserConstants.AuthenticationScheme);
+            services.AddSwaggerCustom("v1", "v1", "Gear API", "Gear API", true);
 
             services.AddControllers();
             services.Configure<ApiBehaviorOptions>(options =>
@@ -52,8 +52,7 @@ namespace Mihaylov.Api.Gear
                 opt.MediatRLicenseKey = Config.GetEnvironmentVariable("MediatR_LicenseKey", string.Empty);
             });
 
-            services.AddClientJwtAuthentication(UserConstants.AuthenticationScheme, 
-                AuthorizationExtensions.GetAuthorizationOptions, null, opt =>
+            services.AddClientJwtAuthentication(null, opt =>
             {
                 opt.Secret = Config.GetEnvironmentVariable("JWT_AUTHENTICATION_SECRET", "abc");
                 opt.Issuer = Config.GetEnvironmentVariable("JWT_ISSUER", string.Empty);

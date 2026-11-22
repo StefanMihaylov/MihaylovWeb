@@ -1,0 +1,44 @@
+﻿@model SiteFilterModel
+
+<form action="@Url.Href(new MenuRoute<SiteController>(c => c.Search(null)))" method="post" class="form search-form">
+    <fieldset>
+        <div class="form-row">
+            <div class="form-group col-auto">
+                @Html.LabelFor(m => Model.AccountTypeId, "Type")
+                @Html.DropDownListFor(m => Model.AccountTypeId, Model.AccountTypes.GetListItems(u => u.Id, u => u.Name), ViewConstants.DefaultDropDownValueShort, new { @class = "form-control", style = "width:120px" })
+            </div>
+            <div class="form-group col-auto">
+                @Html.LabelFor(m => Model.AccountName)
+                @Html.TextBoxFor(m => Model.AccountName, new { @class = "form-control", aria_autocomplete = "none", autocomplete = "off" })
+            </div>
+            <div class="form-group col-auto">
+                @Html.LabelFor(m => Model.Name)
+                @Html.TextBoxFor(m => Model.Name, new { @class = "form-control", style = "width:105px", aria_autocomplete = "none", autocomplete = "off" })
+            </div>
+            <div class="form-group col-auto">
+                @Html.LabelFor(m => Model.StatusId, "Status")
+                @Html.DropDownListFor(m => Model.StatusId, Model.AccountStates.GetListItems(u => u.Id, u => u.Name), ViewConstants.DefaultDropDownValue, new { @class = "form-control", style = "width:200px" })
+            </div>
+            <div class="form-group col-auto">
+                @Html.HiddenFor(m => Model.Page)
+                <button type="submit" class="submit-btn btn btn-primary">
+                    <icon type="IconType.Search" />
+                </button>
+            </div>
+            <div class="form-group col-auto">
+                <span class="btn btn-success add-new-person-search-button">
+                    <icon type="IconType.New" />
+                </span>
+            </div>
+            <div class="form-group col-auto">
+                <span class="btn btn-secondary merge-action-button merge-base-button"
+                      data-url="@Url.Href(new MenuRoute<SiteController>(c => c.MergeView(null)))">
+                    <icon type="IconType.Merge" />
+                </span>
+                <span class="btn btn-secondary clear-merge-person-button merge-base-button">
+                    <icon type="IconType.Delete2" color=@Colour.Disabled />
+                </span>
+            </div>
+        </div>
+    </fieldset>
+</form>

@@ -49,7 +49,7 @@ namespace Mihaylov.UI.Mvc.Other.Areas.Cluster.Models.Velero
 
             builder.Append("<ul class='custom-popover'>");
             AddPopupLine(builder, "Name", Name);
-            AddPopupLine(builder, "Delete", $"<a href='{url}?backup={Name}'>{buttonIcon}</a>");
+            AddPopupLine(builder, "Delete", $"<a href='{url}'>{buttonIcon}</a>");
             AddPopupLine(builder, "Phase", Phase?.ToString());
             AddPopupLine(builder, "Created", CreatedOn?.ToString("yyyy-MM-dd HH:mm:ss"));
             AddPopupLine(builder, "Completed", CompletionTimestamp?.ToString("yyyy-MM-dd HH:mm:ss"));

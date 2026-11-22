@@ -1,0 +1,25 @@
+﻿@model NewPersonViewModel
+
+<form action="@Url.Href(new MenuRoute<SiteController>(c => c.NewPerson(null)))" method="post" class="form highlight">
+    <fieldset>
+        <div class="form-row">
+            <div class="form-group col-auto">
+                @Html.LabelFor(m => Model.AccountTypeId, "Type")
+                @Html.DropDownListFor(m => Model.AccountTypeId, Model.AccountTypes.GetListItems(u => u.Id, u => u.Name), ViewConstants.DefaultDropDownValueShort, new { @class = "form-control", style = "width:120px" })
+            </div>
+            <div class="form-group col-auto">
+                @Html.LabelFor(m => Model.AccountName)
+                @Html.TextBoxFor(m => Model.AccountName, new { @class = "form-control", aria_autocomplete = "none", autocomplete = "off" })
+            </div>
+            <div class="form-group col-auto">
+                @Html.HiddenFor(m => Model.IsPreview)
+                <button type="submit" class="submit-btn btn btn-primary">
+                    <icon type=@(Model.IsPreview == true ? IconType.View : IconType.Save) />
+                </button>
+                <span class="btn btn-danger close-new-person-button">
+                    <icon type="IconType.Close" color=@Colour.Disabled />
+                </span>
+            </div>
+        </div>
+    </fieldset>
+</form>

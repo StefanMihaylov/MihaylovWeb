@@ -26,14 +26,28 @@ public class ModuleCatalog(IEnumerable<IUiModule> modules) : IModuleCatalog
     /// <inheritdoc />
     public async Task<IEnumerable<ComponentModuleInfo>> GetModuleVersionsAsync(IServiceScopeFactory factory)
     {
-        var modulesInfo = new List<ComponentModuleInfo>();
+        var result = new List<ComponentModuleInfo>();
 
         foreach (var module in Modules)
         {
             var moduleInfo = await module.GetModuleInfoAsync(factory).ConfigureAwait(false);
-            modulesInfo.Add(moduleInfo);
+            result.Add(moduleInfo);
         }
 
-        return modulesInfo;
+        return result;
+    }
+
+    /// <inheritdoc />
+    public async Task<IEnumerable<ComponentDependencies>> GetModuleDependenciesAsync(IServiceScopeFactory factory)
+    {
+        var result = new List<ComponentDependencies>();
+
+        foreach (var module in Modules)
+        {
+            var dependencies = await module.GetDependenciesAsync(factory).ConfigureAwait(false);
+            result.Add(dependencies);
+        }
+
+        return result;
     }
 }

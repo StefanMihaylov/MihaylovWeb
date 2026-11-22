@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
+using Mihaylov.Common;
 
 namespace Mihaylov.Api.Other.Contracts.Cluster.Models.Nexus
 {
     public class NexusNugetImage : NexusBaseImage
     {
-        public IEnumerable<NugetPackageDependency> Dependencies { get; set; }
+        public IEnumerable<DependencyNodeFlat> Dependencies { get; set; }
 
 
         public NexusNugetImage()

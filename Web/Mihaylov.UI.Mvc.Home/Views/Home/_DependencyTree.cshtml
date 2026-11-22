@@ -1,0 +1,13 @@
+﻿@using Mihaylov.Common
+@model DependencyNode
+
+@if (Model == null)
+{
+    <p class="text-muted">No dependency data.</p>
+}
+else
+{
+    <ul class="list-unstyled">
+        <partial name="_DependencyNode" model="Model" />
+    </ul>
+}

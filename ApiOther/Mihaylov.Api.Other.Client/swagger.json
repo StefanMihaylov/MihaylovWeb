@@ -2,7 +2,7 @@
   "openapi": "3.0.4",
   "info": {
     "title": "Other API",
-    "description": "Miscellaneous Endpoints API",
+    "description": "Miscellaneous Endpoints API | ApiName = Mihaylov.Api.Other, Version = 0.4.0",
     "version": "v1"
   },
   "servers": [
@@ -1497,6 +1497,29 @@
         }
       }
     },
+    "/api/Module/GetDependencies": {
+      "get": {
+        "tags": [
+          "Module"
+        ],
+        "operationId": "DependenciesGetInfo",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/DependencyNodeFlat"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/Nexus/Images": {
       "get": {
         "tags": [
@@ -1528,6 +1551,118 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/NexusImages"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
+      }
+    },
+    "/api/Nexus/Nugets": {
+      "get": {
+        "tags": [
+          "Nexus"
+        ],
+        "responses": {
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NugetPackages"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
+      }
+    },
+    "/api/Nexus/Nuget": {
+      "get": {
+        "tags": [
+          "Nexus"
+        ],
+        "parameters": [
+          {
+            "name": "packageName",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "version",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "framework",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/DependencyNodeFlat"
+                  }
                 }
               }
             }
@@ -3297,6 +3432,96 @@
           ]
         }
       },
+      "DependencyKind": {
+        "enum": [
+          1,
+          2,
+          3
+        ],
+        "type": "integer",
+        "description": "1 - Project, 2 - Package, 3 - Swagger",
+        "format": "int32",
+        "x-enumNames": [
+          "Project",
+          "Package",
+          "Swagger"
+        ],
+        "x-ms-enum": {
+          "name": "DependencyKind",
+          "modelAsString": false,
+          "values": [
+            {
+              "value": 1,
+              "name": "Project"
+            },
+            {
+              "value": 2,
+              "name": "Package"
+            },
+            {
+              "value": 3,
+              "name": "Swagger"
+            }
+          ]
+        }
+      },
+      "DependencyNodeFlat": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "version": {
+            "type": "string",
+            "nullable": true
+          },
+          "framework": {
+            "type": "string",
+            "nullable": true
+          },
+          "kind": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/DependencyKind"
+              }
+            ],
+            "x-enumNames": [
+              "Project",
+              "Package",
+              "Swagger"
+            ],
+            "x-ms-enum": {
+              "name": "DependencyKind",
+              "modelAsString": false,
+              "values": [
+                {
+                  "value": 1,
+                  "name": "Project"
+                },
+                {
+                  "value": 2,
+                  "name": "Package"
+                },
+                {
+                  "value": 3,
+                  "name": "Swagger"
+                }
+              ]
+            }
+          },
+          "parentId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "DeploymentFile": {
         "type": "object",
         "properties": {
@@ -3798,13 +4023,6 @@
             },
             "nullable": true
           },
-          "nugets": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/NexusNugetImage"
-            },
-            "nullable": true
-          },
           "runtimes": {
             "type": "array",
             "items": {
@@ -3853,13 +4071,29 @@
           "isFirst": {
             "type": "boolean"
           },
-          "localDependenciesCount": {
-            "type": "integer",
-            "format": "int32"
+          "dependencies": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DependencyNodeFlat"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "NugetPackages": {
+        "type": "object",
+        "properties": {
+          "localPackagePrefix": {
+            "type": "string",
+            "nullable": true
           },
-          "externalDependenciesCount": {
-            "type": "integer",
-            "format": "int32"
+          "nugets": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/NexusNugetImage"
+            },
+            "nullable": true
           }
         },
         "additionalProperties": false

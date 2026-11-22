@@ -1,0 +1,98 @@
+﻿@model PersonExtended
+
+@{
+    var ethnicities = Model.Ethnicities.GetListItems(u => u.Id, u => u.Name);
+    var orientations = Model.Orientations.GetListItems(u => u.Id, u => u.Name);
+    var countries = Model.Countries.GetListItems(u => u.Id, u => u.Name);
+    var states = Model.CountryStates.GetListItems(u => u.Id, u => u.Name);
+    var dateOfBirthTypes = EnumExtensions.GetDropdown<DateOfBirthType>();
+}
+
+<form action="@Url.Href(new MenuRoute<SiteController>(c => c.SavePerson(null)))" method="post" class="form">
+    <fieldset>
+        <div class="form-row">
+            <div class="form-group col-auto">
+                @Html.LabelFor(m => m.Details.FirstName)
+                @Html.TextBoxFor(m => m.Details.FirstName, new { @class = "form-control", aria_autocomplete = "none", autocomplete = "off" })
+            </div>
+            <div class="form-group col-auto">
+                @Html.LabelFor(m => m.Details.MiddleName)
+                @Html.TextBoxFor(m => m.Details.MiddleName, new { @class = "form-control", style = "width:105px", aria_autocomplete = "none", autocomplete = "off" })
+            </div>
+            <div class="form-group col-auto">
+                @Html.LabelFor(m => m.Details.LastName)
+                @Html.TextBoxFor(m => m.Details.LastName, new { @class = "form-control", aria_autocomplete = "none", autocomplete = "off" })
+            </div>
+            <div class="form-group col-auto">
+                @Html.LabelFor(m => m.Details.OtherNames)
+                @Html.TextBoxFor(m => m.Details.OtherNames, new { @class = "form-control", style = "width:105px", aria_autocomplete = "none", autocomplete = "off" })
+            </div>
+            <div class="form-group col-auto">
+                @Html.LabelFor(m => m.EthnicityId, "Ethnicity")
+                @Html.DropDownListFor(m => m.EthnicityId, ethnicities, ViewConstants.DefaultDropDownValue, new { @class = "form-control", style = "width:200px" })
+            </div>
+            <div class="form-group col-auto">
+                @Html.LabelFor(m => m.OrientationId, "Orientation")
+                @Html.DropDownListFor(m => m.OrientationId, orientations, ViewConstants.DefaultDropDownValue, new { @class = "form-control", style = "width:200px" })
+            </div>
+            <div class="form-group col-auto">
+                @Html.LabelFor(m => m.Comments)
+                @Html.TextBoxFor(m => m.Comments, new { @class = "form-control", aria_autocomplete = "none", autocomplete = "off" })
+            </div>
+            <div class="form-group col-auto">
+                @Html.LabelFor(m => m.CreatedOn)
+                @Html.TextBoxFor(m => m.CreatedOn, ViewConstants.DateTimeFormat, new { @class = "form-control", style = "width:105px", aria_autocomplete = "none", autocomplete = "off" })
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-auto">
+                @Html.LabelFor(m => m.Age)
+                @Html.TextBoxFor(m => m.Age, new { @class = "form-control", style = "width:105px", aria_autocomplete = "none", autocomplete = "off" })
+            </div>
+            <div class="form-group col-auto">
+                @Html.LabelFor(m => m.DateOfBirth)
+                @Html.TextBoxFor(m => m.DateOfBirth, ViewConstants.DateFormat, new { @class = "form-control", style = "width:105px", aria_autocomplete = "none", autocomplete = "off" })
+            </div>
+            <div class="form-group col-auto">
+                @Html.LabelFor(m => m.DateOfBirthType)
+                @Html.DropDownListFor(m => m.DateOfBirthType, dateOfBirthTypes, ViewConstants.DefaultDropDownValue, new { @class = "form-control", style = "width:200px" })
+            </div>
+            <div class="form-group col-auto">
+                @Html.LabelFor(m => m.CountryId, "Country")
+                @Html.DropDownListFor(m => m.CountryId, countries, ViewConstants.DefaultDropDownValue, new { @class = "form-control", style = "width:200px" })
+            </div>
+            <div class="form-group col-auto">
+                @Html.LabelFor(m => m.Location.CountryStateId, "State")
+                @Html.DropDownListFor(m => m.Location.CountryStateId, states, ViewConstants.DefaultDropDownValue, new { @class = "form-control", style = "width:200px" })
+            </div>
+            <div class="form-group col-auto">
+                @Html.LabelFor(m => m.Location.Region)
+                @Html.TextBoxFor(m => m.Location.Region, new { @class = "form-control", style = "width:105px", aria_autocomplete = "none", autocomplete = "off" })
+            </div>
+            <div class="form-group col-auto">
+                @Html.LabelFor(m => m.Location.City)
+                @Html.TextBoxFor(m => m.Location.City, new { @class = "form-control", style = "width:105px", aria_autocomplete = "none", autocomplete = "off" })
+            </div>
+            <div class="form-group col-auto">
+                @Html.LabelFor(m => m.Location.Details)
+                @Html.TextBoxFor(m => m.Location.Details, new { @class = "form-control", aria_autocomplete = "none", autocomplete = "off" })
+            </div>
+            <div class="form-group col-auto">
+                @if (Model.Id > 0)
+                {
+                    @Html.HiddenFor(m => m.Id)
+                    <button type="submit" class="submit-btn btn btn-primary">
+                        <icon type="IconType.Save" />
+                    </button>
+                }
+                <span class="btn btn-danger close-person-button">
+                    <icon type="IconType.Close" color=@Colour.Disabled />
+                </span>
+            </div>
+        </div>
+    </fieldset>
+</form>
+
+<hr />
+@await Html.PartialAsync("_AccountsGrid", new AccountsExtended(Model))
+@await Html.PartialAsync("_AnswersGrid", Model.AnswersExtended)

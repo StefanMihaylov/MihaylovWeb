@@ -1,0 +1,23 @@
+﻿@model DependencyNode
+
+<li>
+    @if (Model.IsLocal)
+    {
+        <strong>@Model.Name</strong>
+    }
+    else
+    {
+        @Model.Name
+    }
+    <small class="text-muted">@Model.Version @Model.Framework (@Model.Kind)</small>
+
+    @if (Model.Dependencies?.Any() == true)
+    {
+        <ul>
+            @foreach (var child in Model.Dependencies)
+            {
+                <partial name="_DependencyNode" model="child" />
+            }
+        </ul>
+    }
+</li>

@@ -137,6 +137,15 @@ namespace Mihaylov.Api.Gear.Client
 
         /// <returns>OK</returns>
         /// <exception cref="SwaggerException">A server side error occurred.</exception>
+        System.Threading.Tasks.Task<System.Collections.Generic.IEnumerable<DependencyNodeFlat>> DependenciesGetInfoAsync();
+
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+        /// <returns>OK</returns>
+        /// <exception cref="SwaggerException">A server side error occurred.</exception>
+        System.Threading.Tasks.Task<System.Collections.Generic.IEnumerable<DependencyNodeFlat>> DependenciesGetInfoAsync(System.Threading.CancellationToken cancellationToken);
+
+        /// <returns>OK</returns>
+        /// <exception cref="SwaggerException">A server side error occurred.</exception>
         System.Threading.Tasks.Task<System.Collections.Generic.IEnumerable<Trip>> TripListAsync();
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
@@ -347,6 +356,45 @@ namespace Mihaylov.Api.Gear.Client
 
         [System.Text.Json.Serialization.JsonPropertyName("isDefault")]
         public bool IsDefault { get; set; }
+
+    }
+
+    /// <summary>
+    /// 1 - Project, 2 - Package, 3 - Swagger
+    /// </summary>
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
+    public enum DependencyKind
+    {
+
+        Project = 1,
+
+        Package = 2,
+
+        Swagger = 3,
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class DependencyNodeFlat
+    {
+
+        [System.Text.Json.Serialization.JsonPropertyName("id")]
+        public int Id { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("name")]
+        public string Name { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("version")]
+        public string Version { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("framework")]
+        public string Framework { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("kind")]
+        public DependencyKind Kind { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("parentId")]
+        public int? ParentId { get; set; }
 
     }
 

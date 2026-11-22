@@ -10,4 +10,10 @@ public interface IModuleAssemblyService
     /// </summary>
     /// <returns>An IModuleInfo that represents the module's metadata and runtime information.</returns>
     IModuleInfo GetModuleInfo();
+
+    /// <summary>
+    /// Gets the dependencies of the root assembly.
+    /// </summary>
+    /// <returns>A dependency node representing the dependencies of the root assembly.</returns>
+    DependencyNode GetDependencies();
 }

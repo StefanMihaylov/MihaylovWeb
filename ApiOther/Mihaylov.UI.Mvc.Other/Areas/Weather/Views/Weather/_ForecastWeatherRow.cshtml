@@ -9,24 +9,22 @@
     <tr>
         @if (count == 0)
         {
-            <td><my-value>@Model.Current.Location</my-value></td>
+            <td>@Model.Current.Location</td>
         }
         else
         {
             <td></td>
         }
-        <td><my-value>@forecast.Date</my-value></td>
-        <td><my-value>@forecast.Condition</my-value></td>
+        <td>@forecast.Date</td>
+        <td>@forecast.Condition</td>
         <td>
-            <my-value>
-                @if (!string.IsNullOrEmpty(forecast.ConditionIcon))
-                {
-                    <img src=@forecast.ConditionIcon width="40" height="40" />
-                }
-            </my-value>
+            @if (!string.IsNullOrEmpty(forecast.ConditionIcon))
+            {
+                <img src=@forecast.ConditionIcon width="40" height="40" />
+            }
         </td>
-        <td><my-value>@forecast.Temperatures</my-value></td>
-        <td><my-value>@forecast.Rains</my-value></td>
+        <td>@forecast.Temperatures</td>
+        <td>@forecast.Rains</td>
     </tr>
 
     count++;

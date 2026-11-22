@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Mihaylov.Api.Other.Contracts.Cluster.Interfaces;
-using Mihaylov.Api.Other.Contracts.Cluster.Models.Nexus;
+using Mihaylov.Common;
 using NuGet.Common;
 using NuGet.Configuration;
 using NuGet.Frameworks;
@@ -19,9 +18,8 @@ namespace Mihaylov.Api.Other.Data.Cluster
     public class NugetClient : INugetClient
     {
         public const string NUGET_URL = "https://api.nuget.org/v3/index.json";
-        public const string LOCAL_PACKAGE_PREFIX = "Mihaylov";
 
-        public async Task<IEnumerable<NugetPackage>> GetMetadataAsync(string repositoryUrl, CancellationToken ct)
+        public async Task<IEnumerable<DependencyNode>> GetMetadataAsync(string repositoryUrl, CancellationToken ct)
         {
             var logger = NullLogger.Instance;
             using var cache = new SourceCacheContext();
@@ -33,7 +31,7 @@ namespace Mihaylov.Api.Other.Data.Cluster
             var results = await search.SearchAsync("", new SearchFilter(includePrerelease: true), 0, 100, logger, ct);
             var packageIdentities = results.Select(p => p.Identity).ToList();
 
-            var result = new List<NugetPackage>();
+            var result = new List<DependencyNode>();
 
             var metadataResource = await repo.GetResourceAsync<PackageMetadataResource>();
             foreach (var packageIdentity in packageIdentities)
@@ -42,7 +40,7 @@ namespace Mihaylov.Api.Other.Data.Cluster
 
                 foreach (var package in packages)
                 {
-                    var nuget = GetPackageData(package);
+                    var nuget = CreateNode(package, package.DependencySets.FirstOrDefault());
                     if (nuget == null)
                     {
                         continue;
@@ -55,7 +53,8 @@ namespace Mihaylov.Api.Other.Data.Cluster
             return result;
         }
 
-        public async Task<NugetPackage> GetMetadataByIdAsync(string repositoryUrl, string packageName, string version, CancellationToken ct)
+        public async Task<DependencyNode> GetMetadataByIdAsync(string repositoryUrl, string packageName, string version,
+            string framework, CancellationToken ct)
         {
             var logger = NullLogger.Instance;
             using var cache = new SourceCacheContext();
@@ -67,74 +66,30 @@ namespace Mihaylov.Api.Other.Data.Cluster
             var identity = new PackageIdentity(packageName, NuGetVersion.Parse(version));
 
             var package = await metadataResource.GetMetadataAsync(identity, cache, logger, ct);
-            var nuget = GetPackageData(package);
+            var nugetFramework = ParseFramework(framework);
+            var group = NuGetFrameworkUtility.GetNearest(package.DependencySets, nugetFramework);
+            var nuget = CreateNode(package, group);        
 
             return nuget;
         }
 
-        public bool IsNugetLocal(string packageName)
+        private static DependencyNode CreateNode(IPackageSearchMetadata package, PackageDependencyGroup group)
         {
-            return packageName?.StartsWith(LOCAL_PACKAGE_PREFIX) ?? false;
-        }
-
-
-        private NugetPackage GetPackageData(IPackageSearchMetadata package)
-        {
-            var dependencySetCount = package.DependencySets.Count();
-            if (dependencySetCount == 0)
+            if (group == null)
             {
-                return null;
+                return null;   // no dependency group (or none compatible)
             }
 
+            var dependencies = group.Packages
+                .Select(d => new DependencyNode(d.Id, GetVersion(d.VersionRange), null, DependencyKind.Package))
+                .ToList();
 
-            PackageDependencyGroup dependencySet;
-            if (dependencySetCount == 1)
-            {
-                dependencySet = package.DependencySets.First();
-            }
-            else
-            {
-                var frameworkList = new[]
-                {
-                    new { Framework = "net12.0", Order = 1 },
-                    new { Framework = "net10.0", Order = 2 },
-                    new { Framework = "netstandard2.1", Order = 3 },
-                    new { Framework = "netstandard2.0", Order = 4 },
-                };
-
-                dependencySet = package.DependencySets.Select(d => new
-                {
-                    DependencySet = d,
-                    Framework = GetFrameworkName(d.TargetFramework)
-                })
-                .Join(frameworkList, d => d.Framework, f => f.Framework, (d, f) => new
-                {
-                    d.DependencySet,
-                    f.Order,
-                })
-                .OrderBy(a => a.Order)
-                .Select(a => a.DependencySet)
-                .FirstOrDefault();
-
-                if (dependencySet == null)
-                {
-                    return null;
-                }
-            }
-
-            var dependencies = dependencySet.Packages
-                        .Select(d => new NugetPackageDependency(d.Id, GetVersion(d.VersionRange), IsNugetLocal(d.Id)))
-                        .ToList();
-
-            var line = new NugetPackage()
-            {
-                Title = package.Identity.Id,
-                Version = package.Identity.Version.OriginalVersion,
-                Framework = GetFrameworkName(dependencySet.TargetFramework),
-                Dependencies = dependencies,
-            };
-
-            return line;
+            return new DependencyNode(
+                package.Identity.Id,
+                package.Identity.Version.OriginalVersion,
+                group.TargetFramework.GetShortFolderName(),
+                DependencyKind.Package,
+                dependencies);
         }
 
         private static string GetVersion(VersionRange range)
@@ -151,24 +106,16 @@ namespace Mihaylov.Api.Other.Data.Cluster
             return range.OriginalString;
         }
 
-        private static string GetFrameworkName(NuGetFramework nugetFramework)
+        private static NuGetFramework ParseFramework(string framework)
         {
-            string framework = string.Empty;
-
-            var frameworkName = nugetFramework.Framework;
-            if (frameworkName.Contains("netstandard", StringComparison.OrdinalIgnoreCase))
+            if (framework.Contains("Version="))  // ".NETCoreApp,Version=v8.0"
             {
-                framework = "netstandard";
+                return NuGetFramework.ParseFrameworkName(framework, DefaultFrameworkNameProvider.Instance);
             }
-            else if (frameworkName.Contains("netcoreapp", StringComparison.OrdinalIgnoreCase))
+            else
             {
-                framework = "net";
+                return NuGetFramework.Parse(framework);  // "net8.0", "netstandard2.1"
             }
-
-            string version = nugetFramework.Version.ToString(2);
-            var result = $"{framework}{version}";
-
-            return result;
         }
     }
 }

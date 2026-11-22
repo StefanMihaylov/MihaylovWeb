@@ -9,8 +9,7 @@
         var $this = $(row);
         var id = $this.data('id');
         if (id) {
-            var url = url + '?id=' + id + '&reload=' + reload;
-            $.get(url, function (data, status) {
+            $.get(url, { id: id, reload: reload }, function (data, status) {
                 $this.replaceWith(data);
 
                 $('[data-toggle="popover"]').popover();

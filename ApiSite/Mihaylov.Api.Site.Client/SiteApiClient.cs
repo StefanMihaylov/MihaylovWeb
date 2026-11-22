@@ -27,6 +27,12 @@ namespace Mihaylov.Api.Site.Client
             return await this.ModuleGetInfoAsync();
         }
 
+        public async Task<DependencyNode> GetDependenciesAsync()
+        {
+            var flat = await this.DependenciesGetInfoAsync();
+            return flat.ToTreeModel();
+        }
+
         public Task<PersonGrid> PersonsAsync(IGridRequest request, int? pageSize)
         {
             return PersonsAsync(request.AccountTypeId, request.StatusId, request.Name,
@@ -36,6 +42,11 @@ namespace Mihaylov.Api.Site.Client
 
     public partial class ModuleInfo : IModuleInfo
     {
+    }
+
+    public partial class DependencyNodeFlat : IDependencyNodeFlat
+    {
+        Common.DependencyKind IDependencyNodeFlat.Kind => (Common.DependencyKind)(int)Kind;
     }
 
     public partial class Pager : IPager
@@ -74,11 +85,20 @@ namespace Mihaylov.Api.Site.Client
 
     public static class SiteApiClientExtensions
     {
-        public static IServiceCollection AddSiteApiClient(this IServiceCollection services, Action<OptionsBuilder<SiteSettings>> bindSettings)
+        public static IServiceCollection AddSiteApiClient(this IServiceCollection services, string moduleName)
         {
-            services.AddApiClient<ISiteApiClient, SiteApiClient, SiteSettings>(SiteApiClient.API_CLIENT, bindSettings);
+            services.AddApiClient<ISiteApiClient, SiteApiClient, SiteSettings>(SiteApiClient.API_CLIENT, moduleName);
 
             return services;
         }
+    }
+
+    public class HubConstants
+    {
+        public const string HUB_PATH = "/UpdateProgressHub";
+
+        public const string JS_FUNC_NAME = "updateAccountsLoadingBar";
+
+        public const string API_PATH = "/api/person/accounts";
     }
 }

@@ -14,8 +14,8 @@
             @foreach (var type in Model)
             {
                 <tr>
-                    <td><my-value>@type.Name</my-value></td>
-                    <td><my-value>@type.ConcertsCount</my-value></td>
+                    <td>@type.Name</td>
+                    <td>@type.ConcertsCount</td>
                     <td>
                         <span class="btn btn-sm btn-secondary edit-concert-type-btn" data-id="@type.Id" data-name="@type.Name">
                             Редактирай

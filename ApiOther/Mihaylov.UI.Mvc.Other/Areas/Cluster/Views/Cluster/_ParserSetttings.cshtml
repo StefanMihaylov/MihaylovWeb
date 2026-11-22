@@ -23,16 +23,16 @@
         @foreach (var setting in Model.ParserSettings)
         {
             <tr>
-                <td><my-value>@setting.Name</my-value></td>
-@*                 <td><my-value>@setting.ApplicationName</my-value></td> *@
-                <td><my-value>@setting.VersionUrlType.ToString()</my-value></td>
-                <td><my-value>@setting.VersionSelector</my-value></td>
-                <td><my-value>@setting.VersionCommand</my-value></td>
-                <td><my-value>@setting.ReleaseDateUrlType.ToString()</my-value></td>
-                <td><my-value>@setting.ReleaseDateSelector</my-value></td>
-                <td><my-value>@setting.ReleaseDateCommand</my-value></td>
+                <td>@setting.Name</td>
+@*                 <td>@setting.ApplicationName</td> *@
+                <td>@setting.VersionUrlType.ToString()</td>
+                <td>@setting.VersionSelector</td>
+                <td>@setting.VersionCommand</td>
+                <td>@setting.ReleaseDateUrlType.ToString()</td>
+                <td>@setting.ReleaseDateSelector</td>
+                <td>@setting.ReleaseDateCommand</td>
                 <td>
-                    <a href="@($"{Url.Href(new MenuRoute<ClusterController>(c => c.Index(null, null)))}?settingId={setting.Id}")" class="btn btn-primary">
+                    <a href="@Url.Href(new MenuRoute<ClusterController>(c => c.Index(null, null)), new { settingId = setting.Id })" class="btn btn-primary">
                         <icon type="IconType.Edit" />
                     </a>
                 </td>

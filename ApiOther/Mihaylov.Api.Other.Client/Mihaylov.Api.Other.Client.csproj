@@ -18,10 +18,14 @@
 		<EmbedUntrackedSources>true</EmbedUntrackedSources>
 		<Deterministic>true</Deterministic>
 	</PropertyGroup>
+
+	<PropertyGroup>
+		<ApiSwaggerFile>$(MSBuildProjectDirectory)\swagger.json</ApiSwaggerFile>
+	</PropertyGroup>
 	
 	<ItemGroup>
-		<PackageReference Include="Mihaylov.Common.Core" Version="0.2.0" />
-		<PackageReference Include="Mihaylov.Common.Http" Version="0.2.0" />
+		<PackageReference Include="Mihaylov.Common.Core" Version="0.2.1-1" />
+		<PackageReference Include="Mihaylov.Common.Http" Version="0.2.1-1" />
 		<PackageReference Include="NSwag.MSBuild" Version="14.7.1">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

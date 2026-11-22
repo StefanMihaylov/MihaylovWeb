@@ -1,23 +1,17 @@
-using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Mihaylov.Api;
 using Mihaylov.Common;
+using Mihaylov.UI.Mvc.Gear;
+using Mihaylov.UI.Mvc.Home;
+using Mihaylov.UI.Mvc.Home.Hubs;
 using Mihaylov.UI.Mvc.Other;
-using Mihaylov.Web.Areas;
-using Mihaylov.Web.Areas.Identity.Pages.Account;
-using Mihaylov.Web.Common;
-using Mihaylov.Web.Controllers;
-using Mihaylov.Web.Hubs;
-using Mihaylov.Web.Models.Configs;
-using Mihaylov.Web.Services;
+using Mihaylov.UI.Mvc.Site;
+using Mihaylov.UI.Mvc.Users;
 
 namespace Mihaylov.Web
 {
@@ -28,22 +22,14 @@ namespace Mihaylov.Web
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-            // var configuration = builder.Configuration;
-            //  builder.Services.Configure<aaa>(configuration.GetSection("AppSettings"));
 
             AddDependencies(builder.Services);
 
             var app = builder.Build();
 
-            // Configure the HTTP request pipeline.
-            if (app.Environment.IsDevelopment())
-            {
-                // app.UseMigrationsEndPoint();
-            }
-            else
+            if (!app.Environment.IsDevelopment())
             {
                 app.UseExceptionHandler("/Home/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
 
@@ -58,11 +44,8 @@ namespace Mihaylov.Web
                 else await next();
             });
 
-            // app.UseHttpsRedirection();
             app.UseStaticFiles();
-
             app.UseRouting();
-
             app.UseAuthentication()
                .UseStatusCodePages(async context =>
                {
@@ -87,7 +70,7 @@ namespace Mihaylov.Web
                 pattern: "{controller=Home}/{action=Index}/{id?}");
 
             app.MapRazorPages();
-            app.MapHub<ScanProgressHub>("/ScanProgressHub");
+            app.MapHub<ScanProgressHub>(ScanProgressHub.HUB_PATH);
 
             app.Run();
         }
@@ -97,16 +80,7 @@ namespace Mihaylov.Web
             services.AddControllersWithViews()
                     .ConfigureApplicationPartManager(apm =>
                     {
-                        var assembly = typeof(IdentityBuilderUIExtensions).Assembly;
-                        var factory = new ConsolidatedAssemblyApplicationPartFactory();
-                        var parts = factory.GetApplicationParts(assembly).ToList();
-
-                        foreach (var part in parts)
-                        {
-                            apm.ApplicationParts.Add(part);
-                        }
-
-                        apm.FeatureProviders.Add(new ViewVersionFeatureProvider(assembly));
+                        apm.AddUsersIdentityPages();
                     });
 
             services.AddRazorPages();
@@ -114,55 +88,26 @@ namespace Mihaylov.Web
 
             services.AddClientJwtAuthentication(h =>
             {
-                h.CookieName = LoginModel.COOKIE_NAME;
-                h.UsernameClaimType = ClaimType.Username;
+                h.CookieName = IAccessTokenProvider.COOKIE_NAME;
                 h.LoginUrl = LOGIN_URL;
-            }, opt =>
+            },
+            opt =>
             {
                 opt.Secret = Config.GetEnvironmentVariable("JWT_AUTHENTICATION_SECRET");
                 opt.Issuer = Config.GetEnvironmentVariable("JWT_ISSUER");
                 opt.Audience = Config.GetEnvironmentVariable("JWT_AUDIENCE");
+                opt.NameClaimType = ClaimMap.GetClaim(Config.GetEnvironmentVariable("JWT_NameClaim", string.Empty));
             });
 
             services.AddModuleInfo();
-            services.AddScoped<IModuleService, ModuleService>();
-
-            services.Configure<SiteConfig>(opt =>
+            services.RegisterModules(c =>
             {
-                opt.SiteApiBaseUrl = Config.GetEnvironmentVariable("Site_Api_Client");
-            });
-
-            services.AddHttpContextAccessor();
-            services.AddScoped<IAccessTokenProvider, CookieTokenProvider>();
-
-            // https://fontawesome.com/v4/icons/, https://icons.getbootstrap.com/
-            var homeMenu = new MenuItem(0, "", new MenuRoute<HomeController>(c => c.Index()), null, "fa-home"); // "bi-house-door-fill"
-            var login = new MenuItem(1, "", null, null, null);
-            services.RegisterModules(homeMenu, login, c =>
-            {
+                c.Add(new HomeUiModule());
+                c.Add(new UsersUiModule());
                 c.Add(new OtherUiModule());
+                c.Add(new SiteUiModule());
+                c.Add(new GearUiModule());
             });
-
-            services.AddUsersApiClient(Config.GetEnvironmentVariable("Users_Api_Client"));
-            services.AddSiteApiClient(Config.GetEnvironmentVariable("Site_Api_Client"));
-            services.AddGearApiClient(Config.GetEnvironmentVariable("Gear_Api_Client"));
-
-            services.AddMediaServices(ffMpeg =>
-            {
-                // https://ffmpeg.org/download.html, https://github.com/jrottenberg/ffmpeg/tree/main, https://hub.docker.com/r/jrottenberg/ffmpeg
-                ffMpeg.FFMpegPath = Config.GetEnvironmentVariable("Media_FFMpegPath", string.Empty);
-            });
-
-            services.Configure<MediaConfig>(opt =>
-            {
-                opt.DuplicatePathLocked = Config.GetEnvironmentVariable("Media_Dub_Path_Lock", string.Empty);
-                opt.DuplicatePathNotLocked = Config.GetEnvironmentVariable("Media_Dub_Path_NotLock", string.Empty);
-                opt.SoftPath = Config.GetEnvironmentVariable("Media_Sort", string.Empty);
-                opt.RenamePath = Config.GetEnvironmentVariable("Media_Rename", string.Empty);
-            });
-
-            services.AddSignalR();
-            services.AddScoped<IProgressReporterFactory, ProgressReporterFactory>();
         }
     }
 }

@@ -2,6 +2,7 @@
   "openapi": "3.0.4",
   "info": {
     "title": "Users API",
+    "description": " | ApiName = Mihaylov.Api.Users, Version = 0.4.1",
     "version": "v1"
   },
   "servers": [
@@ -204,6 +205,29 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ModuleInfo"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Module/GetDependencies": {
+      "get": {
+        "tags": [
+          "Module"
+        ],
+        "operationId": "DependenciesGetInfo",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/DependencyNodeFlat"
+                  }
                 }
               }
             }
@@ -887,6 +911,96 @@
         "properties": {
           "roleName": {
             "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "DependencyKind": {
+        "enum": [
+          1,
+          2,
+          3
+        ],
+        "type": "integer",
+        "description": "1 - Project, 2 - Package, 3 - Swagger",
+        "format": "int32",
+        "x-enumNames": [
+          "Project",
+          "Package",
+          "Swagger"
+        ],
+        "x-ms-enum": {
+          "name": "DependencyKind",
+          "modelAsString": false,
+          "values": [
+            {
+              "value": 1,
+              "name": "Project"
+            },
+            {
+              "value": 2,
+              "name": "Package"
+            },
+            {
+              "value": 3,
+              "name": "Swagger"
+            }
+          ]
+        }
+      },
+      "DependencyNodeFlat": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "version": {
+            "type": "string",
+            "nullable": true
+          },
+          "framework": {
+            "type": "string",
+            "nullable": true
+          },
+          "kind": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/DependencyKind"
+              }
+            ],
+            "x-enumNames": [
+              "Project",
+              "Package",
+              "Swagger"
+            ],
+            "x-ms-enum": {
+              "name": "DependencyKind",
+              "modelAsString": false,
+              "values": [
+                {
+                  "value": 1,
+                  "name": "Project"
+                },
+                {
+                  "value": 2,
+                  "name": "Package"
+                },
+                {
+                  "value": 3,
+                  "name": "Swagger"
+                }
+              ]
+            }
+          },
+          "parentId": {
+            "type": "integer",
+            "format": "int32",
             "nullable": true
           }
         },

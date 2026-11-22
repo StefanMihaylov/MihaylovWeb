@@ -72,7 +72,7 @@
                     <td>
                         @if (schedule.Paused != true && schedule.Phase == SchedulePhaseType.Enabled)
                         {
-                            <a href="@($"{Url.Href(new MenuRoute<VeleroController>(c => c.CreateBackup(string.Empty)))}?schedule={schedule.Name}")">
+                            <a href="@Url.Href(new MenuRoute<VeleroController>(c => c.CreateBackup(string.Empty)), new { schedule = schedule.Name })">
                                 <icon type="IconType.Play2" />
                             </a>
                         }
@@ -111,7 +111,7 @@
                             {
                                 @if (backup.CreatedOn.HasValue && backup.CreatedOn.Value.Date == date)
                                 {
-                                    <span data-container="body" data-toggle="popover" data-placement="top" data-content="@backup.PopupContent(Url.Href(new MenuRoute<VeleroController>(c => c.DeleteBackup(string.Empty))))" data-html="true">
+                                    <span data-container="body" data-toggle="popover" data-placement="top" data-content="@backup.PopupContent(Url.Href(new MenuRoute<VeleroController>(c => c.DeleteBackup(string.Empty)), new { backup = backup.Name }))" data-html="true">
                                         @if (backup.Phase == BackupPhaseType.Completed)
                                         {
                                             <icon type="IconType.Success" color=@(!backup.IsSizeValid ? "chocolate" : Colour.Green) />

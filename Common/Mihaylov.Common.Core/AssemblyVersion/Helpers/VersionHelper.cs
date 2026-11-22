@@ -11,6 +11,19 @@ namespace Mihaylov.Common
     public static class VersionHelper
     {
         /// <summary>
+        /// Builds a <see cref="IModuleInfo"/> for assembly containing <typeparamref name="T"/> for dependencies.
+        /// </summary>
+        /// <typeparam name="T">A reference type in the assembly to scan.</typeparam>
+        /// <returns>The dependency node for the scanned assembly.</returns>
+        public static IModuleInfo GetVersionInfo<T>() where T : class
+        {
+            var assembly = typeof(T).Assembly;
+            var result = GetVersionInfo(assembly);
+
+            return result;
+        }
+
+        /// <summary>
         /// Builds a <see cref="IModuleInfo"/> for the given assembly.
         /// </summary>
         /// <param name="assembly">The assembly to inspect.</param>

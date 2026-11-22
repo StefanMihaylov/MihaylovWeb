@@ -14,9 +14,9 @@
             @foreach (var country in Model.Countries.Data)
             {
                 <tr>
-                    <td><my-value>@country.Name</my-value></td>
-                    <td><my-value>@country.Code</my-value></td>
-                    <td><my-value>@country.BandCount</my-value></td>
+                    <td>@country.Name</td>
+                    <td>@country.Code</td>
+                    <td>@country.BandCount</td>
                     <td>
                         <span class="btn btn-sm btn-secondary edit-country-btn" data-id="@country.Id" data-name="@country.Name" data-code="@country.Code">
                             Редактирай

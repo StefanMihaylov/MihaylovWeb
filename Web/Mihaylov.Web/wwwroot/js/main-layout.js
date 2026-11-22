@@ -13,8 +13,12 @@ $(function () {
             var url = $('.serverUrl').data('url'),
                 newUrl;
 
-            if (url.slice(-1) != '/') {
+            if (!url.endsWith('/')) {
                 url += '/';
+            }
+
+            if (urlExtension.startsWith('/')) {
+                urlExtension = urlExtension.substring(1);
             }
 
             newUrl = url + urlExtension;

@@ -1,8 +1,6 @@
-﻿using System;
-using System.Net.Http;
+﻿using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
 using Mihaylov.Common;
 
 namespace Mihaylov.Api.Users.Client
@@ -25,10 +23,21 @@ namespace Mihaylov.Api.Users.Client
         {
             return await this.ModuleGetInfoAsync();
         }
+
+        public async Task<DependencyNode> GetDependenciesAsync()
+        {
+            var flat = await this.DependenciesGetInfoAsync();
+            return flat.ToTreeModel();
+        }
     }
 
     public partial class ModuleInfo : IModuleInfo
     {
+    }
+
+    public partial class DependencyNodeFlat : IDependencyNodeFlat
+    {
+        Common.DependencyKind IDependencyNodeFlat.Kind => (Common.DependencyKind)(int)Kind;
     }
 
     public partial class LoginRequestModel
@@ -52,9 +61,9 @@ namespace Mihaylov.Api.Users.Client
 
     public static class UsersApiClientExtensions
     {
-        public static IServiceCollection AddUsersApiClient(this IServiceCollection services, Action<OptionsBuilder<UsersSettings>> bindSettings)
+        public static IServiceCollection AddUsersApiClient(this IServiceCollection services, string moduleName)
         {
-            services.AddApiClient<IUsersApiClient, UsersApiClient, UsersSettings>(UsersApiClient.API_CLIENT, bindSettings);
+            services.AddApiClient<IUsersApiClient, UsersApiClient, UsersSettings>(UsersApiClient.API_CLIENT, moduleName);
 
             return services;
         }

@@ -21,7 +21,7 @@ namespace Mihaylov.Users.Server
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddSwaggerCustom("v1", "v1", "Users API", null, true, UserConstants.AuthenticationScheme);
+            services.AddSwaggerCustom("v1", "v1", "Users API", null, true);
 
             services.AddDatabaseDeveloperPageExceptionFilter();
             services.AddControllers();
@@ -51,8 +51,7 @@ namespace Mihaylov.Users.Server
                             password.RequireDigit = Config.GetEnvironmentVariable("Password_RequireDigit", bool.TryParse, false);
                             password.RequiredLength = Config.GetEnvironmentVariable("Password_RequiredLength", int.TryParse, 6);
                         })
-                    .AddClientJwtAuthentication(UserConstants.AuthenticationScheme,
-                            AuthorizationExtensions.GetAuthorizationOptions, null, opt =>
+                    .AddClientJwtAuthentication(null, opt =>
                             {
                                 opt.Secret = tokenConfig.Secret;
                                 opt.Issuer = tokenConfig.Issuer;

@@ -1,0 +1,38 @@
+﻿@model IEnumerable<ModuleInfoModel>
+
+<h2>Modules</h2>
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>@Html.LabelFor(m => m.First().ModuleName)</th>
+            <th>@Html.LabelFor(m => m.First().Version)</th>
+            <th>@Html.LabelFor(m => m.First().Framework)</th>
+            <th>@Html.LabelFor(m => m.First().BuildDate)</th>
+            <th>@Html.LabelFor(m => m.First().GitCommit)</th>
+            <th>@Html.LabelFor(m => m.First().JenkinsBuildNumber)</th>
+            <th>@Html.LabelFor(m => m.First().UiModuleName)</th>
+            <th>@Html.LabelFor(m => m.First().UiModuleVersion)</th>
+            <th>@Html.LabelFor(m => m.First().UiFramework)</th>
+            <th>@Html.LabelFor(m => m.First().UiBuildDate)</th>
+            <th>@Html.LabelFor(m => m.First().MenuOrders)</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var version in Model)
+        {
+            <tr>
+                <td>@version.ModuleName</td>
+                <td>@version.Version</td>
+                <td>@version.Framework</td>
+                <td>@($"{version.BuildDate} {(!string.IsNullOrEmpty(version.BuildDate) ? "UTC" : string.Empty)}")</td>
+                <td>@version.GitCommit</td>
+                <td>@version.JenkinsBuildNumber</td>
+                <td>@version.UiModuleName</td>
+                <td>@version.UiModuleVersion</td>
+                <td>@version.UiFramework</td>
+                <td>@version.UiBuildDate</td>
+                <td>@version.MenuOrders</td>
+            </tr>
+        }
+    </tbody>
+</table>

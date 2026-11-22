@@ -20,6 +20,10 @@
 		<EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
 	</PropertyGroup>
 
+	<PropertyGroup>
+		<SkipDependencyAttributes>true</SkipDependencyAttributes>
+	</PropertyGroup>
+
   <ItemGroup>
     <ProjectReference Include="$(MSBuildThisFileDirectory)..\_Tools\Mihaylov.Common.Analyzers\Mihaylov.Common.Analyzers.csproj"
                       OutputItemType="Analyzer" ReferenceOutputAssembly="false" PrivateAssets="all" /> 

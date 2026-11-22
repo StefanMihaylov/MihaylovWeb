@@ -1,0 +1,48 @@
+﻿@model AnswersExtended
+
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>@Html.NameFor(m => m.Answers.First().AskDate)</th>
+            <th>@Html.NameFor(m => m.Answers.First().Question)</th>
+            <th>@Html.NameFor(m => m.Answers.First().Value)</th>
+            <th>@Html.NameFor(m => m.Answers.First().Unit)</th>
+            <th>@Html.NameFor(m => m.Answers.First().HalfType)</th>
+            <th>@Html.NameFor(m => m.Answers.First().Details)</th>
+            <th>
+                @if (Model.PersonId > 0)
+                {
+                    <span class="btn btn-success edit-answer-button" data-id="" data-personid="@Model.PersonId">
+                        <icon type="IconType.New" />
+                    </span>
+                }
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var answer in Model.Answers)
+        {
+            <tr>
+                <td>@answer.AskDate.ToString(ViewConstants.DateTimeFormatSimple)</td>
+                <td>@answer.Question</td>
+                <td>@answer.ValueDisplay</td>
+                <td>@answer.Unit</td>
+                <td>@answer.HalfType</td>
+                <td>@answer.Details</td>
+                <td>
+                    <span class="btn btn-secondary edit-answer-button" data-id="@answer.Id" data-personid="@answer.PersonId">
+                        <icon type="IconType.Edit" />
+                    </span>
+                    <span class="btn btn-secondary delete-answer-button" data-id="@answer.Id">
+                        <icon type="IconType.Delete" />
+                    </span>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<hr />
+<div id="answers-info" data-url="@Url.Href(new MenuRoute<SiteController>(c => c.AnswerView(null)))"
+     data-delete-url="@($"{Url.Href(new MenuRoute<SiteController>(c => c.DeleteAnswer(null)))}?id=")"></div>
+<hr />

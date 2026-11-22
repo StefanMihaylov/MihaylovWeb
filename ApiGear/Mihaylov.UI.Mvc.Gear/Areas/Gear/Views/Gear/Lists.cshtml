@@ -1,0 +1,20 @@
+﻿@model ListsViewModel
+
+<div class="row">
+    <div class="col-3">
+        @await Html.PartialAsync("_SmallGrid", new SmallGridViewModel(Model.Categories, "Категории", Url.Href(new MenuRoute<GearController>(c => c.SaveCategory(null)))))
+    </div>
+    <div class="col-3">
+        @await Html.PartialAsync("_SmallGrid", new SmallGridViewModel(Model.Brands, "Марки", Url.Href(new MenuRoute<GearController>(c => c.SaveBrand(null)))))
+    </div>
+    <div class="col-3">
+        @await Html.PartialAsync("_SmallGrid", new SmallGridViewModel(Model.Shops, "Магазини", Url.Href(new MenuRoute<GearController>(c => c.SaveShop(null)))))
+    </div>
+    <div class="col-3">
+        @await Html.PartialAsync("_SmallGrid", new SmallGridViewModel(Model.Groups, "Групи", Url.Href(new MenuRoute<GearController>(c => c.SaveGroup(null)))))
+    </div>
+</div>
+
+@section Scripts {
+    <script src="@(Url.ModuleFile<GearUiModule>("js/gear-lists.js"))" asp-append-version="true"></script>
+}

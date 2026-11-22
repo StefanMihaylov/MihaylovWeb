@@ -25,11 +25,13 @@ namespace Mihaylov.UI.Mvc.Other.Areas.Cluster.Controllers
         {
             NexusImages images = await _client.ImagesAsync().ConfigureAwait(false);
             NexusBlobs blobs = await _client.BlobsAsync().ConfigureAwait(false);
+            NugetPackages nugets = await _client.NugetsAsync().ConfigureAwait(false);
 
             var model = new NexusMainModel
             {
                 Images = images,
-                Blobs = blobs
+                Blobs = blobs,
+                Nugets = nugets,
             };
 
             return View(model);

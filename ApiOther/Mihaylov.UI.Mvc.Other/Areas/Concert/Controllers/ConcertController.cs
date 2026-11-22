@@ -54,31 +54,13 @@ namespace Mihaylov.UI.Mvc.Other.Areas.Concert.Controllers
             return View(viewModel);
         }
 
-        [HttpGet]
-        public async Task<IActionResult> IndexRedirect(AddConcertVewModel inputModel)
-        {
-            if (inputModel?.Date.HasValue != true)
-            {
-                ModelState.Clear();
-
-                inputModel = new AddConcertVewModel()
-                {
-                    Date = DateTime.Now.Date,
-                };
-            }
-
-            ConcertMainModel viewModel = await FillModel(inputModel, new ConcertQueryRequest(1, CONCERTS_TAB)).ConfigureAwait(false);
-
-            return View(viewModel);
-        }
-
         [HttpPost]
         public async Task<IActionResult> Add(AddConcertVewModel inputModel)
         {
             if (!ModelState.IsValid)
             {
                 ConcertMainModel viewModel = await FillModel(inputModel, new ConcertQueryRequest(1, CONCERTS_TAB)).ConfigureAwait(false);
-                return RedirectToAction(nameof(IndexRedirect), viewModel);
+                return View(nameof(Index), viewModel);
             }
 
             try
@@ -116,8 +98,8 @@ namespace Mihaylov.UI.Mvc.Other.Areas.Concert.Controllers
 
                 _logger.LogError(ex, "Error in Add/update band. Error: {message}", builder.ToString());
 
-                ConcertMainModel viewModel = await FillModel(null, new ConcertQueryRequest(1, CONCERTS_TAB)).ConfigureAwait(false);
-                return RedirectToAction(nameof(IndexRedirect), viewModel);
+                ConcertMainModel viewModel = await FillModel(inputModel, new ConcertQueryRequest(1, CONCERTS_TAB)).ConfigureAwait(false);
+                return View(nameof(Index), viewModel);
             }
             catch (SwaggerException ex)
             {
@@ -163,7 +145,7 @@ namespace Mihaylov.UI.Mvc.Other.Areas.Concert.Controllers
 
                     ConcertMainModel viewModel = await FillModel(null, new ConcertQueryRequest(1, BANDS_TAB)).ConfigureAwait(false);
 
-                    return RedirectToAction(nameof(IndexRedirect), viewModel);
+                    return View(nameof(Index), viewModel);
                 }
                 catch (SwaggerException ex)
                 {

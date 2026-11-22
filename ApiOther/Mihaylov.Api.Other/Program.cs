@@ -26,7 +26,7 @@ namespace Mihaylov.Api.Other
 
         private static void AddServices(IServiceCollection services)
         {
-            services.AddSwaggerCustom("v1", "v1", "Other API", "Miscellaneous Endpoints API", true, UserConstants.AuthenticationScheme);
+            services.AddSwaggerCustom("v1", "v1", "Other API", "Miscellaneous Endpoints API", true);
 
             services.AddControllers();
             services.Configure<ApiBehaviorOptions>(options =>
@@ -104,8 +104,7 @@ namespace Mihaylov.Api.Other
                     weather.Language = Config.GetEnvironmentVariable("Weather_Api_Language", "bg");
                 });
 
-            services.AddClientJwtAuthentication(UserConstants.AuthenticationScheme, 
-                AuthorizationExtensions.GetAuthorizationOptions, null, opt =>
+            services.AddClientJwtAuthentication(null, opt =>
             {
                 opt.Secret = Config.GetEnvironmentVariable("JWT_AUTHENTICATION_SECRET", "abc");
                 opt.Issuer = Config.GetEnvironmentVariable("JWT_ISSUER", string.Empty);

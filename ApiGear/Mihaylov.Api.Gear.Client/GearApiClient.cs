@@ -25,10 +25,21 @@ namespace Mihaylov.Api.Gear.Client
         {
             return await this.ModuleGetInfoAsync();
         }
+
+        public async Task<DependencyNode> GetDependenciesAsync()
+        {
+            var flat = await this.DependenciesGetInfoAsync();
+            return flat.ToTreeModel();
+        }
     }
 
     public partial class ModuleInfo : IModuleInfo
     {
+    }
+
+    public partial class DependencyNodeFlat : IDependencyNodeFlat
+    {
+        Common.DependencyKind IDependencyNodeFlat.Kind => (Common.DependencyKind)(int)Kind;
     }
 
     public interface ISmallItem
@@ -60,9 +71,9 @@ namespace Mihaylov.Api.Gear.Client
 
     public static class GearApiClientExtensions
     {
-        public static IServiceCollection AddGearApiClient(this IServiceCollection services, Action<OptionsBuilder<GearSettings>> bindSettings)
+        public static IServiceCollection AddGearApiClient(this IServiceCollection services, string moduleName)
         {
-            services.AddApiClient<IGearApiClient, GearApiClient, GearSettings>(GearApiClient.API_CLIENT, bindSettings);
+            services.AddApiClient<IGearApiClient, GearApiClient, GearSettings>(GearApiClient.API_CLIENT, moduleName);
 
             return services;
         }

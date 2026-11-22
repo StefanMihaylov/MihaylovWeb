@@ -35,4 +35,11 @@ public interface IModuleCatalog
     /// <param name="factory">Creates the scope used to resolve the module info services.</param>
     /// <returns>One <see cref="ComponentModuleInfo"/> for each module in <see cref="Modules"/>.</returns>
     Task<IEnumerable<ComponentModuleInfo>> GetModuleVersionsAsync(IServiceScopeFactory factory);
+
+    /// <summary>
+    /// Retrieves the dependencies for the registered modules.
+    /// </summary>
+    /// <param name="factory">The factory used to create service scopes.</param>
+    /// <returns>A task that represents the asynchronous operation. The task result contains the module dependencies.</returns>
+    Task<IEnumerable<ComponentDependencies>> GetModuleDependenciesAsync(IServiceScopeFactory factory);
 }

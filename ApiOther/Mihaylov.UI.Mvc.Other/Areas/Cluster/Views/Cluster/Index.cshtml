@@ -23,5 +23,5 @@
 </div>
 
 @section Scripts {
-    <script src="/_content/mihaylov.ui.mvc.other/js/cluster.js" asp-append-version="true"></script>
+    <script src="@(Url.ModuleFile<OtherUiModule>("js/cluster.js"))" asp-append-version="true"></script>
 }

@@ -5,152 +5,143 @@
         @Model.Main.Order
     </td>
     <td>
-        <my-value>
-            <span style="font-size: 1.4rem">
-                @switch (Model.Icon)
-                {
-                    case VersionIconType.OK:
-                        <icon type="IconType.Success" />
-                        break;
+        <span style="font-size: 1.4rem">
+            @switch (Model.Icon)
+            {
+                case VersionIconType.OK:
+                    <icon type="IconType.Success" />
+                    break;
 
-                    case VersionIconType.New:
-                        <icon type="IconType.Up" />
-                        break;
+                case VersionIconType.New:
+                    <icon type="IconType.Up" />
+                    break;
 
-                    case VersionIconType.Error:
-                        <icon type="IconType.Warning2" color=@Colour.Red />
-                        break;
+                case VersionIconType.Error:
+                    <icon type="IconType.Warning2" color=@Colour.Red />
+                    break;
 
-                    case VersionIconType.Unknown:
-                        <icon type="IconType.Question" color=@Colour.Orange />
-                        break;
+                case VersionIconType.Unknown:
+                    <icon type="IconType.Question" color=@Colour.Orange />
+                    break;
 
-                    case VersionIconType.None:
-                    default:
-                        break;
-                }
+                case VersionIconType.None:
+                default:
+                    break;
+            }
+        </span>
+
+        @Model.Main.Name
+    </td>
+    <td>
+        @if (Model.Main.Version != null)
+        {
+            var interval = DateTime.UtcNow.Date.Subtract(Model.Main.Version.ReleaseDate);
+            var days = $"{interval.TotalDays} дни";
+            @days
+
+            <icon type="IconType.Repeat" color=@Colour.Blue class="reload" />
+        }
+
+        @if (Model.IsNew)
+        {
+            <br />
+            var interval = DateTime.UtcNow.Date.Subtract(Model.LastVersion.ReleaseDate.Value.Date);
+            var days = $"{interval.TotalDays} дни";
+            var fullDate = Model.LastVersion.ReleaseDate.Value.ToString("yyyy.MM.dd");
+            var lastVersionFillInfo = $"{days} ({fullDate})";
+
+            @lastVersionFillInfo
+        }
+
+        @if (Model.Icon == VersionIconType.Error)
+        {
+            <br />
+            @Model.LastVersion?.RawReleaseDate
+        }
+    </td>
+    <td>
+        @Model.Main.Version?.Version
+        @if (Model.Main.Versions?.Any() == true)
+        {
+            var content = $"<ul class='custom-popover'><li>{string.Join("</li><li>", Model.Main.Versions.Select(b => $"{b.Version} ({b.ReleaseDate.ToString("dd.MM.yyyy")}) - {b.CreatedOn.ToString("yyyy.MM.dd")}"))}</li></ul>";
+            <span class="version-history" data-container="body" data-toggle="version-popover" data-id="@Model.Main.Id" data-placement="top" data-content="@content" data-html="true">
+                <icon type="IconType.List" color=@Colour.Blue />
             </span>
+        }
 
-            @Model.Main.Name
-        </my-value>
+        @if (Model.IsNew)
+        {
+            <br />
+            @Model.LastVersion.Version
+        }
+
+        @if (Model.Icon == VersionIconType.Error)
+        {
+            <br />
+            @Model.LastVersion?.RawVersion
+        }
     </td>
+    <td>@Model.Main.Version?.HelmVersion</td>
+    <td style="display: none;">@Model.Main.Version?.HelmAppVersion</td>
     <td>
-        <my-value>
-            @if (Model.Main.Version != null)
+        <span style="font-size: 1.4rem">
+            @if (!string.IsNullOrEmpty(Model.Main.SiteUrl))
             {
-                var interval = DateTime.UtcNow.Date.Subtract(Model.Main.Version.ReleaseDate);
-                var days = $"{interval.TotalDays} дни";
-                @days
-
-                <icon type="IconType.Repeat" color=@Colour.Blue class="reload" />
+                <a href="@Model.Main.SiteUrl" target="_blank">
+                    <icon Name="bi-globe" />
+                </a>
             }
-
-            @if (Model.IsNew)
+            @if (!string.IsNullOrEmpty(Model.Main.ReleaseUrl))
             {
-                <br />
-                var interval = DateTime.UtcNow.Date.Subtract(Model.LastVersion.ReleaseDate.Value.Date);
-                var days = $"{interval.TotalDays} дни";
-                var fullDate = Model.LastVersion.ReleaseDate.Value.ToString("yyyy.MM.dd");
-                var lastVersionFillInfo = $"{days} ({fullDate})";
-
-                @lastVersionFillInfo
-            }
-
-            @if (Model.Icon == VersionIconType.Error)
-            {
-                <br />
-                @Model.LastVersion?.RawReleaseDate
-            }
-        </my-value>
-    </td>
-    <td>
-        <my-value>
-            @Model.Main.Version?.Version
-            @if (Model.Main.Versions?.Any() == true)
-            {
-                var content = $"<ul class='custom-popover'><li>{string.Join("</li><li>", Model.Main.Versions.Select(b => $"{b.Version} ({b.ReleaseDate.ToString("dd.MM.yyyy")}) - {b.CreatedOn.ToString("yyyy.MM.dd")}"))}</li></ul>";
-                <span class="version-history" data-container="body" data-toggle="version-popover" data-id="@Model.Main.Id" data-placement="top" data-content="@content" data-html="true">
-                    <icon type="IconType.List" color=@Colour.Blue />
-                </span>
-            }
-
-            @if (Model.IsNew)
-            {
-                <br />
-                @Model.LastVersion.Version
-            }
-
-            @if (Model.Icon == VersionIconType.Error)
-            {
-                <br />
-                @Model.LastVersion?.RawVersion
-            }
-        </my-value>
-    </td>
-    <td><my-value>@Model.Main.Version?.HelmVersion</my-value></td>
-    <td style="display: none;"><my-value>@Model.Main.Version?.HelmAppVersion</my-value></td>
-    <td>
-        <my-value>
-            <span style="font-size: 1.4rem">
-                @if (!string.IsNullOrEmpty(Model.Main.SiteUrl))
-                {
-                    <a href="@Model.Main.SiteUrl" target="_blank">
-                        <icon Name="bi-globe" />
-                    </a>
-                }
                 <a href="@Model.Main.ReleaseUrl" target="_blank">
                     <icon type="IconType.Up" color=@Colour.Disabled />
                 </a>
-                @if (!string.IsNullOrEmpty(Model.Main.ResourceUrl))
-                {
-                    <a href="@Model.Main.ResourceUrl" target="_blank">
-                        <icon type="IconType.Download" />
-                    </a>
-                }
-                @if (!string.IsNullOrEmpty(Model.Main.GithubVersionUrl))
-                {
-                    <a href="@Model.Main.GithubVersionUrl" target="_blank">
-                        <icon Name="bi-github" />
-                    </a>
-                }
-            </span>
-        </my-value>
-    </td>
-    <td><my-value>@Model.Main.Deployment.ToString()</my-value></td>
-    <td>
-        <my-value>
-            @if (Model.Main.Files?.Any() == true)
-            {
-                if (Model.Main.Files.Count() > 1)
-                {
-                    var content = $"<ul class='custom-popover'><li>{string.Join("</li><li>", Model.Main.Files?.Select(b => b?.Name))}</li></ul>";
-                    <button type="button" class="btn btn-secondary" data-container="body" data-toggle="popover" data-placement="top" data-content="@content" data-html="true">
-                        <icon type="IconType.List" />
-                    </button>
-                }
-                else
-                {
-                    var fileName = Model.Main.Files?.Select(b => b?.Name).First();
-                    @fileName
-                }
             }
-        </my-value>
-    </td>
-    <td>
-        <my-value>
-            @if (Model.Main.Pods?.Any() == true)
+            @if (!string.IsNullOrEmpty(Model.Main.ResourceUrl))
             {
-                var content = $"<ul class='custom-popover'><li>{string.Join("</li><li>", Model.Main.Pods?.Select(b => b?.Name))}</li></ul>";
+                <a href="@Model.Main.ResourceUrl" target="_blank">
+                    <icon type="IconType.Download" />
+                </a>
+            }
+            @if (!string.IsNullOrEmpty(Model.Main.GithubVersionUrl))
+            {
+                <a href="@Model.Main.GithubVersionUrl" target="_blank">
+                    <icon Name="bi-github" />
+                </a>
+            }
+        </span>
+    </td>
+    <td>@Model.Main.Deployment.ToString()</td>
+    <td>
+        @if (Model.Main.Files?.Any() == true)
+        {
+            if (Model.Main.Files.Count() > 1)
+            {
+                var content = $"<ul class='custom-popover'><li>{string.Join("</li><li>", Model.Main.Files?.Select(b => b?.Name))}</li></ul>";
                 <button type="button" class="btn btn-secondary" data-container="body" data-toggle="popover" data-placement="top" data-content="@content" data-html="true">
                     <icon type="IconType.List" />
                 </button>
             }
-        </my-value>
+            else
+            {
+                var fileName = Model.Main.Files?.Select(b => b?.Name).First();
+                @fileName
+            }
+        }
     </td>
-    <td><my-value>@Model.Main.Notes</my-value></td>
-    <td><my-value>@Model.Main.ParserSettingName</my-value></td>
     <td>
-        <a href="@($"{Url.Href(new MenuRoute<ClusterController>(c => c.Index(null, null)))}/{Model.Main.Id}")" class="btn btn-primary">
+        @if (Model.Main.Pods?.Any() == true)
+        {
+            var content = $"<ul class='custom-popover'><li>{string.Join("</li><li>", Model.Main.Pods?.Select(b => b?.Name))}</li></ul>";
+            <button type="button" class="btn btn-secondary" data-container="body" data-toggle="popover" data-placement="top" data-content="@content" data-html="true">
+                <icon type="IconType.List" />
+            </button>
+        }
+    </td>
+    <td>@Model.Main.Notes</td>
+    <td>@Model.Main.ParserSettingName</td>
+    <td>
+        <a href="@Url.Href(new MenuRoute<ClusterController>(c => c.Index(null, null)), new { id = Model.Main.Id })" class="btn btn-primary">
             <icon type="IconType.Edit" />
         </a>
     </td>

@@ -7,5 +7,7 @@ namespace Mihaylov.UI.Mvc.Other.Areas.Cluster.Models.Nexus
         public NexusImages Images { get; set; }
 
         public NexusBlobs Blobs { get; set; }
+
+        public NugetPackages Nugets { get; set; }
     }
 }

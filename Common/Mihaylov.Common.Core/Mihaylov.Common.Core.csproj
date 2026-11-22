@@ -11,4 +11,8 @@
 		<Description>Shared Common utilities.</Description>
 	</PropertyGroup>
 
+	<!--
+	dotnet pack D:\Github\MihaylovWeb\Common\Mihaylov.Common.Core\Mihaylov.Common.Core.csproj -p:Version=0.2.1-1 -c Release -o D:\Github\_NugetPrerease 
+	-->
+
 </Project>

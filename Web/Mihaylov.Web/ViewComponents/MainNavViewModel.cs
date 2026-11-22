@@ -7,8 +7,8 @@ namespace Mihaylov.Web.ViewComponents
     {
         public MenuItem Home { get; set; }
 
-        public IEnumerable<MenuItem> MenuItems { get; set; }
+        public IUiModule Login { get; set; }
 
-        public MenuItem Login { get; set; }
+        public IEnumerable<MenuItem> MenuItems { get; set; }
     }
 }

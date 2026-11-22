@@ -7,19 +7,24 @@
 	</PropertyGroup>
 
 	<PropertyGroup>
-		<Version>0.2.2</Version>
+		<Version>0.2.3</Version>
 		<PackageId>Mihaylov.Common.Database</PackageId>
 		<Description>Shared Database utilities.</Description>
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Mihaylov.Common.Core" Version="0.2.0" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.14" />
+		<PackageReference Include="Mihaylov.Common.Core" Version="0.2.1-1" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.15" />
 	</ItemGroup>
 	
 	<ItemGroup>
 		<!--Overrides the Pkcs 9.0.11 package from SqlServer package because it has vulnerabilities; SqlClient contains Azure package -->
-		<PackageReference Include="Microsoft.Data.SqlClient" Version="7.1.1" />
-		<PackageReference Include="System.Security.Cryptography.Pkcs" Version="10.0.14" />
+		<PackageReference Include="Microsoft.Data.SqlClient" Version="7.1.2" />
+		<!--<PackageReference Include="System.Security.Cryptography.Pkcs" Version="10.0.14" />-->
 	</ItemGroup>
+
+	<!--
+	dotnet pack D:\Github\MihaylovWeb\Common\Mihaylov.Common.Database\Mihaylov.Common.Database.csproj -p:Version=0.2.3-1 -c Release -o D:\Github\_NugetPrerease 
+	-->
+	
 </Project>

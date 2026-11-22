@@ -12,18 +12,13 @@ namespace Mihaylov.UI.Mvc.Other;
 
 public class OtherUiModule : BaseUiModule, IUiModule
 {
-    public OtherUiModule() : base("Other")
+    public OtherUiModule() : base("Other", typeof(IOtherApiClient))
     {
     }
 
     public override void ConfigureServices(IServiceCollection services)
     {
-        services.AddOtherApiClient(builder => builder.BindSettings(Name));
-    }
-
-    public override async Task<ComponentModuleInfo> GetModuleInfoAsync(IServiceScopeFactory factory)
-    {
-        return await this.GetModelInfoAsync<IOtherApiClient>(factory).ConfigureAwait(false);
+        services.AddOtherApiClient(Name);
     }
 
     public override IEnumerable<MenuItem> Menus =>

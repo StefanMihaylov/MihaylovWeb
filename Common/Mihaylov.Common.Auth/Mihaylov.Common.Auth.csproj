@@ -6,7 +6,7 @@
   </PropertyGroup>
 
 	<PropertyGroup>
-		<Version>0.2.0</Version>
+		<Version>0.2.1</Version>
 		<PackageId>Mihaylov.Common.Auth</PackageId>
 		<Description>Shared Authorisation utilities.</Description>
 	</PropertyGroup>
@@ -14,5 +14,9 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Authorization" Version="10.0.14" />
   </ItemGroup>
+
+	<!--
+	dotnet pack D:\Github\MihaylovWeb\Common\Mihaylov.Common.Auth\Mihaylov.Common.Auth.csproj -p:Version=0.2.1-1 -c Release -o D:\Github\_NugetPrerease 
+	-->
 
 </Project>

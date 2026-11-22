@@ -1,0 +1,44 @@
+<Project>
+
+	<ItemGroup Condition="'$(SkipDependencyAttributes)' != 'true'">
+		<_DeclaredProjectReference Include="@(ProjectReference)" />
+	</ItemGroup>
+
+	<Target Name="EmbedPackageReferences" BeforeTargets="GetAssemblyAttributes" 
+				Condition="'$(SkipDependencyAttributes)' != 'true'">
+		<ItemGroup>
+			<_PublicPackage Include="@(PackageReference)" />
+			<_PublicPackage Remove="@(PackageReference)"
+							Condition="'%(PackageReference.PrivateAssets)' == 'all'" />
+		</ItemGroup>
+		<ItemGroup>
+			<AssemblyAttribute Include="System.Reflection.AssemblyMetadataAttribute">
+				<_Parameter1>PackageReferences</_Parameter1>
+				<_Parameter2>@(_PublicPackage->'%(Identity)|%(Version)', ';')</_Parameter2>
+			</AssemblyAttribute>
+			<AssemblyAttribute Include="System.Reflection.AssemblyMetadataAttribute">
+				<_Parameter1>ProjectReferences</_Parameter1>
+				<_Parameter2>@(_DeclaredProjectReference->'%(Filename)', ';')</_Parameter2>
+			</AssemblyAttribute>
+		</ItemGroup>
+	</Target>
+
+	<!--<Target Name="EmbedApiVersion" BeforeTargets="GetAssemblyAttributes" Condition="Exists('$(ApiSwaggerFile)')">
+		<PropertyGroup>
+			<_SwaggerText>$([System.IO.File]::ReadAllText('$(ApiSwaggerFile)'))</_SwaggerText>
+			<_ApiVersion>$([System.Text.RegularExpressions.Regex]::Match($(_SwaggerText), 'API version ([^"\\\s]+)').Groups[1].Value)</_ApiVersion>
+			<_ApiName>$([System.IO.Path]::GetFileNameWithoutExtension('$(ApiProject)'))</_ApiName>
+		</PropertyGroup>
+		<ItemGroup>
+			<AssemblyAttribute Include="System.Reflection.AssemblyMetadataAttribute">
+				<_Parameter1>ApiName</_Parameter1>
+				<_Parameter2>$(_ApiName)</_Parameter2>
+			</AssemblyAttribute>
+			<AssemblyAttribute Include="System.Reflection.AssemblyMetadataAttribute">
+				<_Parameter1>ApiVersion</_Parameter1>
+				<_Parameter2>$(_ApiVersion)</_Parameter2>
+			</AssemblyAttribute>
+		</ItemGroup>
+	</Target>-->
+	
+</Project>

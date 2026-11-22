@@ -59,23 +59,23 @@ namespace Mihaylov.Api.Other.Data.Cluster
 
             var result = new NugetPackages()
             {
-                LocalPackagePrefix = NugetClient.LOCAL_PACKAGE_PREFIX,
+                LocalPackagePrefix = DependencyExtensions.LOCAL_PACKAGE_PREFIX,
                 Nugets = GroupNexusItems(nugetPackages),
             };
 
             return result;
         }
 
-        public async Task<NugetPackage> GetNugetPackageAsync(string packageName, string version)
+        public async Task<DependencyNode> GetNugetPackageAsync(string packageName, string version, string framework)
         {
             var repoUrl = NugetClient.NUGET_URL;
-            if (_nugetClient.IsNugetLocal(packageName))
+            if (DependencyExtensions.IsNugetLocal(packageName))
             {
                 var nugetRepo = await GetHostedRepositoryAsync("nuget").ConfigureAwait(false);
                 repoUrl = nugetRepo.Url;
             }
 
-            var nuget = await _nugetClient.GetMetadataByIdAsync(repoUrl, packageName, version, CancellationToken.None).ConfigureAwait(false);
+            var nuget = await _nugetClient.GetMetadataByIdAsync(repoUrl, packageName, version, framework, CancellationToken.None).ConfigureAwait(false);
 
             return nuget;
         }
@@ -246,7 +246,7 @@ namespace Mihaylov.Api.Other.Data.Cluster
             return image;
         }
 
-        private NexusNugetImage EnrichNugetImage(NexusBaseImage inputImage, IDictionary<string, NugetPackage> packageMetadataDict)
+        private NexusNugetImage EnrichNugetImage(NexusBaseImage inputImage, IDictionary<string, DependencyNode> packageMetadataDict)
         {
             var image = new NexusNugetImage(inputImage);
 
@@ -254,7 +254,7 @@ namespace Mihaylov.Api.Other.Data.Cluster
             if (packageMetadataDict.TryGetValue(key, out var packageMetadata))
             {
                 image.Runtime = packageMetadata.Framework;
-                image.Dependencies = packageMetadata.Dependencies;
+                image.Dependencies = packageMetadata.Dependencies.ToFlatModel();
             }
 
             return image;
@@ -536,14 +536,14 @@ namespace Mihaylov.Api.Other.Data.Cluster
             return repositories;
         }
 
-        private async Task<IDictionary<string, NugetPackage>> GetNugetPackagesMetadataAsync(string nugetBaseUrl)
+        private async Task<IDictionary<string, DependencyNode>> GetNugetPackagesMetadataAsync(string nugetBaseUrl)
         {
             var packagesMetadata = await _nugetClient.GetMetadataAsync(nugetBaseUrl, CancellationToken.None);
 
-            var packageMetadataDict = new Dictionary<string, NugetPackage>(StringComparer.OrdinalIgnoreCase);
+            var packageMetadataDict = new Dictionary<string, DependencyNode>(StringComparer.OrdinalIgnoreCase);
             foreach (var package in packagesMetadata)
             {
-                var key = $"{package.Title}_{package.Version}";
+                var key = $"{package.Name}_{package.Version}";
                 if (!packageMetadataDict.ContainsKey(key))
                 {
                     packageMetadataDict.Add(key, package);

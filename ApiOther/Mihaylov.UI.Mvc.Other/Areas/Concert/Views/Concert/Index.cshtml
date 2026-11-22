@@ -1,7 +1,7 @@
 ﻿@model ConcertMainModel
 
 @section Styles {
-    <link rel="stylesheet" href="/_content/mihaylov.ui.mvc.other/css/concerts.css" asp-append-version="true" />
+    <link rel="stylesheet" href="@(Url.ModuleFile<OtherUiModule>("css/concerts.css"))" asp-append-version="true" />
 }
 
 <div class="row form-distance">
@@ -51,5 +51,5 @@
 </div>
 
 @section Scripts {
-    <script src="/_content/mihaylov.ui.mvc.other/js/concerts.js"></script>
+    <script src="@(Url.ModuleFile<OtherUiModule>("js/concerts.js"))"></script>
 }

@@ -50,7 +50,7 @@
                     <td>@snapshot.Files</td>
                     <td>@snapshot.Dirs</td>
                     <td>
-                        <a href="@($"{Url.Href(new MenuRoute<VeleroController>(c => c.DeleteSnapshot(string.Empty)))}?id={snapshot.SnapshotId}")">
+                        <a href="@Url.Href(new MenuRoute<VeleroController>(c => c.DeleteSnapshot(string.Empty)), new { id = snapshot.SnapshotId })">
                             <icon type="IconType.DeleteFill" />
                         </a>
                     </td>

@@ -11,7 +11,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <PackageReference Include="Mihaylov.Common.Database" Version="0.2.2" />
+	  <PackageReference Include="Mihaylov.Common.Database" Version="0.2.3-1" />
 	</ItemGroup>
 
   <ItemGroup>

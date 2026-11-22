@@ -45,4 +45,15 @@ public class ModuleAssemblyService : IModuleAssemblyService
 
         return result;
     }
+
+    /// <summary>
+    /// Gets the dependencies of the root assembly.
+    /// </summary>
+    /// <returns>A dependency node representing the dependencies of the root assembly.</returns>
+    public DependencyNode GetDependencies()
+    {
+        var dependency = DependencyScanner.Scan(_rootAssembly);
+
+        return dependency;
+    }
 }

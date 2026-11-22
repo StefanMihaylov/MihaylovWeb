@@ -1,0 +1,106 @@
+﻿@using Mihaylov.Api.Gear.Client
+@model GearNodeRowsVewModel
+
+@if (Model.Nodes.Any())
+{
+    var indent = Model.Level * 25; // 25px indentation per level
+
+    @foreach (var node in Model.Nodes)
+    {
+        var excluded = node.IsExcluded ? "text-muted bg-light table-secondary" : string.Empty;
+        var packed = node.IsPacked ? "table-success" : string.Empty;
+
+        <tr class="@excluded @packed">
+            <td style="padding-left: @(indent)px">
+
+                @if (node.NodeType == NodeType.Group)
+                {
+                    <icon name="fa-folder" color=@Colour.Orange class="mr-2" />
+                }
+                else if (node.NodeType == NodeType.Category)
+                {
+                    <icon name="fa-tags" color="text-info" class="mr-2" />
+                }
+                else
+                {
+                    <icon name="fa-cube" color="text-secondary" class="mr-2" />
+                }
+
+                @if (node.IsExcluded)
+                {
+                    <icon type="IconType.Down" class="mr-2" />
+                }
+
+                @if (node.IsRequired)
+                {
+                    <icon type="IconType.Warning3" class="mr-2" />
+                }
+
+                @if (node.IsInventoryItemActive == false)
+                {
+                    <icon type="IconType.Banned" class="mr-2" />
+                }
+
+                <span>@(node.GroupName ?? node.CategoryName ?? node.InventoryItem)</span>
+            </td>
+            <td>
+                @if (node.Quantity > 0)
+                {
+                    var color = "badge-secondary";
+                    if (node.Quantity > 1)
+                    {
+                        color = "badge-primary";
+                    }
+
+                    <span class="badge badge-pill @color p-2">@node.Quantity</span>
+                }
+            </td>
+            <td>
+                @if (node.InventoryKitContents != null && node.InventoryKitContents.Any())
+                {
+                    <div class="inventory-kit-row" style="font-size: 0.75rem;">
+                        <icon name="fa-boxes" color="text-info" class="mr-1" />
+                        @string.Join(" • ", node.InventoryKitContents.Select(x => x.Name))
+                    </div>
+                }
+            </td>
+            <td>
+                @if (node.Quantity > 0)
+                {
+                    <a class="btn btn-xs toggle-pack-button" style="font-size: 1.4rem"
+                       href="@Url.Href(new MenuRoute<GearController>(c => c.Packed(0, null, 0)), new { tripId = node.TripId, nonPacked = Model.NonPacked, nodeId = node.Id })">
+                        @if (node.IsPacked)
+                        {
+                            <icon type="IconType.Success" />
+                        }
+                        else
+                        {
+                            <icon type="IconType.Question2" />
+                        }
+                    </a>
+                }
+            </td>
+            <td class="text-right">
+                <div class="btn-group">
+
+                    <button class="btn btn-xs btn-outline-primary gearnode-btn-edit" data-json='@Json.Serialize(node)'>
+                        <icon type="IconType.Edit2" />
+                    </button>
+
+                    @if (node.NodeType != NodeType.Item)
+                    {
+                        <button class="btn btn-xs btn-outline-success gearnode-btn-add" data-parent-id="@node.Id">
+                            <icon type="IconType.New2" />
+                        </button>
+                    }
+
+                    <a class="btn btn-warning" href="@Url.Href(new MenuRoute<GearController>(c => c.DeleteNode(0, null, 0)), new { tripId = node.TripId, nonPacked = Model.NonPacked, nodeId = node.Id })">
+                        <icon type="IconType.Delete2" color="@Colour.Disabled" />
+                    </a>
+                </div>
+            </td>
+        </tr>
+
+        @await Html.PartialAsync("_GearNodeRows", new GearNodeRowsVewModel(Model.AllNodes, node.Id, Model.Level + 1, Model.NonPacked))
+    }
+}

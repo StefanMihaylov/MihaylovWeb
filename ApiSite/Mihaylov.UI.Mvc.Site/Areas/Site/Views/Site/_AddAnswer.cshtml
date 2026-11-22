@@ -1,0 +1,51 @@
+﻿@model AnswerExtended
+
+@{
+    var questions = Model.Questions.GetListItems(u => u.Id, u => u.Value);
+    var units = Model.Units.GetListItems(u => u.Id, u => u.Name);
+    var halfTypes = Model.HalfTypes.GetListItems(u => u.Id, u => u.Name);
+}
+
+<form action="@Url.Href(new MenuRoute<SiteController>(c => c.SaveAnswer(null)))" method="post" class="form">
+    <fieldset>
+        <div class="form-row">
+            <div class="form-group col-auto">
+                @Html.LabelFor(m => Model.AskDate)
+                @Html.TextBoxFor(m => Model.AskDate, ViewConstants.DateTimeFormat, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => Model.AskDate)
+            </div>
+            <div class="form-group col-auto">
+                @Html.LabelFor(m => Model.QuestionId, "Question")
+                @Html.DropDownListFor(m => Model.QuestionId, questions, ViewConstants.DefaultDropDownValue, new { @class = "form-control", style = "width:200px" })
+                @Html.ValidationMessageFor(m => Model.QuestionId)
+            </div>
+            <div class="form-group col-auto">
+                @Html.LabelFor(m => Model.Value)
+                @Html.TextBoxFor(m => Model.Value, new { @class = "form-control", aria_autocomplete = "none", autocomplete = "off" })
+            </div>
+            <div class="form-group col-auto">
+                @Html.LabelFor(m => Model.UnitId, "Unit")
+                @Html.DropDownListFor(m => Model.UnitId, units, ViewConstants.DefaultDropDownValue, new { @class = "form-control", style = "width:200px" })
+            </div>
+            <div class="form-group col-auto">
+                @Html.LabelFor(m => Model.HalfTypeId, "Half")
+                @Html.DropDownListFor(m => Model.HalfTypeId, halfTypes, ViewConstants.DefaultDropDownValue, new { @class = "form-control", style = "width:200px" })
+            </div>
+            <div class="form-group col-auto">
+                @Html.LabelFor(m => Model.Details)
+                @Html.TextBoxFor(m => Model.Details, new { @class = "form-control", aria_autocomplete = "none", autocomplete = "off" })
+            </div>
+            <div class="form-group col-auto">
+                @Html.HiddenFor(m => Model.Id)
+                @Html.HiddenFor(m => Model.PersonId)
+                @Html.ValidationMessageFor(m => Model.PersonId)
+                <button type="submit" class="submit-btn btn btn-primary">
+                    <icon type="IconType.Save" />
+                </button>
+                <span class="btn btn-danger close-answer-button">
+                    <icon type="IconType.Close" color=@Colour.Disabled />
+                </span>
+            </div>
+        </div>
+    </fieldset>
+</form>

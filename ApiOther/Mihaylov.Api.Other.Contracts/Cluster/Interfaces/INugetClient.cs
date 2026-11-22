@@ -1,16 +1,15 @@
 ﻿using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using Mihaylov.Api.Other.Contracts.Cluster.Models.Nexus;
+using Mihaylov.Common;
 
 namespace Mihaylov.Api.Other.Contracts.Cluster.Interfaces
 {
     public interface INugetClient
     {
-        Task<IEnumerable<NugetPackage>> GetMetadataAsync(string repositoryUrl, CancellationToken ct);
+        Task<IEnumerable<DependencyNode>> GetMetadataAsync(string repositoryUrl, CancellationToken ct);
 
-        Task<NugetPackage> GetMetadataByIdAsync(string repositoryUrl, string packageName, string version, CancellationToken ct);
-
-        bool IsNugetLocal(string packageName);
+        Task<DependencyNode> GetMetadataByIdAsync(string repositoryUrl, string packageName, string version, 
+            string framework, CancellationToken ct);
     }
 }

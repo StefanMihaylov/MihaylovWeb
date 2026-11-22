@@ -245,12 +245,39 @@ namespace Mihaylov.Api.Other.Client
 
         /// <returns>OK</returns>
         /// <exception cref="SwaggerException">A server side error occurred.</exception>
+        System.Threading.Tasks.Task<System.Collections.Generic.IEnumerable<DependencyNodeFlat>> DependenciesGetInfoAsync();
+
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+        /// <returns>OK</returns>
+        /// <exception cref="SwaggerException">A server side error occurred.</exception>
+        System.Threading.Tasks.Task<System.Collections.Generic.IEnumerable<DependencyNodeFlat>> DependenciesGetInfoAsync(System.Threading.CancellationToken cancellationToken);
+
+        /// <returns>OK</returns>
+        /// <exception cref="SwaggerException">A server side error occurred.</exception>
         System.Threading.Tasks.Task<NexusImages> ImagesAsync();
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>OK</returns>
         /// <exception cref="SwaggerException">A server side error occurred.</exception>
         System.Threading.Tasks.Task<NexusImages> ImagesAsync(System.Threading.CancellationToken cancellationToken);
+
+        /// <returns>OK</returns>
+        /// <exception cref="SwaggerException">A server side error occurred.</exception>
+        System.Threading.Tasks.Task<NugetPackages> NugetsAsync();
+
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+        /// <returns>OK</returns>
+        /// <exception cref="SwaggerException">A server side error occurred.</exception>
+        System.Threading.Tasks.Task<NugetPackages> NugetsAsync(System.Threading.CancellationToken cancellationToken);
+
+        /// <returns>OK</returns>
+        /// <exception cref="SwaggerException">A server side error occurred.</exception>
+        System.Threading.Tasks.Task<System.Collections.Generic.IEnumerable<DependencyNodeFlat>> NugetAsync(string packageName, string version, string framework);
+
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+        /// <returns>OK</returns>
+        /// <exception cref="SwaggerException">A server side error occurred.</exception>
+        System.Threading.Tasks.Task<System.Collections.Generic.IEnumerable<DependencyNodeFlat>> NugetAsync(string packageName, string version, string framework, System.Threading.CancellationToken cancellationToken);
 
         /// <returns>OK</returns>
         /// <exception cref="SwaggerException">A server side error occurred.</exception>
@@ -1016,6 +1043,45 @@ namespace Mihaylov.Api.Other.Client
 
     }
 
+    /// <summary>
+    /// 1 - Project, 2 - Package, 3 - Swagger
+    /// </summary>
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
+    public enum DependencyKind
+    {
+
+        Project = 1,
+
+        Package = 2,
+
+        Swagger = 3,
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class DependencyNodeFlat
+    {
+
+        [System.Text.Json.Serialization.JsonPropertyName("id")]
+        public int Id { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("name")]
+        public string Name { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("version")]
+        public string Version { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("framework")]
+        public string Framework { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("kind")]
+        public DependencyKind Kind { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("parentId")]
+        public int? ParentId { get; set; }
+
+    }
+
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
     public partial class DeploymentFile
     {
@@ -1368,9 +1434,6 @@ namespace Mihaylov.Api.Other.Client
         [System.Text.Json.Serialization.JsonPropertyName("images")]
         public System.Collections.Generic.IEnumerable<NexusDockerImage> Images { get; set; }
 
-        [System.Text.Json.Serialization.JsonPropertyName("nugets")]
-        public System.Collections.Generic.IEnumerable<NexusNugetImage> Nugets { get; set; }
-
         [System.Text.Json.Serialization.JsonPropertyName("runtimes")]
         public System.Collections.Generic.IEnumerable<MicrosoftRuntime> Runtimes { get; set; }
 
@@ -1407,11 +1470,20 @@ namespace Mihaylov.Api.Other.Client
         [System.Text.Json.Serialization.JsonPropertyName("isFirst")]
         public bool IsFirst { get; set; }
 
-        [System.Text.Json.Serialization.JsonPropertyName("localDependenciesCount")]
-        public int LocalDependenciesCount { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("dependencies")]
+        public System.Collections.Generic.IEnumerable<DependencyNodeFlat> Dependencies { get; set; }
 
-        [System.Text.Json.Serialization.JsonPropertyName("externalDependenciesCount")]
-        public int ExternalDependenciesCount { get; set; }
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class NugetPackages
+    {
+
+        [System.Text.Json.Serialization.JsonPropertyName("localPackagePrefix")]
+        public string LocalPackagePrefix { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("nugets")]
+        public System.Collections.Generic.IEnumerable<NexusNugetImage> Nugets { get; set; }
 
     }
 

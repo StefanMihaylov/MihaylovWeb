@@ -74,6 +74,34 @@
       "files": [
         "jquery.cookie.js"
       ]
+    },
+    {
+      "library": "bootstrap-icons@1.13.2",
+      "destination": "wwwroot/lib/bootstrap-icons/",
+      "files": [
+        "font/bootstrap-icons.min.css",
+        "font/fonts/bootstrap-icons.woff",
+        "font/fonts/bootstrap-icons.woff2"
+      ]
+    },
+    {
+      "library": "@fortawesome/fontawesome-free@7.3.1",
+      "destination": "wwwroot/lib/fortawesome/fontawesome-free/",
+      "files": [
+        "css/all.min.css",
+        "webfonts/fa-brands-400.woff2",
+        "webfonts/fa-regular-400.woff2",
+        "webfonts/fa-solid-900.woff2",
+        "webfonts/fa-v4compatibility.woff2"
+      ]
+    },
+    {
+      "library": "select2@4.1.0",
+      "destination": "wwwroot/lib/select2/",
+      "files": [
+        "dist/css/select2.min.css",
+        "dist/js/select2.min.js"
+      ]
     }
   ]
 }

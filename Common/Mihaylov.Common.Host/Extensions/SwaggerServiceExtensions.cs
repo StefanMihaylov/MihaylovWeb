@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using Microsoft.OpenApi;
 
 namespace Mihaylov.Common;
@@ -22,39 +24,41 @@ public static class SwaggerServiceExtensions
     /// <param name="title">The title for the Swagger document.</param>
     /// <param name="description">The description for the Swagger document.</param>
     /// <param name="isPrivate">True to add the authentication scheme (Authorize button) and security requirements to the Swagger document.</param>
-    /// <param name="authenticationScheme"> HTTP <c>Authorization</c> scheme word that Swagger UI sends before the token 
-    /// (<c>Authorization: {scheme} {token}</c>). It is used only when <paramref name="isPrivate"/> is <c>true</c>.
-    /// Pass <c>UserConstants.AuthenticationScheme</c> (<c>"Bearer"</c>).</param>
     /// <returns>The configured IServiceCollection for chaining.</returns>
-    public static IServiceCollection AddSwaggerCustom(this IServiceCollection services, string name, string apiVersion, string title, string description, bool isPrivate, string authenticationScheme)
+    public static IServiceCollection AddSwaggerCustom(this IServiceCollection services, string name, string apiVersion, string title, string description, bool isPrivate)
     {
         services.AddSwaggerGen(options =>
         {
+            using var provider = services.BuildServiceProvider();
+            var assemblyWrapper = provider.GetRequiredService<IOptions<AssemblyWrapper>>();
+            var assembly = assemblyWrapper.Value.Assembly;
+            var moduleInfo = VersionHelper.GetVersionInfo(assembly);
+
             options.SwaggerDoc(name, new OpenApiInfo
             {
                 Version = apiVersion,
                 Title = title,
-                Description = description
+                Description = $"{description} | ApiName = {moduleInfo.ModuleName}, Version = {moduleInfo.Version}",
             });
 
             if (isPrivate)
             {
                 var message = new StringBuilder();
-                message.AppendLine($"JWT Authorization header using the {authenticationScheme} scheme.");
-                message.AppendLine($"Enter '{authenticationScheme}' [space] and then your token in the text input below.");
-                message.AppendLine($"Example: '{authenticationScheme} 12345abcdef'");
+                message.AppendLine($"JWT Authorization header using the {UserConstants.AuthenticationScheme} scheme.");
+                message.AppendLine($"Enter '{UserConstants.AuthenticationScheme}' [space] and then your token in the text input below.");
+                message.AppendLine($"Example: '{UserConstants.AuthenticationScheme} 12345abcdef'");
 
-                options.AddSecurityDefinition(authenticationScheme, new OpenApiSecurityScheme
+                options.AddSecurityDefinition(UserConstants.AuthenticationScheme, new OpenApiSecurityScheme
                 {
                     Name = "Authorization",
                     Type = SecuritySchemeType.Http,  // ApiKey or Http
-                    Scheme = authenticationScheme,
+                    Scheme = UserConstants.AuthenticationScheme,
                     In = ParameterLocation.Header,
                     BearerFormat = "JWT",
                     Description = message.ToString(),
                 });
 
-                options.OperationFilter<AuthorizeOperationFilter>(authenticationScheme);
+                options.OperationFilter<AuthorizeOperationFilter>(UserConstants.AuthenticationScheme);
             }
 
             var assemblies = AppDomain.CurrentDomain.GetAssemblies().Where(x => x.FullName.StartsWith("Mihaylov")).ToList();

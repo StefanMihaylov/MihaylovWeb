@@ -25,8 +25,12 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Mihaylov.Common.Mvc" Version="0.2.0" />
-		<PackageReference Include="Mihaylov.Api.Users.Client" Version="0.4.0" />
+		<PackageReference Include="Mihaylov.Common.Mvc" Version="0.2.1-1" />
+		<!--<PackageReference Include="Mihaylov.Api.Users.Client" Version="0.4.0" />-->
 		<PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="10.0.14" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\Mihaylov.Api.Users.Client\Mihaylov.Api.Users.Client.csproj" />
 	</ItemGroup>
 </Project>

@@ -6,15 +6,21 @@
 	</PropertyGroup>
 
 	<PropertyGroup>
-		<Version>0.2.2</Version>
+		<Version>0.2.3</Version>
 		<PackageId>Mihaylov.Common.Host</PackageId>
 		<Description>Shared Host utilities.</Description>
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Mihaylov.Common.Core" Version="0.2.0" />
-		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.14" />		
-		<PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="10.3.1" />
-		<PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="10.3.1" />
+		<PackageReference Include="Mihaylov.Common.Auth" Version="0.2.1-1" />		
+		<PackageReference Include="Mihaylov.Common.Core" Version="0.2.1-1" />
+		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.15" />		
+		<PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="11.0.1" />
+		<PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="11.0.1" />
 	</ItemGroup>
+
+	<!--
+	dotnet pack D:\Github\MihaylovWeb\Common\Mihaylov.Common.Host\Mihaylov.Common.Host.csproj -p:Version=0.2.3-2 -c Release -o D:\Github\_NugetPrerease 
+	-->
+
 </Project>

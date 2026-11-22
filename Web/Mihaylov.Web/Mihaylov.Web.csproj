@@ -26,18 +26,19 @@
 	</PropertyGroup>
 	
 	<ItemGroup>
-		<PackageReference Include="Mihaylov.Api.Users.Client" Version="0.3.0" />
-		<PackageReference Include="Mihaylov.Common.Host" Version="0.2.1" />
+		<PackageReference Include="Mihaylov.Common.Auth" Version="0.2.1-1" />
+		<PackageReference Include="Mihaylov.Common.Host" Version="0.2.3-2" />
+		<!--<PackageReference Include="Mihaylov.UI.Mvc.Users" Version="0.4.0" />-->
 		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.23.0" />
-		<PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="10.0.13" />
 		<PackageReference Include="Microsoft.Web.LibraryManager.Build" Version="3.0.114" />
 	</ItemGroup>
 	
 	<ItemGroup>
-	  <ProjectReference Include="..\..\ApiGear\Mihaylov.Api.Gear.Client\Mihaylov.Api.Gear.Client.csproj" />
+	  <ProjectReference Include="..\..\ApiGear\Mihaylov.UI.Mvc.Gear\Mihaylov.UI.Mvc.Gear.csproj" />
 	  <ProjectReference Include="..\..\ApiOther\Mihaylov.UI.Mvc.Other\Mihaylov.UI.Mvc.Other.csproj" />
-	  <ProjectReference Include="..\..\ApiSite\Mihaylov.Api.Site.Data\Mihaylov.Api.Site.Data.csproj" />
-	  <ProjectReference Include="..\..\ApiSite\Mihaylov.Api.Site.Client\Mihaylov.Api.Site.Client.csproj" />
+	  <ProjectReference Include="..\..\ApiSite\Mihaylov.UI.Mvc.Site\Mihaylov.UI.Mvc.Site.csproj" />
+	  <ProjectReference Include="..\..\ApiUsers\Mihaylov.UI.Mvc.Users\Mihaylov.UI.Mvc.Users.csproj" />
+	  <ProjectReference Include="..\Mihaylov.UI.Mvc.Home\Mihaylov.UI.Mvc.Home.csproj" />
 	</ItemGroup>
 
 </Project>

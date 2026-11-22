@@ -36,9 +36,19 @@ public interface IUiModule
     IEnumerable<MenuItem> Menus { get; }
 
     /// <summary>
-    /// Gets the server and UI module info of the module.
+    /// Gets the server and UI module info of a UI module.
     /// </summary>
-    /// <param name="factory">Creates the scope used to resolve the services.</param>
-    /// <returns>The <see cref="ComponentModuleInfo"/> of the module.</returns>
+    /// <param name="factory">Creates the scope used to resolve IModuleInfoService</param>
+    /// <returns>
+    /// The <see cref="ComponentModuleInfo"/> with the server info and the UI info read from the module's assembly.
+    /// If the server cannot be read, the server info has only the module name.
+    /// </returns>
     Task<ComponentModuleInfo> GetModuleInfoAsync(IServiceScopeFactory factory);
+
+    /// <summary>
+    /// Gets the component dependencies from the specified service scope factory.
+    /// </summary>
+    /// <param name="factory">The service scope factory used to resolve the component dependencies.</param>
+    /// <returns>A task that resolves to the component dependencies for the current scope.</returns>
+    Task<ComponentDependencies> GetDependenciesAsync(IServiceScopeFactory factory);
 }

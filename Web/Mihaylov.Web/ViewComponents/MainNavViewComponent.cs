@@ -7,16 +7,13 @@ using Mihaylov.Common;
 
 namespace Mihaylov.Web.ViewComponents;
 
-public class MainNavViewComponent(IModuleCatalog catalog, IAuthorizationService auth) : ViewComponent
+public class MainNavViewComponent(IModuleCatalog catalog, IAuthorizationService authService) : ViewComponent
 {
     public async Task<IViewComponentResult> InvokeAsync()
     {
-        var visible = new List<MenuItem>()
-        {
-            catalog.Home
-        };
+        var visible = new List<MenuItem>();
 
-        var menuItems = catalog.Modules.SelectMany(m => m.Menus).OrderBy(i => i.Order).ToList();
+        var menuItems = catalog.MenuModules.SelectMany(m => m.Menus).OrderBy(i => i.Order).ToList();
         foreach (var menuItem in menuItems)
         {
             var filtered = await FilterAsync(menuItem);
@@ -29,7 +26,8 @@ public class MainNavViewComponent(IModuleCatalog catalog, IAuthorizationService 
         var model = new MainNavViewModel()
         {
             Home = catalog.Home,
-            MenuItems = visible
+            Login = catalog.Login,
+            MenuItems = visible,
         };
 
         return View(model);
@@ -37,9 +35,9 @@ public class MainNavViewComponent(IModuleCatalog catalog, IAuthorizationService 
 
     private async Task<MenuItem> FilterAsync(MenuItem menuItem)
     {
-        if (menuItem.PermissionPolicy != null)
+        if (menuItem.AccessLevel != AccessLevel.Public)
         {
-            var authorization = await auth.AuthorizeAsync(UserClaimsPrincipal, menuItem.PermissionPolicy).ConfigureAwait(false);
+            var authorization = await authService.AuthorizeAsync(UserClaimsPrincipal, menuItem.AccessLevel.ToString()).ConfigureAwait(false);
             if (!authorization.Succeeded)
             {
                 return null;
@@ -68,8 +66,7 @@ public class MainNavViewComponent(IModuleCatalog catalog, IAuthorizationService 
             return null;
         }
 
-        menuItem.Children = kids;
-
-        return menuItem;
+        return new MenuItem(menuItem.Order, menuItem.Title, menuItem.MenuRoute, menuItem.AccessLevel, menuItem.Icon,
+                                kids, menuItem.DividerBefore, menuItem.IsHomeMenu);
     }
 }

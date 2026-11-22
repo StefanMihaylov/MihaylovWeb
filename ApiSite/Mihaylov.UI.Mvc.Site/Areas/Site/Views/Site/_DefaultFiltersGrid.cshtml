@@ -1,0 +1,39 @@
+﻿@using Mihaylov.Api.Site.Client
+@model IEnumerable<DefaultFilter>
+
+<table class="table table-bordered table-striped">
+    <caption style="caption-side: top;">Филтри</caption>
+    <thead>
+        <tr>
+            <th>@Html.NameFor(m => m.First().IsEnabled)</th>
+            <th>@Html.NameFor(m => m.First().AccountType)</th>
+            <th>@Html.NameFor(m => m.First().Status)</th>
+            <th>@Html.NameFor(m => m.First().IsArchive)</th>
+            <th>@Html.NameFor(m => m.First().IsPreview)</th>
+            <th>
+                <span class="btn btn-success edit-default-filter-button" data-id="">
+                    <icon type="IconType.New" />
+                </span>
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var filter in Model)
+        {
+            <tr>
+                <td><icon type=@(filter.IsEnabled ? IconType.Success : IconType.Error) /></td>
+                <td>@filter.AccountType</td>
+                <td>@filter.Status</td>
+                <td>@filter.IsArchive</td>
+                <td>@filter.IsPreview</td>
+                <td>
+                    <span class="btn btn-secondary edit-default-filter-button" data-id="@filter.Id">
+                        <icon type="IconType.Edit" />
+                    </span>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div id="default-filter-info" data-url="@Url.Href(new MenuRoute<SiteController>(c => c.DefaultFilterView(null)))"></div>

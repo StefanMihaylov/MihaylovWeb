@@ -73,7 +73,7 @@
     }
 </table>
 
-<h3>Nexus Nugets - @Model.Images.Nugets.Count() бр, Types: @Model.Images.Nugets.Where(n => n.IsFirst).Count() бр</h3>
+<h3>Nexus Nugets - @Model.Nugets.Nugets.Count() бр, Types: @Model.Nugets.Nugets.Where(n => n.IsFirst).Count() бр</h3>
 
 <table class="table table-bordered table-striped" id="nugets-grid">
     <tr>
@@ -87,8 +87,11 @@
         <th>Action</th>
     </tr>
 
-    @foreach (var nuget in Model.Images.Nugets)
+    @foreach (var nuget in Model.Nugets.Nugets)
     {
+        var localCount = nuget.DependencyNodes.Count(d => d.IsLocal);
+        var publicCount = nuget.DependencyNodes.Count(d => !d.IsLocal);
+
         <tr>
             <td>
                 @if (nuget.IsFirst)
@@ -103,8 +106,8 @@
             </td>
             <td>@nuget.Runtime</td>
             <td>@nuget.Size.FormatBytes()</td>
-            <td>@(nuget.LocalDependenciesCount > 0 ? nuget.LocalDependenciesCount : string.Empty)</td>
-            <td>@(nuget.ExternalDependenciesCount > 0 ? nuget.ExternalDependenciesCount : string.Empty)</td>
+            <td>@(localCount > 0 ? localCount.ToString() : string.Empty)</td>
+            <td>@(publicCount > 0 ? publicCount.ToString() : string.Empty)</td>
             <td>@nuget.LastModified?.ToString(ViewConstants.DateTimeFormatSimple)</td>
             <td>
                 @*                 <a href="@($"{Url.Href(new MenuRoute<NexusController>(c => c.DeleteImage("")))}?imageId={nuget.Id}")">
@@ -155,4 +158,14 @@
         </tr>
     }
 
+    <tfoot class="highlight">
+        <tr>
+            <td></td>
+            <td></td>
+            <td>@Model.Images.Runtimes.Sum(s => s.Size).FormatBytes()</td>
+            <td>@Model.Images.Runtimes.Sum(s => s.LayersCount)</td>
+            <td></td>
+            <td></td>
+        </tr>
+    </tfoot>
 </table>

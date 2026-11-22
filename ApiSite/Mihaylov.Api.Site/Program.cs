@@ -26,7 +26,7 @@ namespace Mihaylov.Api.Site
 
         private static void AddServices(IServiceCollection services)
         {
-            services.AddSwaggerCustom("v1", "v1", "Site API", "Site Endpoints API", true, UserConstants.AuthenticationScheme);
+            services.AddSwaggerCustom("v1", "v1", "Site API", "Site Endpoints API", true);
 
             services.AddControllers();
             services.Configure<ApiBehaviorOptions>(options =>
@@ -41,8 +41,7 @@ namespace Mihaylov.Api.Site
             services.AddEndpointsApiExplorer();
             services.AddMemoryCache();
 
-            services.AddClientJwtAuthentication(UserConstants.AuthenticationScheme,
-                AuthorizationExtensions.GetAuthorizationOptions, null, opt =>
+            services.AddClientJwtAuthentication(null, opt =>
             {
                 opt.Secret = Config.GetEnvironmentVariable("JWT_AUTHENTICATION_SECRET", "abc");
                 opt.Issuer = Config.GetEnvironmentVariable("JWT_ISSUER", string.Empty);
@@ -96,7 +95,7 @@ namespace Mihaylov.Api.Site
 
             app.MapControllers();
 
-            app.MapHub<UpdateProgressHub>("/UpdateProgressHub");
+            app.MapHub<UpdateProgressHub>(UpdateProgressHub.HUB_PATH);
         }
     }
 }

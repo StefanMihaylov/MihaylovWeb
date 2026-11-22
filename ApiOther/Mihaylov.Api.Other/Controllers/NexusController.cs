@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Reflection;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -45,14 +46,14 @@ namespace Mihaylov.Api.Other.Controllers
         }
 
         [HttpGet]
-        [ProducesResponseType(typeof(NugetPackage), StatusCodes.Status200OK)]
-        public async Task<IActionResult> Nuget([FromQuery] string packageName, [FromQuery] string version)
+        [ProducesResponseType(typeof(IEnumerable<DependencyNodeFlat>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> Nuget([FromQuery] string packageName, [FromQuery] string version, [FromQuery] string framework)
         {
-            NugetPackage nuget = await _service.GetNugetPackageAsync(packageName, version).ConfigureAwait(false);
+            DependencyNode nuget = await _service.GetNugetPackageAsync(packageName, version, framework).ConfigureAwait(false);
+            IEnumerable<DependencyNodeFlat> flat = nuget.ToFlatModel();
 
-            return Ok(nuget);
+            return Ok(flat);
         }
-
 
         [HttpDelete]
         [ProducesResponseType(typeof(void), StatusCodes.Status200OK)]

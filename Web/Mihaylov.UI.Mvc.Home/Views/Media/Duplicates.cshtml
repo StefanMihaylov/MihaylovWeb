@@ -1,0 +1,60 @@
+﻿@using Mihaylov.UI.Mvc.Home.Hubs
+@model DuplicatesViewModel
+
+<div id="scan-container" data-url="@Url.Href(new MenuRoute<MediaController>(c => c.ReadDuplicateFiles(null)))"
+     data-hub="@ScanProgressHub.HUB_PATH" data-func="@ScanProgressHub.JS_FUNC_NAME">
+    <span class="btn btn-primary start-new-scan">Update</span>
+    <span>Files: @Model.FilesCount, Duplicates: @Model.DuplicatesCount</span>
+
+    <div class="progress" style="margin-top:1rem">
+        <div id="files-progress-bar" class="progress-bar bg-info" role="progressbar" style="" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+    </div>
+    <div class="progress" style="margin-top:1rem">
+        <div id="hash-progress-bar" class="progress-bar bg-info" role="progressbar" style="" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+    </div>
+</div>
+
+<table class="table table-bordered table-striped" style="margin-top:1rem">
+    <tbody>
+        @foreach (var duplicate in Model.Duplicates)
+        {
+            <tr>
+                <td>
+                    <span>@duplicate.Similarity % | @duplicate.Checksum | @duplicate.Hash</span>
+                    <table class="table table-bordered table-striped">
+                        <tbody>
+                            <tr>
+                                @foreach (var file in @duplicate.List)
+                                {
+                                    @* // height="@file.Height" width="@file.Width" *@
+                                    var path = WebUtility.UrlEncode(file.FullPath);
+                                    <td>
+                                        <p>
+                                            @file.SubDirectories | @file.Name | @file.DownloadedOn |
+                                            @if (!file.Readonly)
+                                            {
+                                                <a href="@($"{Url.Href(new MenuRoute<MediaController>(c => c.DeleteDuplicateFile(null, null)))}?id={path}&redirectUrl={Model.RedirectUrl}")" class="btn btn-danger">Delete</a>
+                                            }
+                                            else
+                                            {
+                                                <span class="btn btn-info">Locked</span>
+                                            }
+                                        </p>
+                                        <p>
+                                            <img src="@($"{Url.Href(new MenuRoute<MediaController>(c => c.GetThumbnail(null)))}/{path}")" />
+                                        </p>
+                                    </td>
+                                }
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@section Scripts {
+    <script src="~/lib/signalr/dist/browser/signalr.min.js"></script>
+    <script src="@(Url.ModuleFile<HomeUiModule>("js/media-dups.js"))" asp-append-version="true"></script>
+}

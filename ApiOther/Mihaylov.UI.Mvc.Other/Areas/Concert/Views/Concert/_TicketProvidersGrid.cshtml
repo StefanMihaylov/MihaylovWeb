@@ -14,8 +14,8 @@
             @foreach (var tp in Model.Providers.Data)
             {
                 <tr>
-                    <td><my-value>@tp.Name</my-value></td>
-                    <td><my-value>@tp.Url</my-value></td>
+                    <td>@tp.Name</td>
+                    <td>@tp.Url</td>
                     <td>
                         @if (tp.IsActive)
                         {

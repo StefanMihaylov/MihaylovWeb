@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Mihaylov.Api.Other.Contracts.Cluster.Models.Nexus;
+using Mihaylov.Common;
 
 namespace Mihaylov.Api.Other.Contracts.Cluster.Interfaces
 {
@@ -9,7 +10,7 @@ namespace Mihaylov.Api.Other.Contracts.Cluster.Interfaces
 
         Task<NugetPackages> GetNugetPackagesAsync();
 
-        Task<NugetPackage> GetNugetPackageAsync(string packageName, string version);
+        Task<DependencyNode> GetNugetPackageAsync(string packageName, string version, string framework);
 
         Task ClearImages();
 

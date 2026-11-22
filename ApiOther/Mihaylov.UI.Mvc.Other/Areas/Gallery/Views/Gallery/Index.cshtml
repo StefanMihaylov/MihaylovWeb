@@ -1,10 +1,7 @@
-﻿@using Mihaylov.Api.Other.Client;
-@using Mihaylov.Common
-@using Mihaylov.UI.Mvc.Other.Areas.Gallery.Controllers
-@model IEnumerable<AlbumModel>
+﻿@model IEnumerable<AlbumModel>
 
 @section Styles {
-    <link rel="stylesheet" href="/_content/mihaylov.ui.mvc.other/css/gallery.css" asp-append-version="true" />
+    <link rel="stylesheet" href="@(Url.ModuleFile<OtherUiModule>("css/gallery.css"))" asp-append-version="true" />
 }
 
 <div class="row">

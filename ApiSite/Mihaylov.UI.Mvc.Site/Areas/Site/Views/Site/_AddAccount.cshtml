@@ -1,0 +1,66 @@
+﻿@model AccountExtended
+
+@{
+    var accountTypes = Model.AccountTypes.GetListItems(u => u.Id, u => u.Name);
+    var accountStates = Model.AccountStates.GetListItems(u => u.Id, u => u.Name);
+}
+
+<form action="@Url.Href(new MenuRoute<SiteController>(c => c.SaveAccount(null)))" method="post" class="form">
+    <fieldset>
+        <div class="form-row">
+            <div class="form-group col-auto">
+                @Html.LabelFor(m => Model.AccountTypeId, "Type")
+                @Html.DropDownListFor(m => Model.AccountTypeId, accountTypes, ViewConstants.DefaultDropDownValue, new { @class = "form-control", style = "width:105px" })
+                @Html.ValidationMessageFor(m => Model.AccountTypeId)
+            </div>
+            <div class="form-group col-auto">
+                @Html.LabelFor(m => Model.Username)
+                @Html.TextBoxFor(m => Model.Username, new { @class = "form-control", aria_autocomplete = "none", autocomplete = "off" })
+                @Html.ValidationMessageFor(m => Model.Username)
+            </div>
+            <div class="form-group col-auto">
+                @Html.LabelFor(m => Model.DisplayName)
+                @Html.TextBoxFor(m => Model.DisplayName, new { @class = "form-control", style = "width:105px", aria_autocomplete = "none", autocomplete = "off" })
+            </div>
+            <div class="form-group col-auto">
+                @Html.LabelFor(m => Model.StatusId, "Status")
+                @Html.DropDownListFor(m => Model.StatusId, accountStates, ViewConstants.DefaultDropDownValue, new { @class = "form-control", style = "width:200px" })
+            </div>
+            <div class="form-group col-auto">
+                @Html.LabelFor(m => Model.AskDate)
+                @Html.TextBoxFor(m => Model.AskDate, ViewConstants.DateTimeFormat, new { @class = "form-control", style = "width:105px" })
+                @Html.ValidationMessageFor(m => Model.AskDate)
+            </div>
+            <div class="form-group col-auto">
+                @Html.LabelFor(m => Model.Age)
+                @Html.TextBoxFor(m => Model.Age, new { @class = "form-control", style = "width:105px" })
+            </div>
+            <div class="form-group col-auto">
+                @Html.LabelFor(m => Model.CreateDate)
+                @Html.TextBoxFor(m => Model.CreateDate, ViewConstants.DateFormat, new { @class = "form-control", style = "width:105px" })
+            </div>
+            <div class="form-group col-auto">
+                @Html.LabelFor(m => Model.LastOnlineDate)
+                @Html.TextBoxFor(m => Model.LastOnlineDate, ViewConstants.DateFormat, new { @class = "form-control", style = "width:105px" })
+            </div>
+            <div class="form-group col-auto">
+                @Html.LabelFor(m => Model.ReconciledDate)
+                @Html.TextBoxFor(m => Model.ReconciledDate, ViewConstants.DateFormat, new { @class = "form-control", style = "width:105px" }) @* , @disabled = "disabled" *@
+            </div>
+            <div class="form-group col-auto">
+                @Html.LabelFor(m => Model.Details)
+                @Html.TextBoxFor(m => Model.Details, new { @class = "form-control", style = "width:150px", aria_autocomplete = "none", autocomplete = "off" })
+            </div>
+            <div class="form-group col-auto">
+                @Html.HiddenFor(m => Model.Id)
+                @Html.HiddenFor(m => Model.PersonId)
+                <button type="submit" class="submit-btn btn btn-primary">
+                    <icon type="IconType.Save" />
+                </button>
+                <span class="btn btn-danger close-account-button">
+                    <icon type="IconType.Close" color=@Colour.Disabled />
+                </span>
+            </div>
+        </div>
+    </fieldset>
+</form>

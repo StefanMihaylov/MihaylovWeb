@@ -6,15 +6,20 @@
   </PropertyGroup>
 
 	<PropertyGroup>
-		<Version>0.2.0</Version>
+		<Version>0.2.1</Version>
 		<PackageId>Mihaylov.Common.Http</PackageId>
 		<Description>Shared Http utilities.</Description>
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="10.0.14" />
-		<PackageReference Include="Microsoft.Extensions.Http" Version="10.0.14" />
-		<PackageReference Include="Microsoft.Extensions.Options.DataAnnotations" Version="10.0.14" />
-		<PackageReference Include="System.Text.Json" Version="10.0.14" />
+		<PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="10.0.15" />
+		<PackageReference Include="Microsoft.Extensions.Http" Version="10.0.15" />
+		<PackageReference Include="Microsoft.Extensions.Options.DataAnnotations" Version="10.0.15" />
+		<PackageReference Include="System.Text.Json" Version="10.0.15" />
 	</ItemGroup>
+
+	<!--
+	dotnet pack D:\Github\MihaylovWeb\Common\Mihaylov.Common.Http\Mihaylov.Common.Http.csproj -p:Version=0.2.1-1 -c Release -o D:\Github\_NugetPrerease 
+	-->
+	
 </Project>
